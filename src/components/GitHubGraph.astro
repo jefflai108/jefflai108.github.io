@@ -1,0 +1,119 @@
+---
+import data from '../data/contributions.json';
+import { site } from '../data/site';
+
+type Day = { date: string; count: number };
+const weeks: Day[][] = (data.weeks as Day[][]) ?? [];
+const total: number = data.total ?? 0;
+
+// GitHub's own bucketing: 0, then quartiles of the non-zero range.
+const counts = weeks.flat().map((d) => d.count).filter((n) => n > 0);
+const max = counts.length ? Math.max(...counts) : 0;
+const level = (n: number) => {
+  if (n <= 0) return 0;
+  if (max <= 4) return Math.min(4, n);
+  const q = max / 4;
+  return Math.min(4, Math.ceil(n / q));
+};
+
+const CELL = 11;
+const GAP = 3;
+const STEP = CELL + GAP;
+const LEFT = 26; // room for day-of-week labels
+const TOP = 14; // room for month labels
+const width = LEFT + weeks.length * STEP;
+const height = TOP + 7 * STEP;
+
+// A month label sits above the first week that starts a new month.
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const monthLabels: { x: number; label: string }[] = [];
+let lastMonth = -1;
+weeks.forEach((week, i) => {
+  const first = week[0];
+  if (!first) return;
+  const m = new Date(first.date + 'T00:00:00Z').getUTCMonth();
+  if (m !== lastMonth) {
+    lastMonth = m;
+    monthLabels.push({ x: LEFT + i * STEP, label: MONTHS[m] });
+  }
+});
+
+const dayLabels = [
+  { y: TOP + 1 * STEP + 9, label: 'Mon' },
+  { y: TOP + 3 * STEP + 9, label: 'Wed' },
+  { y: TOP + 5 * STEP + 9, label: 'Fri' },
+];
+
+const fmt = (d: string) =>
+  new Date(d + 'T00:00:00Z').toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+---
+
+{
+  weeks.length > 0 && (
+    <section class="gh" id="activity">
+      <div class="gh-meta">
+        <span class="lbl">GITHUB</span>
+        <span>{total.toLocaleString('en-US')} contributions in the past year</span>
+        <a href={site.links.github}>@jefflai108</a>
+      </div>
+
+      <div class="gh-canvas">
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          width={width}
+          height={height}
+          role="img"
+          aria-label={`GitHub contribution graph: ${total} contributions in the past year`}
+        >
+          {monthLabels.map((m) => (
+            <text class="ml" x={m.x} y={9}>
+              {m.label}
+            </text>
+          ))}
+          {dayLabels.map((d) => (
+            <text class="dl" x={0} y={d.y}>
+              {d.label}
+            </text>
+          ))}
+          {weeks.map((week, wi) =>
+            week.map((day) => {
+              const di = new Date(day.date + 'T00:00:00Z').getUTCDay();
+              return (
+                <rect
+                  class="c"
+                  data-l={level(day.count)}
+                  x={LEFT + wi * STEP}
+                  y={TOP + di * STEP}
+                  width={CELL}
+                  height={CELL}
+                  rx={2}
+                >
+                  <title>
+                    {day.count} contribution{day.count === 1 ? '' : 's'} on {fmt(day.date)}
+                  </title>
+                </rect>
+              );
+            })
+          )}
+        </svg>
+      </div>
+
+      <div class="gh-foot">
+        <span class="scale">
+          <span>less</span>
+          <i data-l="0" />
+          <i data-l="1" />
+          <i data-l="2" />
+          <i data-l="3" />
+          <i data-l="4" />
+          <span>more</span>
+        </span>
+      </div>
+    </section>
+  )
+}

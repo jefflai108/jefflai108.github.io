@@ -1,0 +1,132 @@
+---
+interface Props {
+  name:
+    | 'mail'
+    | 'scholar'
+    | 'github'
+    | 'linkedin'
+    | 'file'
+    | 'medium'
+    | 'sun'
+    | 'moon'
+    | 'link'
+    | 'arxiv'
+    | 'code'
+    | 'star';
+  size?: number;
+  class?: string;
+}
+
+const { name, size = 15, class: klass = '' } = Astro.props;
+const common = {
+  width: size,
+  height: size,
+  viewBox: '0 0 24 24',
+  fill: 'none',
+  stroke: 'currentColor',
+  'stroke-width': 1.8,
+  'stroke-linecap': 'round' as const,
+  'stroke-linejoin': 'round' as const,
+  'aria-hidden': 'true',
+  class: klass,
+};
+const filled = {
+  width: size,
+  height: size,
+  viewBox: '0 0 24 24',
+  fill: 'currentColor',
+  'aria-hidden': 'true',
+  class: klass,
+};
+---
+
+{
+  name === 'mail' && (
+    <svg {...common}>
+      <rect x="2" y="4" width="20" height="16" rx="2" />
+      <path d="m22 7-10 6L2 7" />
+    </svg>
+  )
+}
+{
+  name === 'scholar' && (
+    <svg {...filled}>
+      <path d="M12 2 1 8l11 6 9-4.91V17h2V8L12 2z" />
+      <path d="M5 12.18v3.82c0 1.66 3.13 3.5 7 3.5s7-1.84 7-3.5v-3.82l-7 3.82-7-3.82z" />
+    </svg>
+  )
+}
+{
+  name === 'github' && (
+    <svg {...filled}>
+      <path d="M12 .5a11.5 11.5 0 0 0-3.64 22.42c.58.1.79-.25.79-.56v-2.1c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.5 3.17-1.18 3.17-1.18.63 1.6.24 2.76.12 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.27 5.69.41.36.78 1.07.78 2.16v3.2c0 .31.2.67.8.55A11.5 11.5 0 0 0 12 .5z" />
+    </svg>
+  )
+}
+{
+  name === 'linkedin' && (
+    <svg {...filled}>
+      <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3V9zm7 0h3.8v1.64h.06c.53-.95 1.83-1.95 3.77-1.95C21.6 8.69 22 11.1 22 14.2V21h-4v-6c0-1.43-.03-3.27-2-3.27-2 0-2.3 1.56-2.3 3.17V21h-4V9z" />
+    </svg>
+  )
+}
+{
+  name === 'file' && (
+    <svg {...common}>
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <path d="M14 2v6h6" />
+    </svg>
+  )
+}
+{
+  name === 'medium' && (
+    <svg {...filled}>
+      <path d="M2.85 6.6a.86.86 0 0 0-.28-.72L.51 3.4v-.37h6.4l4.95 10.85L16.22 3.03H22.3v.37l-1.76 1.69a.51.51 0 0 0-.2.49v12.4a.51.51 0 0 0 .2.49l1.72 1.69v.37h-8.64v-.37l1.78-1.73c.17-.18.17-.23.17-.5V7.9l-4.96 12.6h-.67L4.16 7.9v8.45c-.05.35.07.7.32.96l2.32 2.81v.37H.35v-.37l2.32-2.81c.25-.26.36-.61.3-.96V6.6z" />
+    </svg>
+  )
+}
+{
+  name === 'sun' && (
+    <svg {...common} class={`icon-sun ${klass}`}>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+    </svg>
+  )
+}
+{
+  name === 'moon' && (
+    <svg {...common} class={`icon-moon ${klass}`}>
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  )
+}
+{
+  name === 'link' && (
+    <svg {...common}>
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+    </svg>
+  )
+}
+{
+  name === 'arxiv' && (
+    <svg {...common}>
+      <path d="M4 4h16v16H4z" />
+      <path d="M8 8h8M8 12h8M8 16h5" />
+    </svg>
+  )
+}
+{
+  name === 'code' && (
+    <svg {...common}>
+      <path d="m16 18 6-6-6-6M8 6l-6 6 6 6" />
+    </svg>
+  )
+}
+{
+  name === 'star' && (
+    <svg {...filled}>
+      <path d="m12 17.27 6.18 3.73-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+    </svg>
+  )
+}

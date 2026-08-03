@@ -1,0 +1,71 @@
+---
+import { site } from '../data/site';
+import Icon from '../components/Icon.astro';
+
+interface Props {
+  /** in-page section anchors to show; omitted on blog pages */
+  sections?: { href: string; label: string }[];
+  tagline?: string;
+}
+
+const { sections = [], tagline } = Astro.props;
+---
+
+<aside class="side">
+  <img
+    class="side-avatar"
+    src={site.avatar}
+    width="92"
+    height="92"
+    alt={`Portrait of ${site.name}`}
+  />
+
+  {/* To show your name in Chinese under the English one (as the reference site
+      does), add: <span class="given">漢字</span> with your actual characters. */}
+  <h1 class="side-name">Cheng-I Jeff Lai</h1>
+
+  {tagline && <p class="side-role" set:html={tagline} />}
+
+  <a class="side-org" href={site.orgUrl}>{site.org}</a>
+
+  <ul class="side-links">
+    <li>
+      <a class="plain-link" href={`mailto:${site.email}`}>
+        <Icon name="mail" /><span>{site.email}</span>
+      </a>
+    </li>
+    <li>
+      <a class="plain-link" href={site.links.scholar}>
+        <Icon name="scholar" /><span>Google Scholar</span>
+      </a>
+    </li>
+    <li>
+      <a class="plain-link" href={site.links.github}>
+        <Icon name="github" /><span>GitHub</span>
+      </a>
+    </li>
+    <li>
+      <a class="plain-link" href={site.links.linkedin}>
+        <Icon name="linkedin" /><span>LinkedIn</span>
+      </a>
+    </li>
+    <li>
+      <a class="plain-link" href={site.cv}>
+        <Icon name="file" /><span>CV</span>
+      </a>
+    </li>
+  </ul>
+
+  {
+    sections.length > 0 && (
+      <nav class="side-nav" aria-label="Sections">
+        {sections.map((s) => (
+          <a href={s.href}>{s.label}</a>
+        ))}
+        <a href={site.links.scholar} class="out">
+          All publications →
+        </a>
+      </nav>
+    )
+  }
+</aside>

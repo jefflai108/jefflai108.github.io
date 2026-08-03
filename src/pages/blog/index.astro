@@ -1,0 +1,91 @@
+---
+import Base from '../../layouts/Base.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import { site, orgs } from '../../data/site';
+import { mediumArchive } from '../../data/writing';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const tagline = `Research Scientist at <a href="${orgs.meta}">Meta Superintelligence Labs</a> — building <strong>real-time speech-to-speech</strong> and audio-text LLM systems.`;
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+---
+
+<Base nav="blog" title={`Blog — ${site.name}`} description={`Writing by ${site.name} on speech, audio LLMs, and real-time voice systems.`}>
+  <div class="shell">
+    <Sidebar tagline={tagline} />
+
+    <main id="main">
+      <section class="sec">
+        <div class="sec-eyebrow">WRITING</div>
+        <h2 class="sec-title">Blog</h2>
+
+        {
+          posts.length === 0 ? (
+            <p style="color: var(--fg-2); font-size: 0.95rem;">
+              Nothing new here yet — notes on speech, audio LLMs, and building real-time voice
+              systems are on the way.
+            </p>
+          ) : (
+            posts.map((post) => (
+              <article class="post-card">
+                <div class="d">{fmtDate(post.data.date)}</div>
+                <h3>
+                  <a href={post.data.external ?? `/blog/${post.id}/`}>{post.data.title}</a>
+                </h3>
+                <p>{post.data.description}</p>
+                {post.data.tags && post.data.tags.length > 0 && (
+                  <div class="tags">
+                    {post.data.tags.map((t: string) => (
+                      <span>{t}</span>
+                    ))}
+                  </div>
+                )}
+              </article>
+            ))
+          )
+        }
+      </section>
+
+      <section class="sec" id="archive">
+        <div class="sec-eyebrow">ARCHIVE</div>
+        <h2 class="sec-title">Earlier writing</h2>
+        <p style="color: var(--fg-3); font-size: 0.88rem; margin-top: -0.6rem;">
+          From my undergraduate years at JHU (2017–2019), on <a href={site.links.medium}>Medium</a>.
+        </p>
+        <ul class="news" style="margin-top: 0.9rem;">
+          {
+            mediumArchive.map((p) => (
+              <li>
+                <span class="d">{p.date.slice(0, 7).replace('-', '.')}</span>
+                <span class="body">
+                  <a href={p.url}>
+                    <strong>{p.title}</strong>
+                  </a>
+                  <br />
+                  {p.blurb}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <footer class="site-footer">
+        © {new Date().getFullYear()} Cheng-I Jeff Lai ·
+        <a href="/">Home</a> ·
+        <a href={site.links.github}>GitHub</a> ·
+        <a href="/rss.xml">RSS</a>
+      </footer>
+    </main>
+  </div>
+</Base>

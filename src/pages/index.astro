@@ -1,0 +1,335 @@
+---
+import Base from '../layouts/Base.astro';
+import Sidebar from '../components/Sidebar.astro';
+import GitHubGraph from '../components/GitHubGraph.astro';
+import Icon from '../components/Icon.astro';
+import { site, orgs, people } from '../data/site';
+import { news } from '../data/news';
+import { selectedPublications } from '../data/publications';
+import { openSource } from '../data/oss';
+import { experience, education, earlierRoles, talks, service } from '../data/career';
+import { getCollection } from 'astro:content';
+
+const sections = [
+  { href: '#about', label: 'About' },
+  { href: '#news', label: 'News' },
+  { href: '#publications', label: 'Publications' },
+  { href: '#writing', label: 'Writing' },
+  { href: '#oss', label: 'Open source' },
+  { href: '#talks', label: 'Talks' },
+  { href: '#career', label: 'Career' },
+];
+
+const tagline = `Research Scientist at <a href="${orgs.meta}">Meta Superintelligence Labs</a> — building <strong>real-time speech-to-speech</strong> and audio-text LLM systems.`;
+
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const latestPost = posts[0];
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC' })
+    .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
+
+/** Render an author list, emphasising Jeff's own name (wrapped in braces). */
+const renderAuthors = (s: string) =>
+  s.replace(/\{([^}]+)\}/g, '<span class="me">$1</span>');
+---
+
+<Base nav="home">
+  <div class="shell">
+    <Sidebar sections={sections} tagline={tagline} />
+
+    <main id="main">
+      {/* ─────────────────────────── about ─────────────────────────── */}
+      <section class="sec about" id="about">
+        <div class="sec-eyebrow">ABOUT</div>
+
+        <p>
+          I'm a Research Scientist at <a href={orgs.meta}>Meta Superintelligence Labs</a>, working on
+          <strong>real-time speech-to-speech</strong> and audio-text LLMs. I lead user-memory
+          post-training — data curation and evaluation — and co-lead the infra integration that lets a
+          voice model remember you and personalize its responses mid-stream.
+        </p>
+
+        <p>
+          Before that I was at WaveForms AI (<a href={orgs.waveformsNews}>acquired by Meta</a>), where
+          I architected the initial <strong>audio-text MoE</strong> stack for real-time voice and ran
+          mid-training across 256 GPUs. At <a href={orgs.deepmind}>Google DeepMind</a> I built
+          <strong>Audio-Visual Gemma</strong>, a 3B/10B/28B foundation-model family for natively
+          visually-coherent speech generation, trained on 512 TPUs over 285k hours of spoken captions.
+        </p>
+
+        <p>
+          I finished my Ph.D. at <a href={orgs.mit}>MIT</a> in 2025, advised by
+          <a href={people.glass}>James Glass</a> in the
+          <a href={orgs.sls}>Spoken Language Systems</a> group at CSAIL. My thesis was on language
+          modeling from <strong>visually grounded speech</strong>; along the way I worked on sparse
+          subnetworks in self-supervised speech (<a href="#publications">PARP</a>) and co-authored
+          <a href="#publications">SUPERB</a>. Earlier, I studied electrical engineering at
+          <a href={orgs.jhu}>Johns Hopkins</a> with <a href={people.dehak}>Najim Dehak</a> and
+          <a href={people.villalba}>Jesús Villalba</a>, on speaker recognition and anti-spoofing.
+        </p>
+
+        <div class="topics">
+          <span>Speech &amp; Audio LLMs</span>
+          <span>Real-Time Voice Agents</span>
+          <span>Self-Supervised Learning</span>
+          <span>Multimodal Grounding</span>
+        </div>
+
+        <GitHubGraph />
+      </section>
+
+      {/* ──────────────────────────── news ─────────────────────────── */}
+      <section class="sec" id="news">
+        <div class="sec-eyebrow">01 / NEWS</div>
+        <h2 class="sec-title">Recent updates</h2>
+        <ul class="news">
+          {
+            news.map((n) => (
+              <li>
+                <span class="d">{n.date}</span>
+                <span class="body" set:html={n.html} />
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      {/* ───────────────────────── publications ────────────────────── */}
+      <section class="sec" id="publications">
+        <div class="sec-eyebrow">02 / RESEARCH</div>
+        <h2 class="sec-title">Selected publications</h2>
+
+        <div class="scholar-stats">
+          <div>
+            <span class="n">{site.scholarStats.citations}</span>
+            <span class="l">Citations</span>
+          </div>
+          <div>
+            <span class="n">{site.scholarStats.hIndex}</span>
+            <span class="l">h-index</span>
+          </div>
+          <div>
+            <span class="n">{site.scholarStats.i10}</span>
+            <span class="l">i10-index</span>
+          </div>
+          <div>
+            <span class="n">{site.scholarStats.asOf}</span>
+            <span class="l">As of</span>
+          </div>
+        </div>
+
+        <ul class="pubs">
+          {
+            selectedPublications.map((p) => (
+              <li>
+                <div class="pub-title">{p.title}</div>
+                <span class="pub-authors" set:html={renderAuthors(p.authors)} />
+                <div class="pub-meta">
+                  <a class="venue-badge" href={p.page ?? p.arxiv ?? site.links.scholar}>
+                    {p.venue} {p.year}
+                  </a>
+                  {p.honor && <span class="honor">{p.honor}</span>}
+                  <span class="pub-links">
+                    {p.arxiv && (
+                      <a href={p.arxiv}>
+                        <Icon name="arxiv" size={12} /> arxiv
+                      </a>
+                    )}
+                    {p.code && (
+                      <a href={p.code}>
+                        <Icon name="code" size={12} /> code
+                      </a>
+                    )}
+                    {p.page && (
+                      <a href={p.page}>
+                        <Icon name="link" size={12} /> page
+                      </a>
+                    )}
+                  </span>
+                  {p.citations && <span class="pub-cites">{p.citations.toLocaleString('en-US')} cites</span>}
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="sec-more">
+          <a href={site.links.scholar}>Full publication list on Google Scholar →</a>
+        </div>
+      </section>
+
+      {/* ─────────────────────────── writing ───────────────────────── */}
+      <section class="sec" id="writing">
+        <div class="sec-eyebrow">03 / WRITING</div>
+        <h2 class="sec-title">Blog</h2>
+
+        {
+          latestPost ? (
+            <article class="post-card">
+              <div class="d">{fmtDate(latestPost.data.date)}</div>
+              <h3>
+                <a href={`/blog/${latestPost.id}/`}>{latestPost.data.title}</a>
+              </h3>
+              <p>{latestPost.data.description}</p>
+              {latestPost.data.tags && latestPost.data.tags.length > 0 && (
+                <div class="tags">
+                  {latestPost.data.tags.map((t: string) => (
+                    <span>{t}</span>
+                  ))}
+                </div>
+              )}
+            </article>
+          ) : (
+            <p style="color: var(--fg-2); font-size: 0.92rem;">
+              Notes on speech, audio LLMs, and building real-time voice systems — coming soon. Some
+              earlier writing from my JHU years is <a href="/blog/">archived here</a>.
+            </p>
+          )
+        }
+
+        <div class="sec-more">
+          <a href="/blog/">All posts →</a>
+        </div>
+      </section>
+
+      {/* ───────────────────────── open source ─────────────────────── */}
+      <section class="sec" id="oss">
+        <div class="sec-eyebrow">04 / OPEN SOURCE</div>
+        <h2 class="sec-title">Open source</h2>
+        <ul class="oss">
+          {
+            openSource.map((o) => (
+              <li>
+                <div class="row1">
+                  <a class="name plain-link" href={o.url}>
+                    {o.name}
+                  </a>
+                  {o.stars != null && o.stars > 0 && (
+                    <span class="stars">
+                      <Icon name="star" size={10} /> {o.stars.toLocaleString('en-US')}
+                    </span>
+                  )}
+                  <span class={o.hot ? 'role hot' : 'role'}>{o.role}</span>
+                  <span class="yr">{o.year}</span>
+                </div>
+                <p class="blurb" set:html={o.blurb} />
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      {/* ──────────────────────────── talks ────────────────────────── */}
+      <section class="sec" id="talks">
+        <div class="sec-eyebrow">05 / TALKS</div>
+        <h2 class="sec-title">Invited talks</h2>
+        <ul>
+          {
+            talks.map((t) => (
+              <li class="talk">
+                <span class="d">{t.date}</span>
+                <span>
+                  <span class="t">{t.title}</span>
+                  <span class="v">
+                    {' — '}
+                    {t.venueUrl ? <a href={t.venueUrl}>{t.venue}</a> : t.venue}
+                  </span>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      {/* ─────────────────────────── career ────────────────────────── */}
+      <section class="sec" id="career">
+        <div class="sec-eyebrow">06 / CAREER</div>
+        <h2 class="sec-title">Experience &amp; education</h2>
+
+        <div class="cols">
+          <div class="col">
+            <h3 class="col-title">Experience</h3>
+            <ol class="tl">
+              {
+                experience.map((e) => (
+                  <li class={e.current ? 'tl-item current' : 'tl-item'}>
+                    <div class="role">{e.role}</div>
+                    <div class="org">
+                      {e.orgUrl ? <a href={e.orgUrl}>{e.org}</a> : e.org}
+                      {e.loc && <span class="loc"> · {e.loc}</span>}
+                    </div>
+                    <div class="period">{e.period}</div>
+                    {e.desc && <p class="desc" set:html={e.desc} />}
+                    {e.points && (
+                      <ul class="pts">
+                        {e.points.map((p) => (
+                          <li set:html={p} />
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))
+              }
+            </ol>
+            <p class="tl-more">
+              <strong>{earlierRoles.label}:</strong> <span set:html={earlierRoles.html} />
+            </p>
+          </div>
+
+          <div class="col">
+            <h3 class="col-title">Education</h3>
+            <ol class="tl">
+              {
+                education.map((e) => (
+                  <li class="tl-item">
+                    <div class="role">{e.role}</div>
+                    <div class="org">
+                      {e.orgUrl ? <a href={e.orgUrl}>{e.org}</a> : e.org}
+                      {e.loc && <span class="loc"> · {e.loc}</span>}
+                    </div>
+                    <div class="period">{e.period}</div>
+                    {e.advisors && (
+                      <div class="adv">
+                        {e.advisorLabel}{' '}
+                        {e.advisors.map((a, i) => (
+                          <>
+                            {i > 0 && ', '}
+                            {a.url ? <a href={a.url}>{a.name}</a> : a.name}
+                          </>
+                        ))}
+                      </div>
+                    )}
+                    {e.points && (
+                      <ul class="pts">
+                        {e.points.map((p) => (
+                          <li set:html={p} />
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))
+              }
+            </ol>
+
+            <h3 class="col-title" style="margin-top:1.6rem">Service</h3>
+            <p class="tl-more" style="padding-left:0">
+              <strong>Program committees:</strong> {service.committees}
+              <br />
+              <strong>Reviewing:</strong> {service.reviewing}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        © {new Date().getFullYear()} Cheng-I Jeff Lai ·
+        <a href={site.links.github}>GitHub</a> ·
+        <a href={site.links.scholar}>Scholar</a> ·
+        <a href="/rss.xml">RSS</a>
+      </footer>
+    </main>
+  </div>
+</Base>
