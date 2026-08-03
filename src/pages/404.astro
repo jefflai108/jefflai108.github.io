@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+
+<Base title={`Not found — ${site.name}`} description="That page doesn't exist.">
+  <div class="shell" style="grid-template-columns: 1fr;">
+    <main id="main" style="max-width: 44rem; margin: 0 auto; width: 100%;">
+      <section class="sec">
+        <div class="sec-eyebrow">404</div>
+        <h1 class="sec-title">That page isn't here</h1>
+        <p style="color: var(--fg-2);">
+          This site was rebuilt in 2026, so a few older URLs no longer resolve. Try the
+          <a href="/">homepage</a> or the <a href="/blog/">blog</a> — or find my papers on
+          <a href={site.links.scholar}>Google Scholar</a> and my code on
+          <a href={site.links.github}>GitHub</a>.
+        </p>
+      </section>
+
+      <footer class="site-footer">
+        © {new Date().getFullYear()} Cheng-I Jeff Lai ·
+        <a href="/">Home</a> ·
+        <a href={site.links.github}>GitHub</a>
+      </footer>
+    </main>
+  </div>
+</Base>

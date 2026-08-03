@@ -30,7 +30,7 @@
   --highlight: #a8452c;
   --grid: color-mix(in srgb, var(--accent) 8%, transparent);
 
-  --gh-0: #ebedf0;
+  --gh-0: #e6e8e2;
   --gh-1: #a6dced;
   --gh-2: #58b4d1;
   --gh-3: #2b8bab;
@@ -47,16 +47,20 @@
   --fg-2: #b6bac6;
   --fg-3: #8189a0;
   --rule: #232733;
-  --rule-2: #232733;
+  /* Sits between --bg and --rule so list hairlines recede against structural
+     dividers, the same two-tier relationship the light theme has. */
+  --rule-2: #1c202a;
   --accent: #7cc4e0;
   --accent-2: #9ad3ea;
   --badge-bg: #161922;
   --highlight: #e0917b;
 
-  --gh-0: #161b22;
-  --gh-1: #0d3d4d;
-  --gh-2: #145b73;
-  --gh-3: #2b8bab;
+  /* Level 1 was only a 1.5:1 step off the empty cell, so single-contribution
+     days read as blank. Widened the bottom of the ramp. */
+  --gh-0: #1b2029;
+  --gh-1: #14485c;
+  --gh-2: #1e6d8a;
+  --gh-3: #2f9bc0;
   --gh-4: #58c1e0;
 }
 
@@ -429,9 +433,17 @@ ol {
     grid-template-columns: 15rem 1fr;
   }
   .side {
+    align-self: start;
+  }
+}
+
+/* Only pin the rail when there is room for all of it. The content is ~710px
+   tall, so on a 720px-high window a sticky rail would grow its own inner
+   scrollbar; below that it simply scrolls away with the page. */
+@media (min-width: 860px) and (min-height: 820px) {
+  .side {
     position: sticky;
     top: 3.2rem;
-    align-self: start;
     max-height: calc(100vh - 4rem);
     overflow-y: auto;
     scrollbar-width: thin;
@@ -443,7 +455,7 @@ ol {
    ========================================================================= */
 
 .sec {
-  padding-top: 2.4rem;
+  padding-top: 3rem;
 }
 
 .sec.about {
@@ -473,8 +485,18 @@ ol {
 }
 
 .about p {
+  /* ~74 characters at 15.5px Inter. Unconstrained, the 755px column ran to 97
+     characters a line, well past a comfortable measure. */
+  max-width: 68ch;
   margin: 0 0 0.75rem;
   color: var(--fg-2);
+}
+
+/* Lead paragraph — gives the opening the weight the reference gives its own. */
+.about p:first-of-type {
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: var(--fg);
 }
 
 .about p strong {
@@ -628,28 +650,46 @@ ol {
   vertical-align: middle;
 }
 
+/* Not right-aligned: only some papers carry a count, so margin-left:auto left
+   a ragged 380–460px gap on the rows that had one and nothing on the rest. */
 .pub-cites {
-  margin-left: auto;
   font-family: var(--mono);
   font-size: 0.7rem;
   color: var(--fg-3);
   white-space: nowrap;
 }
 
+.pub-cites::before {
+  content: '·';
+  margin-right: 0.5rem;
+  color: var(--rule);
+}
+
+/* A masthead rule for the list rather than a card — as a bordered box it left
+   half its width as framed emptiness, and it was the only card on the page
+   besides .post-card. */
 .scholar-stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.4rem;
-  margin-bottom: 1.1rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--rule);
-  border-radius: 6px;
-  background: var(--card);
+  align-items: baseline;
+  gap: 0.4rem 2.2rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--rule);
 }
 
 .scholar-stats div {
   display: flex;
-  flex-direction: column;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+/* Provenance, not a fourth statistic. */
+.scholar-stats .asof {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--fg-3);
 }
 
 .scholar-stats .n {
@@ -665,6 +705,13 @@ ol {
   font-size: 0.66rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.pub-legend {
+  margin: 0.8rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.68rem;
   color: var(--fg-3);
 }
 

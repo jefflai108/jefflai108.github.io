@@ -18,7 +18,6 @@ export const experience: TimelineItem[] = [
     role: 'Research Scientist',
     org: 'Meta Superintelligence Labs',
     orgUrl: orgs.meta,
-    loc: 'Menlo Park',
     period: '2025.08 — Present',
     current: true,
     points: [

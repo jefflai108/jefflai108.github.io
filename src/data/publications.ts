@@ -24,7 +24,7 @@ export const publications: Publication[] = [
   {
     key: 'instruct-asr',
     title: 'Instruction-Following Speech Recognition',
-    authors: '{Cheng-I Jeff Lai}, Zhiyun Lu, Liangliang Cao, Ruoming Pang',
+    authors: '{Cheng-I Jeff Lai}*, Zhiyun Lu, Liangliang Cao, Ruoming Pang',
     venue: 'NeurIPS Workshop',
     year: 2024,
     arxiv: 'https://arxiv.org/abs/2309.09843',
@@ -146,10 +146,10 @@ export const publications: Publication[] = [
     key: 'parp',
     title: 'PARP: Prune, Adjust and Re-Prune for Self-Supervised Speech Recognition',
     authors:
-      '{Cheng-I Jeff Lai}, Yang Zhang, Alexander H. Liu, Shiyu Chang, Yi-Lun Liao, Yung-Sung Chuang, Kaizhi Qian, Sameer Khurana, David Cox, James Glass',
+      '{Cheng-I Jeff Lai}, Yang Zhang*, Alexander H. Liu*, Shiyu Chang*, Yi-Lun Liao, Yung-Sung Chuang, Kaizhi Qian, Sameer Khurana, David Cox, James Glass',
     venue: 'NeurIPS',
     year: 2021,
-    honor: 'Spotlight (top 3%)',
+    honor: 'Spotlight',
     citations: 100,
     arxiv: 'https://arxiv.org/abs/2106.05933',
     code: 'https://github.com/jefflai108/PARP-wav2vec-PyTorch',

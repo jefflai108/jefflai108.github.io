@@ -5,6 +5,26 @@ Personal homepage — [jefflai108.github.io](https://jefflai108.github.io).
 Astro 5, no UI framework, no CSS framework. Static output deployed to GitHub Pages by
 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) on every push to `master`.
 
+## Deploying
+
+The Pages source must be **GitHub Actions**, not a branch. This repo served from `master:/`
+until the 2026 rebuild, and the switch is a one-time manual step:
+
+```bash
+gh api --method PUT repos/jefflai108/jefflai108.github.io/pages -f build_type=workflow
+```
+
+or Settings → Pages → Source → "GitHub Actions". Verify with:
+
+```bash
+gh api repos/jefflai108/jefflai108.github.io/pages --jq .build_type
+```
+
+Do this **before** the first push. The workflow's `actions/configure-pages` step will not do
+it for you — its `enablement` option only fires when no Pages site exists at all, and this
+repo already has one, so it is a no-op here. Until the source is switched, `deploy-pages`
+fails and Pages keeps trying to serve the repo root, which no longer has an `index.html`.
+
 ## Running it
 
 ```bash

@@ -24,8 +24,15 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: npm
+
+      # NOTE: this step does NOT switch the Pages source. `enablement: true`
+      # only fires when no Pages site exists at all — on a repo already serving
+      # from a branch it is a silent no-op. The source must be set to
+      # "GitHub Actions" once, out of band; see README → Deploying.
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
 
       - run: npm ci
 

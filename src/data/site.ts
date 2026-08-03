@@ -4,7 +4,6 @@ export const site = {
   role: 'Research Scientist',
   org: 'Meta Superintelligence Labs',
   orgUrl: 'https://ai.meta.com/',
-  location: 'Mountain View, CA',
   email: 'jefflai108@gmail.com',
   url: 'https://jefflai108.github.io',
   avatar: '/images/jeff-avatar.jpg',

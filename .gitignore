@@ -12,3 +12,6 @@ node_modules/
 *.log
 .env
 .env.production
+
+# local editor/tooling state
+.claude/

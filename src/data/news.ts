@@ -50,7 +50,7 @@ export const news: NewsItem[] = [
   },
   {
     date: '2021.10',
-    html: `<a class="venue-badge" href="https://arxiv.org/abs/2106.05933">NeurIPS 2021</a> <strong>PARP</strong> accepted as a <span class="honor">Spotlight</span> (top 3%).`,
+    html: `<a class="venue-badge" href="https://arxiv.org/abs/2106.05933">NeurIPS 2021</a> <strong>PARP</strong> accepted as a <span class="honor">Spotlight</span>.`,
   },
   {
     date: '2021.08',
