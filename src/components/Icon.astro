@@ -18,6 +18,13 @@ interface Props {
 }
 
 const { name, size = 15, class: klass = '' } = Astro.props;
+
+// The theme toggle renders both icons and shows one per theme, so sun/moon
+// need their marker class. Build the full class here — a `class` inside the
+// spread object below would win over an explicit `class=` attribute.
+const themeClass = name === 'sun' ? 'icon-sun' : name === 'moon' ? 'icon-moon' : '';
+const cls = [themeClass, klass].filter(Boolean).join(' ');
+
 const common = {
   width: size,
   height: size,
@@ -28,7 +35,7 @@ const common = {
   'stroke-linecap': 'round' as const,
   'stroke-linejoin': 'round' as const,
   'aria-hidden': 'true',
-  class: klass,
+  class: cls,
 };
 const filled = {
   width: size,
@@ -36,7 +43,7 @@ const filled = {
   viewBox: '0 0 24 24',
   fill: 'currentColor',
   'aria-hidden': 'true',
-  class: klass,
+  class: cls,
 };
 ---
 
@@ -87,7 +94,7 @@ const filled = {
 }
 {
   name === 'sun' && (
-    <svg {...common} class={`icon-sun ${klass}`}>
+    <svg {...common}>
       <circle cx="12" cy="12" r="4" />
       <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
     </svg>
@@ -95,7 +102,7 @@ const filled = {
 }
 {
   name === 'moon' && (
-    <svg {...common} class={`icon-moon ${klass}`}>
+    <svg {...common}>
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
     </svg>
   )

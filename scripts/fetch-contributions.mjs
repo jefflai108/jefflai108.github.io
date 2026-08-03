@@ -41,11 +41,15 @@ const QUERY = `
 `;
 
 function bail(why) {
+  // Never fail the build over a decorative graph — but say so loudly, because
+  // a silently stale snapshot looks identical to a fresh one on the page.
   if (existsSync(OUT)) {
-    console.log(`[contributions] ${why} — keeping existing snapshot`);
+    console.warn(`[contributions] WARNING: ${why}`);
+    console.warn('[contributions] Falling back to the committed snapshot — the graph may be stale.');
+    console.warn("[contributions] Refresh locally with: npm run contributions (uses your `gh auth token`).");
     process.exit(0);
   }
-  console.log(`[contributions] ${why} — writing empty snapshot`);
+  console.warn(`[contributions] WARNING: ${why} — writing an empty snapshot; the graph will not render.`);
   writeFileSync(OUT, JSON.stringify({ total: 0, weeks: [], fetchedAt: null }, null, 2));
   process.exit(0);
 }

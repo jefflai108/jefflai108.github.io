@@ -28,12 +28,15 @@ juggling. Edit, commit, push; the site rebuilds itself.
 | `src/data/oss.ts` | Open-source projects and their star counts |
 | `src/data/writing.ts` | The Medium archive listed on `/blog/` |
 
-Two things are deliberately parameterised in `site.ts`:
+Three things are deliberately parameterised in `site.ts`:
 
 - **`scholarStats`** is a manual snapshot with an `asOf` date. Google Scholar has no public API,
   so refresh it by hand every so often and bump `asOf`.
 - **`orgs`** holds every outbound URL in one place. `waveforms.ai` is absent on purpose — the
   domain stopped resolving after the Meta acquisition, so the acquisition coverage is linked instead.
+- **`cv`** is empty, so no CV link renders. The résumé PDF carries a personal phone number in its
+  contact block, and everything under `public/` is served to the open internet. To publish one,
+  put a phone-free copy at `public/data/cv.pdf` and set `cv: '/data/cv.pdf'`.
 
 ## Writing a blog post
 
@@ -49,7 +52,12 @@ page is built.
 `scripts/fetch-contributions.mjs` pulls the last year of contributions from the GitHub GraphQL
 API into `src/data/contributions.json`, and runs automatically as a `prebuild` step. Locally it
 uses your `gh auth token`; in CI it uses the workflow's `GITHUB_TOKEN`. If the fetch fails for
-any reason it keeps the committed snapshot rather than breaking the build.
+any reason it keeps the committed snapshot rather than breaking the build, and prints a loud
+warning to the build log.
+
+CI's `GITHUB_TOKEN` is a repository-scoped token, and `contributionsCollection` is a *user*-level
+GraphQL field — so the CI refresh may not succeed. If the build log shows the fallback warning,
+the reliable path is to refresh locally and commit the snapshot.
 
 Refresh it by hand with:
 

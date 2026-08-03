@@ -8,7 +8,14 @@ export const site = {
   email: 'jefflai108@gmail.com',
   url: 'https://jefflai108.github.io',
   avatar: '/images/jeff-avatar.jpg',
-  cv: '/data/cheng-i-jeff-lai-cv.pdf',
+  /**
+   * Empty on purpose — the sidebar CV link only renders when this is set.
+   *
+   * The résumé PDF carries a personal phone number in its contact block, and
+   * anything under public/ is served to the open internet. To publish a CV,
+   * drop a phone-free copy at public/data/cv.pdf and set this to '/data/cv.pdf'.
+   */
+  cv: '',
   links: {
     scholar: 'https://scholar.google.com/citations?user=mV4mRm0AAAAJ&hl=en',
     github: 'https://github.com/jefflai108',

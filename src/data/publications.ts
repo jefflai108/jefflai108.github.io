@@ -46,7 +46,9 @@ export const publications: Publication[] = [
   },
   {
     key: 'av-nsl',
-    title: 'Textless Phrase Structure Induction from Visually-Grounded Speech',
+    // Published at ASRU under this title. An earlier submission circulated as
+    // "Textless Phrase Structure Induction from Visually-Grounded Speech".
+    title: 'Audio-Visual Neural Syntax Acquisition',
     authors:
       '{Cheng-I Jeff Lai}*, Freda Shi*, Puyuan Peng*, Yoon Kim, Kevin Gimpel, Shiyu Chang, Yung-Sung Chuang, Saurabhchand Bhati, David Cox, David Harwath, Yang Zhang, Karen Livescu, James Glass',
     venue: 'ASRU',

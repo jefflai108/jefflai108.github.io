@@ -30,7 +30,7 @@ export const news: NewsItem[] = [
   },
   {
     date: '2023.10',
-    html: `<a class="venue-badge" href="https://arxiv.org/abs/2310.07654">ASRU 2023</a> <strong>Textless Phrase Structure Induction from Visually-Grounded Speech</strong> accepted.`,
+    html: `<a class="venue-badge" href="https://arxiv.org/abs/2310.07654">ASRU 2023</a> <strong>Audio-Visual Neural Syntax Acquisition</strong> accepted — grammar induction from speech and images, with no text or ASR in the loop.`,
   },
   {
     date: '2023.05',

@@ -19,7 +19,9 @@
   --card: #ffffff;
   --fg: #1f252b;
   --fg-2: #4a535e;
-  --fg-3: #7b838e;
+  /* 5.0:1 on --bg, 4.7:1 on --bg-2, 5.3:1 on --card. Every use of --fg-3 is
+     9–12px text, which gets no large-text exemption, so it must clear 4.5:1. */
+  --fg-3: #636c78;
   --rule: #dee1db;
   --rule-2: #e8eae4;
   --accent: #14607f;
@@ -106,6 +108,32 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Links sitting inside running prose need a non-colour affordance (WCAG 1.4.1).
+   Navigation, badges and list-row links are structurally obvious, so they stay
+   underline-free. */
+.about a,
+.prose a,
+.news .body a:not(.venue-badge),
+.post-card p a,
+.tl-item a,
+.oss .blurb a,
+.sec > p a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.about a:hover,
+.prose a:hover,
+.news .body a:not(.venue-badge):hover,
+.post-card p a:hover,
+.tl-item a:hover,
+.oss .blurb a:hover,
+.sec > p a:hover {
+  text-decoration-color: currentColor;
+}
+
 a:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--accent);
@@ -146,6 +174,12 @@ ol {
 
 .skip-link:focus {
   left: 0;
+}
+
+/* --accent inverts to a light blue in dark mode, so white-on-accent drops to
+   1.9:1. Same treatment as .venue-badge. */
+:root.dark .skip-link {
+  color: #0f1115;
 }
 
 .visually-hidden {
@@ -223,6 +257,30 @@ ol {
 .toggle:hover {
   color: var(--accent);
   border-color: var(--accent);
+}
+
+/* The header is a single non-wrapping row; below ~620px it needs to give
+   ground or it forces the whole page to scroll sideways. */
+@media (max-width: 620px) {
+  .site-header .inner {
+    gap: 1rem;
+    padding: 0.55rem 1rem;
+  }
+  .site-header .brand {
+    font-size: 0.95rem;
+  }
+  .site-header nav {
+    gap: 0.85rem;
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 460px) {
+  /* The full name sits directly below in the sidebar — drop the duplicate
+     rather than truncate it. */
+  .site-header .brand {
+    display: none;
+  }
 }
 
 .toggle .icon-sun {
@@ -930,7 +988,10 @@ ol {
 
 .gh-canvas svg {
   display: block;
-  max-width: 100%;
+  width: 100%;
+  /* Without a floor the graph scales down to ~5px cells on a phone, which is
+     unreadable. Below this the container scrolls instead. */
+  min-width: 640px;
   height: auto;
 }
 
