@@ -77,7 +77,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).toString()
           { '@type': 'CollegeOrUniversity', name: 'Massachusetts Institute of Technology' },
           { '@type': 'CollegeOrUniversity', name: 'Johns Hopkins University' },
         ],
-        sameAs: [site.links.scholar, site.links.github, site.links.linkedin],
+        sameAs: [site.links.scholar, site.links.github, site.links.linkedin].filter(Boolean),
       })}
     />
   </head>

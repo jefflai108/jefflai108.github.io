@@ -44,11 +44,16 @@ const { sections = [], tagline } = Astro.props;
         <Icon name="github" /><span>GitHub</span>
       </a>
     </li>
-    <li>
-      <a class="plain-link" href={site.links.linkedin}>
-        <Icon name="linkedin" /><span>LinkedIn</span>
-      </a>
-    </li>
+    {
+      site.links.linkedin && (
+        <li>
+          <a class="plain-link" href={site.links.linkedin}>
+            <Icon name="linkedin" />
+            <span>LinkedIn</span>
+          </a>
+        </li>
+      )
+    }
     {
       site.cv && (
         <li>

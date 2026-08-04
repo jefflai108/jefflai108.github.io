@@ -18,7 +18,14 @@ export const site = {
   links: {
     scholar: 'https://scholar.google.com/citations?user=mV4mRm0AAAAJ&hl=en',
     github: 'https://github.com/jefflai108',
-    linkedin: 'https://www.linkedin.com/in/jefflai108/',
+    /**
+     * Empty on purpose — the sidebar link only renders when this is set.
+     *
+     * linkedin.com/in/jefflai108/ returns a hard 404 ("Profile Not Found") to
+     * logged-out visitors, verified against a control profile that resolves.
+     * Set this to the working vanity URL to bring the link back.
+     */
+    linkedin: '',
     medium: 'https://medium.com/@jefflai108',
   },
   scholarStats: {
