@@ -612,13 +612,6 @@ ol {
   color: var(--fg-2);
 }
 
-/* Lead paragraph — gives the opening the weight the reference gives its own. */
-.about p:first-of-type {
-  font-size: 1.02rem;
-  line-height: 1.65;
-  color: var(--fg);
-}
-
 /* ============================================================================
    Badges
    ========================================================================= */
