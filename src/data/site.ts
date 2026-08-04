@@ -66,6 +66,10 @@ export const orgs = {
 
 export const people = {
   glass: 'https://people.csail.mit.edu/jrg/',
+  // JHU faculty pages sit behind Cloudflare and answer 403 to bots; they are
+  // fine in a browser.
   dehak: 'https://engineering.jhu.edu/faculty/najim-dehak/',
   villalba: 'https://engineering.jhu.edu/faculty/jesus-villalba/',
+  king: 'https://homepages.inf.ed.ac.uk/simonk/',
+  yamagishi: 'https://yamagishilab.jp/',
 } as const;

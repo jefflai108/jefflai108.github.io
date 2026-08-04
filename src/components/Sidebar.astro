@@ -23,9 +23,10 @@ const { sections = [], tagline } = Astro.props;
     alt={`Portrait of ${site.name}`}
   />
 
-  {/* To show your name in Chinese under the English one (as the reference site
-      does), add: <span class="given">漢字</span> with your actual characters. */}
-  <h1 class="side-name">Cheng-I Jeff Lai</h1>
+  <h1 class="side-name">
+    Cheng-I Jeff Lai
+    <span class="given" lang="zh-Hant">賴承逸</span>
+  </h1>
 
   {tagline && <p class="side-role" set:html={tagline} />}
 

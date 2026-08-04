@@ -44,9 +44,19 @@ juggling. Edit, commit, push; the site rebuilds itself.
 | `src/data/site.ts` | Name, role, email, social links, Scholar stats, and every outbound org/person URL |
 | `src/data/news.ts` | The "Recent updates" feed — newest first, one line of HTML each |
 | `src/data/publications.ts` | Full publication list. `selected: true` puts a paper on the homepage |
-| `src/data/career.ts` | Experience and education timelines, talks, service |
-| `src/data/oss.ts` | Open-source projects and their star counts |
-| `src/data/writing.ts` | The Medium archive listed on `/blog/` |
+| `src/data/work.ts` | The "Recent work" showcase — new projects go here |
+
+Three data files are **kept but no longer rendered**, after the page was trimmed to
+About → Recent work → Publications → Writing. They are intact if a section comes back:
+
+| File | Was |
+| --- | --- |
+| `src/data/career.ts` | Experience/education timelines, talks, service |
+| `src/data/oss.ts` | Open-source projects and star counts |
+| `src/data/writing.ts` | The Medium archive on `/blog/` |
+
+`publications.ts` still holds all 23 papers; `SELECTED` at the bottom of that file picks the
+two shown on the homepage.
 
 Three things are deliberately parameterised in `site.ts`:
 

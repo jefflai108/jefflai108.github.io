@@ -655,9 +655,15 @@ ol {
   color: #0f1115;
 }
 
+/* Sits in the publication meta row beside the venue badge (0.68rem) and the
+   link/citation chips (0.7-0.72rem). Left to inherit, it came out at 0.92rem
+   and shouted over its neighbours. */
 .honor {
-  color: var(--highlight);
+  font-family: var(--mono);
+  font-size: 0.72rem;
   font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--highlight);
 }
 
 .org-badge {

@@ -2,7 +2,6 @@
 import Base from '../../layouts/Base.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import { site } from '../../data/site';
-import { mediumArchive } from '../../data/writing';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog'))
@@ -56,29 +55,6 @@ const fmtDate = (d: Date) =>
         }
       </section>
 
-      <section class="sec" id="archive">
-        <div class="sec-eyebrow">ARCHIVE</div>
-        <h2 class="sec-title">Earlier writing</h2>
-        <p style="color: var(--fg-3); font-size: 0.88rem; margin-top: -0.6rem;">
-          From my JHU and early research years (2017–2019), on <a href={site.links.medium}>Medium</a>.
-        </p>
-        <ul class="news" style="margin-top: 0.9rem;">
-          {
-            mediumArchive.map((p) => (
-              <li>
-                <span class="d">{p.date.slice(0, 7).replace('-', '.')}</span>
-                <span class="body">
-                  <a href={p.url}>
-                    <strong>{p.title}</strong>
-                  </a>
-                  <br />
-                  {p.blurb}
-                </span>
-              </li>
-            ))
-          }
-        </ul>
-      </section>
 
       <footer class="site-footer">
         © {new Date().getFullYear()} Cheng-I Jeff Lai ·
