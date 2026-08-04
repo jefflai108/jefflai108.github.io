@@ -31,12 +31,8 @@ export const site = {
     linkedin: '',
     medium: 'https://medium.com/@jefflai108',
   },
-  scholarStats: {
-    citations: '3,600+',
-    hIndex: 18,
-    i10: 21,
-    asOf: 'Aug 2026',
-  },
+  // Scholar figures are NOT stored here — they're fetched at build time into
+  // src/data/scholar.json by scripts/fetch-scholar.mjs. See README.
 } as const;
 
 /**

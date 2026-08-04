@@ -30,8 +30,6 @@ const { sections = [], tagline } = Astro.props;
 
   {tagline && <p class="side-role" set:html={tagline} />}
 
-  <a class="side-org" href={site.orgUrl}>{site.org}</a>
-
   <ul class="side-links">
     <li>
       <a class="plain-link" href={`mailto:${site.email}`}>

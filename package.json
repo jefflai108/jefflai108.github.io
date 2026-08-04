@@ -5,9 +5,9 @@
   "private": true,
   "scripts": {
     "dev": "astro dev --port 4321",
-    "prebuild": "node scripts/fetch-contributions.mjs",
+    "prebuild": "npm run refresh",
     "build": "astro build",
-    "contributions": "node scripts/fetch-contributions.mjs",
+    "refresh": "node scripts/fetch-contributions.mjs && node scripts/fetch-scholar.mjs",
     "preview": "astro preview --port 4321",
     "astro": "astro"
   },

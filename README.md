@@ -102,6 +102,31 @@ for the frontmatter schema — it is a draft, so it stays invisible until you fl
 To list a post that lives elsewhere, add an `external:` URL to the frontmatter and no local
 page is built.
 
+## Things that keep themselves current
+
+Two numbers on the page would go stale if anyone had to remember to update
+them, so nobody does:
+
+| What | Source | Refreshed |
+| --- | --- | --- |
+| GitHub contribution graph | GitHub GraphQL API | every build |
+| Citations · h-index · i10-index | Google Scholar profile page | every build |
+
+Both run in `prebuild` (`npm run refresh`), and **the deploy workflow is on a
+weekly cron** (Mondays 06:00 UTC) so the site rebuilds itself even in a week
+with no commits. Nothing to run by hand.
+
+Both fetchers fail safe: if the source is unreachable they keep the committed
+snapshot, print a warning, and exit 0 — a bad network never breaks a deploy.
+The Scholar figures display the date they were actually fetched, so a stale
+snapshot reads as stale instead of passing off old numbers as current.
+
+One caveat worth knowing: Scholar has no API, so `fetch-scholar.mjs` parses the
+profile page, and Scholar sometimes serves datacenter IPs a CAPTCHA instead.
+The script detects that and keeps the old snapshot rather than parsing garbage.
+If the Actions log shows that warning repeatedly, run `npm run refresh` locally
+(residential IPs are not blocked) and commit the updated `src/data/scholar.json`.
+
 ## The GitHub contribution graph
 
 `scripts/fetch-contributions.mjs` pulls the last year of contributions from the GitHub GraphQL

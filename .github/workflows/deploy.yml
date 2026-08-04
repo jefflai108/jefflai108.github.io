@@ -3,7 +3,12 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [master]
-  # Lets you rebuild by hand — useful for refreshing the GitHub contribution graph.
+  # Rebuilds on its own so the GitHub contribution graph and the Google Scholar
+  # figures stay current without anyone pushing. Both are re-fetched by the
+  # `prebuild` step on every run. 06:00 UTC each Monday.
+  schedule:
+    - cron: '0 6 * * 1'
+  # And an on-demand rebuild from the Actions tab.
   workflow_dispatch:
 
 permissions:

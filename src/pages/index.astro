@@ -6,6 +6,7 @@ import Icon from '../components/Icon.astro';
 import { site, orgs, people } from '../data/site';
 import { recentWork } from '../data/work';
 import { selectedPublications } from '../data/publications';
+import scholar from '../data/scholar.json';
 
 import { getCollection } from 'astro:content';
 
@@ -17,6 +18,17 @@ const sections = [
 ];
 
 const tagline = site.tagline;
+
+// Refreshed on every build by scripts/fetch-scholar.mjs. Shows the date the
+// numbers were actually retrieved, so a blocked scrape reads as stale rather
+// than silently passing off old figures as current.
+const scholarAsOf = scholar.fetchedAt
+  ? new Date(scholar.fetchedAt + 'T00:00:00Z').toLocaleDateString('en-US', {
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'UTC',
+    })
+  : 'date unknown';
 
 const posts = (await getCollection('blog'))
   .filter((p) => !p.data.draft)
@@ -112,21 +124,25 @@ const renderAuthors = (s: string) =>
           </a>
         </div>
 
-        <div class="scholar-stats">
-          <div>
-            <span class="n">{site.scholarStats.citations}</span>
-            <span class="l">Citations</span>
-          </div>
-          <div>
-            <span class="n">{site.scholarStats.hIndex}</span>
-            <span class="l">h-index</span>
-          </div>
-          <div>
-            <span class="n">{site.scholarStats.i10}</span>
-            <span class="l">i10-index</span>
-          </div>
-          <span class="asof">Google Scholar, as of {site.scholarStats.asOf}</span>
-        </div>
+        {
+          scholar.citations && (
+            <div class="scholar-stats">
+              <div>
+                <span class="n">{scholar.citations.toLocaleString('en-US')}</span>
+                <span class="l">Citations</span>
+              </div>
+              <div>
+                <span class="n">{scholar.hIndex}</span>
+                <span class="l">h-index</span>
+              </div>
+              <div>
+                <span class="n">{scholar.i10}</span>
+                <span class="l">i10-index</span>
+              </div>
+              <span class="asof">Google Scholar, {scholarAsOf}</span>
+            </div>
+          )
+        }
 
         <ul class="pubs">
           {

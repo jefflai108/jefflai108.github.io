@@ -24,7 +24,7 @@ export const recentWork: WorkItem[] = [
     blurb:
       'A family of 3B/10B audio–visual models that generate audio tokens directly from images and short video — a SigLIP encoder for visual understanding, audio-token generation inside a Gemma backbone, pretrained on 285k hours of web-scale spoken captions. Transfers to Spoken Visual QA, video-to-speech generation, and audio-visual sound understanding.',
     date: '2025',
-    tags: ['Google DeepMind', 'Preprint'],
+    tags: ['Google DeepMind'],
     featured: true,
     links: [
       { label: 'project page', href: 'https://people.csail.mit.edu/clai24/avgemma/' },
