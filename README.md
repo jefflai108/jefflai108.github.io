@@ -54,9 +54,25 @@ Three things are deliberately parameterised in `site.ts`:
   so refresh it by hand every so often and bump `asOf`.
 - **`orgs`** holds every outbound URL in one place. `waveforms.ai` is absent on purpose — the
   domain stopped resolving after the Meta acquisition, so the acquisition coverage is linked instead.
-- **`cv`** is empty, so no CV link renders. The résumé PDF carries a personal phone number in its
-  contact block, and everything under `public/` is served to the open internet. To publish one,
-  put a phone-free copy at `public/data/cv.pdf` and set `cv: '/data/cv.pdf'`.
+- **`cv`** points at `public/data/cv.pdf`, which is **generated, not copied** — see below.
+
+## Regenerating the CV
+
+The private résumé carries a phone number in its contact block, and everything under `public/`
+is served to the open internet. [`scripts/build-cv.py`](scripts/build-cv.py) produces the public
+copy:
+
+```bash
+python3 scripts/build-cv.py ~/path/to/resume.pdf public/data/cv.pdf
+```
+
+It applies a real redaction — `apply_redactions()` rewrites the content stream, so the digits are
+gone from the text layer, not merely covered — then rebuilds the contact line so the removal
+doesn't leave a hole, re-attaching the email/LinkedIn/Scholar hyperlinks. It exits non-zero rather
+than write a file if a phone-shaped string survives, or if the rebuilt line stops extracting as
+selectable text (a CV that renders but doesn't extract is invisible to résumé parsers).
+
+Never drop a résumé PDF into `public/` by hand — route it through this script.
 
 ## Writing a blog post
 
