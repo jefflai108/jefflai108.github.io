@@ -322,12 +322,16 @@ ol {
 }
 
 .side-avatar {
-  width: 92px;
-  height: 92px;
+  /* Fills the 15rem rail rather than floating in it, capped so it can't
+     dominate once the sidebar stacks above the content on mobile. */
+  width: 100%;
+  max-width: 168px;
+  aspect-ratio: 1;
+  height: auto;
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid var(--rule);
-  margin-bottom: 1rem;
+  margin-bottom: 1.1rem;
   display: block;
 }
 
