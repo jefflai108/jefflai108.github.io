@@ -7,7 +7,7 @@ import { site, orgs, people } from '../data/site';
 import { recentWork } from '../data/work';
 import { selectedPublications } from '../data/publications';
 import { openSource } from '../data/oss';
-import { experience, education, earlierRoles, service } from '../data/career';
+
 import { getCollection } from 'astro:content';
 
 const sections = [
@@ -16,7 +16,6 @@ const sections = [
   { href: '#publications', label: 'Publications' },
   { href: '#writing', label: 'Writing' },
   { href: '#oss', label: 'Open source' },
-  { href: '#career', label: 'Career' },
 ];
 
 const tagline = site.tagline;
@@ -242,86 +241,6 @@ const renderAuthors = (s: string) =>
             ))
           }
         </ul>
-      </section>
-
-      {/* ─────────────────────────── career ────────────────────────── */}
-      <section class="sec" id="career">
-        <div class="sec-eyebrow">05 / CAREER</div>
-        <h2 class="sec-title">Experience &amp; education</h2>
-
-        <div class="cols">
-          <div class="col">
-            <h3 class="col-title">Experience</h3>
-            <ol class="tl">
-              {
-                experience.map((e) => (
-                  <li class={e.current ? 'tl-item current' : 'tl-item'}>
-                    <div class="role">{e.role}</div>
-                    <div class="org">
-                      {e.orgUrl ? <a href={e.orgUrl}>{e.org}</a> : e.org}
-                      {e.loc && <span class="loc"> · {e.loc}</span>}
-                    </div>
-                    <div class="period">{e.period}</div>
-                    {e.desc && <p class="desc" set:html={e.desc} />}
-                    {e.points && (
-                      <ul class="pts">
-                        {e.points.map((p) => (
-                          <li set:html={p} />
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                ))
-              }
-            </ol>
-            <p class="tl-more">
-              <strong>{earlierRoles.label}:</strong> <span set:html={earlierRoles.html} />
-            </p>
-          </div>
-
-          <div class="col">
-            <h3 class="col-title">Education</h3>
-            <ol class="tl">
-              {
-                education.map((e) => (
-                  <li class="tl-item">
-                    <div class="role">{e.role}</div>
-                    <div class="org">
-                      {e.orgUrl ? <a href={e.orgUrl}>{e.org}</a> : e.org}
-                      {e.loc && <span class="loc"> · {e.loc}</span>}
-                    </div>
-                    <div class="period">{e.period}</div>
-                    {e.advisors && (
-                      <div class="adv">
-                        {e.advisorLabel}{' '}
-                        {e.advisors.map((a, i) => (
-                          <>
-                            {i > 0 && ', '}
-                            {a.url ? <a href={a.url}>{a.name}</a> : a.name}
-                          </>
-                        ))}
-                      </div>
-                    )}
-                    {e.points && (
-                      <ul class="pts">
-                        {e.points.map((p) => (
-                          <li set:html={p} />
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                ))
-              }
-            </ol>
-
-            <h3 class="col-title" style="margin-top:1.6rem">Service</h3>
-            <p class="tl-more" style="padding-left:0">
-              <strong>Program committees:</strong> {service.committees}
-              <br />
-              <strong>Reviewing:</strong> {service.reviewing}
-            </p>
-          </div>
-        </div>
       </section>
 
       <footer class="site-footer">
