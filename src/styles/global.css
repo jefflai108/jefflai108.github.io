@@ -353,7 +353,7 @@ ol {
      platform. Kai is a lighter, brush-drawn style, so it wants a touch more
      size and tracking than the Ming serif did to hold its weight here. */
   font-family: 'LXGW WenKai TC', 'Kaiti TC', 'Kaiti SC', 'STKaiti', serif;
-  font-size: 0.66em;
+  font-size: 0.82em;
   font-weight: 400;
   letter-spacing: 0.16em;
   color: var(--fg-3);
