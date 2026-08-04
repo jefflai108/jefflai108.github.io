@@ -10,8 +10,6 @@ export interface Publication {
   arxiv?: string;
   code?: string;
   page?: string;
-  /** show on the homepage's selected list */
-  selected?: boolean;
 }
 
 /**
@@ -29,7 +27,6 @@ export const publications: Publication[] = [
     year: 2024,
     arxiv: 'https://arxiv.org/abs/2309.09843',
     code: 'https://github.com/jefflai108/speeech-instruction-following',
-    selected: true,
   },
   {
     key: 'superb-eval',
@@ -42,7 +39,6 @@ export const publications: Publication[] = [
     arxiv: 'https://arxiv.org/abs/2404.09385',
     code: 'https://github.com/s3prl/s3prl',
     page: 'https://superbbenchmark.github.io/',
-    selected: true,
   },
   {
     key: 'av-nsl',
@@ -56,7 +52,6 @@ export const publications: Publication[] = [
     // The arXiv preprint carries the earlier title "Audio-Visual Neural Syntax Acquisition".
     arxiv: 'https://arxiv.org/abs/2310.07654',
     code: 'https://github.com/jefflai108/AV-NSL',
-    selected: true,
   },
   {
     key: 's3-router',
@@ -80,7 +75,6 @@ export const publications: Publication[] = [
     citations: 22,
     arxiv: 'https://arxiv.org/abs/2204.02524',
     code: 'https://github.com/jefflai108/Unsupervised-TTS',
-    selected: true,
   },
   {
     key: 'contentvec',
@@ -93,7 +87,6 @@ export const publications: Publication[] = [
     citations: 207,
     arxiv: 'https://arxiv.org/abs/2204.09224',
     code: 'https://github.com/auspicious3000/contentvec',
-    selected: true,
   },
   {
     key: 'cm-discrete',
@@ -129,7 +122,6 @@ export const publications: Publication[] = [
     citations: 564,
     arxiv: 'https://arxiv.org/abs/2110.09784',
     code: 'https://github.com/YuanGongND/ssast',
-    selected: true,
   },
   {
     key: 'tts-pruning',
@@ -153,7 +145,6 @@ export const publications: Publication[] = [
     citations: 100,
     arxiv: 'https://arxiv.org/abs/2106.05933',
     code: 'https://github.com/jefflai108/PARP-wav2vec-PyTorch',
-    selected: true,
   },
   {
     key: 'superb',
@@ -166,7 +157,6 @@ export const publications: Publication[] = [
     arxiv: 'https://arxiv.org/abs/2105.01051',
     code: 'https://github.com/s3prl/s3prl',
     page: 'https://superbbenchmark.github.io/',
-    selected: true,
   },
   {
     key: 'semi-slu',
@@ -241,7 +231,6 @@ export const publications: Publication[] = [
     citations: 258,
     arxiv: 'https://arxiv.org/abs/1904.01120',
     code: 'https://github.com/jefflai108/ASSERT',
-    selected: true,
   },
   {
     key: 'attentive-filtering',
@@ -284,4 +273,15 @@ export const publications: Publication[] = [
   },
 ];
 
-export const selectedPublications = publications.filter((p) => p.selected);
+/**
+ * The homepage list, chosen explicitly and in this order rather than by year —
+ * these are the two first-author works the rest of the page refers back to.
+ * Everything else is one click away on Google Scholar.
+ */
+const SELECTED = ['av-nsl', 'parp'] as const;
+
+export const selectedPublications = SELECTED.map((key) => {
+  const pub = publications.find((p) => p.key === key);
+  if (!pub) throw new Error(`selectedPublications: no publication with key "${key}"`);
+  return pub;
+});
