@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { site } from '../data/site';
 import Icon from '../components/Icon.astro';
+import avatar from '../assets/jeff-avatar.jpg';
 
 interface Props {
   title?: string;
@@ -33,11 +34,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).toString()
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL(site.avatar, site.url).toString()} />
+    <meta property="og:image" content={new URL(avatar.src, site.url).toString()} />
     <meta name="twitter:card" content="summary" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href={site.avatar} />
+    <link rel="apple-touch-icon" href={avatar.src} />
     <link rel="alternate" type="application/rss+xml" title={site.name} href="/rss.xml" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -69,7 +70,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).toString()
         name: site.name,
         alternateName: 'Jeff Lai',
         url: site.url,
-        image: new URL(site.avatar, site.url).toString(),
+        image: new URL(avatar.src, site.url).toString(),
         email: `mailto:${site.email}`,
         jobTitle: site.role,
         worksFor: { '@type': 'Organization', name: site.org },

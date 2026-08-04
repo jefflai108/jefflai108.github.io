@@ -1,6 +1,9 @@
 ---
 import { site } from '../data/site';
 import Icon from '../components/Icon.astro';
+// Imported rather than referenced from public/ so the emitted filename carries
+// a content hash — swapping the photo can never be masked by a stale cache.
+import avatar from '../assets/jeff-avatar.jpg';
 
 interface Props {
   /** in-page section anchors to show; omitted on blog pages */
@@ -14,7 +17,7 @@ const { sections = [], tagline } = Astro.props;
 <aside class="side">
   <img
     class="side-avatar"
-    src={site.avatar}
+    src={avatar.src}
     width="92"
     height="92"
     alt={`Portrait of ${site.name}`}

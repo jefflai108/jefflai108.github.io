@@ -7,7 +7,7 @@ import { site, orgs, people } from '../data/site';
 import { recentWork } from '../data/work';
 import { selectedPublications } from '../data/publications';
 import { openSource } from '../data/oss';
-import { experience, education, earlierRoles, talks, service } from '../data/career';
+import { experience, education, earlierRoles, service } from '../data/career';
 import { getCollection } from 'astro:content';
 
 const sections = [
@@ -16,7 +16,6 @@ const sections = [
   { href: '#publications', label: 'Publications' },
   { href: '#writing', label: 'Writing' },
   { href: '#oss', label: 'Open source' },
-  { href: '#talks', label: 'Talks' },
   { href: '#career', label: 'Career' },
 ];
 
@@ -244,31 +243,9 @@ const renderAuthors = (s: string) =>
         </ul>
       </section>
 
-      {/* ──────────────────────────── talks ────────────────────────── */}
-      <section class="sec" id="talks">
-        <div class="sec-eyebrow">05 / TALKS</div>
-        <h2 class="sec-title">Talks &amp; guest lectures</h2>
-        <ul>
-          {
-            talks.map((t) => (
-              <li class="talk">
-                <span class="d">{t.date}</span>
-                <span>
-                  <span class="t">{t.title}</span>
-                  <span class="v">
-                    {' — '}
-                    {t.venueUrl ? <a href={t.venueUrl}>{t.venue}</a> : t.venue}
-                  </span>
-                </span>
-              </li>
-            ))
-          }
-        </ul>
-      </section>
-
       {/* ─────────────────────────── career ────────────────────────── */}
       <section class="sec" id="career">
-        <div class="sec-eyebrow">06 / CAREER</div>
+        <div class="sec-eyebrow">05 / CAREER</div>
         <h2 class="sec-title">Experience &amp; education</h2>
 
         <div class="cols">
