@@ -343,10 +343,14 @@ ol {
 
 .side-name .given {
   display: block;
-  margin-top: 0.15rem;
-  font-size: 0.62em;
+  margin-top: 0.2rem;
+  /* Source Serif 4 has no CJK glyphs, so without an explicit CJK serif the
+     browser substitutes the OS default — usually a sans, which sat oddly under
+     the serif English name and looked different on every platform. */
+  font-family: 'Noto Serif TC', 'Songti TC', 'Songti SC', serif;
+  font-size: 0.6em;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   color: var(--fg-3);
 }
 
