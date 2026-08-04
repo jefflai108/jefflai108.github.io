@@ -144,7 +144,6 @@ export const publications: Publication[] = [
     honor: 'Spotlight',
     citations: 100,
     arxiv: 'https://arxiv.org/abs/2106.05933',
-    code: 'https://github.com/jefflai108/PARP-wav2vec-PyTorch',
   },
   {
     key: 'superb',
