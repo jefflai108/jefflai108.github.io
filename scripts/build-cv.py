@@ -12,24 +12,92 @@ the document's own embedded Helvetica Neue, and their hyperlinks re-attached.
 
     python3 scripts/build-cv.py <source.pdf> [public/data/cv.pdf]
 """
+import os
 import re
+import shutil
+import subprocess
 import sys
+
+# --------------------------------------------------------------------------
+# Find an interpreter that can actually run this.
+#
+# `python3` is frequently an old conda base env. PyMuPDF dropped 3.7, so pip
+# resolves to a 1.x sdist and tries to build it, which needs swig, whose
+# pyproject.toml then chokes conda's ancient vendored TOML parser. Chasing that
+# is a waste of time when a working interpreter is usually already installed —
+# so look for one and re-exec into it rather than lecturing the user.
+# --------------------------------------------------------------------------
+
+_PROBE = "import fitz; fitz.Rect"  # the unrelated PyPI "fitz" imports but has no API
+_REEXEC_FLAG = "_BUILD_CV_REEXEC"
+
+
+def _usable(exe):
+    try:
+        return subprocess.run(
+            [exe, "-c", _PROBE], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30
+        ).returncode == 0
+    except Exception:
+        return False
+
+
+def _candidates():
+    names = ["python3.13", "python3.12", "python3.11", "python3.10", "python3.9", "python3"]
+    dirs = ["/opt/homebrew/bin", "/usr/local/bin", "/usr/bin", os.path.expanduser("~/.local/bin")]
+    out, seen = [], {os.path.realpath(sys.executable)}
+    for name in names:
+        found = [os.path.join(d, name) for d in dirs]
+        which = shutil.which(name)
+        if which:
+            found.append(which)
+        for path in found:
+            if not os.path.exists(path):
+                continue
+            real = os.path.realpath(path)
+            if real in seen:
+                continue
+            seen.add(real)
+            out.append(path)
+    return out
+
 
 try:
     import fitz  # PyMuPDF
-    fitz.Rect  # the unrelated PyPI package "fitz" imports but has no API
+
+    fitz.Rect
 except (ImportError, AttributeError):
+    if os.environ.get(_REEXEC_FLAG):  # already retried once; don't loop
+        sys.exit("ERROR: re-exec did not yield a working PyMuPDF. Install it and retry.")
+
+    env = {**os.environ, _REEXEC_FLAG: "1"}
+    args = sys.argv[1:]
+
+    for exe in _candidates():
+        if _usable(exe):
+            print(f"[build-cv] {sys.executable} has no usable PyMuPDF; using {exe}", file=sys.stderr)
+            os.execve(exe, [exe, os.path.abspath(__file__), *args], env)
+
+    # Nothing installed has it — uv can conjure an ephemeral env without
+    # touching any of the interpreters already on this machine.
+    if shutil.which("uv"):
+        print("[build-cv] no interpreter has PyMuPDF; running via `uv run --with pymupdf`", file=sys.stderr)
+        os.execvpe(
+            "uv",
+            ["uv", "run", "--with", "pymupdf", "python", os.path.abspath(__file__), *args],
+            env,
+        )
+
     sys.exit(
-        "This script needs PyMuPDF, and the interpreter running it does not have a usable copy.\n"
-        f"  interpreter: {sys.executable}  (Python {sys.version.split()[0]})\n\n"
-        "Two common causes:\n"
-        "  1. PyMuPDF isn't installed   ->  python3 -m pip install pymupdf\n"
-        "  2. The unrelated PyPI package named 'fitz' is shadowing it. Its import fails\n"
-        "     with \"No module named 'frontend'\". Fix with:\n"
-        "         python3 -m pip uninstall -y fitz && python3 -m pip install pymupdf\n\n"
-        "PyMuPDF also needs Python >= 3.8; anaconda's bundled 3.7 will not work.\n"
-        "On this machine a known-good interpreter is:\n"
-        "    /usr/local/opt/python@3.9/bin/python3.9 scripts/build-cv.py <src.pdf> [out.pdf]"
+        "This script needs PyMuPDF and no interpreter on this machine has a usable copy.\n"
+        f"  tried: {sys.executable} (Python {sys.version.split()[0]}) and "
+        f"{len(_candidates())} other interpreter(s)\n\n"
+        "Easiest fix, no environment to manage:\n"
+        "    uv run --with pymupdf python scripts/build-cv.py <src.pdf> [out.pdf]\n\n"
+        "Or install into a Python >= 3.9 (PyMuPDF does not support 3.7/3.8):\n"
+        "    python3.11 -m pip install pymupdf\n\n"
+        "If the import fails with \"No module named 'frontend'\", the unrelated PyPI\n"
+        "package named 'fitz' is shadowing PyMuPDF:\n"
+        "    python3 -m pip uninstall -y fitz && python3 -m pip install pymupdf"
     )
 
 PHONE = re.compile(r"(\+?\d{1,2}[\s.-]*)?\(?\d{3}\)?[\s.-]*\d{3}[\s.-]*\d{4}")

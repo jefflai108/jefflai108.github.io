@@ -74,6 +74,15 @@ selectable text (a CV that renders but doesn't extract is invisible to résumé 
 
 Never drop a résumé PDF into `public/` by hand — route it through this script.
 
+**It needs PyMuPDF, but you don't have to arrange that.** If the `python3` you invoke can't
+import it, the script finds an interpreter that can and re-execs into it, falling back to
+`uv run --with pymupdf` if nothing on the machine has it. Two traps it routes around:
+
+- PyMuPDF dropped Python 3.7, so on a conda base env pip resolves to an old sdist, tries to build
+  it, needs `swig`, and dies inside conda's vendored TOML parser. Unwinnable; not worth trying.
+- The PyPI package literally named `fitz` is unrelated to PyMuPDF and shadows it, failing with a
+  baffling `No module named 'frontend'`.
+
 ## Writing a blog post
 
 Drop a Markdown file in `src/content/blog/`. The filename becomes the URL
