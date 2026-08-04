@@ -624,22 +624,6 @@ ol {
   font-weight: 600;
 }
 
-.topics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.9rem;
-}
-
-.topics span {
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  color: var(--fg-3);
-  border: 1px solid var(--rule);
-  border-radius: 3px;
-  padding: 2px 8px;
-}
-
 /* ============================================================================
    Badges
    ========================================================================= */
