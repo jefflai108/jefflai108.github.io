@@ -484,6 +484,118 @@ ol {
   font-size: 0.86rem;
 }
 
+/* Section title with a link riding alongside it (e.g. Google Scholar). */
+.sec-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.sec-title-row .sec-title {
+  margin: 0;
+}
+
+.sec-title-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+/* ============================================================================
+   Recent work
+   ========================================================================= */
+
+.work li {
+  padding: 0.95rem 0;
+  border-bottom: 1px solid var(--rule-2);
+}
+
+.work li:first-child {
+  padding-top: 0.2rem;
+}
+
+.work li:last-child {
+  border-bottom: 0;
+}
+
+.work-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.work-name {
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  font-weight: 900;
+  color: var(--fg);
+}
+
+.work-tagline {
+  font-size: 0.88rem;
+  color: var(--fg-2);
+}
+
+.work-date {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--fg-3);
+}
+
+.work-blurb {
+  max-width: 68ch;
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--fg-2);
+}
+
+.work-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.work-tag {
+  padding: 2px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--fg-3);
+}
+
+.work-links {
+  margin-left: auto;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+}
+
+.work-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+/* The newest entry gets a rule in the accent colour rather than a filled card,
+   so it reads as emphasis without introducing new chrome. */
+.work li.featured {
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--accent);
+}
+
 .about p {
   /* ~74 characters at 15.5px Inter. Unconstrained, the 755px column ran to 97
      characters a line, well past a comfortable measure. */

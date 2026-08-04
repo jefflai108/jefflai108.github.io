@@ -43,7 +43,9 @@ export const experience: TimelineItem[] = [
     orgUrl: orgs.deepmind,
     period: '2024.06 — 2024.12',
     points: [
-      'Built <strong>Audio-Visual Gemma</strong> (3B / 10B / 28B), a foundation-model family for natively visually-coherent speech generation.',
+      // The résumé says 3B/10B/28B; the public paper describes 3B/10B. Matching
+      // the paper, since it is linked from Recent work and a reader can check it.
+      'Built <strong>Audio-Visual Gemma</strong> (3B / 10B), a foundation-model family for natively visually-coherent speech generation.',
       'Led audio-visual data curation (<strong>285k hours</strong> of spoken captions) and orchestrated training on <strong>512 TPUs</strong>.',
       'SOTA on Spoken Visual QA, video-to-speech generation, and audio-visual sound understanding.',
     ],

@@ -4,7 +4,7 @@ import Sidebar from '../components/Sidebar.astro';
 import GitHubGraph from '../components/GitHubGraph.astro';
 import Icon from '../components/Icon.astro';
 import { site, orgs, people } from '../data/site';
-import { news } from '../data/news';
+import { recentWork } from '../data/work';
 import { selectedPublications } from '../data/publications';
 import { openSource } from '../data/oss';
 import { experience, education, earlierRoles, talks, service } from '../data/career';
@@ -12,7 +12,7 @@ import { getCollection } from 'astro:content';
 
 const sections = [
   { href: '#about', label: 'About' },
-  { href: '#news', label: 'News' },
+  { href: '#work', label: 'Recent work' },
   { href: '#publications', label: 'Publications' },
   { href: '#writing', label: 'Writing' },
   { href: '#oss', label: 'Open source' },
@@ -20,7 +20,7 @@ const sections = [
   { href: '#career', label: 'Career' },
 ];
 
-const tagline = `Research Scientist at <a href="${orgs.meta}">Meta Superintelligence Labs</a> — building <strong>real-time speech-to-speech</strong> and audio-text LLM systems.`;
+const tagline = site.tagline;
 
 const posts = (await getCollection('blog'))
   .filter((p) => !p.data.draft)
@@ -46,7 +46,7 @@ const renderAuthors = (s: string) =>
         <div class="sec-eyebrow">ABOUT</div>
 
         <p>
-          I'm a Research Scientist at <a href={orgs.meta}>Meta Superintelligence Labs</a>, working on
+          I'm a speech researcher at <a href={orgs.meta}>Meta Superintelligence Labs</a>, working on
           <strong>real-time speech-to-speech</strong> and audio-text LLMs. I lead user-memory
           post-training — data curation and evaluation — and co-lead the infra integration that lets a
           voice model remember you and personalize its responses mid-stream.
@@ -56,7 +56,7 @@ const renderAuthors = (s: string) =>
           Before that I was at WaveForms AI (<a href={orgs.waveformsNews}>acquired by Meta</a>), where
           I architected the initial <strong>audio-text MoE</strong> stack for real-time voice and ran
           mid-training across 256 GPUs. At <a href={orgs.deepmind}>Google DeepMind</a> I built
-          <strong>Audio-Visual Gemma</strong>, a 3B/10B/28B foundation-model family for natively
+          <strong>Audio-Visual Gemma</strong>, a 3B/10B foundation-model family for natively
           visually-coherent speech generation, trained on 512 TPUs over 285k hours of spoken captions.
         </p>
 
@@ -81,16 +81,34 @@ const renderAuthors = (s: string) =>
         <GitHubGraph />
       </section>
 
-      {/* ──────────────────────────── news ─────────────────────────── */}
-      <section class="sec" id="news">
-        <div class="sec-eyebrow">01 / NEWS</div>
-        <h2 class="sec-title">Recent updates</h2>
-        <ul class="news">
+      {/* ───────────────────────── recent work ─────────────────────── */}
+      <section class="sec" id="work">
+        <div class="sec-eyebrow">01 / RECENT WORK</div>
+        <h2 class="sec-title">Recent work</h2>
+        <ul class="work">
           {
-            news.map((n) => (
-              <li>
-                <span class="d">{n.date}</span>
-                <span class="body" set:html={n.html} />
+            recentWork.map((w) => (
+              <li class={w.featured ? 'featured' : undefined}>
+                <div class="work-head">
+                  <span class="work-name">{w.name}</span>
+                  <span class="work-tagline">{w.tagline}</span>
+                  <span class="work-date">{w.date}</span>
+                </div>
+                <p class="work-blurb">{w.blurb}</p>
+                <div class="work-meta">
+                  {w.tags?.map((t) => <span class="work-tag">{t}</span>)}
+                  {
+                    w.links && w.links.length > 0 && (
+                      <span class="work-links">
+                        {w.links.map((l) => (
+                          <a href={l.href}>
+                            <Icon name={l.href.endsWith('.pdf') ? 'file' : 'link'} size={12} /> {l.label}
+                          </a>
+                        ))}
+                      </span>
+                    )
+                  }
+                </div>
               </li>
             ))
           }
@@ -100,7 +118,12 @@ const renderAuthors = (s: string) =>
       {/* ───────────────────────── publications ────────────────────── */}
       <section class="sec" id="publications">
         <div class="sec-eyebrow">02 / RESEARCH</div>
-        <h2 class="sec-title">Selected publications</h2>
+        <div class="sec-title-row">
+          <h2 class="sec-title">Selected publications</h2>
+          <a class="sec-title-link" href={site.links.scholar}>
+            <Icon name="scholar" size={13} /> Google Scholar
+          </a>
+        </div>
 
         <div class="scholar-stats">
           <div>

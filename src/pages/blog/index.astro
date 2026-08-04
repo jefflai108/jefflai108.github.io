@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Sidebar from '../../components/Sidebar.astro';
-import { site, orgs } from '../../data/site';
+import { site } from '../../data/site';
 import { mediumArchive } from '../../data/writing';
 import { getCollection } from 'astro:content';
 
@@ -9,7 +9,7 @@ const posts = (await getCollection('blog'))
   .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-const tagline = `Research Scientist at <a href="${orgs.meta}">Meta Superintelligence Labs</a> — building <strong>real-time speech-to-speech</strong> and audio-text LLM systems.`;
+const tagline = site.tagline;
 
 const fmtDate = (d: Date) =>
   d.toLocaleDateString('en-US', {

@@ -14,7 +14,23 @@ the document's own embedded Helvetica Neue, and their hyperlinks re-attached.
 """
 import re
 import sys
-import fitz
+
+try:
+    import fitz  # PyMuPDF
+    fitz.Rect  # the unrelated PyPI package "fitz" imports but has no API
+except (ImportError, AttributeError):
+    sys.exit(
+        "This script needs PyMuPDF, and the interpreter running it does not have a usable copy.\n"
+        f"  interpreter: {sys.executable}  (Python {sys.version.split()[0]})\n\n"
+        "Two common causes:\n"
+        "  1. PyMuPDF isn't installed   ->  python3 -m pip install pymupdf\n"
+        "  2. The unrelated PyPI package named 'fitz' is shadowing it. Its import fails\n"
+        "     with \"No module named 'frontend'\". Fix with:\n"
+        "         python3 -m pip uninstall -y fitz && python3 -m pip install pymupdf\n\n"
+        "PyMuPDF also needs Python >= 3.8; anaconda's bundled 3.7 will not work.\n"
+        "On this machine a known-good interpreter is:\n"
+        "    /usr/local/opt/python@3.9/bin/python3.9 scripts/build-cv.py <src.pdf> [out.pdf]"
+    )
 
 PHONE = re.compile(r"(\+?\d{1,2}[\s.-]*)?\(?\d{3}\)?[\s.-]*\d{3}[\s.-]*\d{4}")
 GAP = 13.51  # separator width used between contact items in the source
