@@ -5,7 +5,7 @@ export const site = {
   /** Shown under the name in the sidebar on every page — kept here so the
       homepage and the blog can't drift apart. */
   tagline:
-    'Speech Researcher at <a href="https://ai.meta.com/">Meta Superintelligence Labs</a> — building <strong>real-time speech-to-speech</strong> and audio-text LLM systems.',
+    'Speech Researcher at <a href="https://ai.meta.com/">Meta Superintelligence Labs</a> — building <strong>speech-to-speech LLMs</strong>.',
   org: 'Meta Superintelligence Labs',
   orgUrl: 'https://ai.meta.com/',
   email: 'jefflai108@gmail.com',
