@@ -47,13 +47,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).toString()
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,900&display=swap"
     />
-    {/* Noto Serif TC, subset to the three characters of the name via `text=` —
-        a couple of KB rather than a full CJK face. Without it the browser picks
-        whatever CJK font the visitor's OS defaults to, which is usually a sans
-        and clashes with the serif English name beside it. */}
+    {/* LXGW WenKai TC (霞鶩文楷) — a Kai 楷書 brush style for the name, subset to
+        its three characters via `text=` so it costs ~2KB rather than a whole
+        CJK face. Note the popular brush faces on Google Fonts (Ma Shan Zheng,
+        Zhi Mang Xing, ZCOOL XiaoWei, Long Cang) are Simplified-only and have no
+        glyph for 賴 — they would render the surname in a fallback face. */}
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600&display=swap&text=%E8%B3%B4%E6%89%BF%E9%80%B8"
+      href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400&display=swap&text=%E8%B3%B4%E6%89%BF%E9%80%B8"
     />
 
     {/* Set the theme before first paint so there is no light/dark flash. */}

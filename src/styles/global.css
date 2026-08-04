@@ -348,13 +348,14 @@ ol {
 .side-name .given {
   display: block;
   margin-top: 0.2rem;
-  /* Source Serif 4 has no CJK glyphs, so without an explicit CJK serif the
-     browser substitutes the OS default — usually a sans, which sat oddly under
-     the serif English name and looked different on every platform. */
-  font-family: 'Noto Serif TC', 'Songti TC', 'Songti SC', serif;
-  font-size: 0.6em;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  /* Source Serif 4 has no CJK glyphs, so without an explicit CJK face the
+     browser substitutes the OS default and the name looks different on every
+     platform. Kai is a lighter, brush-drawn style, so it wants a touch more
+     size and tracking than the Ming serif did to hold its weight here. */
+  font-family: 'LXGW WenKai TC', 'Kaiti TC', 'Kaiti SC', 'STKaiti', serif;
+  font-size: 0.66em;
+  font-weight: 400;
+  letter-spacing: 0.16em;
   color: var(--fg-3);
 }
 
