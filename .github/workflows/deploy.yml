@@ -12,7 +12,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  # `write` so the scheduled run can commit the refreshed data snapshot back.
+  # That commit is what keeps this workflow alive — see "Keep alive" below.
+  contents: write
   pages: write
   id-token: write
 
@@ -46,6 +48,37 @@ jobs:
         env:
           # Used by scripts/fetch-contributions.mjs to refresh the activity graph.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Keep alive.
+      #
+      # GitHub disables scheduled workflows in a PUBLIC repo "when no repository
+      # activity has occurred in 60 days". This site can easily go two months
+      # without a push, at which point the cron would be switched off silently
+      # and the contribution graph would freeze with no visible error.
+      #
+      # So the scheduled run commits its own refreshed snapshot back. That is a
+      # real commit on master, so the inactivity clock restarts every week and
+      # the workflow never ages out. It also keeps the committed JSON current,
+      # which matters because it is the fallback whenever a fetch is blocked
+      # (Google Scholar 403s CI, so scholar.json only moves when refreshed from
+      # a machine Google will talk to).
+      #
+      # [skip ci] stops this commit from triggering another deploy. Pushes made
+      # with GITHUB_TOKEN do not start new workflow runs anyway, so this is a
+      # belt-and-braces guard against a loop.
+      - name: Persist refreshed data
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          if git diff --quiet -- src/data/; then
+            echo "No change to src/data/ — nothing to commit."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/
+          git commit -m "chore: refresh contribution + citation data [skip ci]"
+          git push
+          echo "Committed refreshed data; the 60-day inactivity clock is reset."
 
       - uses: actions/upload-pages-artifact@v3
         with:
