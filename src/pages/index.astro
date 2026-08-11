@@ -171,17 +171,14 @@ const renderAuthors = (s: string) =>
                         <Icon name="link" size={12} /> page
                       </a>
                     )}
+                    {p.press && (
+                      <a href={p.press.href} title={p.press.title} aria-label={`${p.press.outlet}: ${p.press.title}`}>
+                        <Icon name="news" size={12} /> {p.press.outlet}
+                      </a>
+                    )}
                   </span>
                   {p.citations && <span class="pub-cites">{p.citations.toLocaleString('en-US')} cites</span>}
                 </div>
-                {
-                  p.press && (
-                    <div class="pub-press">
-                      <span class="outlet">{p.press.outlet}</span>
-                      <a href={p.press.href}>{p.press.title}</a>
-                    </div>
-                  )
-                }
               </li>
             ))
           }
