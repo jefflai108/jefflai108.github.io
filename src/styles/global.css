@@ -751,6 +751,31 @@ ol {
 
 /* Not right-aligned: only some papers carry a count, so margin-left:auto left
    a ragged 380–460px gap on the rows that had one and nothing on the rest. */
+/* Press coverage sits below the artifact links, set apart by the outlet chip so
+   it does not read as another link to the paper itself. */
+.pub-press {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.pub-press .outlet {
+  flex: none;
+  padding: 1px 6px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--fg-3);
+  white-space: nowrap;
+}
+
 .pub-cites {
   font-family: var(--mono);
   font-size: 0.7rem;

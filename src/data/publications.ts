@@ -10,6 +10,8 @@ export interface Publication {
   arxiv?: string;
   code?: string;
   page?: string;
+  /** Press coverage — rendered on its own line beneath the paper's links. */
+  press?: { outlet: string; title: string; href: string };
 }
 
 /**
@@ -51,7 +53,6 @@ export const publications: Publication[] = [
     year: 2023,
     // The arXiv preprint carries the earlier title "Audio-Visual Neural Syntax Acquisition".
     arxiv: 'https://arxiv.org/abs/2310.07654',
-    code: 'https://github.com/jefflai108/AV-NSL',
   },
   {
     key: 's3-router',
@@ -144,6 +145,11 @@ export const publications: Publication[] = [
     honor: 'Spotlight',
     citations: 100,
     arxiv: 'https://arxiv.org/abs/2106.05933',
+    press: {
+      outlet: 'MIT News',
+      title: 'Toward speech recognition for uncommon spoken languages',
+      href: 'https://news.mit.edu/2021/speech-recognition-uncommon-languages-1104',
+    },
   },
   {
     key: 'superb',
