@@ -32,7 +32,7 @@ const QUERY = `
         contributionCalendar {
           totalContributions
           weeks {
-            contributionDays { date contributionCount }
+            contributionDays { date contributionCount contributionLevel }
           }
         }
       }
@@ -74,8 +74,23 @@ try {
   const cal = json?.data?.user?.contributionsCollection?.contributionCalendar;
   if (!cal) bail(`unexpected API response: ${JSON.stringify(json).slice(0, 200)}`);
 
+  // Take GitHub's own level rather than deriving one. GitHub buckets by
+  // quartiles of the distribution; scaling by the maximum instead collapses a
+  // normal day to the lightest shade whenever a single outlier day exists
+  // (one 200-contribution day put every <50 day in level 1).
+  const LEVELS = {
+    NONE: 0,
+    FIRST_QUARTILE: 1,
+    SECOND_QUARTILE: 2,
+    THIRD_QUARTILE: 3,
+    FOURTH_QUARTILE: 4,
+  };
   const weeks = cal.weeks.map((w) =>
-    w.contributionDays.map((d) => ({ date: d.date, count: d.contributionCount }))
+    w.contributionDays.map((d) => ({
+      date: d.date,
+      count: d.contributionCount,
+      level: LEVELS[d.contributionLevel] ?? 0,
+    }))
   );
 
   writeFileSync(

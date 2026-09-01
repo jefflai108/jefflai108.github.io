@@ -2,19 +2,24 @@
 import data from '../data/contributions.json';
 import { site } from '../data/site';
 
-type Day = { date: string; count: number };
+type Day = { date: string; count: number; level?: number };
 const weeks: Day[][] = (data.weeks as Day[][]) ?? [];
 const total: number = data.total ?? 0;
 
-// GitHub's own bucketing: 0, then quartiles of the non-zero range.
-const counts = weeks.flat().map((d) => d.count).filter((n) => n > 0);
-const max = counts.length ? Math.max(...counts) : 0;
-const level = (n: number) => {
-  if (n <= 0) return 0;
-  if (max <= 4) return Math.min(4, n);
-  const q = max / 4;
-  return Math.min(4, Math.ceil(n / q));
-};
+// Levels come from GitHub itself (contributionLevel), so the shading matches
+// the profile page exactly. Snapshots written before that field was fetched
+// have no `level`, so derive one the way GitHub does — quartiles of the
+// distribution of active days.
+//
+// NOT max/4: with a 202-contribution day in the set, quarters of the *range*
+// start at 50, so every ordinary day collapses into the lightest shade and the
+// graph reads as flat. Quartiles of the *distribution* split by rank instead,
+// which is what makes the depth mean anything.
+const counts = weeks.flat().map((d) => d.count).filter((n) => n > 0).sort((a, b) => a - b);
+const at = (p: number) => counts[Math.min(counts.length - 1, Math.floor(counts.length * p))] ?? 0;
+const [q1, q2, q3] = [at(0.25), at(0.5), at(0.75)];
+const derive = (n: number) => (n <= 0 ? 0 : n <= q1 ? 1 : n <= q2 ? 2 : n <= q3 ? 3 : 4);
+const level = (d: Day) => d.level ?? derive(d.count);
 
 const CELL = 11;
 const GAP = 3;
@@ -86,7 +91,7 @@ const fmt = (d: string) =>
               return (
                 <rect
                   class="c"
-                  data-l={level(day.count)}
+                  data-l={level(day)}
                   x={LEFT + wi * STEP}
                   y={TOP + di * STEP}
                   width={CELL}
