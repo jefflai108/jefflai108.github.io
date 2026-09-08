@@ -1,0 +1,80 @@
+---
+import '../styles/taigi-review.css';
+import avatar from '../assets/jeff-avatar.jpg';
+const title = 'Taigi label correction';
+const description = 'Listen, review, and correct the Taigi dev reference transcripts in one shared workspace.';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href="https://jefflai108.github.io/taigi-review/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content="https://jefflai108.github.io/taigi-review/" />
+    <meta property="og:image" content={new URL(avatar.src, 'https://jefflai108.github.io').toString()} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(avatar.src, 'https://jefflai108.github.io').toString()} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip-link" href="#annotation">Skip to human annotation</a>
+    <header class="topbar">
+      <a href="/" class="home">Jeff Lai <span>/</span></a>
+      <div class="brand">Taigi <span>label correction</span></div>
+      <span class="split-tag">DEV SET ONLY</span>
+      <div class="top-actions"><span id="connection" class="connection" role="status">Connecting…</span><button id="share" class="quiet" disabled>Share review</button><button id="export" class="quiet" disabled>Export annotations ↓</button></div>
+    </header>
+    <main class="shell">
+      <div class="intro"><div><p class="eyebrow">REFERENCE TRANSCRIPT REVIEW</p><h1>Listen closely. Make it right.</h1><p>Listen to the recording, then edit the human annotation. Your corrections are shared and saved automatically.</p></div>
+      <div class="progress-block"><strong id="progress-label">0 <span>/ 5,424 reviewed</span></strong><progress id="progress" max="5424" value="0" aria-label="Dev clips reviewed"></progress><span id="progress-detail">5,424 clips · 6.85 hours · one shared copy</span></div></div>
+      <section id="access-panel" class="access-panel" hidden>
+        <div><h2>Open your shared review</h2><p>Use the private invitation link, or paste its review key below.</p></div>
+        <form id="access-form"><label for="access-key">Review key</label><div class="inline"><input id="access-key" type="password" autocomplete="off" required /><button class="primary">Open review</button></div></form>
+      </section>
+      <div id="notice" class="notice" role="status" hidden></div>
+      <div class="workspace" id="workspace" aria-busy="true">
+        <aside class="queue" aria-label="Dev clip queue">
+          <div class="queue-heading"><h2>Review queue</h2><span id="queue-count">5,424 clips</span></div>
+          <label class="sr-only" for="search">Search clip ID or transcript</label><input type="search" id="search" placeholder="Search ID or transcript…" disabled />
+          <label class="sr-only" for="filter">Filter clips</label><select id="filter" disabled><option value="all">All dev clips</option><option value="unreviewed">Not reviewed</option><option value="reviewed">Reviewed</option><option value="flagged">Needs another listen</option><option value="corrected">Transcript changed</option></select>
+          <div id="clip-list" class="clip-list" aria-label="Clips"><p class="empty">Connecting to the shared dev set…</p></div>
+          <div class="queue-paging"><button id="queue-prev" aria-label="Previous queue page" disabled>←</button><span id="queue-page">—</span><button id="queue-next" aria-label="Next queue page" disabled>→</button></div>
+          <p class="queue-note">Original labels are teacher-generated.<br />Human review makes the reference reliable.</p>
+        </aside>
+        <section class="review" aria-label="Transcript editor">
+          <div class="clip-heading"><div><span class="eyebrow" id="clip-position">DEV CLIP</span><h2 id="clip-id">Your listening workspace</h2></div><span id="clip-status" class="status-badge">Not reviewed</span></div>
+          <section class="audio-panel" aria-label="Audio recording">
+            <div class="section-label"><span><b>01</b> Listen to the audio</span><span id="duration">MAC-HOSTED AUDIO</span></div>
+            <audio id="audio" controls preload="auto" aria-label="Dev clip audio"></audio>
+            <div class="audio-tools"><div><button id="replay" disabled>↺ Replay</button><button id="back-five" disabled>−5 sec</button><label for="speed" class="sr-only">Playback speed</label><select id="speed"><option value="0.75">0.75× speed</option><option value="1" selected>1× speed</option><option value="1.25">1.25× speed</option><option value="1.5">1.5× speed</option></select></div><span id="audio-message" role="status">Audio loads when you open a clip.</span><button id="audio-retry" hidden>Retry audio</button></div>
+          </section>
+          <section class="original-panel">
+            <div class="section-label"><label for="original"><b>02</b> Original transcript</label><span class="readonly-tag">READ ONLY · TEACHER LABEL</span></div>
+            <textarea id="original" readonly rows="2" lang="nan-TW" placeholder="The original dev transcript will appear here." aria-label="Original teacher transcript, read only"></textarea>
+          </section>
+          <section class="annotation-panel">
+            <div class="section-label"><label for="annotation"><b>03</b> Human annotation</label><span class="editable-tag">✎ EDIT HERE</span></div>
+            <p class="edit-hint" id="annotation-hint">This is your working transcript. Click below and type the correct words.</p>
+            <textarea id="annotation" rows="4" lang="nan-TW" spellcheck="false" disabled placeholder="The original transcript is copied here for you to correct." aria-describedby="annotation-hint save-status" maxlength="10000"></textarea>
+            <div class="annotation-meta"><span id="save-status" role="status" aria-live="polite">Waiting for the shared review</span><span id="change-label">Starts from the original transcript</span></div>
+          </section>
+          <section id="conflict" class="conflict" role="alert" hidden><h3>A collaborator saved a different version</h3><p>Your draft is still in the editor above. Compare it with the latest saved transcript below before choosing.</p><blockquote id="conflict-text" lang="nan-TW"></blockquote><p id="conflict-author"></p><div class="inline"><button id="use-shared">Use their saved version</button><button id="use-mine">Save my editor version instead</button></div></section>
+          <div class="review-actions"><label class="editor-name">Annotating as <input id="editor" placeholder="Your name" maxlength="80" autocomplete="given-name" aria-label="Your annotator name" /></label><div class="inline"><button id="save" disabled>Save now</button><button id="flag" disabled>Flag for another listen</button><button id="review-next" class="primary" disabled>Mark reviewed & next →</button></div></div>
+          <div class="bottom-nav"><button id="previous" disabled>← Previous clip</button><span><kbd>Ctrl / ⌘</kbd> <kbd>Enter</kbd> review & next · <kbd>Alt</kbd> <kbd>Space</kbd> play / pause</span><button id="next" disabled>Next clip →</button></div>
+          <details id="history-details" class="history"><summary>Revision history <span id="revision-label">· no edits yet</span></summary><div id="history-list">Saved edits appear here.</div></details>
+        </section>
+      </div>
+      <footer><a href="https://huggingface.co/datasets/jefflai108/streaming-taigi-asr" target="_blank" rel="noreferrer">streaming-taigi-asr</a><span>Taigi dev · HF validation split · 5,424 clips</span><span>Audio and shared saves are available while Jeff’s Mac is awake and online.</span></footer>
+    </main>
+    <script>import '../scripts/taigi-review';</script>
+  </body>
+</html>
