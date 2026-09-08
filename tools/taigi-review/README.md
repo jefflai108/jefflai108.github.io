@@ -48,3 +48,19 @@ npm run build
 Tests use synthetic clips and isolated temporary storage. Public API verification checks authorization, CORS, exact WAV byte content, and source/count. Production labels are never modified for testing.
 
 Optional WebMCP tools feature-detect support: `read_current_taigi_clip` and `save_taigi_annotation`. They reuse the visible editor and its conflict checks. Contract tests cover registration and valid/invalid input; no supported live WebMCP browser context was available, so live browser registration was not verified. Browser UI testing was not requested.
+
+## Record & annotate
+
+The upper **Record & annotate** tab captures audio from each visitor's own microphone after they press Start recording and grant browser permission. Recordings are limited to two minutes. Visitors can replay or download a take, type its transcript, then save audio and transcript together. Saved transcripts autosave and use the same explicit conflict comparison as the dev review.
+
+User recordings live in separate `recordings` and `recording_history` tables in the existing database. They never join the HF dev split or its 5,424-clip export/progress. The separate recording export identifies its source as `user_recordings`. Audio uploads use a stable UUID and SHA256 to prevent duplicate takes or audio replacement on retry. Both original compressed audio and a normalized mono PCM16 16 kHz WAV are committed atomically with the recording and initial transcript; daily SQLite backups include both audio representations.
+
+`recordings.py` uses the existing `/opt/homebrew/bin/ffmpeg` to validate/decode browser WebM, MP4, Ogg or WAV captures. It limits upload size, audio duration, decoder concurrency and processing time. New private routes are `POST /api/recordings`, `GET /api/recordings`, `GET/PUT /api/recordings/{id}`, plus `/audio`, `/history`, and `/api/recordings/export`. The invitation key is required for every route.
+
+Unuploaded takes are kept in this browser's IndexedDB and appear as recoverable takes after reopening. This local recovery area is temporary; the shared database remains authoritative after upload. If local storage is unavailable or full, the page tells the visitor to keep it open and offers an audio download. Microphone tracks are released on stop, startup failure and page exit; a permission result arriving after the visitor leaves cannot start a hidden recording. The recorder stops when its page is hidden. No real microphone was activated during implementation; capture lifecycle and recovery tests use synthetic media, and server tests decode real generated WebM/MP4 files.
+
+When updating the backend, copy **both** `server.py` and `recordings.py` to the private runtime directory before restarting the service. The schema extension is additive and preserves all existing dev annotations. Run the additional frontend tests with:
+
+```sh
+node --test tools/taigi-review/test_recording_frontend.mjs
+```

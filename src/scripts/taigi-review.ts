@@ -1,4 +1,5 @@
 // Public shell; private dataset and one authoritative Mac-hosted SQLite store.
+import { reviewSession } from './taigi-session';
 type Status = 'unreviewed' | 'reviewed' | 'flagged';
 type Clip = { id: string; position: number; original: string; annotation: string; duration: number; status: Status; revision: number; updated_by: string | null; updated_at: string | null };
 type Draft = { id: string; annotation: string; status: Status; revision: number; uncertain?: boolean };
@@ -29,6 +30,14 @@ let navigating = false, polling = false, composing = false, ready = false, initi
 let queueRequest = 0, selectionRequest = 0, audioRequest = 0;
 let audioURL: string | null = null;
 const audioCache = new Map<string, Blob>();
+reviewSession.key = () => accessKey;
+reviewSession.ready = () => ready;
+reviewSession.leaveDev = async () => {
+  if (navigating || composing || reviewing) return false;
+  if (current && !(await flush())) return false;
+  audio.pause();
+  return true;
+};
 input('editor').value = storage.get('editor') || '';
 el<HTMLSelectElement>('speed').value = storage.get('speed') || '1';
 
@@ -349,6 +358,7 @@ button('export').addEventListener('click', async () => {
   } catch (error) { fail(error); }
 });
 document.addEventListener('keydown', event => {
+  if (reviewSession.activeTab !== 'dev') return;
   if (event.isComposing || composing) return;
   if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') { event.preventDefault(); void reviewedNext(); }
   if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 's') { event.preventDefault(); void flush(); }
@@ -372,7 +382,7 @@ if (modelContext?.registerTool) {
       annotations: { readOnlyHint: true, untrustedContentHint: true },
       execute(args: unknown) {
         if (!args || typeof args !== 'object' || Array.isArray(args) || Object.keys(args).length) throw new Error('No arguments are accepted');
-        if (!ready || !current) throw new Error('Open the private review invitation first');
+        if (!ready || !current || reviewSession.activeTab !== 'dev') throw new Error('Open a dev clip in the review tab first');
         return { ...current, editor_annotation: annotation.value, editor_status: desiredStatus, unsaved: dirty(), conflict: !!conflicting };
       },
     },
@@ -383,7 +393,7 @@ if (modelContext?.registerTool) {
       annotations: { readOnlyHint: false, untrustedContentHint: true },
       async execute(args: any) {
         if (!args || typeof args !== 'object' || Array.isArray(args) || Object.keys(args).sort().join(',') !== 'annotation,editor,id,status' || typeof args.id !== 'string' || typeof args.annotation !== 'string' || args.annotation.length > 10000 || !Object.hasOwn(statusNames, args.status) || typeof args.editor !== 'string' || !args.editor.trim() || args.editor.length > 80) throw new Error('Invalid annotation input');
-        if (!ready || !current || args.id !== current.id) throw new Error('The requested clip must already be open in the editor');
+        if (!ready || !current || args.id !== current.id || reviewSession.activeTab !== 'dev') throw new Error('The requested dev clip must already be open in the review tab');
         if (dirty() || conflicting || inFlight || navigating || composing) throw new Error('Resolve or save the current human draft first');
         input('editor').value = args.editor; storage.set('editor', args.editor);
         annotation.value = args.annotation; desiredStatus = args.status; updateClipMetadata(); draft();

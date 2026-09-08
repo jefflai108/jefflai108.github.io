@@ -2,7 +2,7 @@
 import '../styles/taigi-review.css';
 import avatar from '../assets/jeff-avatar.jpg';
 const title = 'Taigi label correction';
-const description = 'Listen, review, and correct the Taigi dev reference transcripts in one shared workspace.';
+const description = 'Review Taigi dev transcripts, record your own Taigi, and annotate recordings in one shared workspace.';
 ---
 <!doctype html>
 <html lang="en">
@@ -30,17 +30,22 @@ const description = 'Listen, review, and correct the Taigi dev reference transcr
     <header class="topbar">
       <a href="/" class="home">Jeff Lai <span>/</span></a>
       <div class="brand">Taigi <span>label correction</span></div>
-      <span class="split-tag">DEV SET ONLY</span>
+      <span class="split-tag">SHARED WORKSPACE</span>
       <div class="top-actions"><span id="connection" class="connection" role="status">Connecting…</span><button id="share" class="quiet" disabled>Share review</button><button id="export" class="quiet" disabled>Export annotations ↓</button></div>
     </header>
     <main class="shell">
-      <div class="intro"><div><p class="eyebrow">REFERENCE TRANSCRIPT REVIEW</p><h1>Listen closely. Make it right.</h1><p>Listen to the recording, then edit the human annotation. Your corrections are shared and saved automatically.</p></div>
+      <nav class="workspace-tabs" role="tablist" aria-label="Taigi workspace">
+        <button id="tab-dev" role="tab" aria-selected="true" aria-controls="dev-panel">Dev set review <span>5,424 clips</span></button>
+        <button id="tab-record" role="tab" aria-selected="false" aria-controls="record-panel" tabindex="-1"><span class="record-dot" aria-hidden="true"></span> Record & annotate <span>Your Taigi recordings</span></button>
+      </nav>
+      <div class="intro" id="dev-intro"><div><p class="eyebrow">REFERENCE TRANSCRIPT REVIEW</p><h1>Listen closely. Make it right.</h1><p>Listen to the recording, then edit the human annotation. Your corrections are shared and saved automatically.</p></div>
       <div class="progress-block"><strong id="progress-label">0 <span>/ 5,424 reviewed</span></strong><progress id="progress" max="5424" value="0" aria-label="Dev clips reviewed"></progress><span id="progress-detail">5,424 clips · 6.85 hours · one shared copy</span></div></div>
       <section id="access-panel" class="access-panel" hidden>
         <div><h2>Open your shared review</h2><p>Use the private invitation link, or paste its review key below.</p></div>
         <form id="access-form"><label for="access-key">Review key</label><div class="inline"><input id="access-key" type="password" autocomplete="off" required /><button class="primary">Open review</button></div></form>
       </section>
       <div id="notice" class="notice" role="status" hidden></div>
+      <div id="dev-panel" role="tabpanel" aria-labelledby="tab-dev">
       <div class="workspace" id="workspace" aria-busy="true">
         <aside class="queue" aria-label="Dev clip queue">
           <div class="queue-heading"><h2>Review queue</h2><span id="queue-count">5,424 clips</span></div>
@@ -73,8 +78,27 @@ const description = 'Listen, review, and correct the Taigi dev reference transcr
           <details id="history-details" class="history"><summary>Revision history <span id="revision-label">· no edits yet</span></summary><div id="history-list">Saved edits appear here.</div></details>
         </section>
       </div>
+      </div>
+      <section id="record-panel" role="tabpanel" aria-labelledby="tab-record" hidden>
+        <div class="intro"><div><p class="eyebrow">YOUR VOICE · YOUR WORDS</p><h1>Speak Taigi. Write what you said.</h1><p>Record a short clip, listen back, and add its transcript. Save it for both annotators to review.</p></div><button id="rec-new" class="primary">＋ New recording</button></div>
+        <div id="rec-notice" class="notice" role="status" hidden></div>
+        <div class="record-workspace">
+          <section class="record-studio" aria-label="Record and annotate Taigi">
+            <div class="clip-heading"><div><span class="eyebrow" id="rec-kicker">NEW RECORDING</span><h2 id="rec-heading">Make a little room for Taigi.</h2></div><span id="rec-badge" class="status-badge">Ready to record</span></div>
+            <div class="record-fields"><label>Your name<input id="rec-name" autocomplete="given-name" placeholder="Who is speaking?" maxlength="80" /></label><label>Recording title <span>(optional)</span><input id="rec-title" placeholder="e.g. A story about my morning" maxlength="120" /></label></div>
+            <div id="rec-capture" class="capture-panel"><div><p class="eyebrow">01 · RECORD YOUR VOICE</p><p id="rec-instruction">Press record and speak naturally.</p><small>Your microphone turns on only when you press record. Up to 2 minutes per clip.</small></div><div class="capture-controls"><output id="rec-timer" aria-label="Recording time">0:00</output><button id="rec-start" class="record-button"><span aria-hidden="true">●</span> Start recording</button><button id="rec-stop" class="record-button" hidden>■ Stop recording</button></div></div>
+            <div id="rec-playback" class="audio-panel" hidden><div class="section-label"><span><b>01</b> Listen to your recording</span><span id="rec-audio-detail"></span></div><audio id="rec-audio" controls preload="auto" aria-label="Your Taigi recording"></audio><div class="audio-tools"><span id="rec-audio-message" role="status"></span><div><button id="rec-download">Download audio ↓</button><button id="rec-audio-retry" hidden>Retry audio</button><button id="rec-discard">Discard this take</button></div></div></div>
+            <section class="annotation-panel"><div class="section-label"><label for="rec-transcript"><b>02</b> Your Taigi transcript</label><span class="editable-tag">✎ EDIT HERE</span></div><p class="edit-hint">Listen back and write the words you said. You can also save the audio now and annotate it later.</p><textarea id="rec-transcript" rows="5" lang="nan-TW" spellcheck="false" maxlength="10000" placeholder="Type the Taigi words you hear in this recording…" aria-describedby="rec-save-state"></textarea><div class="annotation-meta"><span id="rec-save-state" role="status" aria-live="polite">Record a clip to get started.</span><span id="rec-revision"></span></div></section>
+            <section id="rec-conflict" class="conflict" role="alert" hidden><h3>A collaborator saved another transcript</h3><p>Your draft is still above. Compare the shared version before choosing.</p><blockquote id="rec-conflict-text" lang="nan-TW"></blockquote><p id="rec-conflict-author"></p><div class="inline"><button id="rec-use-shared">Use their version</button><button id="rec-use-mine">Save my version instead</button></div></section>
+            <div class="record-save-actions"><label for="rec-status">Review status<select id="rec-status"><option value="unreviewed">Needs annotation / review</option><option value="reviewed">Reviewed</option><option value="flagged">Needs another listen</option></select></label><button id="rec-save" class="primary" disabled>Save recording & transcript →</button></div>
+            <p class="record-footnote">Saved audio and transcripts are shared with everyone who has this private review link.</p>
+            <details id="rec-history" class="history" hidden><summary>Transcript revision history</summary><div id="rec-history-list"></div></details>
+          </section>
+          <aside class="record-library" aria-label="Shared recordings library"><div class="queue-heading"><h2>Our recordings</h2><span id="rec-count">0 saved</span></div><p class="library-hint">Everyone’s recordings, in one place.</p><div id="rec-local-list"></div><label for="rec-search" class="sr-only">Search recordings</label><input id="rec-search" type="search" placeholder="Search title or transcript…" /><div id="rec-list" class="record-list"><p class="empty">Save your first recording to start the collection.</p></div><div class="queue-paging"><button id="rec-list-prev" aria-label="Previous recordings page" disabled>←</button><span id="rec-list-page">—</span><button id="rec-list-next" aria-label="Next recordings page" disabled>→</button></div><button id="rec-export" class="quiet">Export recording transcripts ↓</button></aside>
+        </div>
+      </section>
       <footer><a href="https://huggingface.co/datasets/jefflai108/streaming-taigi-asr" target="_blank" rel="noreferrer">streaming-taigi-asr</a><span>Taigi dev · HF validation split · 5,424 clips</span><span>Audio and shared saves are available while Jeff’s Mac is awake and online.</span></footer>
     </main>
-    <script>import '../scripts/taigi-review';</script>
+    <script>import '../scripts/taigi-review'; import '../scripts/taigi-recordings';</script>
   </body>
 </html>

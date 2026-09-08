@@ -13,6 +13,7 @@ import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, unquote, urlparse
 import wave
+import recordings
 
 EXPECTED_COUNT = 5424
 EXPECTED_FINGERPRINT = '9f676034bdaa564a554d93443dbf1836fc2782270cb1eb36b75679b27838c78d'
@@ -75,6 +76,7 @@ def initialize(db_path, manifest, expected_count=EXPECTED_COUNT):
             db.execute("INSERT INTO metadata VALUES('manifest_sha256',?)", (fingerprint,))
             db.execute("INSERT INTO metadata VALUES('source',?)", (json.dumps(SOURCE),))
         db.execute("PRAGMA optimize")
+    recordings.initialize(db_path)
 
 
 def public_row(row):
@@ -147,7 +149,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.respond(403, {"error": "Origin not allowed"})
         self.send_response(204)
         self.cors()
-        self.send_header('Access-Control-Allow-Methods', 'GET, PUT, OPTIONS')
+        self.send_header('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Authorization, Content-Type, Range')
         self.send_header('Access-Control-Max-Age', '3600')
         self.end_headers()
@@ -159,6 +161,8 @@ class Handler(BaseHTTPRequestHandler):
         if not self.authorized():
             return
         try:
+            if path == '/api/recordings' or path.startswith('/api/recordings/'):
+                return recordings.get(self, path, parse_qs(urlparse(self.path).query))
             with connect(self.server.db_path) as db:
                 if path == '/api/meta':
                     stats = dict(db.execute("SELECT count(*) total, sum(status='reviewed') reviewed, sum(status='flagged') flagged, sum(annotation != original) corrected, sum(duration) seconds FROM clips").fetchone())
@@ -249,7 +253,9 @@ class Handler(BaseHTTPRequestHandler):
             return
         if self.headers.get('Origin') and self.headers['Origin'] not in self.server.allowed_origins:
             return self.respond(403, {"error": "Origin not allowed"})
-        match = re.fullmatch(r'/api/clips/(taigi-[0-9]+)', urlparse(self.path).path)
+        path = urlparse(self.path).path
+        recording = re.fullmatch(r'/api/recordings/(' + recordings.ID_PATTERN + ')', path)
+        match = recording or re.fullmatch(r'/api/clips/(taigi-[0-9]+)', path)
         if not match:
             return self.respond(404, {"error": "Not found"})
         try:
@@ -257,12 +263,33 @@ class Handler(BaseHTTPRequestHandler):
             if not 0 < length <= 100000:
                 return self.respond(413, {"error": "Request too large"})
             payload = json.loads(self.rfile.read(length))
-            code, body = save(self.server.db_path, match[1], payload)
+            writer = recordings.save if recording else save
+            code, body = writer(self.server.db_path, match[1], payload)
             self.respond(code, body)
         except (ValueError, UnicodeError, TypeError):
             self.respond(400, {"error": "Invalid request"})
         except sqlite3.Error:
             self.respond(503, {"error": "Save failed. Please retry; your draft is still in the editor."})
+
+    def do_POST(self):
+        if not self.authorized():
+            return
+        if self.headers.get('Origin') and self.headers['Origin'] not in self.server.allowed_origins:
+            return self.respond(403, {"error": "Origin not allowed"})
+        if urlparse(self.path).path != '/api/recordings':
+            return self.respond(404, {"error": "Not found"})
+        try:
+            self.connection.settimeout(120)
+            length = int(self.headers.get('Content-Length', '0'))
+            if not 0 < length <= recordings.MAX_BODY:
+                return self.respond(413, {"error": "Recording upload is too large"})
+            payload = json.loads(self.rfile.read(length))
+            code, body = recordings.create(self.server.db_path, payload)
+            self.respond(code, body)
+        except (ValueError, UnicodeError, TypeError) as error:
+            self.respond(400, {"error": str(error) if isinstance(error, ValueError) and not isinstance(error, json.JSONDecodeError) else 'Invalid recording upload'})
+        except (sqlite3.Error, OSError):
+            self.respond(503, {"error": "Recording could not be saved. Keep your take and retry."})
 
 
 def make_server(host, port, db_path, access_key, origins):

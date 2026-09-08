@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import test from 'node:test';
 import ts from 'typescript';
 const source = readFileSync(new URL('../../src/scripts/taigi-review.ts', import.meta.url), 'utf8');
-const script = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText;
+const script = ts.transpileModule(source.replace("import { reviewSession } from './taigi-session';", ''), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText;
 function deferred() { let resolve, reject; const promise = new Promise((a,b) => {resolve=a; reject=b;}); return {promise,resolve,reject}; }
 class Element {
   constructor() { this.value=''; this.textContent=''; this.children=[]; this.dataset={}; this.hidden=false; this.disabled=false; this.handlers={}; this.attributes={}; this.classList={toggle(){}}; this.paused=true; }
@@ -46,7 +46,7 @@ function harness({storage=new Map(), before, failPath}={}) {
   };
   const window=new Element();const document=new Element();document.hidden=false;
   document.getElementById=get;document.createElement=()=>new Element();document.createTextNode=text=>({textContent:text});document.modelContext={registerTool(tool){tools.push(tool);}};
-  const context=vm.createContext({document,window,location:{hash:''},history:{replaceState(){}},navigator:{clipboard:{writeText:async()=>{}}},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},fetch,URL,URLSearchParams,Response,Blob,AbortController,AbortSignal,console,setTimeout:()=>1,clearTimeout(){},setInterval:fn=>intervals.push(fn)});
+  const context=vm.createContext({reviewSession:{activeTab:'dev'},document,window,location:{hash:''},history:{replaceState(){}},navigator:{clipboard:{writeText:async()=>{}}},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},fetch,URL,URLSearchParams,Response,Blob,AbortController,AbortSignal,console,setTimeout:()=>1,clearTimeout(){},setInterval:fn=>intervals.push(fn)});
   vm.runInContext(script+`\nthis.api={start,openClip,flush,poll,draft,read:()=>({current,conflicting,dirty:dirty(),navigating,ready,base:draftBaseRevision}),edit:text=>{annotation.value=text;onEdit();},setKey:()=>{accessKey='test-only';}};`,context);
   context.api.setKey();
   return {api:context.api,elements,get,storage,rows,calls,intervals,tools,setFailure(value){failing=value;}};
