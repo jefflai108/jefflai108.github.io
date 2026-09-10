@@ -65,7 +65,7 @@ reviewSession.selectDev = async (tab: ReviewSet) => {
   el('dataset-source').textContent = `Taigi ${setName()} · HF ${tab === 'dev2' ? 'validation2' : 'validation'} split · ${clipCount.toLocaleString()} clips`;
   el('dev-panel').setAttribute('aria-labelledby', `tab-${tab}`);
   savedLabel(`Loading ${setName()} review…`, 'pending');
-  renderQueue(); updateStats({ total: clipCount, reviewed: 0, flagged: 0, corrected: 0 });
+  renderQueue(); pendingProgress('Loading shared progress…');
   el('workspace').setAttribute('aria-busy', 'true');
   void start();
   return true;
@@ -114,7 +114,13 @@ function updateStats(stats: { total: number; reviewed: number; flagged: number; 
   const span = document.createElement('span'); span.textContent = `/ ${stats.total.toLocaleString()} reviewed`; label.append(span);
   el<HTMLProgressElement>('progress').value = stats.reviewed;
   el<HTMLProgressElement>('progress').max = stats.total;
+  el('progress').hidden = false;
   el('progress-detail').textContent = `${stats.corrected.toLocaleString()} changed · ${stats.flagged.toLocaleString()} flagged · one shared copy`;
+}
+function pendingProgress(message: string) {
+  el('progress-label').replaceChildren(document.createTextNode('—'));
+  el('progress').hidden = true;
+  el('progress-detail').textContent = message;
 }
 async function refreshStats() { const token = datasetRequest; const data = await json('/api/meta'); if (token === datasetRequest) updateStats(data.stats); return data; }
 function renderQueue() {
@@ -341,15 +347,17 @@ async function start() {
   if (initializing) return;
   if (!accessKey) {
     el('access-panel').hidden = false; el('connection').textContent = 'Private invitation required';
-    el('clip-list').textContent = 'Open your invitation to load the dev clips.';
+    pendingProgress('Open your invitation to see shared progress.');
+    el('clip-list').textContent = 'Review locked. Open your invitation to load the saved corrections and history.';
     el('workspace').setAttribute('aria-busy', 'false'); return;
   }
-  storage.set('key', accessKey);
   initializing = true;
   try {
     // Read cursor before clips, so initial loading cannot skip collaborator edits.
     const meta = await refreshStats(); sequence = meta.sequence;
-    el('access-panel').hidden = true; notice();
+    const remembered = storage.set('key', accessKey);
+    el('access-panel').hidden = true;
+    notice(remembered ? '' : 'This browser could not remember your access. Use your invitation link again when you return.');
     for (const id of ['search', 'filter', 'share', 'export']) (el(id) as HTMLInputElement).disabled = false;
     await refreshQueue();
     const last = storage.get(datasetKey('last-clip'));
@@ -363,6 +371,19 @@ async function start() {
   } catch (error) { ready = false; fail(error); }
   finally { initializing = false; el('workspace').setAttribute('aria-busy', 'false'); }
 }
+function unlockRememberedReview(key: string | null) {
+  // A fragment navigation doesn't reload the app. Other open tabs receive the
+  // remembered key through storage events. Never interrupt an active review.
+  if (!key || ready || current || initializing) return;
+  accessKey = key;
+  void start();
+}
+window.addEventListener('hashchange', () => {
+  unlockRememberedReview(new URLSearchParams(location.hash.slice(1)).get('key'));
+});
+window.addEventListener('storage', event => {
+  if (event.key === 'taigi-review:key') unlockRememberedReview(event.newValue);
+});
 annotation.addEventListener('compositionstart', () => { composing = true; clearTimeout(saveTimer); updateActions(); });
 annotation.addEventListener('compositionend', () => { composing = false; onEdit(); updateActions(); });
 function onEdit() {

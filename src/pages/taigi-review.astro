@@ -40,9 +40,9 @@ const description = 'Review Taigi Dev and Dev2 transcripts, record your own Taig
         <button id="tab-record" role="tab" aria-selected="false" aria-controls="record-panel" tabindex="-1"><span class="record-dot" aria-hidden="true"></span> Record & annotate <span>Your Taigi recordings</span></button>
       </nav>
       <div class="intro" id="dev-intro"><div><p class="eyebrow">REFERENCE TRANSCRIPT REVIEW</p><h1>Listen closely. Make it right.</h1><p>Listen to the recording, then edit the human annotation. Your corrections are shared and saved automatically.</p></div>
-      <div class="progress-block"><strong id="progress-label">0 <span>/ 5,424 reviewed</span></strong><progress id="progress" max="5424" value="0" aria-label="Dev clips reviewed"></progress><span id="progress-detail">5,424 clips · 6.85 hours · one shared copy</span></div></div>
+      <div class="progress-block"><strong id="progress-label">—</strong><progress id="progress" max="5424" value="0" aria-label="Dev clips reviewed" hidden></progress><span id="progress-detail">Loading shared review…</span></div></div>
       <section id="access-panel" class="access-panel" hidden>
-        <div><h2>Open your shared review</h2><p>Use the private invitation link, or paste its review key below.</p></div>
+        <div><h2>Unlock the shared review</h2><p>Both links open the same saved corrections and history. Open your invitation once in this browser, or paste its review key below.</p></div>
         <form id="access-form"><label for="access-key">Review key</label><div class="inline"><input id="access-key" type="password" autocomplete="off" required /><button class="primary">Open review</button></div></form>
       </section>
       <div id="notice" class="notice" role="status" hidden></div>

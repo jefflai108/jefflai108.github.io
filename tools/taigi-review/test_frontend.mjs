@@ -17,7 +17,7 @@ class Element {
   hasAttribute(k) {return k in this.attributes;}
   focus(){} scrollIntoView(){} load(){} pause(){this.paused=true;} play(){this.paused=false;return Promise.resolve();} click(){}
 }
-function harness({storage=new Map(), before, failPath}={}) {
+function harness({storage=new Map(), before, failPath, bootstrap=true}={}) {
   const elements=new Map(); const get=id=>{ if(!elements.has(id))elements.set(id,new Element());return elements.get(id); };
   get('filter').value='all';get('editor').value='Alice';get('speed').value='1';
   storage.set('taigi-review:editor','Alice');
@@ -50,12 +50,44 @@ function harness({storage=new Map(), before, failPath}={}) {
   };
   const window=new Element();const document=new Element();document.hidden=false;
   document.getElementById=get;document.createElement=()=>new Element();document.createTextNode=text=>({textContent:text});document.modelContext={registerTool(tool){tools.push(tool);}};
-  const context=vm.createContext({reviewSession:{activeTab:'dev'},document,window,location:{hash:''},history:{replaceState(){}},navigator:{clipboard:{writeText:async()=>{}}},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},fetch,URL,URLSearchParams,Response,Blob,AbortController,AbortSignal,console,setTimeout:()=>1,clearTimeout(){},setInterval:fn=>intervals.push(fn)});
+  const location={hash:''};
+  const context=vm.createContext({reviewSession:{activeTab:'dev'},document,window,location,history:{replaceState(){}},navigator:{clipboard:{writeText:async()=>{}}},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},fetch,URL,URLSearchParams,Response,Blob,AbortController,AbortSignal,console,setTimeout:()=>1,clearTimeout(){},setInterval:fn=>intervals.push(fn)});
   vm.runInContext(script+`\nthis.api={start,openClip,flush,poll,draft,go,loadHistory,refreshStats,select:reviewSession.selectDev,read:()=>({current,reviewSet,conflicting,dirty:dirty(),navigating,ready,base:draftBaseRevision}),edit:text=>{annotation.value=text;onEdit();},setKey:()=>{accessKey='test-only';}};`,context);
-  context.api.setKey();
-  return {api:context.api,elements,get,storage,rows,dev2,calls,intervals,tools,setFailure(value){failing=value;}};
+  if(bootstrap)context.api.setKey();
+  return {api:context.api,elements,get,storage,rows,dev2,calls,intervals,tools,window,location,setFailure(value){failing=value;}};
 }
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
+test('an invitation fragment unlocks an already-open plain link and loads shared edits',async()=>{
+  const h=harness({bootstrap:false});
+  assert.equal(h.get('access-panel').hidden,false);assert.equal(h.get('progress').hidden,true);
+  assert.match(h.get('clip-list').textContent,/Review locked/);
+  h.rows[0].annotation='Existing shared correction';h.rows[0].revision=4;h.rows[0].status='reviewed';
+  h.location.hash='#key=test-only';h.window.handlers.hashchange[0]();
+  for(let i=0;i<5;i++)await settle();
+  assert.equal(h.api.read().ready,true);assert.equal(h.get('annotation').value,'Existing shared correction');
+  assert.equal(h.get('progress').value,1);assert.equal(h.get('progress').hidden,false);
+  assert.equal(h.storage.get('taigi-review:key'),'test-only');
+});
+test('a locked tab picks up the invitation remembered by another tab',async()=>{
+  const h=harness({bootstrap:false});
+  h.window.handlers.storage[0]({key:'taigi-review:editor',newValue:'Someone'});
+  await settle();assert.equal(h.api.read().ready,false);assert.equal(h.calls.length,0);
+  h.window.handlers.storage[0]({key:'taigi-review:key',newValue:'test-only'});
+  for(let i=0;i<5;i++)await settle();
+  assert.equal(h.api.read().ready,true);assert.equal(h.get('access-panel').hidden,true);
+});
+test('invitation events do not restart an active review or discard its draft',async()=>{
+  const h=harness();await h.api.start();await settle();h.api.edit('Unsaved human correction');const calls=h.calls.length;
+  h.location.hash='#key=another-key';h.window.handlers.hashchange[0]();
+  h.window.handlers.storage[0]({key:'taigi-review:key',newValue:'another-key'});
+  await settle();assert.equal(h.calls.length,calls);assert.equal(h.get('annotation').value,'Unsaved human correction');
+  assert.equal(h.api.read().dirty,true);assert.equal(h.storage.get('taigi-review:key'),'test-only');
+});
+test('access is remembered only after the shared API accepts it',async()=>{
+  const h=harness({failPath:'/api/meta'});await h.api.start();
+  assert.equal(h.storage.has('taigi-review:key'),false);
+  h.setFailure(null);await h.api.start();assert.equal(h.storage.get('taigi-review:key'),'test-only');
+});
 test('a restored stale draft preserves its base revision across editing and reopening',async()=>{
   const h=harness();h.rows[0].annotation='Shared';h.rows[0].revision=1;
   h.storage.set('taigi-review:draft:taigi-00768192',JSON.stringify({id:h.rows[0].id,annotation:'Draft',status:'unreviewed',revision:0}));

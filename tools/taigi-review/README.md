@@ -6,6 +6,8 @@ Private API/audio origin: https://taigi-review-api.heymachi.live
 
 Open the invitation URL with its `#key=...` fragment. The fragment stays in the browser; it is sent only as a bearer authorization header to the private review API. The Share review button copies the invitation for a co-annotator. Anyone holding that invitation can read recordings/transcripts and edit this shared review. Never commit or publicly post the invitation.
 
+The plain URL and invitation URL use the same saved corrections and history. After a successful unlock, the browser remembers the key, so the plain URL works in that browser too. Adding the invitation fragment to an already-open page unlocks it without reloading, and other locked tabs pick up access through a storage event. A new browser/profile or private session still needs the invitation. Locked or loading pages show unknown progress rather than a misleading zero; failure to remember access is reported to the reviewer.
+
 ## Dataset and storage
 
 Two review tabs use independently pinned splits from `jefflai108/streaming-taigi-asr`, config `default`:
