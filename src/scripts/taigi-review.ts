@@ -348,7 +348,9 @@ async function start() {
   if (!accessKey) {
     el('access-panel').hidden = false; el('connection').textContent = 'Private invitation required';
     pendingProgress('Open your invitation to see shared progress.');
-    el('clip-list').textContent = 'Review locked. Open your invitation to load the saved corrections and history.';
+    const locked = document.createElement('p'); locked.className = 'empty';
+    locked.textContent = 'Review locked. Open your invitation to load the saved corrections and history.';
+    el('clip-list').replaceChildren(locked);
     el('workspace').setAttribute('aria-busy', 'false'); return;
   }
   initializing = true;

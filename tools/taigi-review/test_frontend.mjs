@@ -60,7 +60,7 @@ const settle=()=>new Promise(resolve=>setImmediate(resolve));
 test('an invitation fragment unlocks an already-open plain link and loads shared edits',async()=>{
   const h=harness({bootstrap:false});
   assert.equal(h.get('access-panel').hidden,false);assert.equal(h.get('progress').hidden,true);
-  assert.match(h.get('clip-list').textContent,/Review locked/);
+  assert.match(h.get('clip-list').children[0].textContent,/Review locked/);
   h.rows[0].annotation='Existing shared correction';h.rows[0].revision=4;h.rows[0].status='reviewed';
   h.location.hash='#key=test-only';h.window.handlers.hashchange[0]();
   for(let i=0;i<5;i++)await settle();
