@@ -32,9 +32,9 @@ function setup({store=new Map(),storage=new Map(),media,brokenRecorder=false}={}
     else result={recording:rows.get(path.split('/').at(-1))};
     return new Response(JSON.stringify(result),{headers:{'Content-Type':'application/json'}});
   };
-  const session={activeTab:'record',key:()=> 'test',ready:()=>true,leaveDev:async()=>true};
+  const session={activeTab:'record',key:()=> 'test',ready:()=>true,leaveDev:async()=>true,selectDev:async()=>true};
   const context=vm.createContext({reviewSession:session,document,window,indexedDB,MediaRecorder:Recorder,navigator:{mediaDevices:{getUserMedia:media||(async()=>stream)}},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},fetch,URL,URLSearchParams,Blob,Response,AbortSignal,crypto:webcrypto,performance:{now:()=>1000},btoa,console,setTimeout:()=>1,clearTimeout(){},setInterval:()=>1,clearInterval(){}});
-  vm.runInContext(code+`\nthis.api={startRecording,stopRecording,saveAll,openRecording,refreshLocal,persistAnnotation,read:()=>({capture,take,current,conflict,base,dirty:dirty()}),edit:value=>{text.value=value;onEdit();},persist:()=>persistChain};`,context);
+  vm.runInContext(code+`\nthis.api={startRecording,stopRecording,saveAll,openRecording,refreshLocal,persistAnnotation,switchTab,read:()=>({capture,take,current,conflict,base,dirty:dirty()}),edit:value=>{text.value=value;onEdit();},persist:()=>persistChain};`,context);
   return{api:context.api,document,window,get,store,storage,track,stream,rows,calls,session,setFail(value){fail=value;},get recorderCount(){return recorderCount;}};
 }
 async function take(h){await h.api.startRecording();assert.equal(h.api.read().capture,'recording');h.api.stopRecording();await h.api.persist();assert.ok(h.api.read().take);}
@@ -66,4 +66,18 @@ test('duplicate upload with different revision-zero annotation requires explicit
   assert.equal(await h.api.saveAll(),false);assert.ok(h.api.read().conflict);assert.equal(h.get('rec-transcript').value,'My initial words');assert.equal(h.calls.filter(c=>c.method==='PUT').length,0);
   const stored=JSON.parse(h.storage.get(`taigi-review:record-draft:${draft.id}`));assert.equal(stored.conflict,true);
   const reopened=setup({storage:new Map(h.storage)});reopened.rows.set(draft.id,h.rows.get(draft.id));await reopened.api.openRecording(h.rows.get(draft.id));assert.ok(reopened.api.read().conflict);
+});
+
+
+test('three tabs preserve recording drafts and block leaving an active microphone',async()=>{
+  const h=setup();let chosen=[];h.session.selectDev=async tab=>{chosen.push(tab);return true;};
+  await h.api.startRecording();await h.api.switchTab('dev2');assert.equal(h.session.activeTab,'record');
+  h.api.stopRecording();await h.api.persist();await h.api.switchTab('dev2');
+  assert.equal(h.session.activeTab,'dev2');assert.deepEqual(chosen,['dev2']);
+  assert.equal(h.get('dev-panel').hidden,false);assert.equal(h.get('record-panel').hidden,true);
+  assert.equal(h.get('tab-dev2').attributes['aria-selected'],'true');assert.equal(h.store.size,1);
+  await h.api.switchTab('dev');assert.equal(h.session.activeTab,'dev');
+  h.session.leaveDev=async()=>false;await h.api.switchTab('record');assert.equal(h.session.activeTab,'dev');
+  h.session.leaveDev=async()=>true;await h.api.switchTab('record');assert.equal(h.session.activeTab,'record');
+  assert.equal(h.get('dev-panel').hidden,true);assert.equal(h.get('export').hidden,true);
 });

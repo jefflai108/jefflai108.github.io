@@ -212,22 +212,24 @@ async function poll(){
   if(!active()||document.hidden||blocked()||polling||!reviewSession.key())return;polling=true;
   try{await refreshLibrary();if(current){const id=current.id;const data=await json(`/api/recordings/${id}`);if(blocked()||current?.id!==id)return;const incoming:Recording=data.recording;if(incoming.revision>current.revision){if(dirty()||composing||conflict)showConflict(incoming);else accept(incoming);}if(dirty()&&!conflict&&!composing)await saveAll();}}catch(error){if(!loaded)errorMessage(error);}finally{polling=false;}
 }
-async function switchTab(tab:'dev'|'record'){
+async function switchTab(tab:'dev'|'dev2'|'record'){
   if(switching||tab===reviewSession.activeTab)return;switching=true;
   try{
     if(tab==='record'&&!(await reviewSession.leaveDev()))return;
-    if(tab==='dev'){
+    if(tab!=='record'&&reviewSession.activeTab==='record'){
       if(capture==='requesting'){generation++;capture='idle';stopTracks();}
       else if(capture!=='idle'){message('Stop your recording before switching tabs.');return;}
       if(saving&&!(await saving))return;if(dirty()&&!(await saveAll()))return;
       if(take)await persistTake();player.pause();
     }
-    reviewSession.activeTab=tab;el('dev-panel').hidden=tab!=='dev';el('dev-intro').hidden=tab!=='dev';el('record-panel').hidden=tab!=='record';btn('export').hidden=tab!=='dev';
-    for(const id of ['dev','record']){el(`tab-${id}`).setAttribute('aria-selected',String(id===tab));el(`tab-${id}`).tabIndex=id===tab?0:-1;}
+    if(tab!=='record'&&!(await reviewSession.selectDev(tab)))return;
+    reviewSession.activeTab=tab;el('dev-panel').hidden=tab==='record';el('dev-intro').hidden=tab==='record';el('record-panel').hidden=tab!=='record';btn('export').hidden=tab==='record';
+    for(const id of ['dev','dev2','record']){el(`tab-${id}`).setAttribute('aria-selected',String(id===tab));el(`tab-${id}`).tabIndex=id===tab?0:-1;}
     controls();if(tab==='record'){void refreshLocal();void refreshLibrary().catch(errorMessage);}
   }finally{switching=false;}
 }
-for(const tab of ['dev','record'] as const){btn(`tab-${tab}`).addEventListener('click',()=>{void switchTab(tab);});btn(`tab-${tab}`).addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){event.preventDefault();const target=event.key==='Home'?'dev':event.key==='End'?'record':tab==='dev'?'record':'dev';void switchTab(target).then(()=>btn(`tab-${reviewSession.activeTab}`).focus());}});}
+const tabs=['dev','dev2','record'] as const;
+for(const tab of tabs){btn(`tab-${tab}`).addEventListener('click',()=>{void switchTab(tab);});btn(`tab-${tab}`).addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){event.preventDefault();const index=tabs.indexOf(tab);const target=event.key==='Home'?'dev':event.key==='End'?'record':tabs[(index+(event.key==='ArrowRight'?1:tabs.length-1))%tabs.length];void switchTab(target).then(()=>btn(`tab-${reviewSession.activeTab}`).focus());}});}
 function onEdit(){
   if(current&&status.value==='reviewed')status.value='unreviewed';persistAnnotation();if(take)void persistTake();metadata();
   if(!conflict)saveState(current?'Unsaved transcript changes…':take?'Not uploaded yet — save when ready.':'You can write a transcript before recording.','pending');

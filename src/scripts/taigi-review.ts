@@ -4,6 +4,10 @@ type Status = 'unreviewed' | 'reviewed' | 'flagged';
 type Clip = { id: string; position: number; original: string; annotation: string; duration: number; status: Status; revision: number; updated_by: string | null; updated_at: string | null };
 type Draft = { id: string; annotation: string; status: Status; revision: number; uncertain?: boolean };
 const API = 'https://taigi-review-api.heymachi.live';
+type ReviewSet = 'dev' | 'dev2';
+let reviewSet: ReviewSet = 'dev', datasetRequest = 0, clipCount = 5424;
+const setName = () => reviewSet === 'dev2' ? 'Dev2' : 'Dev';
+const datasetKey = (key: string) => reviewSet === 'dev' ? key : `dev2:${key}`;
 const el = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
 const input = (id: string) => el<HTMLInputElement>(id);
 const button = (id: string) => el<HTMLButtonElement>(id);
@@ -33,9 +37,37 @@ const audioCache = new Map<string, Blob>();
 reviewSession.key = () => accessKey;
 reviewSession.ready = () => ready;
 reviewSession.leaveDev = async () => {
-  if (navigating || composing || reviewing) return false;
+  if (navigating || composing || reviewing || initializing) return false;
   if (current && !(await flush())) return false;
   audio.pause();
+  return true;
+};
+reviewSession.selectDev = async (tab: ReviewSet) => {
+  if (tab === reviewSet) return true;
+  if (!(await reviewSession.leaveDev())) return false;
+  clearTimeout(saveTimer); clearTimeout(queueTimer);
+  datasetRequest++; queueRequest++; selectionRequest++; audioRequest++;
+  reviewSet = tab; ready = false; current = null; conflicting = null;
+  clips = []; offset = 0; total = 0; sequence = 0;
+  unresolvedSaveIntent = false; draftBaseRevision = 0;
+  clipCount = tab === 'dev2' ? 5133 : 5424;
+  annotation.value = ''; el<HTMLTextAreaElement>('original').value = '';
+  input('search').value = ''; el<HTMLSelectElement>('filter').value = 'all';
+  el('conflict').hidden = true; el('history-list').replaceChildren();
+  el('clip-id').textContent = `Loading ${setName()} clips…`;
+  el('clip-position').textContent = `${setName().toUpperCase()} CLIP`;
+  el('clip-status').textContent = ''; el('change-label').textContent = ''; el('revision-label').textContent = '';
+  el('duration').textContent = 'MAC-HOSTED AUDIO';
+  audio.removeAttribute('src'); audio.load();
+  if (audioURL) { URL.revokeObjectURL(audioURL); audioURL = null; }
+  button('replay').disabled = true; button('back-five').disabled = true;
+  el('audio-retry').hidden = true; el('audio-message').textContent = 'Audio loads when you open a clip.';
+  el('dataset-source').textContent = `Taigi ${setName()} · HF ${tab === 'dev2' ? 'validation2' : 'validation'} split · ${clipCount.toLocaleString()} clips`;
+  el('dev-panel').setAttribute('aria-labelledby', `tab-${tab}`);
+  savedLabel(`Loading ${setName()} review…`, 'pending');
+  renderQueue(); updateStats({ total: clipCount, reviewed: 0, flagged: 0, corrected: 0 });
+  el('workspace').setAttribute('aria-busy', 'true');
+  void start();
   return true;
 };
 input('editor').value = storage.get('editor') || '';
@@ -47,22 +79,23 @@ function connected(ok: boolean) { el('connection').textContent = ok ? 'Shared re
 function dirty() { return !!current && (unresolvedSaveIntent || annotation.value !== current.annotation || desiredStatus !== current.status); }
 function draft() {
   if (!current) return;
-  if (dirty()) storage.set(`draft:${current.id}`, JSON.stringify({ id: current.id, annotation: annotation.value, status: desiredStatus, revision: draftBaseRevision, uncertain: unresolvedSaveIntent }));
-  else storage.remove(`draft:${current.id}`);
+  if (dirty()) storage.set(datasetKey(`draft:${current.id}`), JSON.stringify({ id: current.id, annotation: annotation.value, status: desiredStatus, revision: draftBaseRevision, uncertain: unresolvedSaveIntent }));
+  else storage.remove(datasetKey(`draft:${current.id}`));
 }
 function updateActions() {
   for (const id of ['save', 'flag', 'review-next', 'previous', 'next']) button(id).disabled = !current || navigating || !!conflicting || composing;
   if (current) {
     button('previous').disabled ||= current.position === 0;
-    button('next').disabled ||= current.position === 5423;
+    button('next').disabled ||= current.position >= clipCount - 1;
   }
   annotation.disabled = !current || navigating;
   button('queue-prev').disabled = !ready || navigating || offset === 0;
   button('queue-next').disabled = !ready || navigating || offset + clips.length >= total;
 }
 class ApiError extends Error { constructor(public status: number, public body: any) { super(body.error || 'Request failed'); } }
-async function request(path: string, init: RequestInit = {}) {
-  const response = await fetch(API + path, { ...init, cache: 'no-store', headers: { Authorization: `Bearer ${accessKey}`, ...(init.body ? { 'Content-Type': 'application/json' } : {}), ...init.headers }, signal: AbortSignal.timeout(15000) });
+async function request(path: string, init: RequestInit = {}, selected: ReviewSet = reviewSet) {
+  const route = selected === 'dev2' ? path.replace(/^\/api\//, '/api/dev2/') : path;
+  const response = await fetch(API + route, { ...init, cache: 'no-store', headers: { Authorization: `Bearer ${accessKey}`, ...(init.body ? { 'Content-Type': 'application/json' } : {}), ...init.headers }, signal: AbortSignal.timeout(15000) });
   if (!response.ok) {
     const body = await response.json().catch(() => ({ error: 'The Mac is unavailable. Keep this page open and retry when it is online.' }));
     throw new ApiError(response.status, body);
@@ -76,12 +109,14 @@ function fail(error: unknown) {
   else notice(error instanceof ApiError ? error.message : 'The Mac is offline or the connection was interrupted. Keep your draft here; saving will retry when the connection returns.');
 }
 function updateStats(stats: { total: number; reviewed: number; flagged: number; corrected: number }) {
+  clipCount = stats.total;
   const label = el('progress-label'); label.replaceChildren(document.createTextNode(stats.reviewed.toLocaleString() + ' '));
   const span = document.createElement('span'); span.textContent = `/ ${stats.total.toLocaleString()} reviewed`; label.append(span);
   el<HTMLProgressElement>('progress').value = stats.reviewed;
+  el<HTMLProgressElement>('progress').max = stats.total;
   el('progress-detail').textContent = `${stats.corrected.toLocaleString()} changed · ${stats.flagged.toLocaleString()} flagged · one shared copy`;
 }
-async function refreshStats() { const data = await json('/api/meta'); updateStats(data.stats); return data; }
+async function refreshStats() { const token = datasetRequest; const data = await json('/api/meta'); if (token === datasetRequest) updateStats(data.stats); return data; }
 function renderQueue() {
   const list = el('clip-list'); list.replaceChildren();
   for (const clip of clips) {
@@ -111,7 +146,7 @@ async function refreshQueue(): Promise<void> {
 }
 function updateClipMetadata() {
   if (!current) return;
-  el('clip-position').textContent = `DEV CLIP ${current.position + 1} OF 5,424`;
+  el('clip-position').textContent = `${setName().toUpperCase()} CLIP ${current.position + 1} OF ${clipCount.toLocaleString()}`;
   el('clip-id').textContent = current.id;
   el('clip-status').textContent = statusNames[desiredStatus];
   el('clip-status').dataset.status = desiredStatus;
@@ -168,9 +203,10 @@ async function flush(): Promise<boolean> {
   return success;
 }
 async function blobFor(id: string) {
-  if (audioCache.has(id)) return audioCache.get(id)!;
+  const key = `${reviewSet}:${id}`;
+  if (audioCache.has(key)) return audioCache.get(key)!;
   const blob = await (await request(`/api/clips/${id}/audio`)).blob();
-  audioCache.set(id, blob);
+  audioCache.set(key, blob);
   while (audioCache.size > 5) audioCache.delete(audioCache.keys().next().value!);
   return blob;
 }
@@ -186,7 +222,8 @@ async function loadAudio(clip: Clip) {
     audioURL = URL.createObjectURL(blob); audio.src = audioURL; audio.load(); audio.playbackRate = Number(el<HTMLSelectElement>('speed').value);
     button('replay').disabled = false; button('back-five').disabled = false;
     el('audio-message').textContent = 'Ready to play · cached for instant replay';
-    if (clip.position < 5423) void blobFor(`taigi-${String(768192 + clip.position + 1).padStart(8, '0')}`).catch(() => {});
+    const next = clips.find(c => c.position === clip.position + 1);
+    if (next) void blobFor(next.id).catch(() => {});
   } catch { if (token === audioRequest) { el('audio-message').textContent = 'Could not load this recording. Check that the Mac is online.'; el('audio-retry').hidden = false; } }
 }
 async function openClip(id: string): Promise<boolean> {
@@ -202,7 +239,7 @@ async function openClip(id: string): Promise<boolean> {
     unresolvedSaveIntent = false;
     el<HTMLTextAreaElement>('original').value = current!.original;
     annotation.value = current!.annotation; clearConflict();
-    const savedDraft = storage.get(`draft:${id}`);
+    const savedDraft = storage.get(datasetKey(`draft:${id}`));
     if (savedDraft) {
       try {
         const restored: Draft = JSON.parse(savedDraft);
@@ -212,12 +249,12 @@ async function openClip(id: string): Promise<boolean> {
             unresolvedSaveIntent = !!restored.uncertain;
             if (restored.revision !== current!.revision) showConflict(current!);
             else { savedLabel('Restored your unsaved draft — click Save now', 'pending'); notice('An unsaved draft from this browser has been restored. Review it, then save.'); }
-          } else storage.remove(`draft:${id}`);
+          } else storage.remove(datasetKey(`draft:${id}`));
         }
       } catch {}
     }
     if (!dirty() && !conflicting) savedLabel(current!.updated_by ? `Saved by ${current!.updated_by} · shared revision ${current!.revision}` : 'Ready to edit · original copied here');
-    updateClipMetadata(); renderQueue(); storage.set('last-clip', id);
+    updateClipMetadata(); renderQueue(); storage.set(datasetKey('last-clip'), id);
     void loadAudio(current!);
     if (el<HTMLDetailsElement>('history-details').open) void loadHistory();
     connected(true); return true;
@@ -227,8 +264,16 @@ async function openClip(id: string): Promise<boolean> {
 async function go(direction: number) {
   if (!current || navigating) return;
   const position = current.position + direction;
-  if (position < 0 || position >= 5424) { notice('You’ve reached the end of the dev set.'); return; }
-  const target = `taigi-${String(768192 + position).padStart(8, '0')}`;
+  if (position < 0 || position >= clipCount) { notice(`You’ve reached the end of the ${setName()} set.`); return; }
+  const token = datasetRequest;
+  let target = clips.find(c => c.position === position)?.id;
+  if (!target) {
+    navigating = true; updateActions();
+    try { target = (await json(`/api/clips?offset=${position}&limit=1`)).clips[0]?.id; }
+    catch (error) { if (token === datasetRequest) fail(error); return; }
+    finally { navigating = false; updateActions(); }
+  }
+  if (token !== datasetRequest || !target) return;
   if (await openClip(target)) {
     if (!input('search').value && el<HTMLSelectElement>('filter').value === 'all' && !clips.some(c => c.id === target)) {
       offset = Math.floor(position / 30) * 30; await refreshQueue().catch(fail);
@@ -258,9 +303,10 @@ async function reviewedNext() {
 async function loadHistory() {
   if (!current) return;
   const id = current.id;
+  const token = datasetRequest;
   try {
     const data = await json(`/api/clips/${id}/history`);
-    if (current?.id !== id) return;
+    if (token !== datasetRequest || current?.id !== id) return;
     const container = el('history-list'); container.replaceChildren();
     if (!data.history.length) container.textContent = 'No edits yet. The human annotation still starts from the original label.';
     for (const row of data.history) {
@@ -268,14 +314,15 @@ async function loadHistory() {
       const meta = document.createElement('small'); meta.textContent = `Revision ${row.revision} · ${row.editor} · ${new Date(row.saved_at).toLocaleString()} · ${statusNames[row.status as Status]}`;
       const text = document.createElement('p'); text.lang = 'nan-TW'; text.textContent = row.annotation || '(No speech)'; entry.append(meta, text); container.append(entry);
     }
-  } catch { el('history-list').textContent = 'Could not load revision history. Close and reopen to retry.'; }
+  } catch { if (token === datasetRequest) el('history-list').textContent = 'Could not load revision history. Close and reopen to retry.'; }
 }
 async function poll() {
   if (!ready || polling || inFlight || navigating || document.hidden) return;
   polling = true;
+  const token = datasetRequest;
   try {
     const data = await json(`/api/changes?since=${sequence}`);
-    if (inFlight || navigating) return;
+    if (token !== datasetRequest || inFlight || navigating) return;
     for (const changed of data.clips as Clip[]) {
       if (current?.id === changed.id && changed.revision > current.revision) {
         if (dirty() || composing || conflicting) showConflict(changed);
@@ -283,10 +330,11 @@ async function poll() {
       }
     }
     sequence = data.sequence;
-    if (data.clips.length) { await refreshStats(); await refreshQueue(); }
+    if (data.clips.length) { await refreshStats(); if (token !== datasetRequest) return; await refreshQueue(); }
+    if (token !== datasetRequest) return;
     connected(true);
     if (dirty() && !conflicting && !composing && input('editor').value.trim()) await flush();
-  } catch (error) { connected(false); if (error instanceof ApiError && error.status === 401) fail(error); }
+  } catch (error) { if (token === datasetRequest) { connected(false); if (error instanceof ApiError && error.status === 401) fail(error); } }
   finally { polling = false; }
 }
 async function start() {
@@ -304,8 +352,8 @@ async function start() {
     el('access-panel').hidden = true; notice();
     for (const id of ['search', 'filter', 'share', 'export']) (el(id) as HTMLInputElement).disabled = false;
     await refreshQueue();
-    const last = storage.get('last-clip');
-    const target = last && /^taigi-\d{8}$/.test(last) ? last : clips[0]?.id;
+    const last = storage.get(datasetKey('last-clip'));
+    const target = last && /^taigi-(?:dev2-)?\d{8}$/.test(last) ? last : clips[0]?.id;
     if (!target) throw new Error('The dev queue is unavailable');
     let loaded = await openClip(target);
     if (!loaded && clips[0] && clips[0].id !== target) loaded = await openClip(clips[0].id);
@@ -351,14 +399,15 @@ button('share').addEventListener('click', async () => {
 });
 button('export').addEventListener('click', async () => {
   if (current && !(await flush())) return;
+  const selected = reviewSet;
   try {
     const data = await json('/api/export');
     const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
-    const a = document.createElement('a'); a.href = url; a.download = `taigi-dev-annotations-${new Date().toISOString().slice(0, 10)}.json`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+    const a = document.createElement('a'); a.href = url; a.download = `taigi-${selected}-annotations-${new Date().toISOString().slice(0, 10)}.json`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
   } catch (error) { fail(error); }
 });
 document.addEventListener('keydown', event => {
-  if (reviewSession.activeTab !== 'dev') return;
+  if (reviewSession.activeTab === 'record') return;
   if (event.isComposing || composing) return;
   if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') { event.preventDefault(); void reviewedNext(); }
   if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 's') { event.preventDefault(); void flush(); }
@@ -382,8 +431,8 @@ if (modelContext?.registerTool) {
       annotations: { readOnlyHint: true, untrustedContentHint: true },
       execute(args: unknown) {
         if (!args || typeof args !== 'object' || Array.isArray(args) || Object.keys(args).length) throw new Error('No arguments are accepted');
-        if (!ready || !current || reviewSession.activeTab !== 'dev') throw new Error('Open a dev clip in the review tab first');
-        return { ...current, editor_annotation: annotation.value, editor_status: desiredStatus, unsaved: dirty(), conflict: !!conflicting };
+        if (!ready || !current || reviewSession.activeTab === 'record') throw new Error('Open a dev clip in the review tab first');
+        return { ...current, split: reviewSet === 'dev2' ? 'validation2' : 'validation', editor_annotation: annotation.value, editor_status: desiredStatus, unsaved: dirty(), conflict: !!conflicting };
       },
     },
     {
@@ -393,7 +442,7 @@ if (modelContext?.registerTool) {
       annotations: { readOnlyHint: false, untrustedContentHint: true },
       async execute(args: any) {
         if (!args || typeof args !== 'object' || Array.isArray(args) || Object.keys(args).sort().join(',') !== 'annotation,editor,id,status' || typeof args.id !== 'string' || typeof args.annotation !== 'string' || args.annotation.length > 10000 || !Object.hasOwn(statusNames, args.status) || typeof args.editor !== 'string' || !args.editor.trim() || args.editor.length > 80) throw new Error('Invalid annotation input');
-        if (!ready || !current || args.id !== current.id || reviewSession.activeTab !== 'dev') throw new Error('The requested dev clip must already be open in the review tab');
+        if (!ready || !current || args.id !== current.id || reviewSession.activeTab === 'record') throw new Error('The requested dev clip must already be open in the review tab');
         if (dirty() || conflicting || inFlight || navigating || composing) throw new Error('Resolve or save the current human draft first');
         input('editor').value = args.editor; storage.set('editor', args.editor);
         annotation.value = args.annotation; desiredStatus = args.status; updateClipMetadata(); draft();

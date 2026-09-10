@@ -2,7 +2,7 @@
 import '../styles/taigi-review.css';
 import avatar from '../assets/jeff-avatar.jpg';
 const title = 'Taigi label correction';
-const description = 'Review Taigi dev transcripts, record your own Taigi, and annotate recordings in one shared workspace.';
+const description = 'Review Taigi Dev and Dev2 transcripts, record your own Taigi, and annotate recordings in one shared workspace.';
 ---
 <!doctype html>
 <html lang="en">
@@ -36,6 +36,7 @@ const description = 'Review Taigi dev transcripts, record your own Taigi, and an
     <main class="shell">
       <nav class="workspace-tabs" role="tablist" aria-label="Taigi workspace">
         <button id="tab-dev" role="tab" aria-selected="true" aria-controls="dev-panel">Dev set review <span>5,424 clips</span></button>
+        <button id="tab-dev2" role="tab" aria-selected="false" aria-controls="dev-panel" tabindex="-1">Dev2 set review <span>5,133 clips</span></button>
         <button id="tab-record" role="tab" aria-selected="false" aria-controls="record-panel" tabindex="-1"><span class="record-dot" aria-hidden="true"></span> Record & annotate <span>Your Taigi recordings</span></button>
       </nav>
       <div class="intro" id="dev-intro"><div><p class="eyebrow">REFERENCE TRANSCRIPT REVIEW</p><h1>Listen closely. Make it right.</h1><p>Listen to the recording, then edit the human annotation. Your corrections are shared and saved automatically.</p></div>
@@ -97,7 +98,7 @@ const description = 'Review Taigi dev transcripts, record your own Taigi, and an
           <aside class="record-library" aria-label="Shared recordings library"><div class="queue-heading"><h2>Our recordings</h2><span id="rec-count">0 saved</span></div><p class="library-hint">Everyone’s recordings, in one place.</p><div id="rec-local-list"></div><label for="rec-search" class="sr-only">Search recordings</label><input id="rec-search" type="search" placeholder="Search title or transcript…" /><div id="rec-list" class="record-list"><p class="empty">Save your first recording to start the collection.</p></div><div class="queue-paging"><button id="rec-list-prev" aria-label="Previous recordings page" disabled>←</button><span id="rec-list-page">—</span><button id="rec-list-next" aria-label="Next recordings page" disabled>→</button></div><button id="rec-export" class="quiet">Export recording transcripts ↓</button></aside>
         </div>
       </section>
-      <footer><a href="https://huggingface.co/datasets/jefflai108/streaming-taigi-asr" target="_blank" rel="noreferrer">streaming-taigi-asr</a><span>Taigi dev · HF validation split · 5,424 clips</span><span>Audio and shared saves are available while Jeff’s Mac is awake and online.</span></footer>
+      <footer><a href="https://huggingface.co/datasets/jefflai108/streaming-taigi-asr" target="_blank" rel="noreferrer">streaming-taigi-asr</a><span id="dataset-source">Taigi Dev · HF validation split · 5,424 clips</span><span>Audio and shared saves are available while Jeff’s Mac is awake and online.</span></footer>
     </main>
     <script>import '../scripts/taigi-review'; import '../scripts/taigi-recordings';</script>
   </body>

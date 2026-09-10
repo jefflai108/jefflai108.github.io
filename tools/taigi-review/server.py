@@ -18,6 +18,9 @@ import recordings
 EXPECTED_COUNT = 5424
 EXPECTED_FINGERPRINT = '9f676034bdaa564a554d93443dbf1836fc2782270cb1eb36b75679b27838c78d'
 SOURCE = {"repo": "jefflai108/streaming-taigi-asr", "config": "default", "split": "validation", "revision": "6722261aee9c4d729b4c5bdd629ec3ebf2060179"}
+DEV2_SOURCE = {"repo": "jefflai108/streaming-taigi-asr", "config": "default", "split": "validation2", "revision": "7889df22aa03f5dd1805737d24c5d39729a60a54"}
+DEV2_COUNT = 5133
+DEV2_FINGERPRINT = '0848a6246cb5d25a2ef7c8415416c87686cbd2df258d543e03794db4953daee0'
 STATUSES = {"unreviewed", "reviewed", "flagged"}
 
 
@@ -33,11 +36,11 @@ def connect(path):
         db.close()
 
 
-def initialize(db_path, manifest, expected_count=EXPECTED_COUNT):
+def initialize(db_path, manifest, expected_count=EXPECTED_COUNT, *, source=SOURCE, fingerprint=EXPECTED_FINGERPRINT):
     manifest = Path(manifest).resolve()
     rows = [json.loads(line) for line in manifest.read_text().splitlines() if line.strip()]
-    fingerprint = hashlib.sha256(manifest.read_bytes()).hexdigest()
-    if expected_count == EXPECTED_COUNT and fingerprint != EXPECTED_FINGERPRINT:
+    actual_fingerprint = hashlib.sha256(manifest.read_bytes()).hexdigest()
+    if (expected_count == EXPECTED_COUNT or source != SOURCE) and actual_fingerprint != fingerprint:
         raise ValueError('Manifest does not match the verified HF dev snapshot')
     if len(rows) != expected_count or len({r['id'] for r in rows}) != expected_count:
         raise ValueError("Refusing to import: unexpected dev split size or duplicate IDs")
@@ -59,8 +62,11 @@ def initialize(db_path, manifest, expected_count=EXPECTED_COUNT):
         CREATE TABLE IF NOT EXISTS metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL);
         ''')
         existing = db.execute("SELECT value FROM metadata WHERE key='manifest_sha256'").fetchone()
-        if existing and existing[0] != fingerprint:
+        if existing and existing[0] != actual_fingerprint:
             raise ValueError("Dev manifest changed; refusing to modify existing annotations")
+        existing_source = db.execute("SELECT value FROM metadata WHERE key='source'").fetchone()
+        if existing_source and json.loads(existing_source[0]) != source:
+            raise ValueError("Review source changed; refusing to modify existing annotations")
         count = db.execute("SELECT count(*) FROM clips").fetchone()[0]
         if count and count != expected_count:
             raise ValueError("Existing database row count does not match dev split")
@@ -73,8 +79,8 @@ def initialize(db_path, manifest, expected_count=EXPECTED_COUNT):
                     duration = wav.getnframes() / wav.getframerate()
                 db.execute("INSERT INTO clips(id,position,original,annotation,audio_path,duration) VALUES(?,?,?,?,?,?)",
                            (row['id'], pos, row['text'], row['text'], str(audio), duration))
-            db.execute("INSERT INTO metadata VALUES('manifest_sha256',?)", (fingerprint,))
-            db.execute("INSERT INTO metadata VALUES('source',?)", (json.dumps(SOURCE),))
+            db.execute("INSERT INTO metadata VALUES('manifest_sha256',?)", (actual_fingerprint,))
+            db.execute("INSERT INTO metadata VALUES('source',?)", (json.dumps(source),))
         db.execute("PRAGMA optimize")
     recordings.initialize(db_path)
 
@@ -154,6 +160,12 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Max-Age', '3600')
         self.end_headers()
 
+    def review_route(self, path):
+        # Choose per request; never mutate the shared server's DB path.
+        if path.startswith('/api/dev2/'):
+            return '/api/' + path[len('/api/dev2/'):], self.server.dev2_db_path
+        return path, self.server.db_path
+
     def do_GET(self):
         path = urlparse(self.path).path
         if path == '/health':
@@ -163,11 +175,15 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if path == '/api/recordings' or path.startswith('/api/recordings/'):
                 return recordings.get(self, path, parse_qs(urlparse(self.path).query))
-            with connect(self.server.db_path) as db:
+            path, db_path = self.review_route(path)
+            if db_path is None:
+                return self.respond(503, {"error": "Dev2 review is not available yet. Please retry shortly."})
+            with connect(db_path) as db:
+                source = json.loads(db.execute("SELECT value FROM metadata WHERE key='source'").fetchone()[0])
                 if path == '/api/meta':
                     stats = dict(db.execute("SELECT count(*) total, sum(status='reviewed') reviewed, sum(status='flagged') flagged, sum(annotation != original) corrected, sum(duration) seconds FROM clips").fetchone())
                     seq = db.execute("SELECT coalesce(max(sequence),0) FROM history").fetchone()[0]
-                    return self.respond(200, {"source": SOURCE, "stats": stats, "sequence": seq})
+                    return self.respond(200, {"source": source, "stats": stats, "sequence": seq})
                 if path == '/api/clips':
                     query = parse_qs(urlparse(self.path).query)
                     offset = max(0, int(query.get('offset', ['0'])[0]))
@@ -195,8 +211,8 @@ class Handler(BaseHTTPRequestHandler):
                     return self.respond(200, {"clips": [public_row(r) for r in rows], "sequence": latest})
                 if path == '/api/export':
                     rows = db.execute('SELECT * FROM clips ORDER BY position').fetchall()
-                    return self.respond(200, {"source": SOURCE, "exported_at": time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), "clips": [public_row(r) for r in rows]})
-                match = re.fullmatch(r'/api/clips/(taigi-[0-9]+)(/history|/audio)?', path)
+                    return self.respond(200, {"source": source, "exported_at": time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), "clips": [public_row(r) for r in rows]})
+                match = re.fullmatch(r'/api/clips/([A-Za-z0-9][A-Za-z0-9_-]{0,127})(/history|/audio)?', path)
                 if match:
                     row = db.execute('SELECT * FROM clips WHERE id=?', (match[1],)).fetchone()
                     if row is None:
@@ -255,16 +271,19 @@ class Handler(BaseHTTPRequestHandler):
             return self.respond(403, {"error": "Origin not allowed"})
         path = urlparse(self.path).path
         recording = re.fullmatch(r'/api/recordings/(' + recordings.ID_PATTERN + ')', path)
-        match = recording or re.fullmatch(r'/api/clips/(taigi-[0-9]+)', path)
+        path, db_path = self.review_route(path)
+        match = recording or re.fullmatch(r'/api/clips/([A-Za-z0-9][A-Za-z0-9_-]{0,127})', path)
         if not match:
             return self.respond(404, {"error": "Not found"})
+        if db_path is None:
+            return self.respond(503, {"error": "Dev2 review is not available yet. Please retry shortly."})
         try:
             length = int(self.headers.get('Content-Length', '0'))
             if not 0 < length <= 100000:
                 return self.respond(413, {"error": "Request too large"})
             payload = json.loads(self.rfile.read(length))
             writer = recordings.save if recording else save
-            code, body = writer(self.server.db_path, match[1], payload)
+            code, body = writer(db_path, match[1], payload)
             self.respond(code, body)
         except (ValueError, UnicodeError, TypeError):
             self.respond(400, {"error": "Invalid request"})
@@ -292,9 +311,10 @@ class Handler(BaseHTTPRequestHandler):
             self.respond(503, {"error": "Recording could not be saved. Keep your take and retry."})
 
 
-def make_server(host, port, db_path, access_key, origins):
+def make_server(host, port, db_path, access_key, origins, *, dev2_db_path=None):
     server = ThreadingHTTPServer((host, port), Handler)
     server.db_path = str(db_path)
+    server.dev2_db_path = str(dev2_db_path) if dev2_db_path is not None else None
     server.access_key = access_key
     server.allowed_origins = origins
     return server
@@ -309,7 +329,14 @@ if __name__ == '__main__':
         raise ValueError('Access key must contain at least 32 characters')
     initialize(config['db_path'], config['manifest'])
     os.chmod(config['db_path'], 0o600)
+    dev2 = config.get('dev2')
+    if dev2:
+        if Path(dev2['db_path']).resolve() == Path(config['db_path']).resolve():
+            raise ValueError('Dev2 requires its own review database')
+        initialize(dev2['db_path'], dev2['manifest'], DEV2_COUNT, source=DEV2_SOURCE, fingerprint=DEV2_FINGERPRINT)
+        os.chmod(dev2['db_path'], 0o600)
     server = make_server('127.0.0.1', config.get('port', 8766), config['db_path'], config['access_key'],
-                         {'https://jefflai108.github.io', 'http://localhost:4321', 'http://127.0.0.1:4321'})
+                         {'https://jefflai108.github.io', 'http://localhost:4321', 'http://127.0.0.1:4321'},
+                         dev2_db_path=dev2['db_path'] if dev2 else None)
     print(f'Taigi dev review listening on 127.0.0.1:{server.server_port}', flush=True)
     server.serve_forever()

@@ -1,6 +1,7 @@
 """Integration checks use synthetic clips in a temporary DB, never production labels."""
 from concurrent.futures import ThreadPoolExecutor
 import json
+import hashlib
 from pathlib import Path
 import tempfile
 import threading
@@ -84,5 +85,60 @@ class ReviewTests(unittest.TestCase):
         with self.assertRaises(ValueError): server.initialize(self.db,self.manifest)
         self.manifest.write_text(self.manifest.read_text().replace('原始','別的'))
         with self.assertRaises(ValueError): server.initialize(self.db,self.manifest,expected_count=2)
+
+    def add_dev2(self):
+        # Deliberately overlap IDs: even a colliding ID must stay in its own set.
+        manifest = self.root / 'dev2.jsonl'
+        manifest.write_text(self.manifest.read_text().replace('原始台語', '第二組台語'))
+        path = self.root / 'dev2.sqlite3'
+        server.initialize(path, manifest, 2, source=server.DEV2_SOURCE,
+                          fingerprint=hashlib.sha256(manifest.read_bytes()).hexdigest())
+        self.http.dev2_db_path = str(path)
+        return path, manifest
+
+    def test_dev2_import_preserves_existing_edits_and_exports_each_source(self):
+        self.call('/api/clips/taigi-00000000', self.payload('Dev correction', editor='Stella', status='reviewed'))
+        with server.connect(self.db) as db:
+            before = {table: [tuple(r) for r in db.execute('SELECT * FROM ' + table)]
+                      for table in ['clips', 'history', 'metadata']}
+        self.add_dev2()
+        with server.connect(self.db) as db:
+            after = {table: [tuple(r) for r in db.execute('SELECT * FROM ' + table)] for table in before}
+        self.assertEqual(before, after)
+        self.assertEqual(self.call('/api/meta')[2]['stats']['reviewed'], 1)
+        self.assertEqual(self.call('/api/dev2/meta')[2]['stats']['reviewed'], 0)
+        self.assertEqual(self.call('/api/dev2/export')[2]['source'], server.DEV2_SOURCE)
+        self.assertEqual(self.call('/api/export')[2]['source'], server.SOURCE)
+        self.assertEqual(self.call('/api/dev2/clips')[2]['clips'][0]['annotation'], '第二組台語')
+        self.assertEqual(self.call('/api/dev2/recordings')[0], 404)
+
+    def test_dev2_conflicts_changes_history_and_audio_are_isolated(self):
+        self.add_dev2()
+        path = '/api/dev2/clips/taigi-00000000'
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            replies = list(pool.map(lambda name: self.call(path, self.payload(name, editor=name, status='reviewed')), ['Stella', 'Colette']))
+        self.assertEqual(sorted(r[0] for r in replies), [200, 409])
+        winner = next(r[2]['clip'] for r in replies if r[0] == 200)
+        self.assertEqual(self.call(path, self.payload(winner['annotation'], status='reviewed'))[0], 200)
+        self.assertEqual(len(self.call(path + '/history')[2]['history']), 1)
+        self.assertEqual(len(self.call('/api/dev2/changes?since=0')[2]['clips']), 1)
+        self.assertEqual(self.call('/api/changes?since=0')[2]['clips'], [])
+        self.assertEqual(self.call('/api/clips/taigi-00000000')[2]['clip']['revision'], 0)
+        self.assertEqual(self.call('/api/dev2/clips?status=reviewed')[2]['total'], 1)
+        status, headers, data = self.call(path + '/audio', headers={'Range': 'bytes=0-43', 'Origin': 'https://jefflai108.github.io'})
+        self.assertEqual(status, 206); self.assertEqual(data[:4], b'RIFF')
+        self.assertEqual(headers['Access-Control-Allow-Origin'], 'https://jefflai108.github.io')
+
+    def test_dev2_access_and_source_guards(self):
+        self.assertEqual(self.call('/api/dev2/meta')[0], 503)
+        path, manifest = self.add_dev2()
+        for route in ['/api/dev2/meta', '/api/dev2/export', '/api/dev2/changes', '/api/dev2/clips', '/api/dev2/clips/taigi-00000000/audio']:
+            self.assertEqual(self.call(route, auth=False)[0], 401)
+        self.assertEqual(self.call('/api/dev2/clips/taigi-00000000', self.payload('x'), auth=False)[0], 401)
+        self.assertEqual(self.call('/api/dev2/clips/taigi-00000000', self.payload('x'), headers={'Origin': 'https://evil.example'})[0], 403)
+        with self.assertRaises(ValueError):
+            server.initialize(path, manifest, 2, source=server.DEV2_SOURCE, fingerprint='wrong')
+        with self.assertRaises(ValueError):
+            server.initialize(path, manifest, 2)
 
 if __name__=='__main__': unittest.main()
