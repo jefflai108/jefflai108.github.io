@@ -34,6 +34,41 @@ npm run build    # -> dist/
 npm run preview  # serve dist/
 ```
 
+## Image comparison gallery
+
+The public comparison is at `/gpt-vs-gemini/`. Its HTML and checksum manifest are
+tracked in Git; the 40 generated JPEGs (20 originals at 1024×1024 and 20 previews
+at 512×512) are stored in the `image-comparison-2026-09-11` GitHub Release asset
+`line-image-comparison-images.zip`. Do not commit generated images or embed their
+base64 bytes in HTML.
+
+The Pages workflow downloads that exact asset after building, verifies the ZIP
+and every file against `scripts/image-comparison-assets.json`, then adds the images
+to `dist/gpt-vs-gemini/images/`. A missing or changed asset fails deployment, so a
+gallery with broken image links cannot replace the current site. Publish the
+matching release asset before merging changes to its manifest.
+
+For a local preview with images:
+
+```bash
+gallery_assets_dir="$(mktemp -d)"
+gh release download image-comparison-2026-09-11 \
+  --repo jefflai108/jefflai108.github.io \
+  --pattern line-image-comparison-images.zip --dir "$gallery_assets_dir"
+python3 scripts/install-image-comparison-assets.py \
+  "$gallery_assets_dir/line-image-comparison-images.zip" public
+npm run dev
+```
+
+The installed `public/gpt-vs-gemini/images/` directory is ignored by Git. To preview
+a production build, run `npm run build`, pass `dist` instead of `public` to the
+installer, then run `npm run preview`. The installer uses only Python's standard
+library; its offline archive validation tests run with:
+
+```bash
+python3 -m unittest discover -s scripts -p 'test_image_comparison_assets.py'
+```
+
 ## Where the content lives
 
 Everything editable is a plain TypeScript file under `src/data/` — no CMS, no frontmatter

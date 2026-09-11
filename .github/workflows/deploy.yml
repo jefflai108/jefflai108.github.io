@@ -49,6 +49,20 @@ jobs:
           # Used by scripts/fetch-contributions.mjs to refresh the activity graph.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Generated JPEGs live in a release asset, never in the Git history.
+      # Both the archive and every extracted image are pinned by SHA-256.
+      - name: Install image comparison assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_image_comparison_assets.py'
+          gh release download image-comparison-2026-09-11 \
+            --pattern line-image-comparison-images.zip \
+            --dir "$RUNNER_TEMP/image-comparison-assets"
+          python3 scripts/install-image-comparison-assets.py \
+            "$RUNNER_TEMP/image-comparison-assets/line-image-comparison-images.zip" dist
+
       # Keep alive.
       #
       # GitHub disables scheduled workflows in a PUBLIC repo "when no repository
