@@ -1,0 +1,169 @@
+{
+  "release_tag": "image-comparison-2026-09-11",
+  "asset_name": "line-image-comparison-images.zip",
+  "archive_sha256": "4380bcf4bd24876ae0372963820c08d8b929cadff8bf6f91bd5eca65b3e821a7",
+  "archive_bytes": 6305247,
+  "destination": "gpt-vs-gemini/images",
+  "files": {
+    "original/gemini/01.jpg": {
+      "sha256": "e198e04335694357d4f2c33737d0c950042ef53a321b06c57a198797e2c08406",
+      "bytes": 217976
+    },
+    "preview/gemini/01.jpg": {
+      "sha256": "fdc2c3803dc4ac02e387f51c3c6a9e35adad5df9da51e6bd4527a497b9f5f74c",
+      "bytes": 68219
+    },
+    "original/flare/01.jpg": {
+      "sha256": "4b0ed9884a12190117c847542df79b54d569397396277b6b0da61cc4fe2fc0c8",
+      "bytes": 163258
+    },
+    "preview/flare/01.jpg": {
+      "sha256": "e0a8bbc2262a0993fb08c4e41246cb3b1bcdaca44879122cab42e58577cd86f6",
+      "bytes": 72223
+    },
+    "original/gemini/02.jpg": {
+      "sha256": "11e8d807de3562b5e76ed058e99d1a9d783c03717d52bb531db9dec9fc720217",
+      "bytes": 208813
+    },
+    "preview/gemini/02.jpg": {
+      "sha256": "e72aad65bf3c748de87e89d3534885a0a85ff7fae263064d4e38e545df9e2c10",
+      "bytes": 67129
+    },
+    "original/flare/02.jpg": {
+      "sha256": "b1d21b15acae8125dad3ed5d0021888530e967944799d520c171c84c59f93823",
+      "bytes": 145602
+    },
+    "preview/flare/02.jpg": {
+      "sha256": "2d98e89137fb71638b8c19f4c3cd1bd019c7414994c437de4013570223156daa",
+      "bytes": 68016
+    },
+    "original/gemini/03.jpg": {
+      "sha256": "8fe95eab897b2504f62e59ec5194203bac0615bdaf56dbae3de12328cd4a00e1",
+      "bytes": 206488
+    },
+    "preview/gemini/03.jpg": {
+      "sha256": "67911061ce59cd3a5394d0b5b1f1a358fe2909c147944c8611b4a48b547d1da8",
+      "bytes": 62476
+    },
+    "original/flare/03.jpg": {
+      "sha256": "09ca001617e78a1561f706a6d8324040d99d103454fa8cbac165a560b1a180cd",
+      "bytes": 178489
+    },
+    "preview/flare/03.jpg": {
+      "sha256": "1d6777cf92cd4954822ee3b996d683be0d960c4d9b48dac3beb2d8fd3cbc6e4c",
+      "bytes": 80774
+    },
+    "original/gemini/04.jpg": {
+      "sha256": "cad43589f023456426c88215b5c10ba416d02668a1f37a4c0801870cd87ecfed",
+      "bytes": 198573
+    },
+    "preview/gemini/04.jpg": {
+      "sha256": "07a28e498d07393d37b8bc64ad867e70d8404b07a02dbd5e9a806a47583e94b0",
+      "bytes": 62383
+    },
+    "original/flare/04.jpg": {
+      "sha256": "f3bd399fdb8d09c5309a4534d53b72dc93e8e2f48a8e44d8b69c70189a76319e",
+      "bytes": 145181
+    },
+    "preview/flare/04.jpg": {
+      "sha256": "1ed91f557b115490baf130e896c4b605359245222f1a3b2ed3bbde230ed42c7a",
+      "bytes": 63799
+    },
+    "original/gemini/05.jpg": {
+      "sha256": "4dcb6061d5f7461d67befb9c828829522b9149f05e85ef37a0178651288e64fd",
+      "bytes": 408260
+    },
+    "preview/gemini/05.jpg": {
+      "sha256": "2e5a11e222c695f20d61873949cece0428f5f0f3210613addab5c9b95611da1c",
+      "bytes": 111033
+    },
+    "original/flare/05.jpg": {
+      "sha256": "9033f60e7fc4ce8768aede59202a93d27912e532b1d0a0a9b5c2a3341fd5d21c",
+      "bytes": 300634
+    },
+    "preview/flare/05.jpg": {
+      "sha256": "423ea379b00fc805287d5708ecb18f6c9e79fbbae63883dafc9d3a1c7f9bd18e",
+      "bytes": 107805
+    },
+    "original/gemini/06.jpg": {
+      "sha256": "d2b731c378152fcc7cf5b404e02fbdd908943174e088d3f407b8117a8d85fc7b",
+      "bytes": 269133
+    },
+    "preview/gemini/06.jpg": {
+      "sha256": "4f549ec84be10efddfaa8a0f9b12cc9c3b859285d16b87b853acb27526fa0000",
+      "bytes": 78776
+    },
+    "original/flare/06.jpg": {
+      "sha256": "99c74bf224244616fcc5cbf82d8c9b945ef53f0855dc506f06c3444539e9ed31",
+      "bytes": 200567
+    },
+    "preview/flare/06.jpg": {
+      "sha256": "c01f4fc62bcbb0b052835c75ca1c179fc8a0a98cfb9d2fe1bff41190f2ff45ba",
+      "bytes": 81049
+    },
+    "original/gemini/07.jpg": {
+      "sha256": "961f8e04b91643bf8af4427531078ea534b189a451440bde39099e5a90036c81",
+      "bytes": 260400
+    },
+    "preview/gemini/07.jpg": {
+      "sha256": "dbfb8e14c23d133633950c6dd841383fa70bf95dc209e4f68a347ed8e07bf2c9",
+      "bytes": 79769
+    },
+    "original/flare/07.jpg": {
+      "sha256": "3b320b7cca30720ddf79f35c0ef81c052a1c889ca3c9379725bc03a2f3afaa8c",
+      "bytes": 215802
+    },
+    "preview/flare/07.jpg": {
+      "sha256": "b6ff047fc145b2ce358a39ee3ff94a51fb898359fbddf0e1b6d5d9e3a5fcfb65",
+      "bytes": 90261
+    },
+    "original/gemini/08.jpg": {
+      "sha256": "727d9540e247fb2dd9964429265d1c272b88bf670dcaf3997605797f4f647cc6",
+      "bytes": 419564
+    },
+    "preview/gemini/08.jpg": {
+      "sha256": "1fa4721fa3250210a6d38419453d95e70259c6c88e59066b385d4b7ba5abd4a8",
+      "bytes": 123360
+    },
+    "original/flare/08.jpg": {
+      "sha256": "dd3c4a3ea0544afa7be532848160da8331973e2336718dff4764ab1420a5d44e",
+      "bytes": 302021
+    },
+    "preview/flare/08.jpg": {
+      "sha256": "969c0b262bfb5740d0bb4f01ee925c35c322017c089f3e7491da715bdce6297b",
+      "bytes": 120175
+    },
+    "original/gemini/09.jpg": {
+      "sha256": "4f6ad2329db559bbdadb09a5f4f579298e17c0a2e030c61814903846dc9ea333",
+      "bytes": 187812
+    },
+    "preview/gemini/09.jpg": {
+      "sha256": "bd2003bd4d41ef3eddb08cdc3cfe76ec31c2fc070ed0e4bf1d07ea4ade724434",
+      "bytes": 58594
+    },
+    "original/flare/09.jpg": {
+      "sha256": "cbd462c2423c483305fdff8931199c5fd650024faf31057ff1bd7f708ad7fb58",
+      "bytes": 115138
+    },
+    "preview/flare/09.jpg": {
+      "sha256": "edddd7de58ba669ce80a8f21a08caa2de0948c4e96ecc52c6733233828e906d1",
+      "bytes": 56080
+    },
+    "original/gemini/10.jpg": {
+      "sha256": "0a19f56b2143ef142834533fde88e376e93d51fb6720e4904a522cf5b15c6140",
+      "bytes": 305059
+    },
+    "preview/gemini/10.jpg": {
+      "sha256": "287e6e9231f6d53aeb62d6e17c455159351ad48bd372995a7c65fbb73bbb1437",
+      "bytes": 89048
+    },
+    "original/flare/10.jpg": {
+      "sha256": "c20de7f4fcd4065f52c24450b69c1e6c65d054971f7638e2b77a0e4519347d47",
+      "bytes": 220436
+    },
+    "preview/flare/10.jpg": {
+      "sha256": "ef4390bcab86b4a7ce13479bbe6cf443cff7c73e9f3c0b29f3fcc1bff9253cf7",
+      "bytes": 90330
+    }
+  }
+}

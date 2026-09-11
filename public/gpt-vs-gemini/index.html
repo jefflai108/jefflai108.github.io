@@ -1,0 +1,143 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GPT Image 2.5 Flare vs Gemini Lite｜LINE 圖片比較 · Jeff Lai</title>
+<meta name="description" content="10 組相同 prompts，比較 Gemini 3.1 Flash Lite Image 與 GPT Image 2.5 Flare 的最低可選設定。1024 原圖、512 LINE 預覽並排展示。">
+<link rel="canonical" href="https://jefflai108.github.io/gpt-vs-gemini/">
+<meta property="og:type" content="website"><meta property="og:title" content="Gemini Lite × GPT Image 2.5 Flare｜10 組圖片比較">
+<meta property="og:description" content="相同 prompts、最低可選設定、適合 LINE 的正方形圖片。點圖放大比較。">
+<meta property="og:url" content="https://jefflai108.github.io/gpt-vs-gemini/">
+<meta property="og:image" content="https://jefflai108.github.io/gpt-vs-gemini/images/original/flare/02.jpg">
+<meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.svg"><style>
+:root{font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;color:#22332c;background:#f3f5ef}*{box-sizing:border-box}
+body{margin:0}header,main{max-width:1120px;margin:auto;padding:24px}h1{font-size:30px;margin:8px 0}header p{line-height:1.7;max-width:850px}
+.controls{position:sticky;top:0;z-index:2;background:#f3f5eff2;border-bottom:1px solid #ced9cf;padding:12px 24px;text-align:center;backdrop-filter:blur(8px)}
+select{font:inherit;padding:8px;border-radius:8px;border:1px solid #8ca393;background:white}section{background:white;border:1px solid #dde5dc;border-radius:18px;padding:20px;margin-bottom:24px;box-shadow:0 5px 20px #19372607}
+h2{font-size:21px;margin:0 0 16px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:18px}figure{margin:0;min-width:0}figcaption{display:flex;flex-direction:column;gap:6px;min-height:60px}figcaption span{font-size:13px;color:#5e6d63}
+.image-button{padding:0;border:0;background:#e8ece5;border-radius:12px;overflow:hidden;display:block;width:100%;cursor:zoom-in}img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:contain}
+details{margin-top:16px;color:#596b60;font-size:14px;line-height:1.6}summary{cursor:pointer}details p{white-space:pre-wrap}small{word-break:break-all}
+dialog{border:0;padding:12px;border-radius:14px;max-width:95vw;max-height:95vh}dialog::backdrop{background:#10251dd9}dialog img{width:auto;max-width:88vw;max-height:82vh;object-fit:contain}dialog button{font:inherit;float:right;margin-bottom:8px;padding:5px 14px}
+footer{max-width:1120px;padding:0 24px 36px;margin:auto;color:#5e6d63;font-size:13px;line-height:1.7}a{color:#206941}
+@media(max-width:600px){header,main{padding:14px}.pair{gap:10px}section{padding:12px}h1{font-size:24px}figcaption strong{font-size:13px}figcaption span{font-size:11px}figcaption{min-height:70px}}
+</style></head><body><header><a href="/">← Jeff Lai</a><p>HeyMachi · 2026/09/11 UTC</p><h1>Gemini Lite × GPT Image 2.5 Flare</h1>
+<p>同一組 10 個隨機合成 prompts，最低可選設定。左：Gemini Lite（1K、minimal thinking）；右：Flare（low）。
+原圖為 1024×1024 JPEG，預覽為 512×512 JPEG；皆保持完整構圖。點圖可放大。</p>
+<p>從場景池以固定 seed 20260911 抽出 10 個，出圖前已固定。此頁展示適合 LINE 的 JPEG 副本，保持完整構圖。所有內容均為合成測試場景；未使用真實日記，也未向 LINE 聊天室發送測試訊息。</p><p>本次生成時間中位數：Gemini <strong>3.18 秒</strong>，Flare <strong>16.90 秒</strong>。
+Gemini 逐張執行；Flare 首張確認後，其餘以併發 2 執行。這是 10 張的小樣本觀測，並非受控速度測試。</p>
+
+<details><summary>模型與最低設定說明</summary><p>Gemini 使用 gemini-3.1-flash-lite-image，1K、thinking_level=minimal；此模型沒有獨立的 quality=low 檔位。
+Flare 使用 gpt-image-2.5-flare，quality=low、size=1024x1024。兩邊均收到相同文字；生圖 quality 與 JPEG 壓縮設定分別處理。</p>
+<p>Gemini 回應有確認模型 ID；Flare 的 CLI 沒有保存 response model／usage，故紀錄僅確認請求設定及生成檔案，不能據此計算實際帳單。</p></details>
+</header>
+<div class="controls"><label for="resolution">檢視尺寸：</label><select id="resolution"><option value="original">1024×1024 原圖</option><option value="preview">512×512 LINE 預覽</option></select></div><main>
+<section><h2>01 · 復古收音機</h2><div class="pair">
+<figure><figcaption><strong>Gemini Lite · minimal / 1K</strong><span>3.4s · 原圖 213 KB · 預覽 67 KB</span></figcaption><button class="image-button" aria-label="放大復古收音機：Gemini Lite · minimal / 1K"><img loading="lazy" width="1024" height="1024" src="images/original/gemini/01.jpg" data-original="images/original/gemini/01.jpg" data-preview="images/preview/gemini/01.jpg" alt="復古收音機"></button></figure>
+
+<figure><figcaption><strong>Flare · low</strong><span>21.6s · 原圖 159 KB · 預覽 71 KB</span></figcaption><button class="image-button" aria-label="放大復古收音機：Flare · low"><img loading="lazy" width="1024" height="1024" src="images/original/flare/01.jpg" data-original="images/original/flare/01.jpg" data-preview="images/preview/flare/01.jpg" alt="復古收音機"></button></figure>
+</div>
+<details><summary>查看兩邊共用的 prompt</summary><p>A nostalgic still-life photograph of a repaired vintage radio beside a ceramic tea cup on a wooden balcony shelf. Golden late-afternoon sunlight, gently worn materials, no visible brand or readable labels.
+
+Compose a square 1:1 image for viewing in a LINE chat on a phone. Keep the main subject clearly readable at thumbnail size, with a modest safe margin inside every edge. No captions, text, logos, watermarks, UI elements, or decorative border.</p><small>SHA-256：4c47b5701c22d267d3bcb9ddeb6b7b6e672b867630cce0fadd7fe95325fb4c72</small></details>
+</section>
+
+<section><h2>02 · 貓咪修理機器人</h2><div class="pair">
+<figure><figcaption><strong>Gemini Lite · minimal / 1K</strong><span>3.3s · 原圖 204 KB · 預覽 66 KB</span></figcaption><button class="image-button" aria-label="放大貓咪修理機器人：Gemini Lite · minimal / 1K"><img loading="lazy" width="1024" height="1024" src="images/original/gemini/02.jpg" data-original="images/original/gemini/02.jpg" data-preview="images/preview/gemini/02.jpg" alt="貓咪修理機器人"></button></figure>
+
+<figure><figcaption><strong>Flare · low</strong><span>26.7s · 原圖 142 KB · 預覽 66 KB</span></figcaption><button class="image-button" aria-label="放大貓咪修理機器人：Flare · low"><img loading="lazy" width="1024" height="1024" src="images/original/flare/02.jpg" data-original="images/original/flare/02.jpg" data-preview="images/preview/flare/02.jpg" alt="貓咪修理機器人"></button></figure>
+</div>
+<details><summary>查看兩邊共用的 prompt</summary><p>A charming 3D miniature scene of a small calico cat using a tiny screwdriver to repair a friendly round robot at a wooden workbench. Scattered simple gears, warm task light, expressive but clean design.
+
+Compose a square 1:1 image for viewing in a LINE chat on a phone. Keep the main subject clearly readable at thumbnail size, with a modest safe margin inside every edge. No captions, text, logos, watermarks, UI elements, or decorative border.</p><small>SHA-256：138220a0aa74c5b8c8db07a5a3a78b74df95da5a31613fa81dd0023e6325d0a2</small></details>
+</section>
+
+<section><h2>03 · 雨夜的珍奶</h2><div class="pair">
+<figure><figcaption><strong>Gemini Lite · minimal / 1K</strong><span>3.3s · 原圖 202 KB · 預覽 61 KB</span></figcaption><button class="image-button" aria-label="放大雨夜的珍奶：Gemini Lite · minimal / 1K"><img loading="lazy" width="1024" height="1024" src="images/original/gemini/03.jpg" data-original="images/original/gemini/03.jpg" data-preview="images/preview/gemini/03.jpg" alt="雨夜的珍奶"></button></figure>
+
+<figure><figcaption><strong>Flare · low</strong><span>12.7s · 原圖 174 KB · 預覽 79 KB</span></figcaption><button class="image-button" aria-label="放大雨夜的珍奶：Flare · low"><img loading="lazy" width="1024" height="1024" src="images/original/flare/03.jpg" data-original="images/original/flare/03.jpg" data-preview="images/preview/flare/03.jpg" alt="雨夜的珍奶"></button></figure>
+</div>
+<details><summary>查看兩邊共用的 prompt</summary><p>A candid food photograph of a sealed cup of Taiwanese bubble tea on a rain-speckled outdoor cafe table at night. Amber shop lights form soft bokeh behind it. The cup is unbranded, condensation is visible, and the tapioca pearls are distinct.
+
+Compose a square 1:1 image for viewing in a LINE chat on a phone. Keep the main subject clearly readable at thumbnail size, with a modest safe margin inside every edge. No captions, text, logos, watermarks, UI elements, or decorative border.</p><small>SHA-256：87b1ddf3cecbb1a2e4d55c4ecec837cedfef59bf8ffa457083f53ba2e7f3ad94</small></details>
+</section>
+
+<section><h2>04 · 生日鬆餅</h2><div class="pair">
+<figure><figcaption><strong>Gemini Lite · minimal / 1K</strong><span>2.7s · 原圖 194 KB · 預覽 61 KB</span></figcaption><button class="image-button" aria-label="放大生日鬆餅：Gemini Lite · minimal / 1K"><img loading="lazy" width="1024" height="1024" src="images/original/gemini/04.jpg" data-original="images/original/gemini/04.jpg" data-preview="images/preview/gemini/04.jpg" alt="生日鬆餅"></button></figure>
+
+<figure><figcaption><strong>Flare · low</strong><span>18.8s · 原圖 142 KB · 預覽 62 KB</span></figcaption><button class="image-button" aria-label="放大生日鬆餅：Flare · low"><img loading="lazy" width="1024" height="1024" src="images/original/flare/04.jpg" data-original="images/original/flare/04.jpg" data-preview="images/preview/flare/04.jpg" alt="生日鬆餅"></button></figure>
+</div>
+<details><summary>查看兩邊共用的 prompt</summary><p>A playful editorial illustration of a tall stack of pancakes with one lit birthday candle and strawberries on a blue ceramic plate. A surprised cream-colored kitten peeks over the table edge. Warm pastel colors.
+
+Compose a square 1:1 image for viewing in a LINE chat on a phone. Keep the main subject clearly readable at thumbnail size, with a modest safe margin inside every edge. No captions, text, logos, watermarks, UI elements, or decorative border.</p><small>SHA-256：e095c5daee035821b14c18ee6ed0fde4b5d31fd5ca00a2088f80d6e51ca541e9</small></details>
+</section>
+
+<section><h2>05 · 阿嬤包水餃</h2><div class="pair">
+<figure><figcaption><strong>Gemini Lite · minimal / 1K</strong><span>3.3s · 原圖 399 KB · 預覽 108 KB</span></figcaption><button class="image-button" aria-label="放大阿嬤包水餃：Gemini Lite · minimal / 1K"><img loading="lazy" width="1024" height="1024" src="images/original/gemini/05.jpg" data-original="images/original/gemini/05.jpg" data-preview="images/preview/gemini/05.jpg" alt="阿嬤包水餃"></button></figure>
+
+<figure><figcaption><strong>Flare · low</strong><span>18.1s · 原圖 294 KB · 預覽 105 KB</span></figcaption><button class="image-button" aria-label="放大阿嬤包水餃：Flare · low"><img loading="lazy" width="1024" height="1024" src="images/original/flare/05.jpg" data-original="images/original/flare/05.jpg" data-preview="images/preview/flare/05.jpg" alt="阿嬤包水餃"></button></figure>
+</div>
+<details><summary>查看兩邊共用的 prompt</summary><p>A colored-pencil diary illustration showing only an elderly grandmother&#x27;s hands and an adult grandchild&#x27;s hands folding dumplings together over a wooden kitchen table. A small flour bowl and several neatly folded dumplings are visible. Intimate overhead view.
+
+Compose a square 1:1 image for viewing in a LINE chat on a phone. Keep the main subject clearly readable at thumbnail size, with a modest safe margin inside every edge. No captions, text, logos, watermarks, UI elements, or decorative border.</p><small>SHA-256：4c831fc7c892684846634c4c020aaaa3261da780a7af9ca481fe10ff5730087b</small></details>
+</section>
+
+<section><h2>06 · 台東海邊</h2><div class="pair">
+<figure><figcaption><strong>Gemini Lite · minimal / 1K</strong><span>3.1s · 原圖 263 KB · 預覽 77 KB</span></figcaption><button class="image-button" aria-label="放大台東海邊：Gemini Lite · minimal / 1K"><img loading="lazy" width="1024" height="1024" src="images/original/gemini/06.jpg" data-original="images/original/gemini/06.jpg" data-preview="images/preview/gemini/06.jpg" alt="台東海邊"></button></figure>
+
+<figure><figcaption><strong>Flare · low</strong><span>18.4s · 原圖 196 KB · 預覽 79 KB</span></figcaption><button class="image-button" aria-label="放大台東海邊：Flare · low"><img loading="lazy" width="1024" height="1024" src="images/original/flare/06.jpg" data-original="images/original/flare/06.jpg" data-preview="images/preview/flare/06.jpg" alt="台東海邊"></button></figure>
+</div>
+<details><summary>查看兩邊共用的 prompt</summary><p>A cinematic natural photograph of a quiet pebble beach on Taiwan&#x27;s east coast before sunrise. A weathered wooden bench faces the Pacific Ocean, blue-gray waves and a pale peach horizon, no people.
+
+Compose a square 1:1 image for viewing in a LINE chat on a phone. Keep the main subject clearly readable at thumbnail size, with a modest safe margin inside every edge. No captions, text, logos, watermarks, UI elements, or decorative border.</p><small>SHA-256：c0a60fe0881409978a0fe3eeecc3ea91e83ea357935389bee26e960fb2149493</small></details>
+</section>
+
+<section><h2>07 · 機車環島休息站</h2><div class="pair">
+<figure><figcaption><strong>Gemini Lite · minimal / 1K</strong><span>3.0s · 原圖 254 KB · 預覽 78 KB</span></figcaption><button class="image-button" aria-label="放大機車環島休息站：Gemini Lite · minimal / 1K"><img loading="lazy" width="1024" height="1024" src="images/original/gemini/07.jpg" data-original="images/original/gemini/07.jpg" data-preview="images/preview/gemini/07.jpg" alt="機車環島休息站"></button></figure>
+
+<figure><figcaption><strong>Flare · low</strong><span>15.2s · 原圖 211 KB · 預覽 88 KB</span></figcaption><button class="image-button" aria-label="放大機車環島休息站：Flare · low"><img loading="lazy" width="1024" height="1024" src="images/original/flare/07.jpg" data-original="images/original/flare/07.jpg" data-preview="images/preview/flare/07.jpg" alt="機車環島休息站"></button></figure>
+</div>
+<details><summary>查看兩邊共用的 prompt</summary><p>A quiet gouache diary illustration of an anonymous traveler seen from behind resting beside a parked scooter at a coastal overlook in Taiwan. A helmet rests on the seat. Calm ocean, breezy afternoon, no logos or readable plates.
+
+Compose a square 1:1 image for viewing in a LINE chat on a phone. Keep the main subject clearly readable at thumbnail size, with a modest safe margin inside every edge. No captions, text, logos, watermarks, UI elements, or decorative border.</p><small>SHA-256：2dd0ca9864521e220bdf1c4f2be0ccc18b845e8d0f0d97a253469516ace7e443</small></details>
+</section>
+
+<section><h2>08 · 夜市烤玉米</h2><div class="pair">
+<figure><figcaption><strong>Gemini Lite · minimal / 1K</strong><span>3.2s · 原圖 410 KB · 預覽 120 KB</span></figcaption><button class="image-button" aria-label="放大夜市烤玉米：Gemini Lite · minimal / 1K"><img loading="lazy" width="1024" height="1024" src="images/original/gemini/08.jpg" data-original="images/original/gemini/08.jpg" data-preview="images/preview/gemini/08.jpg" alt="夜市烤玉米"></button></figure>
+
+<figure><figcaption><strong>Flare · low</strong><span>15.7s · 原圖 295 KB · 預覽 117 KB</span></figcaption><button class="image-button" aria-label="放大夜市烤玉米：Flare · low"><img loading="lazy" width="1024" height="1024" src="images/original/flare/08.jpg" data-original="images/original/flare/08.jpg" data-preview="images/preview/flare/08.jpg" alt="夜市烤玉米"></button></figure>
+</div>
+<details><summary>查看兩邊共用的 prompt</summary><p>A lively but uncluttered watercolor-and-ink illustration of corn grilling at a Taiwanese night market stall. A vendor&#x27;s anonymous hands turn one corn cob above glowing coals. Steam catches warm lantern light.
+
+Compose a square 1:1 image for viewing in a LINE chat on a phone. Keep the main subject clearly readable at thumbnail size, with a modest safe margin inside every edge. No captions, text, logos, watermarks, UI elements, or decorative border.</p><small>SHA-256：9f8155a2b58946d0308e606f7cd502326e2ba83e3d5dba11a719ff6c3c957265</small></details>
+</section>
+
+<section><h2>09 · 陽台的新葉</h2><div class="pair">
+<figure><figcaption><strong>Gemini Lite · minimal / 1K</strong><span>2.8s · 原圖 183 KB · 預覽 57 KB</span></figcaption><button class="image-button" aria-label="放大陽台的新葉：Gemini Lite · minimal / 1K"><img loading="lazy" width="1024" height="1024" src="images/original/gemini/09.jpg" data-original="images/original/gemini/09.jpg" data-preview="images/preview/gemini/09.jpg" alt="陽台的新葉"></button></figure>
+
+<figure><figcaption><strong>Flare · low</strong><span>12.6s · 原圖 112 KB · 預覽 55 KB</span></figcaption><button class="image-button" aria-label="放大陽台的新葉：Flare · low"><img loading="lazy" width="1024" height="1024" src="images/original/flare/09.jpg" data-original="images/original/flare/09.jpg" data-preview="images/preview/flare/09.jpg" alt="陽台的新葉"></button></figure>
+</div>
+<details><summary>查看兩邊共用的 prompt</summary><p>A quiet editorial photograph of a basil seedling with two fresh leaves in a chipped terracotta pot on an apartment balcony. Soft morning side light, a watering can blurred in the background, close view with shallow depth of field.
+
+Compose a square 1:1 image for viewing in a LINE chat on a phone. Keep the main subject clearly readable at thumbnail size, with a modest safe margin inside every edge. No captions, text, logos, watermarks, UI elements, or decorative border.</p><small>SHA-256：cff08131521a8f28078d5c458ecea85034f35d5adb3059d56a1c3874f6d9e64d</small></details>
+</section>
+
+<section><h2>10 · 雨衣水豚</h2><div class="pair">
+<figure><figcaption><strong>Gemini Lite · minimal / 1K</strong><span>2.6s · 原圖 298 KB · 預覽 87 KB</span></figcaption><button class="image-button" aria-label="放大雨衣水豚：Gemini Lite · minimal / 1K"><img loading="lazy" width="1024" height="1024" src="images/original/gemini/10.jpg" data-original="images/original/gemini/10.jpg" data-preview="images/preview/gemini/10.jpg" alt="雨衣水豚"></button></figure>
+
+<figure><figcaption><strong>Flare · low</strong><span>14.0s · 原圖 215 KB · 預覽 88 KB</span></figcaption><button class="image-button" aria-label="放大雨衣水豚：Flare · low"><img loading="lazy" width="1024" height="1024" src="images/original/flare/10.jpg" data-original="images/original/flare/10.jpg" data-preview="images/preview/flare/10.jpg" alt="雨衣水豚"></button></figure>
+</div>
+<details><summary>查看兩邊共用的 prompt</summary><p>A whimsical storybook illustration of a capybara in a yellow raincoat waiting at a small bus stop during light rain. A puddle reflects the coat and one little green umbrella rests nearby. Cozy muted colors.
+
+Compose a square 1:1 image for viewing in a LINE chat on a phone. Keep the main subject clearly readable at thumbnail size, with a modest safe margin inside every edge. No captions, text, logos, watermarks, UI elements, or decorative border.</p><small>SHA-256：e702a3945866ca509c401f38e271383b74280875dc2f3123e860d2b5ae88dc66</small></details>
+</section>
+</main><footer>
+LINE 一般圖片：JPEG/PNG 原圖 ≤10 MB，預覽 ≤1 MB；512px 是本次選擇，不是 LINE 強制尺寸。
+<a href="https://developers.line.biz/en/reference/messaging-api/#image-message">LINE 規格</a> ·
+<a href="https://ai.google.dev/gemini-api/docs/image-generation">Gemini 規格</a> ·
+<a href="https://developers.openai.com/api/docs/models/gpt-image-2.5-flare">Flare 規格</a><br>
+檔案小於目標區間時不刻意增加容量。生成模型 quality 與 JPEG 壓縮品質分別記錄。耗時為本次小樣本，不能當作供應商速度保證。
+</footer><dialog id="zoom"><button id="close">關閉</button><img alt="放大比較圖"></dialog><script>
+const select=document.querySelector('#resolution');
+select.addEventListener('change',()=>document.querySelectorAll('.image-button img').forEach(img=>img.src=img.dataset[select.value]));
+const dialog=document.querySelector('#zoom');
+document.querySelectorAll('.image-button').forEach(button=>button.addEventListener('click',()=>{const source=button.querySelector('img');dialog.querySelector('img').src=source.src;dialog.querySelector('img').alt=source.alt;dialog.showModal()}));
+document.querySelector('#close').addEventListener('click',()=>dialog.close());
+dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close()});
+</script></body></html>
