@@ -133,7 +133,7 @@ LINE 一般圖片：JPEG/PNG 原圖 ≤10 MB，預覽 ≤1 MB；512px 是本次�
 <a href="https://ai.google.dev/gemini-api/docs/image-generation">Gemini 規格</a> ·
 <a href="https://developers.openai.com/api/docs/models/gpt-image-2.5-flare">Flare 規格</a><br>
 檔案小於目標區間時不刻意增加容量。生成模型 quality 與 JPEG 壓縮品質分別記錄。耗時為本次小樣本，不能當作供應商速度保證。
-</footer><dialog id="zoom"><button id="close">關閉</button><img alt="放大比較圖"></dialog><script>
+</footer><dialog id="zoom" aria-label="圖片放大檢視"><button id="close">關閉</button><img alt="放大比較圖"></dialog><script>
 const select=document.querySelector('#resolution');
 select.addEventListener('change',()=>document.querySelectorAll('.image-button img').forEach(img=>img.src=img.dataset[select.value]));
 const dialog=document.querySelector('#zoom');
