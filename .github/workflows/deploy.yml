@@ -63,6 +63,13 @@ jobs:
           python3 scripts/install-image-comparison-assets.py \
             "$RUNNER_TEMP/image-comparison-assets/line-image-comparison-images.zip" dist
 
+      # A stable release manifest points to an immutable metadata-only snapshot.
+      # Verify its namespace, inventory and hashes before adding it to Pages.
+      - name: Install TaiwanCorpus Discovery
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_taiwan_corpus_assets.py'
+          python3 scripts/install-taiwan-corpus-assets.py dist
+
       # Keep alive.
       #
       # GitHub disables scheduled workflows in a PUBLIC repo "when no repository

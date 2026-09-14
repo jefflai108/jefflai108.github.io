@@ -19,6 +19,15 @@ export interface WorkItem {
  */
 export const recentWork: WorkItem[] = [
   {
+    name: '台灣語林',
+    tagline: 'A topic map of Taiwan’s everyday conversations',
+    blurb:
+      'An interactive map of collected PTT, Dcard and Threads posts. Follow topic branches, compare coverage, and trace each title back to its original conversation.',
+    date: '2026',
+    tags: ['TaiwanCorpus', 'Interactive collection'],
+    links: [{ label: 'explore the tree', href: '/taiwan-corpus/' }],
+  },
+  {
     name: 'AV-Gemma',
     tagline: 'Audio-visual foundation models that speak about what they see',
     blurb:
