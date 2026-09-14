@@ -1,0 +1,6 @@
+{
+  "schema": "taiwan-corpus-public-source/v1",
+  "repository": "jefflai108/jefflai108.github.io",
+  "release_tag": "taiwan-corpus-public",
+  "manifest_asset": "taiwan-corpus-manifest.json"
+}

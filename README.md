@@ -69,6 +69,75 @@ library; its offline archive validation tests run with:
 python3 -m unittest discover -s scripts -p 'test_image_comparison_assets.py'
 ```
 
+## 台灣語林 · TaiwanCorpus Discovery
+
+The interactive topic tree is served at `/taiwan-corpus/`. It shows a public
+snapshot of collected PTT, Dcard and Threads main-post titles, topic assignments,
+dates, counts and canonical source links. Full post bodies, previews, reply text
+and author metadata stay out of this snapshot. Topic assignments are provisional;
+coverage counts describe the collection rather than the population.
+
+The page, assets and generated index live together in a GitHub Release ZIP.
+Only the installer and its fixed release namespace are tracked in this repository:
+
+| Setting | Value |
+| --- | --- |
+| Repository | `jefflai108/jefflai108.github.io` |
+| Release tag | `taiwan-corpus-public` |
+| Manifest pointer | `taiwan-corpus-manifest.json` |
+| Immutable archive | `taiwan-corpus-public-YYYYMMDDTHHMMSSZ-<first12-SHA256>.zip` |
+| Installed directory | `dist/taiwan-corpus/` |
+
+[`scripts/taiwan-corpus-assets.json`](scripts/taiwan-corpus-assets.json) pins that
+namespace. Every Pages build fetches the small release manifest, downloads the
+ZIP it names from the same repository and tag, checks the archive and all five
+member hashes, and validates the public-index schema and counts. The allowed ZIP
+members are exactly `index.html`, `app.js`, `style.css`, `favicon.svg` and
+`data/tree.json`, without an enclosing directory. Extra content fields, unsafe
+source links, unexpected files and path traversal are rejected before installation.
+
+The installer rereads the manifest pointer before writing. A changed pointer,
+missing asset or failed check stops the build, so incomplete snapshot data cannot
+replace the current Pages deployment. The existing image-comparison installer
+and its release remain independent.
+
+The corpus publisher generates snapshots outside this repository. To refresh the
+site, upload a uniquely named ZIP first, then replace the manifest pointer last.
+The pointer's `archive_name` and `asset_name` must both equal the immutable ZIP
+name; its byte count and SHA-256 remain those of the original archive. Only after
+the pointer is complete should the publisher dispatch this repository's Pages
+workflow. This supports regular snapshot updates without generated-data commits.
+The public page shows a snapshot, not a connection to the local collector. Publish
+the first approved snapshot and pointer before merging this integration.
+
+The installer also writes `/taiwan-corpus/snapshot.json` from the verified pointer,
+containing its archive digest, asset name, generation time and post count. This
+small deployment marker is generated separately and is not a sixth ZIP member.
+The publisher can wait for that public marker to match the new digest before
+retiring older archives it owns; replacing a pointer alone is not deployment proof.
+
+For a local preview with the current public release:
+
+```bash
+python3 scripts/install-taiwan-corpus-assets.py public
+npm run dev
+```
+
+For a production preview, run `npm run build`, install into `dist` instead of
+`public`, then run `npm run preview`. An already downloaded ZIP and its release
+manifest can be checked offline:
+
+```bash
+python3 scripts/install-taiwan-corpus-assets.py dist \
+  --archive /absolute/path/to/versioned-snapshot.zip \
+  --manifest /absolute/path/to/taiwan-corpus-manifest.json
+python3 -m unittest discover -s scripts -p 'test_*_assets.py'
+```
+
+`public/taiwan-corpus/`, release ZIPs and build output are ignored by Git. Do not
+commit a catalog, exported tree JSON, actual post content or private credentials.
+Installer tests use authored temporary fixtures only.
+
 ## Where the content lives
 
 Everything editable is a plain TypeScript file under `src/data/` — no CMS, no frontmatter

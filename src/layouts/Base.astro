@@ -101,6 +101,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).toString()
         <nav aria-label="Primary">
           <a href="/" aria-current={nav === 'home' ? 'page' : undefined}>Homepage</a>
           <a href="/blog/" aria-current={nav === 'blog' ? 'page' : undefined}>Blog</a>
+          <a href="/taiwan-corpus/" lang="zh-Hant">台灣語林</a>
         </nav>
         <span class="spacer"></span>
         <button type="button" data-theme-toggle class="toggle" aria-label="Toggle dark mode">

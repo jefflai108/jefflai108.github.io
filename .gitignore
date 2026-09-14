@@ -20,3 +20,7 @@ node_modules/
 /public/gpt-vs-gemini/images/
 line-image-comparison-images.zip
 __pycache__/
+
+# Public corpus snapshots arrive as verified release assets, never Git data.
+/public/taiwan-corpus/
+taiwan-corpus-public*.zip
