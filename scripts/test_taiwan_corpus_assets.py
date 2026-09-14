@@ -4,13 +4,15 @@ import copy
 import hashlib
 import importlib.util
 import json
+import io
 from pathlib import Path
 import stat
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 import warnings
 import zipfile
+from urllib.parse import urlsplit
 from urllib.request import Request
 
 
@@ -210,6 +212,31 @@ class PublicSnapshotTest(unittest.TestCase):
             with self.assertRaises(ValueError):
                 INSTALLER.install_release(self.dist, self.source_path)
             download.assert_not_called()
+
+    def test_both_pointer_reads_bypass_cache_without_changing_asset_namespace(self):
+        archive = self.prepare()
+        raw = self.manifest_path.read_bytes()
+        responses = []
+        for data in (raw, archive, raw):
+            response = MagicMock()
+            response.headers = {'Content-Length': str(len(data))}
+            response.read.side_effect = io.BytesIO(data).read
+            response.__enter__.return_value = response
+            responses.append(response)
+        with patch.object(INSTALLER, 'build_opener') as opener:
+            opener.return_value.open.side_effect = responses
+            self.assertEqual(INSTALLER.install_release(self.dist, self.source_path), 6)
+            requests = [call.args[0] for call in opener.return_value.open.call_args_list]
+        expected = urlsplit(INSTALLER.asset_url(INSTALLER.SOURCE['manifest_asset']))
+        for request in (requests[0], requests[2]):
+            actual = urlsplit(request.full_url)
+            self.assertEqual((actual.scheme, actual.netloc, actual.path),
+                             (expected.scheme, expected.netloc, expected.path))
+            self.assertRegex(actual.query, r'^check=[a-f0-9]{32}$')
+            self.assertEqual(request.get_header('Cache-control'), 'no-cache')
+        self.assertNotEqual(requests[0].full_url, requests[2].full_url)
+        self.assertEqual(requests[1].full_url, INSTALLER.asset_url(self.manifest['archive_name']))
+        self.assertIsNone(requests[1].get_header('Cache-control'))
 
     def test_download_size_bounds(self):
         class Response:

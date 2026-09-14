@@ -12,6 +12,7 @@ import stat
 import tempfile
 from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
+import uuid
 import zipfile
 
 
@@ -84,7 +85,14 @@ class ReleaseRedirect(HTTPRedirectHandler):
 
 
 def download(name, cap):
-    request = Request(asset_url(name), headers={"User-Agent": "TaiwanCorpus-public-installer", "Accept-Encoding": "identity"})
+    url = asset_url(name)
+    headers = {"User-Agent": "TaiwanCorpus-public-installer", "Accept-Encoding": "identity"}
+    if name == SOURCE["manifest_asset"]:
+        # Both pointer reads must observe the mutable asset afresh. The query is
+        # generated here; the repository, release tag and asset path stay pinned.
+        url += "?check=" + uuid.uuid4().hex
+        headers["Cache-Control"] = "no-cache"
+    request = Request(url, headers=headers)
     with build_opener(ReleaseRedirect()).open(request, timeout=60) as response:
         length = response.headers.get("Content-Length")
         if length is not None and (not length.isdigit() or int(length) > cap):
