@@ -236,6 +236,12 @@ If the Actions log shows that warning repeatedly, run `npm run refresh` locally
 
 ## The GitHub contribution graph
 
+Colors are normalized separately for each calendar month (including partial
+months at the ends of the graph). Zero contributions use the empty shade;
+positive counts use four equal ranges relative to that month's highest day.
+The darkest shade therefore marks a month's busiest days, while the total and
+daily tooltips still show the original counts. `npm test` covers this scale.
+
 `scripts/fetch-contributions.mjs` pulls the last year of contributions from the GitHub GraphQL
 API into `src/data/contributions.json`, and runs automatically as a `prebuild` step. Locally it
 uses your `gh auth token`; in CI it uses the workflow's `GITHUB_TOKEN`. If the fetch fails for

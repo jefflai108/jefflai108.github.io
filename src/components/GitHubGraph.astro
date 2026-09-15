@@ -1,25 +1,11 @@
 ---
 import data from '../data/contributions.json';
 import { site } from '../data/site';
+import { normalizeContributionsByMonth } from '../lib/contributions.mjs';
 
 type Day = { date: string; count: number; level?: number };
-const weeks: Day[][] = (data.weeks as Day[][]) ?? [];
+const weeks = normalizeContributionsByMonth((data.weeks as Day[][]) ?? []);
 const total: number = data.total ?? 0;
-
-// Levels come from GitHub itself (contributionLevel), so the shading matches
-// the profile page exactly. Snapshots written before that field was fetched
-// have no `level`, so derive one the way GitHub does — quartiles of the
-// distribution of active days.
-//
-// NOT max/4: with a 202-contribution day in the set, quarters of the *range*
-// start at 50, so every ordinary day collapses into the lightest shade and the
-// graph reads as flat. Quartiles of the *distribution* split by rank instead,
-// which is what makes the depth mean anything.
-const counts = weeks.flat().map((d) => d.count).filter((n) => n > 0).sort((a, b) => a - b);
-const at = (p: number) => counts[Math.min(counts.length - 1, Math.floor(counts.length * p))] ?? 0;
-const [q1, q2, q3] = [at(0.25), at(0.5), at(0.75)];
-const derive = (n: number) => (n <= 0 ? 0 : n <= q1 ? 1 : n <= q2 ? 2 : n <= q3 ? 3 : 4);
-const level = (d: Day) => d.level ?? derive(d.count);
 
 const CELL = 11;
 const GAP = 3;
@@ -73,7 +59,7 @@ const fmt = (d: string) =>
           width={width}
           height={height}
           role="img"
-          aria-label={`GitHub contribution graph: ${total} contributions in the past year`}
+          aria-label={`GitHub contribution graph: ${total} contributions in the past year; colors scaled within each month`}
         >
           {monthLabels.map((m) => (
             <text class="ml" x={m.x} y={9}>
@@ -91,7 +77,7 @@ const fmt = (d: string) =>
               return (
                 <rect
                   class="c"
-                  data-l={level(day)}
+                  data-l={day.level}
                   x={LEFT + wi * STEP}
                   y={TOP + di * STEP}
                   width={CELL}
@@ -109,6 +95,7 @@ const fmt = (d: string) =>
       </div>
 
       <div class="gh-foot">
+        <span>Colors scaled within each month</span>
         <span class="scale">
           <span>less</span>
           <i data-l="0" />

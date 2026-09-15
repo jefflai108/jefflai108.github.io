@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "test": "node --test src/lib/*.test.mjs",
     "dev": "astro dev --port 4321",
     "prebuild": "npm run refresh",
     "build": "astro build",
