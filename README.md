@@ -2,7 +2,7 @@
 
 Personal homepage — [jefflai108.github.io](https://jefflai108.github.io).
 
-Astro 5, no UI framework, no CSS framework. Static output deployed to GitHub Pages by
+Astro 7, no UI framework, no CSS framework. Static output deployed to GitHub Pages by
 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) on every push to `master`.
 
 ## Deploying
@@ -27,7 +27,10 @@ fails and Pages keeps trying to serve the repo root, which no longer has an `ind
 
 ## Running it
 
+Use Node 22.12 or newer. `.nvmrc` selects Node 22, matching the Pages workflow.
+
 ```bash
+nvm use         # when using nvm
 npm install
 npm run dev      # http://localhost:4321
 npm run build    # -> dist/

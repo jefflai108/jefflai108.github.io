@@ -5,6 +5,8 @@ import sitemap from '@astrojs/sitemap';
 // User site (jefflai108.github.io) — served from the domain root, so no `base`.
 export default defineConfig({
   site: 'https://jefflai108.github.io',
+  // Keep whitespace around inline links when upgrading from Astro 5.
+  compressHTML: true,
   integrations: [sitemap()],
   markdown: {
     shikiConfig: { theme: 'github-light', wrap: true },
