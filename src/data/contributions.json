@@ -1,5 +1,5 @@
 {
-  "total": 3193,
+  "total": 3233,
   "weeks": [
     [
       {
@@ -1916,27 +1916,27 @@
       },
       {
         "date": "2026-09-18",
-        "count": 44,
+        "count": 66,
         "level": 1
       },
       {
         "date": "2026-09-19",
-        "count": 2,
+        "count": 4,
         "level": 1
       }
     ],
     [
       {
         "date": "2026-09-20",
-        "count": 7,
+        "count": 15,
         "level": 1
       },
       {
         "date": "2026-09-21",
-        "count": 0,
-        "level": 0
+        "count": 8,
+        "level": 1
       }
     ]
   ],
-  "fetchedAt": "2026-09-21T02:12:51.506Z"
+  "fetchedAt": "2026-09-21T08:14:11.366Z"
 }
