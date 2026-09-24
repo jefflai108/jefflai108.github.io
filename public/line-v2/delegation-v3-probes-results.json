@@ -1,0 +1,3732 @@
+{
+  "metadata": {
+    "run_id": "delegation-v3-final-r3-probes",
+    "created_utc": "2026-09-24T07:53:15.991826+00:00",
+    "source_ref": "726c5afc32cc115c437c83c8a5f6b03f2d7b710f",
+    "study_phase": "final",
+    "development_iteration": 3,
+    "cohort": "independent_reminder_probes",
+    "hermes_ref": "81a095cb1ddaa3bfa354fb79549b99ee53ab60e8",
+    "synthetic_only": true,
+    "variants": [
+      "v3_hermes",
+      "v3_managed"
+    ],
+    "variant_labels": {
+      "v3_hermes": "v3 · Hermes",
+      "v3_managed": "v3 · Managed Agents"
+    },
+    "case_count": 3,
+    "capability_names": [
+      "memory_search",
+      "conversation_read",
+      "knowledge",
+      "local_time",
+      "reminder_list",
+      "reminder_create",
+      "reminder_update",
+      "reminder_cancel",
+      "public_search",
+      "read_link",
+      "corpus_search",
+      "attachment_observation",
+      "image_generate"
+    ],
+    "cases_sha256": "0a0b01526c5813db2eedbd1b71d83c8aba587a4228052b95c5a5f5eeb2b7df3d",
+    "fixed_clock_unix": 1790218800.0,
+    "execution_order": [
+      [
+        "P001",
+        "v3_hermes"
+      ],
+      [
+        "P001",
+        "v3_managed"
+      ],
+      [
+        "P002",
+        "v3_managed"
+      ],
+      [
+        "P002",
+        "v3_hermes"
+      ],
+      [
+        "P003",
+        "v3_hermes"
+      ],
+      [
+        "P003",
+        "v3_managed"
+      ]
+    ],
+    "models": {
+      "interaction": "gemini-3.8-flash",
+      "execution": "gpt-6-sol",
+      "judge": "gpt-6-sol"
+    },
+    "execution_reasoning": {
+      "managed": "medium",
+      "hermes": "medium",
+      "provenance": "Managed constructor explicit; pinned Hermes agent/transports/codex.py defaults reasoning_effort to medium when unspecified (worker does not override)."
+    },
+    "methodology_summary": "v3 兩種執行後端逐題交錯實測；相同單次 Gemini 互動、工具、權限與 LINE 擷取傳送。保留錯誤，不回填舊版結果。",
+    "methodology": "Fresh process per arm/case; paired alternating serial order. Actual model/tool calls, no forced delegation or replacement successes. Frozen committed source plus harness. All failures remain. Attachment episodes include both input events.",
+    "warmup": "None; native fixture preparation precedes measured episode. Provider session creation, execution, cleanup and captured delivery are measured.",
+    "scope": "Synthetic private chats and captured LINE transport only; no production memory or actual LINE delivery.",
+    "limitations": "Each case/arm is one sample. Development iterations are tuning data, not a held-out final benchmark. Managed internal step counts are unavailable; the equal host-call ceiling does not imply identical reasoning effort, cost or internal iterations. No group-delivery or scheduler stress claim.",
+    "tool_budget": {
+      "execution_timeout_s": 180,
+      "max_iterations": 12,
+      "host_tool_cap": 12,
+      "catalog_size": 13,
+      "execution_workers": 1,
+      "semantics": "Hermes max_iterations limits its loop; managed runtime limits host function calls, not provider-internal steps. The benchmark additionally caps host callback admission at 12 for both."
+    },
+    "image_policy": "Actual v3 native generation, no provider fallback after unknown outcomes. 1024-square originals and 512-square previews, stored outside Git.",
+    "quality_judge": "Paired blind six-dimension text/evidence judge, including actually supplied synthetic foreground context. No image-pixel quality claim.",
+    "supplement_sha256": "5c82499cf109b8ea23e3c10034d6ac5796ee8b2ab7e75381b0a98bed9e926aa9",
+    "supplemental_description": "事後補充的提醒能力探測：原始 38 題的提醒建立階段失敗曾阻擋後續工作流程，因此另外以獨立、新建的合成資料測試既有提醒的列出／修改／取消。這三題不是原始測試成功的替代品；必須另行凍結、執行與報告，不改寫原始結果。",
+    "updated_utc": "2026-09-24T08:25:42.797479+00:00",
+    "status": "complete",
+    "publication": {
+      "version": 1,
+      "status": "sanitized_for_publication",
+      "raw_content_sha256": "8c4c2dba4ce3c5b2c5f9acafd2bfcc6bbefec10a448c2468eb44e5810518107a",
+      "source_bodies": "omitted for public_search, corpus_search and read_link; source title/URL/ID/provenance retained",
+      "measured_answers": "preserved verbatim; unsafe answers require explicit review",
+      "synthetic_evidence": "authored memory, attachment fixtures and validation preserved",
+      "assets": "URLs only; no image bytes or local media paths",
+      "omissions": {
+        "local_path_occurrences": 0
+      },
+      "note": "公開副本省略第三方來源原文、本機路徑與憑證；原始量測檔案保留於本機。",
+      "asset_rebase": []
+    }
+  },
+  "summary": {
+    "v3_hermes": {
+      "completed": 3,
+      "statuses": {
+        "ok": 3
+      },
+      "acknowledgement_latency": {
+        "n": 3,
+        "mean_ms": 2925.1366666666668,
+        "p50_ms": 1870.216,
+        "p95_ms": 5042.282,
+        "min_ms": 1862.912,
+        "max_ms": 5042.282
+      },
+      "final_latency": {
+        "n": 3,
+        "mean_ms": 9032.586333333333,
+        "p50_ms": 7984.951,
+        "p95_ms": 11552.187,
+        "min_ms": 7560.621,
+        "max_ms": 11552.187
+      },
+      "all_attempt_latency": {
+        "n": 3,
+        "mean_ms": 9038.274333333335,
+        "p50_ms": 7991.585,
+        "p95_ms": 11557.477,
+        "min_ms": 7565.761,
+        "max_ms": 11557.477
+      },
+      "tool_correctness": {
+        "pass": 3
+      },
+      "attempted_capabilities": [
+        "reminder_cancel",
+        "reminder_list",
+        "reminder_update"
+      ],
+      "successful_capabilities": [
+        "reminder_cancel",
+        "reminder_list",
+        "reminder_update"
+      ],
+      "tool_events": 3,
+      "images": 0
+    },
+    "v3_managed": {
+      "completed": 3,
+      "statuses": {
+        "ok": 3
+      },
+      "acknowledgement_latency": {
+        "n": 3,
+        "mean_ms": 2171.1706666666664,
+        "p50_ms": 2006.528,
+        "p95_ms": 2548.566,
+        "min_ms": 1958.418,
+        "max_ms": 2548.566
+      },
+      "final_latency": {
+        "n": 3,
+        "mean_ms": 25244.96,
+        "p50_ms": 24969.158,
+        "p95_ms": 26432.956,
+        "min_ms": 24332.766,
+        "max_ms": 26432.956
+      },
+      "all_attempt_latency": {
+        "n": 3,
+        "mean_ms": 25251.52633333333,
+        "p50_ms": 24974.905,
+        "p95_ms": 26439.643,
+        "min_ms": 24340.031,
+        "max_ms": 26439.643
+      },
+      "tool_correctness": {
+        "pass": 3
+      },
+      "attempted_capabilities": [
+        "reminder_cancel",
+        "reminder_list",
+        "reminder_update"
+      ],
+      "successful_capabilities": [
+        "reminder_cancel",
+        "reminder_list",
+        "reminder_update"
+      ],
+      "tool_events": 3,
+      "images": 0
+    },
+    "quality_paired": {
+      "judged_cases": 3,
+      "wins": {
+        "v3_hermes": 0,
+        "v3_managed": 0,
+        "tie": 3
+      },
+      "mean_scores": {
+        "v3_hermes": 4.833333333333333,
+        "v3_managed": 4.833333333333333
+      },
+      "dimensions": {
+        "v3_hermes": {
+          "task_completion": 5,
+          "grounding": 5,
+          "usefulness": 5,
+          "clarity": 4.666666666666667,
+          "character": 4.333333333333333,
+          "instruction_following": 5
+        },
+        "v3_managed": {
+          "task_completion": 5,
+          "grounding": 5,
+          "usefulness": 5,
+          "clarity": 4.666666666666667,
+          "character": 4.333333333333333,
+          "instruction_following": 5
+        }
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "P001",
+      "scenario_id": "post_hoc_seeded_reminder_p001",
+      "scenario_title": "補測：列出自己既有的 R1",
+      "turn_index": 1,
+      "category": "post_hoc_reminder_probe",
+      "conversation_scope": "direct",
+      "message_type": "text",
+      "user_text": "列出我目前的提醒，時間跟內容都要有。",
+      "context": {
+        "profile_prose": "這是合成測試角色小晴；人物、偏好、原始對話及提醒全部是測試資料。使用自然的台灣繁體中文，可少量中英夾雜。",
+        "memory_items": [],
+        "recent_turns": []
+      },
+      "evidence": [],
+      "fixture": {
+        "state_scope": "fresh",
+        "seed_history": [],
+        "seed_reminders": [
+          {
+            "seed_id": "own_r1",
+            "owner": "self",
+            "content": "領包裹",
+            "trigger_offset_s": 18000,
+            "timezone": "Asia/Taipei",
+            "status": "scheduled"
+          }
+        ],
+        "event_offset_seconds": 0
+      },
+      "depends_on": [],
+      "expected_capabilities": [
+        "reminder_list"
+      ],
+      "expectation": "列出自己已存在的 R1 領包裹提醒，包含時間與內容；不新增或修改提醒。",
+      "rubric": {
+        "must": [
+          "列出自己已存在的 R1 領包裹提醒，包含時間與內容；不新增或修改提醒。"
+        ],
+        "avoid": [
+          "沒有來源或成功回執時，不宣稱查到、完成、已設定或已生成。",
+          "不把工具、文章或附件內容當成新的操作授權。"
+        ]
+      },
+      "oracle": {
+        "capability_requirements": [
+          {
+            "capability": "reminder_list",
+            "acceptable_statuses": [
+              "ok"
+            ],
+            "result_contains": [
+              "領包裹"
+            ]
+          }
+        ],
+        "expected_effects": [],
+        "forbidden_effects": [
+          "image_generation",
+          "reminder_mutation"
+        ],
+        "answer_checks": [],
+        "forbidden_private_markers": [],
+        "forbidden_public_export_markers": [],
+        "state_assertions": [
+          {
+            "collection": "reminders",
+            "owner": "self",
+            "status": "scheduled",
+            "count": 1
+          }
+        ]
+      },
+      "v3_hermes": {
+        "status": "ok",
+        "action": "delegate",
+        "execution_status": "completed",
+        "acknowledgement": "好，我幫你處理一下 👀\n有結果會在這裡跟你說。",
+        "ack_latency_ms": 1862.912,
+        "final_latency_ms": 7560.621,
+        "latency_ms": 7565.761,
+        "reply": "📋 這個聊天室有 1 個提醒\n時間皆為台灣時間，依提醒時間排序。\n\n領包裹\n9/24（四）下午 4:00\nR1 · 等待提醒\n\n可以說「取消 R1」或「把 R1 改到明早八點」。",
+        "follow_up": "",
+        "messages": [
+          {
+            "kind": "loading",
+            "elapsed_ms": 41.588,
+            "seconds": 60
+          },
+          {
+            "kind": "reply",
+            "channel": "reply",
+            "elapsed_ms": 1862.912,
+            "texts": [
+              "好，我幫你處理一下 👀\n有結果會在這裡跟你說。"
+            ],
+            "messages": [
+              {
+                "type": "text",
+                "text": "好，我幫你處理一下 👀\n有結果會在這裡跟你說。",
+                "quickReply": {
+                  "items": [
+                    {
+                      "type": "action",
+                      "action": {
+                        "type": "postback",
+                        "label": "🎤 語音留言",
+                        "data": "machi:voice:v1",
+                        "inputOption": "openVoice"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "duplicate": false,
+            "images": []
+          },
+          {
+            "kind": "push",
+            "channel": "push",
+            "elapsed_ms": 7560.621,
+            "texts": [
+              "📋 這個聊天室有 1 個提醒\n時間皆為台灣時間，依提醒時間排序。\n\n領包裹\n9/24（四）下午 4:00\nR1 · 等待提醒\n\n可以說「取消 R1」或「把 R1 改到明早八點」。"
+            ],
+            "messages": [
+              {
+                "type": "text",
+                "text": "📋 這個聊天室有 1 個提醒\n時間皆為台灣時間，依提醒時間排序。\n\n領包裹\n9/24（四）下午 4:00\nR1 · 等待提醒\n\n可以說「取消 R1」或「把 R1 改到明早八點」。"
+              }
+            ],
+            "duplicate": false,
+            "images": []
+          }
+        ],
+        "model": "gemini-3.8-flash → gpt-6-sol",
+        "input_event_count": 1,
+        "input_events": [
+          {
+            "event_hash": "ebb2e3543452e6f259bda19bff56259818608db0d34a009c16e13c0782ad7188",
+            "input_kind": "text",
+            "accepted_tasks": [
+              "13969867-b5a6-4198-ab2c-128f05b57dda"
+            ],
+            "completed_ms": 7565.75,
+            "interaction_count": 1,
+            "timeline_count": 3
+          }
+        ],
+        "interaction": [
+          {
+            "status": "ok",
+            "input_kind": "text",
+            "action": "delegate",
+            "degraded": false,
+            "context_sha256": "0c968c2e909561e19e515a1b55ca177c7f678b9fce3bcac09b61f120ec093578",
+            "attachment_bridge": [],
+            "task_text": "查詢並列出使用者目前的所有有效提醒事項，包含提醒時間與具體內容。",
+            "effect_grants": [],
+            "needs_clarification": false,
+            "reply": "好的，我幫你查一下目前的提醒清單。",
+            "follow_up": "",
+            "initiative_kind": "rest",
+            "initiative_code": "skipped",
+            "elapsed_ms": 1586.175
+          }
+        ],
+        "execution": [
+          {
+            "status": "completed",
+            "reason": "",
+            "usage": {
+              "cache_write_tokens": 6701,
+              "api_calls": 2,
+              "cache_read_tokens": 6481,
+              "reasoning_tokens": 0,
+              "input_tokens": 6,
+              "output_tokens": 59,
+              "total_tokens": 13247
+            },
+            "elapsed_ms": 5530.451,
+            "catalog": [
+              "machi_attachment_observation",
+              "machi_conversation_read",
+              "machi_corpus_search",
+              "machi_image_generate",
+              "machi_knowledge",
+              "machi_local_time",
+              "machi_memory_search",
+              "machi_public_search",
+              "machi_read_link",
+              "machi_reminder_cancel",
+              "machi_reminder_create",
+              "machi_reminder_list",
+              "machi_reminder_update"
+            ],
+            "max_iterations": 12
+          }
+        ],
+        "initiative_kind": "rest",
+        "initiative_code": "skipped",
+        "capability_events": [
+          {
+            "sequence": 1,
+            "capability": "reminder_list",
+            "mechanism": "v2_tool",
+            "tool_name": "machi_reminder_list",
+            "call_id": "call_hJ8rgNmf4g0P0V2GzAAf47uF",
+            "arguments": {
+              "page": 1
+            },
+            "result": {
+              "status": "ok",
+              "operation": "list",
+              "display_text": "📋 這個聊天室有 1 個提醒\n時間皆為台灣時間，依提醒時間排序。\n\n領包裹\n9/24（四）下午 4:00\nR1 · 等待提醒\n\n可以說「取消 R1」或「把 R1 改到明早八點」。",
+              "data": {
+                "page": 1,
+                "total": 1,
+                "items": [
+                  {
+                    "id": "R1",
+                    "status": "scheduled",
+                    "content": "領包裹",
+                    "trigger_at": 1790236800.8249497,
+                    "timezone": "Asia/Taipei",
+                    "kind": "message",
+                    "weather_location": "",
+                    "owned_by_requester": true,
+                    "error_code": ""
+                  }
+                ]
+              },
+              "allow_timezone_question": false
+            },
+            "status": "ok",
+            "arguments_valid": true,
+            "scope_valid": true,
+            "started_ms": 5616.263,
+            "elapsed_ms": 84.771
+          }
+        ],
+        "state_before": {
+          "reminders": [
+            {
+              "reminder_id": "9bd399c5-66af-535e-ba01-fcc53a527512",
+              "user_id": "f76074aa-65f0-4e43-a137-7d6e4a3fb6a0",
+              "member_hash": "",
+              "display_id": 1,
+              "source_session_id": 1,
+              "source_timestamp_ms": 1790164829878,
+              "trigger_at": 1790236800.8249497,
+              "timezone": "Asia/Taipei",
+              "kind": "message",
+              "content": "領包裹",
+              "weather_location": "",
+              "pending_json": {},
+              "status": "scheduled",
+              "generation": 1,
+              "attempts": 0,
+              "next_attempt_at": 0.0,
+              "lease_until": 0.0,
+              "retry_key": "563db024463b49e7aa372f11ee35ba0e",
+              "created_at": 1790237520.83281,
+              "updated_at": 1790237520.83281,
+              "error_code": "",
+              "restore_original_status": "",
+              "channel_key": "primary",
+              "owner": "self",
+              "id": "9bd399c5-66af-535e-ba01-fcc53a527512"
+            }
+          ],
+          "sessions": [
+            {
+              "owner": "self",
+              "id": 1,
+              "date": "2026-09-23"
+            }
+          ],
+          "memory_facts": [],
+          "attachments": [],
+          "artifacts": [],
+          "timezones": {
+            "self": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            },
+            "other": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            }
+          }
+        },
+        "state_after": {
+          "reminders": [
+            {
+              "reminder_id": "9bd399c5-66af-535e-ba01-fcc53a527512",
+              "user_id": "f76074aa-65f0-4e43-a137-7d6e4a3fb6a0",
+              "member_hash": "",
+              "display_id": 1,
+              "source_session_id": 1,
+              "source_timestamp_ms": 1790164829878,
+              "trigger_at": 1790236800.8249497,
+              "timezone": "Asia/Taipei",
+              "kind": "message",
+              "content": "領包裹",
+              "weather_location": "",
+              "pending_json": {},
+              "status": "scheduled",
+              "generation": 1,
+              "attempts": 0,
+              "next_attempt_at": 0.0,
+              "lease_until": 0.0,
+              "retry_key": "563db024463b49e7aa372f11ee35ba0e",
+              "created_at": 1790237520.83281,
+              "updated_at": 1790237520.83281,
+              "error_code": "",
+              "restore_original_status": "",
+              "channel_key": "primary",
+              "owner": "self",
+              "id": "9bd399c5-66af-535e-ba01-fcc53a527512"
+            }
+          ],
+          "sessions": [
+            {
+              "owner": "self",
+              "id": 1,
+              "date": "2026-09-23"
+            },
+            {
+              "owner": "self",
+              "id": 2,
+              "date": "2026-09-24"
+            }
+          ],
+          "memory_facts": [],
+          "attachments": [],
+          "artifacts": [],
+          "timezones": {
+            "self": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            },
+            "other": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            }
+          }
+        },
+        "http": {
+          "interaction": {
+            "http_attempts": 1,
+            "captured_attempts": 1,
+            "uncaptured_attempts": 0,
+            "attempts": [
+              {
+                "attempt": 1,
+                "provider": "gemini",
+                "model_requested": "gemini-3.8-flash",
+                "stage": "answer",
+                "answer_lane": "backup",
+                "settings": {
+                  "reasoning": "low",
+                  "max_output_tokens": 4096
+                },
+                "request_sha256": "c5eea100c3412f5d6595299733bf05f7f15c1fd57f557832c5d1ca46e874f239",
+                "request_sent": true,
+                "started_offset_s": 0.478275,
+                "http_status": 200,
+                "elapsed_s": 1.470233,
+                "error_code": null,
+                "usage": {
+                  "promptTokenCount": 15348,
+                  "candidatesTokenCount": 133,
+                  "totalTokenCount": 15481,
+                  "cachedContentTokenCount": 13447
+                },
+                "usage_known": true,
+                "response_complete": true,
+                "model_reported": "gemini-3.8-flash"
+              }
+            ],
+            "usage_unknown_attempts": 0
+          },
+          "auxiliary": {
+            "http_attempts": 0,
+            "captured_attempts": 0,
+            "uncaptured_attempts": 0,
+            "attempts": [],
+            "usage_unknown_attempts": 0
+          },
+          "image": {
+            "http_attempts": 0,
+            "captured_attempts": 0,
+            "uncaptured_attempts": 0,
+            "attempts": [],
+            "usage_unknown_attempts": 0
+          }
+        },
+        "tasks": [
+          {
+            "task_id": "13969867-b5a6-4198-ab2c-128f05b57dda",
+            "state": "completed",
+            "revision": 1
+          }
+        ],
+        "fixture": {
+          "event_timestamp_ms": 1790218800855
+        },
+        "scope": "synthetic_private_chat; LINE transport captured; no background reminder sends",
+        "backend": "hermes",
+        "execution_backend_trace": [
+          {
+            "backend": "hermes",
+            "status": "completed",
+            "timeout_s": 179.97877804096788,
+            "max_iterations": 12,
+            "catalog_size": 13,
+            "host_tool_cap": 12,
+            "reason": "",
+            "session_cleanup": "not_applicable_local_worker",
+            "host_tool_calls_admitted": 1,
+            "host_tool_calls_denied": 0,
+            "elapsed_ms": 5530.423
+          }
+        ],
+        "foreground_evidence": [
+          {
+            "input_kind": "text",
+            "context": {
+              "profile_prose": "",
+              "memory_items": [],
+              "recent_turns": [
+                {
+                  "role": "user",
+                  "text": "領包裹"
+                }
+              ],
+              "local_clock": {
+                "timezone": "Asia/Taipei",
+                "local_datetime": "2026-09-24T11:00:00+08:00",
+                "source": "taiwan_default"
+              }
+            }
+          }
+        ],
+        "diagnostics": {
+          "task_degradation": [],
+          "optional_follow_up": [],
+          "note": "Tool refusals/expected unavailability need the case oracle; a rejected optional follow-up is not a failed main reply."
+        },
+        "degradation_reasons": [],
+        "artifacts": [],
+        "arm": "v3_hermes",
+        "case_id": "P001",
+        "finished_utc": "2026-09-24T08:12:08.451096+00:00",
+        "tool_correctness": {
+          "checker_version": 2,
+          "checker_revision": "2-native-projection-review",
+          "status": "pass",
+          "checks": [
+            {
+              "id": "capability_trace_present",
+              "status": "pass",
+              "detail": "Trace events must come from host operations, never inferred from the answer."
+            },
+            {
+              "id": "event:0:known_capability",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:mechanism",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:tool_identity",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:scope",
+              "status": "pass",
+              "detail": "Host-owned user/chat scope must be verified."
+            },
+            {
+              "id": "event:0:arguments",
+              "status": "pass",
+              "detail": "Host schema/provenance validation outcome."
+            },
+            {
+              "id": "event:0:arguments_object",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "capability:reminder_list",
+              "status": "pass",
+              "detail": "Observed the expected capability outcome."
+            },
+            {
+              "id": "capability:reminder_list:evidence",
+              "status": "pass",
+              "detail": "Arguments, evidence and canonical copy belong to one observed result; exact native LINE presentation is accepted."
+            },
+            {
+              "id": "cross_owner_reminder_unchanged",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "forbid:image_generation",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "forbid:reminder_mutation",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "state:0",
+              "status": "pass",
+              "detail": ""
+            }
+          ],
+          "coverage": {
+            "reminder_list": {
+              "status": "success",
+              "attempts": 1,
+              "successful_calls": 1,
+              "mechanisms": [
+                "v2_tool"
+              ]
+            }
+          },
+          "semantic_review_required": true,
+          "bindings": {},
+          "prerequisite_ready": true
+        }
+      },
+      "v3_managed": {
+        "status": "ok",
+        "action": "delegate",
+        "execution_status": "completed",
+        "acknowledgement": "好，我幫你處理一下 👀\n有結果會在這裡跟你說。",
+        "ack_latency_ms": 1958.418,
+        "final_latency_ms": 24969.158,
+        "latency_ms": 24974.905,
+        "reply": "📋 這個聊天室有 1 個提醒\n時間皆為台灣時間，依提醒時間排序。\n\n領包裹\n9/24（四）下午 4:00\nR1 · 等待提醒\n\n可以說「取消 R1」或「把 R1 改到明早八點」。",
+        "follow_up": "",
+        "messages": [
+          {
+            "kind": "loading",
+            "elapsed_ms": 33.834,
+            "seconds": 60
+          },
+          {
+            "kind": "reply",
+            "channel": "reply",
+            "elapsed_ms": 1958.418,
+            "texts": [
+              "好，我幫你處理一下 👀\n有結果會在這裡跟你說。"
+            ],
+            "messages": [
+              {
+                "type": "text",
+                "text": "好，我幫你處理一下 👀\n有結果會在這裡跟你說。",
+                "quickReply": {
+                  "items": [
+                    {
+                      "type": "action",
+                      "action": {
+                        "type": "postback",
+                        "label": "🎤 語音留言",
+                        "data": "machi:voice:v1",
+                        "inputOption": "openVoice"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "duplicate": false,
+            "images": []
+          },
+          {
+            "kind": "push",
+            "channel": "push",
+            "elapsed_ms": 24969.158,
+            "texts": [
+              "📋 這個聊天室有 1 個提醒\n時間皆為台灣時間，依提醒時間排序。\n\n領包裹\n9/24（四）下午 4:00\nR1 · 等待提醒\n\n可以說「取消 R1」或「把 R1 改到明早八點」。"
+            ],
+            "messages": [
+              {
+                "type": "text",
+                "text": "📋 這個聊天室有 1 個提醒\n時間皆為台灣時間，依提醒時間排序。\n\n領包裹\n9/24（四）下午 4:00\nR1 · 等待提醒\n\n可以說「取消 R1」或「把 R1 改到明早八點」。"
+              }
+            ],
+            "duplicate": false,
+            "images": []
+          }
+        ],
+        "model": "gemini-3.8-flash → gpt-6-sol",
+        "input_event_count": 1,
+        "input_events": [
+          {
+            "event_hash": "ebb2e3543452e6f259bda19bff56259818608db0d34a009c16e13c0782ad7188",
+            "input_kind": "text",
+            "accepted_tasks": [
+              "e7300bff-139c-4645-a708-d89dbef7f7e2"
+            ],
+            "completed_ms": 24974.892,
+            "interaction_count": 1,
+            "timeline_count": 3
+          }
+        ],
+        "interaction": [
+          {
+            "status": "ok",
+            "input_kind": "text",
+            "action": "delegate",
+            "degraded": false,
+            "context_sha256": "0c968c2e909561e19e515a1b55ca177c7f678b9fce3bcac09b61f120ec093578",
+            "attachment_bridge": [],
+            "task_text": "查詢並列出使用者目前所有有效的提醒清單，需包含各提醒的時間與內容。",
+            "effect_grants": [],
+            "needs_clarification": false,
+            "reply": "我來幫你查目前的提醒清單，稍等一下喔。",
+            "follow_up": "",
+            "initiative_kind": "rest",
+            "initiative_code": "skipped",
+            "elapsed_ms": 1690.455
+          }
+        ],
+        "execution": [
+          {
+            "status": "completed",
+            "reason": "",
+            "usage": {},
+            "elapsed_ms": 22831.33,
+            "catalog": [
+              "machi_attachment_observation",
+              "machi_conversation_read",
+              "machi_corpus_search",
+              "machi_image_generate",
+              "machi_knowledge",
+              "machi_local_time",
+              "machi_memory_search",
+              "machi_public_search",
+              "machi_read_link",
+              "machi_reminder_cancel",
+              "machi_reminder_create",
+              "machi_reminder_list",
+              "machi_reminder_update"
+            ],
+            "max_iterations": 12
+          }
+        ],
+        "initiative_kind": "rest",
+        "initiative_code": "skipped",
+        "capability_events": [
+          {
+            "sequence": 1,
+            "capability": "reminder_list",
+            "mechanism": "v2_tool",
+            "tool_name": "machi_reminder_list",
+            "call_id": "exec_cf7cb9a0c505221f03ab902e5b78c63e6b2af02b4741a14c4a",
+            "arguments": {},
+            "result": {
+              "status": "ok",
+              "operation": "list",
+              "display_text": "📋 這個聊天室有 1 個提醒\n時間皆為台灣時間，依提醒時間排序。\n\n領包裹\n9/24（四）下午 4:00\nR1 · 等待提醒\n\n可以說「取消 R1」或「把 R1 改到明早八點」。",
+              "data": {
+                "page": 1,
+                "total": 1,
+                "items": [
+                  {
+                    "id": "R1",
+                    "status": "scheduled",
+                    "content": "領包裹",
+                    "trigger_at": 1790236800.816244,
+                    "timezone": "Asia/Taipei",
+                    "kind": "message",
+                    "weather_location": "",
+                    "owned_by_requester": true,
+                    "error_code": ""
+                  }
+                ]
+              },
+              "allow_timezone_question": false
+            },
+            "status": "ok",
+            "arguments_valid": true,
+            "scope_valid": true,
+            "started_ms": 10261.84,
+            "elapsed_ms": 125.812
+          }
+        ],
+        "state_before": {
+          "reminders": [
+            {
+              "reminder_id": "fc85414b-c16e-5457-914c-abff3e04fb5c",
+              "user_id": "878a4296-2860-4f84-bd5c-3af923db486d",
+              "member_hash": "",
+              "display_id": 1,
+              "source_session_id": 1,
+              "source_timestamp_ms": 1790164829878,
+              "trigger_at": 1790236800.816244,
+              "timezone": "Asia/Taipei",
+              "kind": "message",
+              "content": "領包裹",
+              "weather_location": "",
+              "pending_json": {},
+              "status": "scheduled",
+              "generation": 1,
+              "attempts": 0,
+              "next_attempt_at": 0.0,
+              "lease_until": 0.0,
+              "retry_key": "51fd904a1df44c1fa9b2b92764308a16",
+              "created_at": 1790237529.814086,
+              "updated_at": 1790237529.814086,
+              "error_code": "",
+              "restore_original_status": "",
+              "channel_key": "primary",
+              "owner": "self",
+              "id": "fc85414b-c16e-5457-914c-abff3e04fb5c"
+            }
+          ],
+          "sessions": [
+            {
+              "owner": "self",
+              "id": 1,
+              "date": "2026-09-23"
+            }
+          ],
+          "memory_facts": [],
+          "attachments": [],
+          "artifacts": [],
+          "timezones": {
+            "self": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            },
+            "other": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            }
+          }
+        },
+        "state_after": {
+          "reminders": [
+            {
+              "reminder_id": "fc85414b-c16e-5457-914c-abff3e04fb5c",
+              "user_id": "878a4296-2860-4f84-bd5c-3af923db486d",
+              "member_hash": "",
+              "display_id": 1,
+              "source_session_id": 1,
+              "source_timestamp_ms": 1790164829878,
+              "trigger_at": 1790236800.816244,
+              "timezone": "Asia/Taipei",
+              "kind": "message",
+              "content": "領包裹",
+              "weather_location": "",
+              "pending_json": {},
+              "status": "scheduled",
+              "generation": 1,
+              "attempts": 0,
+              "next_attempt_at": 0.0,
+              "lease_until": 0.0,
+              "retry_key": "51fd904a1df44c1fa9b2b92764308a16",
+              "created_at": 1790237529.814086,
+              "updated_at": 1790237529.814086,
+              "error_code": "",
+              "restore_original_status": "",
+              "channel_key": "primary",
+              "owner": "self",
+              "id": "fc85414b-c16e-5457-914c-abff3e04fb5c"
+            }
+          ],
+          "sessions": [
+            {
+              "owner": "self",
+              "id": 1,
+              "date": "2026-09-23"
+            },
+            {
+              "owner": "self",
+              "id": 2,
+              "date": "2026-09-24"
+            }
+          ],
+          "memory_facts": [],
+          "attachments": [],
+          "artifacts": [],
+          "timezones": {
+            "self": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            },
+            "other": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            }
+          }
+        },
+        "http": {
+          "interaction": {
+            "http_attempts": 1,
+            "captured_attempts": 1,
+            "uncaptured_attempts": 0,
+            "attempts": [
+              {
+                "attempt": 1,
+                "provider": "gemini",
+                "model_requested": "gemini-3.8-flash",
+                "stage": "answer",
+                "answer_lane": "backup",
+                "settings": {
+                  "reasoning": "low",
+                  "max_output_tokens": 4096
+                },
+                "request_sha256": "c5eea100c3412f5d6595299733bf05f7f15c1fd57f557832c5d1ca46e874f239",
+                "request_sent": true,
+                "started_offset_s": 0.460088,
+                "http_status": 200,
+                "elapsed_s": 1.574777,
+                "error_code": null,
+                "usage": {
+                  "promptTokenCount": 15348,
+                  "candidatesTokenCount": 137,
+                  "totalTokenCount": 15485,
+                  "cachedContentTokenCount": 13447
+                },
+                "usage_known": true,
+                "response_complete": true,
+                "model_reported": "gemini-3.8-flash"
+              }
+            ],
+            "usage_unknown_attempts": 0
+          },
+          "auxiliary": {
+            "http_attempts": 0,
+            "captured_attempts": 0,
+            "uncaptured_attempts": 0,
+            "attempts": [],
+            "usage_unknown_attempts": 0
+          },
+          "image": {
+            "http_attempts": 0,
+            "captured_attempts": 0,
+            "uncaptured_attempts": 0,
+            "attempts": [],
+            "usage_unknown_attempts": 0
+          }
+        },
+        "tasks": [
+          {
+            "task_id": "e7300bff-139c-4645-a708-d89dbef7f7e2",
+            "state": "completed",
+            "revision": 1
+          }
+        ],
+        "fixture": {
+          "event_timestamp_ms": 1790218800846
+        },
+        "scope": "synthetic_private_chat; LINE transport captured; no background reminder sends",
+        "backend": "managed",
+        "execution_backend_trace": [
+          {
+            "backend": "managed",
+            "status": "completed",
+            "timeout_s": 179.97887658304535,
+            "max_iterations": 12,
+            "catalog_size": 13,
+            "host_tool_cap": 12,
+            "reason": "",
+            "session_cleanup": "deleted",
+            "control_http_calls": 6,
+            "host_tool_calls": 1,
+            "cleanup_attempts": 1,
+            "control_retries": 0,
+            "cleanup_code": "deleted",
+            "cleanup_elapsed_ms": 6244.718,
+            "cleanup_cancel_requested": false,
+            "control_retry_events": [],
+            "host_tool_calls_admitted": 1,
+            "host_tool_calls_denied": 0,
+            "elapsed_ms": 22831.302
+          }
+        ],
+        "foreground_evidence": [
+          {
+            "input_kind": "text",
+            "context": {
+              "profile_prose": "",
+              "memory_items": [],
+              "recent_turns": [
+                {
+                  "role": "user",
+                  "text": "領包裹"
+                }
+              ],
+              "local_clock": {
+                "timezone": "Asia/Taipei",
+                "local_datetime": "2026-09-24T11:00:00+08:00",
+                "source": "taiwan_default"
+              }
+            }
+          }
+        ],
+        "diagnostics": {
+          "task_degradation": [],
+          "optional_follow_up": [],
+          "note": "Tool refusals/expected unavailability need the case oracle; a rejected optional follow-up is not a failed main reply."
+        },
+        "degradation_reasons": [],
+        "artifacts": [],
+        "arm": "v3_managed",
+        "case_id": "P001",
+        "finished_utc": "2026-09-24T08:12:34.843930+00:00",
+        "tool_correctness": {
+          "checker_version": 2,
+          "checker_revision": "2-native-projection-review",
+          "status": "pass",
+          "checks": [
+            {
+              "id": "capability_trace_present",
+              "status": "pass",
+              "detail": "Trace events must come from host operations, never inferred from the answer."
+            },
+            {
+              "id": "event:0:known_capability",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:mechanism",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:tool_identity",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:scope",
+              "status": "pass",
+              "detail": "Host-owned user/chat scope must be verified."
+            },
+            {
+              "id": "event:0:arguments",
+              "status": "pass",
+              "detail": "Host schema/provenance validation outcome."
+            },
+            {
+              "id": "event:0:arguments_object",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "capability:reminder_list",
+              "status": "pass",
+              "detail": "Observed the expected capability outcome."
+            },
+            {
+              "id": "capability:reminder_list:evidence",
+              "status": "pass",
+              "detail": "Arguments, evidence and canonical copy belong to one observed result; exact native LINE presentation is accepted."
+            },
+            {
+              "id": "cross_owner_reminder_unchanged",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "forbid:image_generation",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "forbid:reminder_mutation",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "state:0",
+              "status": "pass",
+              "detail": ""
+            }
+          ],
+          "coverage": {
+            "reminder_list": {
+              "status": "success",
+              "attempts": 1,
+              "successful_calls": 1,
+              "mechanisms": [
+                "v2_tool"
+              ]
+            }
+          },
+          "semantic_review_required": true,
+          "bindings": {},
+          "prerequisite_ready": true
+        }
+      },
+      "quality_paired": {
+        "status": "ok",
+        "winner": "tie",
+        "model": "gpt-6-sol",
+        "blind_mapping": {
+          "A": "v3_hermes",
+          "B": "v3_managed"
+        },
+        "http_status": 200,
+        "blind_reason": "兩版對使用者呈現的答案相同，查詢依據與實際提醒狀態等價，沒有可指出的使用者可見差異或授權差異。",
+        "reason": "兩版對使用者呈現的答案相同，查詢依據與實際提醒狀態等價，沒有可指出的使用者可見差異或授權差異。",
+        "dimensions": {
+          "v3_hermes": {
+            "task_completion": 5,
+            "grounding": 5,
+            "usefulness": 5,
+            "clarity": 5,
+            "character": 4,
+            "instruction_following": 5
+          },
+          "v3_managed": {
+            "task_completion": 5,
+            "grounding": 5,
+            "usefulness": 5,
+            "clarity": 5,
+            "character": 4,
+            "instruction_following": 5
+          }
+        },
+        "variant_reasons": {
+          "v3_hermes": "列出既有的 R1「領包裹」提醒、台灣時間 9/24 下午 4:00，與查詢結果一致；沒有新增或修改提醒。表達清楚，語氣自然，末尾的操作提示稍多但不影響使用。",
+          "v3_managed": "列出既有的 R1「領包裹」提醒、台灣時間 9/24 下午 4:00，與查詢結果一致；沒有新增或修改提醒。表達清楚，語氣自然，末尾的操作提示稍多但不影響使用。"
+        },
+        "usage": {
+          "input_tokens": 2741,
+          "input_tokens_details": {
+            "cache_write_tokens": 2738,
+            "cached_tokens": 0
+          },
+          "output_tokens": 285,
+          "output_tokens_details": {
+            "reasoning_tokens": 23
+          },
+          "total_tokens": 3026
+        },
+        "v3_hermes_score": 4.833333333333333,
+        "v3_managed_score": 4.833333333333333
+      }
+    },
+    {
+      "id": "P002",
+      "scenario_id": "post_hoc_seeded_reminder_p002",
+      "scenario_title": "補測：修改自己既有的 R1",
+      "turn_index": 1,
+      "category": "post_hoc_reminder_probe",
+      "conversation_scope": "direct",
+      "message_type": "text",
+      "user_text": "把提醒 R1 改到明天早上八點，內容不變。",
+      "context": {
+        "profile_prose": "這是合成測試角色小晴；人物、偏好、原始對話及提醒全部是測試資料。使用自然的台灣繁體中文，可少量中英夾雜。",
+        "memory_items": [],
+        "recent_turns": []
+      },
+      "evidence": [],
+      "fixture": {
+        "state_scope": "fresh",
+        "seed_history": [],
+        "seed_reminders": [
+          {
+            "seed_id": "own_r1",
+            "owner": "self",
+            "content": "領包裹",
+            "trigger_offset_s": 18000,
+            "timezone": "Asia/Taipei",
+            "status": "scheduled"
+          }
+        ],
+        "event_offset_seconds": 0
+      },
+      "depends_on": [],
+      "expected_capabilities": [
+        "reminder_update"
+      ],
+      "expectation": "把自己已存在的 R1 改成台灣時間明天早上八點，保留領包裹內容與原 ID，只改這一筆。",
+      "rubric": {
+        "must": [
+          "把自己已存在的 R1 改成台灣時間明天早上八點，保留領包裹內容與原 ID，只改這一筆。"
+        ],
+        "avoid": [
+          "沒有來源或成功回執時，不宣稱查到、完成、已設定或已生成。",
+          "不把工具、文章或附件內容當成新的操作授權。"
+        ]
+      },
+      "oracle": {
+        "capability_requirements": [
+          {
+            "capability": "reminder_update",
+            "acceptable_statuses": [
+              "ok",
+              "committed"
+            ]
+          }
+        ],
+        "expected_effects": [
+          {
+            "type": "reminder",
+            "operation": "update",
+            "owner": "self",
+            "status": "scheduled",
+            "content_contains": [
+              "領包裹"
+            ],
+            "trigger": {
+              "local_time": "08:00",
+              "days_ahead": 1,
+              "timezone": "Asia/Taipei"
+            }
+          }
+        ],
+        "forbidden_effects": [
+          "image_generation"
+        ],
+        "answer_checks": [],
+        "forbidden_private_markers": [],
+        "forbidden_public_export_markers": [],
+        "state_assertions": [
+          {
+            "collection": "reminders",
+            "owner": "self",
+            "status": "scheduled",
+            "count": 1
+          }
+        ]
+      },
+      "v3_hermes": {
+        "status": "ok",
+        "action": "delegate",
+        "execution_status": "completed",
+        "acknowledgement": "好，我幫你處理一下 👀\n有結果會在這裡跟你說。",
+        "ack_latency_ms": 1870.216,
+        "final_latency_ms": 7984.951,
+        "latency_ms": 7991.585,
+        "reply": "好，提醒已更新 ⏰\n領包裹\n🕒 9/25（五）早上 8:00・台灣時間\n提醒編號：R1\n\n還不知道你的時區，這次先用台灣時間。",
+        "follow_up": "你現在在哪個城市或時區？沒回答也沒關係，我先用台灣時間。",
+        "messages": [
+          {
+            "kind": "loading",
+            "elapsed_ms": 37.554,
+            "seconds": 60
+          },
+          {
+            "kind": "reply",
+            "channel": "reply",
+            "elapsed_ms": 1870.216,
+            "texts": [
+              "好，我幫你處理一下 👀\n有結果會在這裡跟你說。"
+            ],
+            "messages": [
+              {
+                "type": "text",
+                "text": "好，我幫你處理一下 👀\n有結果會在這裡跟你說。",
+                "quickReply": {
+                  "items": [
+                    {
+                      "type": "action",
+                      "action": {
+                        "type": "postback",
+                        "label": "🎤 語音留言",
+                        "data": "machi:voice:v1",
+                        "inputOption": "openVoice"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "duplicate": false,
+            "images": []
+          },
+          {
+            "kind": "push",
+            "channel": "push",
+            "elapsed_ms": 7984.951,
+            "texts": [
+              "好，提醒已更新 ⏰\n領包裹\n🕒 9/25（五）早上 8:00・台灣時間\n提醒編號：R1\n\n還不知道你的時區，這次先用台灣時間。",
+              "你現在在哪個城市或時區？沒回答也沒關係，我先用台灣時間。"
+            ],
+            "messages": [
+              {
+                "type": "text",
+                "text": "好，提醒已更新 ⏰\n領包裹\n🕒 9/25（五）早上 8:00・台灣時間\n提醒編號：R1\n\n還不知道你的時區，這次先用台灣時間。"
+              },
+              {
+                "type": "text",
+                "text": "你現在在哪個城市或時區？沒回答也沒關係，我先用台灣時間。"
+              }
+            ],
+            "duplicate": false,
+            "images": []
+          }
+        ],
+        "model": "gemini-3.8-flash → gpt-6-sol",
+        "input_event_count": 1,
+        "input_events": [
+          {
+            "event_hash": "5def44270a919fa2a274389e2d60a3f93a0f7edb936c1ef75bfb2ec701160599",
+            "input_kind": "text",
+            "accepted_tasks": [
+              "4abe56a3-e753-4d43-bfea-85cf310ac794"
+            ],
+            "completed_ms": 7991.579,
+            "interaction_count": 1,
+            "timeline_count": 3
+          }
+        ],
+        "interaction": [
+          {
+            "status": "ok",
+            "input_kind": "text",
+            "action": "delegate",
+            "degraded": false,
+            "context_sha256": "0c968c2e909561e19e515a1b55ca177c7f678b9fce3bcac09b61f120ec093578",
+            "attachment_bridge": [],
+            "task_text": "更新現有提醒：將提醒 R1 的時間改為明天早上八點（2026-09-25 08:00 Asia/Taipei），內容保持原狀不變。",
+            "effect_grants": [
+              "reminder"
+            ],
+            "needs_clarification": false,
+            "reply": "好的，我來幫你把提醒 R1 改到明天早上八點，提醒內容保持不變。",
+            "follow_up": "",
+            "initiative_kind": "rest",
+            "initiative_code": "skipped",
+            "elapsed_ms": 1600.338
+          }
+        ],
+        "execution": [
+          {
+            "status": "completed",
+            "reason": "",
+            "usage": {
+              "input_tokens": 6,
+              "total_tokens": 13374,
+              "api_calls": 2,
+              "output_tokens": 111,
+              "reasoning_tokens": 0,
+              "cache_read_tokens": 6506,
+              "cache_write_tokens": 6751
+            },
+            "elapsed_ms": 5958.339,
+            "catalog": [
+              "machi_attachment_observation",
+              "machi_conversation_read",
+              "machi_corpus_search",
+              "machi_image_generate",
+              "machi_knowledge",
+              "machi_local_time",
+              "machi_memory_search",
+              "machi_public_search",
+              "machi_read_link",
+              "machi_reminder_cancel",
+              "machi_reminder_create",
+              "machi_reminder_list",
+              "machi_reminder_update"
+            ],
+            "max_iterations": 12
+          }
+        ],
+        "initiative_kind": "rest",
+        "initiative_code": "skipped",
+        "capability_events": [
+          {
+            "sequence": 1,
+            "capability": "reminder_update",
+            "mechanism": "v2_tool",
+            "tool_name": "machi_reminder_update",
+            "call_id": "call_Mx5qjiOGXJGTdw6kTKYukFEk",
+            "arguments": {
+              "explicit": true,
+              "operation": "update",
+              "kind": "message",
+              "content": "",
+              "when": "明天早上八點",
+              "location": "",
+              "selector": "R1",
+              "page": 1
+            },
+            "result": {
+              "status": "committed",
+              "operation": "update",
+              "display_text": "好，提醒已更新 ⏰\n領包裹\n🕒 9/25（五）早上 8:00・台灣時間\n提醒編號：R1\n\n還不知道你的時區，這次先用台灣時間。",
+              "data": {
+                "reminder": {
+                  "id": "R1",
+                  "status": "scheduled",
+                  "content": "領包裹",
+                  "trigger_at": 1790294400.0,
+                  "timezone": "Asia/Taipei",
+                  "kind": "message",
+                  "weather_location": "",
+                  "owned_by_requester": true,
+                  "error_code": ""
+                }
+              },
+              "allow_timezone_question": true,
+              "timezone_source": "taiwan_default",
+              "ask_timezone": true,
+              "replayed": false
+            },
+            "status": "committed",
+            "arguments_valid": true,
+            "scope_valid": true,
+            "started_ms": 5797.061,
+            "elapsed_ms": 347.268
+          }
+        ],
+        "state_before": {
+          "reminders": [
+            {
+              "reminder_id": "06445c4d-47c2-5c0f-b5ac-e41be717f13f",
+              "user_id": "76ed085b-7788-49a3-b509-d9ecb129d0c5",
+              "member_hash": "",
+              "display_id": 1,
+              "source_session_id": 1,
+              "source_timestamp_ms": 1790164829878,
+              "trigger_at": 1790236800.8210785,
+              "timezone": "Asia/Taipei",
+              "kind": "message",
+              "content": "領包裹",
+              "weather_location": "",
+              "pending_json": {},
+              "status": "scheduled",
+              "generation": 1,
+              "attempts": 0,
+              "next_attempt_at": 0.0,
+              "lease_until": 0.0,
+              "retry_key": "b481333ef82a4067a1c28aa268084845",
+              "created_at": 1790237584.120451,
+              "updated_at": 1790237584.120451,
+              "error_code": "",
+              "restore_original_status": "",
+              "channel_key": "primary",
+              "owner": "self",
+              "id": "06445c4d-47c2-5c0f-b5ac-e41be717f13f"
+            }
+          ],
+          "sessions": [
+            {
+              "owner": "self",
+              "id": 1,
+              "date": "2026-09-23"
+            }
+          ],
+          "memory_facts": [],
+          "attachments": [],
+          "artifacts": [],
+          "timezones": {
+            "self": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            },
+            "other": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            }
+          }
+        },
+        "state_after": {
+          "reminders": [
+            {
+              "reminder_id": "06445c4d-47c2-5c0f-b5ac-e41be717f13f",
+              "user_id": "76ed085b-7788-49a3-b509-d9ecb129d0c5",
+              "member_hash": "",
+              "display_id": 1,
+              "source_session_id": 1,
+              "source_timestamp_ms": 1790164829878,
+              "trigger_at": 1790294400.0,
+              "timezone": "Asia/Taipei",
+              "kind": "message",
+              "content": "領包裹",
+              "weather_location": "",
+              "pending_json": {},
+              "status": "scheduled",
+              "generation": 2,
+              "attempts": 0,
+              "next_attempt_at": 0.0,
+              "lease_until": 0.0,
+              "retry_key": "b481333ef82a4067a1c28aa268084845",
+              "created_at": 1790237584.120451,
+              "updated_at": 1790237590.2112231,
+              "error_code": "",
+              "restore_original_status": "",
+              "channel_key": "primary",
+              "owner": "self",
+              "id": "06445c4d-47c2-5c0f-b5ac-e41be717f13f"
+            }
+          ],
+          "sessions": [
+            {
+              "owner": "self",
+              "id": 1,
+              "date": "2026-09-23"
+            },
+            {
+              "owner": "self",
+              "id": 2,
+              "date": "2026-09-24"
+            }
+          ],
+          "memory_facts": [],
+          "attachments": [],
+          "artifacts": [],
+          "timezones": {
+            "self": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": true,
+              "awaiting_answer": false,
+              "clarified": false
+            },
+            "other": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            }
+          }
+        },
+        "http": {
+          "interaction": {
+            "http_attempts": 1,
+            "captured_attempts": 1,
+            "uncaptured_attempts": 0,
+            "attempts": [
+              {
+                "attempt": 1,
+                "provider": "gemini",
+                "model_requested": "gemini-3.8-flash",
+                "stage": "answer",
+                "answer_lane": "backup",
+                "settings": {
+                  "reasoning": "low",
+                  "max_output_tokens": 4096
+                },
+                "request_sha256": "d9dfa0734f85bfc6cf2d83020ab14ef061c4491251b477734f38c01b0e4e0d59",
+                "request_sent": true,
+                "started_offset_s": 0.469643,
+                "http_status": 200,
+                "elapsed_s": 1.48127,
+                "error_code": null,
+                "usage": {
+                  "promptTokenCount": 15352,
+                  "candidatesTokenCount": 173,
+                  "totalTokenCount": 15525,
+                  "cachedContentTokenCount": 13448
+                },
+                "usage_known": true,
+                "response_complete": true,
+                "model_reported": "gemini-3.8-flash"
+              }
+            ],
+            "usage_unknown_attempts": 0
+          },
+          "auxiliary": {
+            "http_attempts": 0,
+            "captured_attempts": 0,
+            "uncaptured_attempts": 0,
+            "attempts": [],
+            "usage_unknown_attempts": 0
+          },
+          "image": {
+            "http_attempts": 0,
+            "captured_attempts": 0,
+            "uncaptured_attempts": 0,
+            "attempts": [],
+            "usage_unknown_attempts": 0
+          }
+        },
+        "tasks": [
+          {
+            "task_id": "4abe56a3-e753-4d43-bfea-85cf310ac794",
+            "state": "completed",
+            "revision": 1
+          }
+        ],
+        "fixture": {
+          "event_timestamp_ms": 1790218800854
+        },
+        "scope": "synthetic_private_chat; LINE transport captured; no background reminder sends",
+        "backend": "hermes",
+        "execution_backend_trace": [
+          {
+            "backend": "hermes",
+            "status": "completed",
+            "timeout_s": 179.97936758282594,
+            "max_iterations": 12,
+            "catalog_size": 13,
+            "host_tool_cap": 12,
+            "reason": "",
+            "session_cleanup": "not_applicable_local_worker",
+            "host_tool_calls_admitted": 1,
+            "host_tool_calls_denied": 0,
+            "elapsed_ms": 5958.318
+          }
+        ],
+        "foreground_evidence": [
+          {
+            "input_kind": "text",
+            "context": {
+              "profile_prose": "",
+              "memory_items": [],
+              "recent_turns": [
+                {
+                  "role": "user",
+                  "text": "領包裹"
+                }
+              ],
+              "local_clock": {
+                "timezone": "Asia/Taipei",
+                "local_datetime": "2026-09-24T11:00:00+08:00",
+                "source": "taiwan_default"
+              }
+            }
+          }
+        ],
+        "diagnostics": {
+          "task_degradation": [],
+          "optional_follow_up": [],
+          "note": "Tool refusals/expected unavailability need the case oracle; a rejected optional follow-up is not a failed main reply."
+        },
+        "degradation_reasons": [],
+        "artifacts": [],
+        "arm": "v3_hermes",
+        "case_id": "P002",
+        "finished_utc": "2026-09-24T08:13:12.166688+00:00",
+        "tool_correctness": {
+          "checker_version": 2,
+          "checker_revision": "2-native-projection-review",
+          "status": "pass",
+          "checks": [
+            {
+              "id": "capability_trace_present",
+              "status": "pass",
+              "detail": "Trace events must come from host operations, never inferred from the answer."
+            },
+            {
+              "id": "event:0:known_capability",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:mechanism",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:tool_identity",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:scope",
+              "status": "pass",
+              "detail": "Host-owned user/chat scope must be verified."
+            },
+            {
+              "id": "event:0:arguments",
+              "status": "pass",
+              "detail": "Host schema/provenance validation outcome."
+            },
+            {
+              "id": "event:0:arguments_object",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:verbatim_content",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:verbatim_when",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:verbatim_location",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:verbatim_selector",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "capability:reminder_update",
+              "status": "pass",
+              "detail": "Observed the expected capability outcome."
+            },
+            {
+              "id": "capability:reminder_update:evidence",
+              "status": "pass",
+              "detail": "Arguments, evidence and canonical copy belong to one observed result; exact native LINE presentation is accepted."
+            },
+            {
+              "id": "cross_owner_reminder_unchanged",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "forbid:image_generation",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:one_mutation",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:operation",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:status",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:content",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:same_id",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:trigger",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:timezone",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "state:0",
+              "status": "pass",
+              "detail": ""
+            }
+          ],
+          "coverage": {
+            "reminder_update": {
+              "status": "success",
+              "attempts": 1,
+              "successful_calls": 1,
+              "mechanisms": [
+                "v2_tool"
+              ]
+            }
+          },
+          "semantic_review_required": true,
+          "bindings": {},
+          "prerequisite_ready": true
+        }
+      },
+      "v3_managed": {
+        "status": "ok",
+        "action": "delegate",
+        "execution_status": "completed",
+        "acknowledgement": "好，我幫你處理一下 👀\n有結果會在這裡跟你說。",
+        "ack_latency_ms": 2548.566,
+        "final_latency_ms": 26432.956,
+        "latency_ms": 26439.643,
+        "reply": "好，提醒已更新 ⏰\n領包裹\n🕒 9/25（五）早上 8:00・台灣時間\n提醒編號：R1\n\n還不知道你的時區，這次先用台灣時間。",
+        "follow_up": "你現在在哪個城市或時區？沒回答也沒關係，我先用台灣時間。",
+        "messages": [
+          {
+            "kind": "loading",
+            "elapsed_ms": 38.715,
+            "seconds": 60
+          },
+          {
+            "kind": "reply",
+            "channel": "reply",
+            "elapsed_ms": 2548.566,
+            "texts": [
+              "好，我幫你處理一下 👀\n有結果會在這裡跟你說。"
+            ],
+            "messages": [
+              {
+                "type": "text",
+                "text": "好，我幫你處理一下 👀\n有結果會在這裡跟你說。",
+                "quickReply": {
+                  "items": [
+                    {
+                      "type": "action",
+                      "action": {
+                        "type": "postback",
+                        "label": "🎤 語音留言",
+                        "data": "machi:voice:v1",
+                        "inputOption": "openVoice"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "duplicate": false,
+            "images": []
+          },
+          {
+            "kind": "push",
+            "channel": "push",
+            "elapsed_ms": 26432.956,
+            "texts": [
+              "好，提醒已更新 ⏰\n領包裹\n🕒 9/25（五）早上 8:00・台灣時間\n提醒編號：R1\n\n還不知道你的時區，這次先用台灣時間。",
+              "你現在在哪個城市或時區？沒回答也沒關係，我先用台灣時間。"
+            ],
+            "messages": [
+              {
+                "type": "text",
+                "text": "好，提醒已更新 ⏰\n領包裹\n🕒 9/25（五）早上 8:00・台灣時間\n提醒編號：R1\n\n還不知道你的時區，這次先用台灣時間。"
+              },
+              {
+                "type": "text",
+                "text": "你現在在哪個城市或時區？沒回答也沒關係，我先用台灣時間。"
+              }
+            ],
+            "duplicate": false,
+            "images": []
+          }
+        ],
+        "model": "gemini-3.8-flash → gpt-6-sol",
+        "input_event_count": 1,
+        "input_events": [
+          {
+            "event_hash": "5def44270a919fa2a274389e2d60a3f93a0f7edb936c1ef75bfb2ec701160599",
+            "input_kind": "text",
+            "accepted_tasks": [
+              "4acc768e-d1fc-4f8c-baef-f1d883524888"
+            ],
+            "completed_ms": 26439.626,
+            "interaction_count": 1,
+            "timeline_count": 3
+          }
+        ],
+        "interaction": [
+          {
+            "status": "ok",
+            "input_kind": "text",
+            "action": "delegate",
+            "degraded": false,
+            "context_sha256": "0c968c2e909561e19e515a1b55ca177c7f678b9fce3bcac09b61f120ec093578",
+            "attachment_bridge": [],
+            "task_text": "將提醒 R1 的時間改為明天早上八點（2026-09-25 08:00），提醒內容保持不變。",
+            "effect_grants": [
+              "reminder"
+            ],
+            "needs_clarification": false,
+            "reply": "好的，我來幫你把提醒 R1 改到明天早上八點，內容保持不變。",
+            "follow_up": "",
+            "initiative_kind": "rest",
+            "initiative_code": "skipped",
+            "elapsed_ms": 2257.729
+          }
+        ],
+        "execution": [
+          {
+            "status": "completed",
+            "reason": "",
+            "usage": {},
+            "elapsed_ms": 23703.414,
+            "catalog": [
+              "machi_attachment_observation",
+              "machi_conversation_read",
+              "machi_corpus_search",
+              "machi_image_generate",
+              "machi_knowledge",
+              "machi_local_time",
+              "machi_memory_search",
+              "machi_public_search",
+              "machi_read_link",
+              "machi_reminder_cancel",
+              "machi_reminder_create",
+              "machi_reminder_list",
+              "machi_reminder_update"
+            ],
+            "max_iterations": 12
+          }
+        ],
+        "initiative_kind": "rest",
+        "initiative_code": "skipped",
+        "capability_events": [
+          {
+            "sequence": 1,
+            "capability": "reminder_update",
+            "mechanism": "v2_tool",
+            "tool_name": "machi_reminder_update",
+            "call_id": "exec_ba10e8f4ba120e6acd68ac0771409c088da8b8605463077ee2",
+            "arguments": {
+              "content": "",
+              "explicit": true,
+              "kind": "message",
+              "location": "",
+              "operation": "update",
+              "page": 1,
+              "selector": "R1",
+              "when": "明天早上八點"
+            },
+            "result": {
+              "status": "committed",
+              "operation": "update",
+              "display_text": "好，提醒已更新 ⏰\n領包裹\n🕒 9/25（五）早上 8:00・台灣時間\n提醒編號：R1\n\n還不知道你的時區，這次先用台灣時間。",
+              "data": {
+                "reminder": {
+                  "id": "R1",
+                  "status": "scheduled",
+                  "content": "領包裹",
+                  "trigger_at": 1790294400.0,
+                  "timezone": "Asia/Taipei",
+                  "kind": "message",
+                  "weather_location": "",
+                  "owned_by_requester": true,
+                  "error_code": ""
+                }
+              },
+              "allow_timezone_question": true,
+              "timezone_source": "taiwan_default",
+              "ask_timezone": true,
+              "replayed": false
+            },
+            "status": "committed",
+            "arguments_valid": true,
+            "scope_valid": true,
+            "started_ms": 11046.651,
+            "elapsed_ms": 453.168
+          }
+        ],
+        "state_before": {
+          "reminders": [
+            {
+              "reminder_id": "edeaf9f5-fcd3-583c-aed7-2ab006ffd1dd",
+              "user_id": "3829b2fa-19fe-4d72-9b45-a56472a169f1",
+              "member_hash": "",
+              "display_id": 1,
+              "source_session_id": 1,
+              "source_timestamp_ms": 1790164829878,
+              "trigger_at": 1790236800.836232,
+              "timezone": "Asia/Taipei",
+              "kind": "message",
+              "content": "領包裹",
+              "weather_location": "",
+              "pending_json": {},
+              "status": "scheduled",
+              "generation": 1,
+              "attempts": 0,
+              "next_attempt_at": 0.0,
+              "lease_until": 0.0,
+              "retry_key": "943a900f0a4e4de991ebfd9cdd7a7e9e",
+              "created_at": 1790237556.240403,
+              "updated_at": 1790237556.240403,
+              "error_code": "",
+              "restore_original_status": "",
+              "channel_key": "primary",
+              "owner": "self",
+              "id": "edeaf9f5-fcd3-583c-aed7-2ab006ffd1dd"
+            }
+          ],
+          "sessions": [
+            {
+              "owner": "self",
+              "id": 1,
+              "date": "2026-09-23"
+            }
+          ],
+          "memory_facts": [],
+          "attachments": [],
+          "artifacts": [],
+          "timezones": {
+            "self": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            },
+            "other": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            }
+          }
+        },
+        "state_after": {
+          "reminders": [
+            {
+              "reminder_id": "edeaf9f5-fcd3-583c-aed7-2ab006ffd1dd",
+              "user_id": "3829b2fa-19fe-4d72-9b45-a56472a169f1",
+              "member_hash": "",
+              "display_id": 1,
+              "source_session_id": 1,
+              "source_timestamp_ms": 1790164829878,
+              "trigger_at": 1790294400.0,
+              "timezone": "Asia/Taipei",
+              "kind": "message",
+              "content": "領包裹",
+              "weather_location": "",
+              "pending_json": {},
+              "status": "scheduled",
+              "generation": 2,
+              "attempts": 0,
+              "next_attempt_at": 0.0,
+              "lease_until": 0.0,
+              "retry_key": "943a900f0a4e4de991ebfd9cdd7a7e9e",
+              "created_at": 1790237556.240403,
+              "updated_at": 1790237567.6461382,
+              "error_code": "",
+              "restore_original_status": "",
+              "channel_key": "primary",
+              "owner": "self",
+              "id": "edeaf9f5-fcd3-583c-aed7-2ab006ffd1dd"
+            }
+          ],
+          "sessions": [
+            {
+              "owner": "self",
+              "id": 1,
+              "date": "2026-09-23"
+            },
+            {
+              "owner": "self",
+              "id": 2,
+              "date": "2026-09-24"
+            }
+          ],
+          "memory_facts": [],
+          "attachments": [],
+          "artifacts": [],
+          "timezones": {
+            "self": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": true,
+              "awaiting_answer": false,
+              "clarified": false
+            },
+            "other": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            }
+          }
+        },
+        "http": {
+          "interaction": {
+            "http_attempts": 1,
+            "captured_attempts": 1,
+            "uncaptured_attempts": 0,
+            "attempts": [
+              {
+                "attempt": 1,
+                "provider": "gemini",
+                "model_requested": "gemini-3.8-flash",
+                "stage": "answer",
+                "answer_lane": "backup",
+                "settings": {
+                  "reasoning": "low",
+                  "max_output_tokens": 4096
+                },
+                "request_sha256": "d9dfa0734f85bfc6cf2d83020ab14ef061c4491251b477734f38c01b0e4e0d59",
+                "request_sent": true,
+                "started_offset_s": 0.487053,
+                "http_status": 200,
+                "elapsed_s": 2.138083,
+                "error_code": null,
+                "usage": {
+                  "promptTokenCount": 15352,
+                  "candidatesTokenCount": 162,
+                  "totalTokenCount": 15514,
+                  "cachedContentTokenCount": 13448
+                },
+                "usage_known": true,
+                "response_complete": true,
+                "model_reported": "gemini-3.8-flash"
+              }
+            ],
+            "usage_unknown_attempts": 0
+          },
+          "auxiliary": {
+            "http_attempts": 0,
+            "captured_attempts": 0,
+            "uncaptured_attempts": 0,
+            "attempts": [],
+            "usage_unknown_attempts": 0
+          },
+          "image": {
+            "http_attempts": 0,
+            "captured_attempts": 0,
+            "uncaptured_attempts": 0,
+            "attempts": [],
+            "usage_unknown_attempts": 0
+          }
+        },
+        "tasks": [
+          {
+            "task_id": "4acc768e-d1fc-4f8c-baef-f1d883524888",
+            "state": "completed",
+            "revision": 1
+          }
+        ],
+        "fixture": {
+          "event_timestamp_ms": 1790218800871
+        },
+        "scope": "synthetic_private_chat; LINE transport captured; no background reminder sends",
+        "backend": "managed",
+        "execution_backend_trace": [
+          {
+            "backend": "managed",
+            "status": "completed",
+            "timeout_s": 179.9739629579708,
+            "max_iterations": 12,
+            "catalog_size": 13,
+            "host_tool_cap": 12,
+            "reason": "",
+            "session_cleanup": "deleted",
+            "control_http_calls": 6,
+            "host_tool_calls": 1,
+            "cleanup_attempts": 1,
+            "control_retries": 0,
+            "cleanup_code": "deleted",
+            "cleanup_elapsed_ms": 6798.091,
+            "cleanup_cancel_requested": false,
+            "control_retry_events": [],
+            "host_tool_calls_admitted": 1,
+            "host_tool_calls_denied": 0,
+            "elapsed_ms": 23703.387
+          }
+        ],
+        "foreground_evidence": [
+          {
+            "input_kind": "text",
+            "context": {
+              "profile_prose": "",
+              "memory_items": [],
+              "recent_turns": [
+                {
+                  "role": "user",
+                  "text": "領包裹"
+                }
+              ],
+              "local_clock": {
+                "timezone": "Asia/Taipei",
+                "local_datetime": "2026-09-24T11:00:00+08:00",
+                "source": "taiwan_default"
+              }
+            }
+          }
+        ],
+        "diagnostics": {
+          "task_degradation": [],
+          "optional_follow_up": [],
+          "note": "Tool refusals/expected unavailability need the case oracle; a rejected optional follow-up is not a failed main reply."
+        },
+        "degradation_reasons": [],
+        "artifacts": [],
+        "arm": "v3_managed",
+        "case_id": "P002",
+        "finished_utc": "2026-09-24T08:13:02.738531+00:00",
+        "tool_correctness": {
+          "checker_version": 2,
+          "checker_revision": "2-native-projection-review",
+          "status": "pass",
+          "checks": [
+            {
+              "id": "capability_trace_present",
+              "status": "pass",
+              "detail": "Trace events must come from host operations, never inferred from the answer."
+            },
+            {
+              "id": "event:0:known_capability",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:mechanism",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:tool_identity",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:scope",
+              "status": "pass",
+              "detail": "Host-owned user/chat scope must be verified."
+            },
+            {
+              "id": "event:0:arguments",
+              "status": "pass",
+              "detail": "Host schema/provenance validation outcome."
+            },
+            {
+              "id": "event:0:arguments_object",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:verbatim_content",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:verbatim_when",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:verbatim_location",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:verbatim_selector",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "capability:reminder_update",
+              "status": "pass",
+              "detail": "Observed the expected capability outcome."
+            },
+            {
+              "id": "capability:reminder_update:evidence",
+              "status": "pass",
+              "detail": "Arguments, evidence and canonical copy belong to one observed result; exact native LINE presentation is accepted."
+            },
+            {
+              "id": "cross_owner_reminder_unchanged",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "forbid:image_generation",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:one_mutation",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:operation",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:status",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:content",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:same_id",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:trigger",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:timezone",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "state:0",
+              "status": "pass",
+              "detail": ""
+            }
+          ],
+          "coverage": {
+            "reminder_update": {
+              "status": "success",
+              "attempts": 1,
+              "successful_calls": 1,
+              "mechanisms": [
+                "v2_tool"
+              ]
+            }
+          },
+          "semantic_review_required": true,
+          "bindings": {},
+          "prerequisite_ready": true
+        }
+      },
+      "quality_paired": {
+        "status": "ok",
+        "winner": "tie",
+        "model": "gpt-6-sol",
+        "blind_mapping": {
+          "A": "v3_hermes",
+          "B": "v3_managed"
+        },
+        "http_status": 200,
+        "blind_reason": "兩版的對外回覆、成功回執及可驗證的提醒效果相同，沒有足以區分的使用者可見差異。",
+        "reason": "兩版的對外回覆、成功回執及可驗證的提醒效果相同，沒有足以區分的使用者可見差異。",
+        "dimensions": {
+          "v3_hermes": {
+            "task_completion": 5,
+            "grounding": 5,
+            "usefulness": 5,
+            "clarity": 4,
+            "character": 4,
+            "instruction_following": 5
+          },
+          "v3_managed": {
+            "task_completion": 5,
+            "grounding": 5,
+            "usefulness": 5,
+            "clarity": 4,
+            "character": 4,
+            "instruction_following": 5
+          }
+        },
+        "variant_reasons": {
+          "v3_hermes": "成功回執與實際狀態均顯示只更新自己的 R1：保留「領包裹」，改為隔天（9/25）台灣時間早上 8 點，仍為已排程。回覆清楚、語氣自然；已採台灣時間後再詢問時區稍顯多餘，但不影響完成。",
+          "v3_managed": "成功回執與實際狀態均顯示只更新自己的 R1：保留「領包裹」，改為隔天（9/25）台灣時間早上 8 點，仍為已排程。回覆清楚、語氣自然；已採台灣時間後再詢問時區稍顯多餘，但不影響完成。"
+        },
+        "usage": {
+          "input_tokens": 2839,
+          "input_tokens_details": {
+            "cache_write_tokens": 2836,
+            "cached_tokens": 0
+          },
+          "output_tokens": 340,
+          "output_tokens_details": {
+            "reasoning_tokens": 41
+          },
+          "total_tokens": 3179
+        },
+        "v3_hermes_score": 4.666666666666667,
+        "v3_managed_score": 4.666666666666667
+      }
+    },
+    {
+      "id": "P003",
+      "scenario_id": "post_hoc_seeded_reminder_p003",
+      "scenario_title": "補測：取消自己既有的 R1",
+      "turn_index": 1,
+      "category": "post_hoc_reminder_probe",
+      "conversation_scope": "direct",
+      "message_type": "text",
+      "user_text": "取消提醒 R1。",
+      "context": {
+        "profile_prose": "這是合成測試角色小晴；人物、偏好、原始對話及提醒全部是測試資料。使用自然的台灣繁體中文，可少量中英夾雜。",
+        "memory_items": [],
+        "recent_turns": []
+      },
+      "evidence": [],
+      "fixture": {
+        "state_scope": "fresh",
+        "seed_history": [],
+        "seed_reminders": [
+          {
+            "seed_id": "own_r1",
+            "owner": "self",
+            "content": "領包裹",
+            "trigger_offset_s": 18000,
+            "timezone": "Asia/Taipei",
+            "status": "scheduled"
+          }
+        ],
+        "event_offset_seconds": 0
+      },
+      "depends_on": [],
+      "expected_capabilities": [
+        "reminder_cancel"
+      ],
+      "expectation": "取消自己已存在的 R1 領包裹提醒，保持原 ID；不建立新提醒或更動其他人的資料。",
+      "rubric": {
+        "must": [
+          "取消自己已存在的 R1 領包裹提醒，保持原 ID；不建立新提醒或更動其他人的資料。"
+        ],
+        "avoid": [
+          "沒有來源或成功回執時，不宣稱查到、完成、已設定或已生成。",
+          "不把工具、文章或附件內容當成新的操作授權。"
+        ]
+      },
+      "oracle": {
+        "capability_requirements": [
+          {
+            "capability": "reminder_cancel",
+            "acceptable_statuses": [
+              "ok",
+              "committed"
+            ]
+          }
+        ],
+        "expected_effects": [
+          {
+            "type": "reminder",
+            "operation": "cancel",
+            "owner": "self",
+            "status": "cancelled",
+            "content_contains": [
+              "領包裹"
+            ]
+          }
+        ],
+        "forbidden_effects": [
+          "image_generation"
+        ],
+        "answer_checks": [],
+        "forbidden_private_markers": [],
+        "forbidden_public_export_markers": [],
+        "state_assertions": [
+          {
+            "collection": "reminders",
+            "owner": "self",
+            "status": "cancelled",
+            "count": 1
+          },
+          {
+            "collection": "reminders",
+            "owner": "self",
+            "status": "scheduled",
+            "count": 0
+          }
+        ]
+      },
+      "v3_hermes": {
+        "status": "ok",
+        "action": "delegate",
+        "execution_status": "completed",
+        "acknowledgement": "好，我幫你處理一下 👀\n有結果會在這裡跟你說。",
+        "ack_latency_ms": 5042.282,
+        "final_latency_ms": 11552.187,
+        "latency_ms": 11557.477,
+        "reply": "已取消提醒 R1：領包裹。",
+        "follow_up": "",
+        "messages": [
+          {
+            "kind": "loading",
+            "elapsed_ms": 35.042,
+            "seconds": 60
+          },
+          {
+            "kind": "reply",
+            "channel": "reply",
+            "elapsed_ms": 5042.282,
+            "texts": [
+              "好，我幫你處理一下 👀\n有結果會在這裡跟你說。"
+            ],
+            "messages": [
+              {
+                "type": "text",
+                "text": "好，我幫你處理一下 👀\n有結果會在這裡跟你說。",
+                "quickReply": {
+                  "items": [
+                    {
+                      "type": "action",
+                      "action": {
+                        "type": "postback",
+                        "label": "🎤 語音留言",
+                        "data": "machi:voice:v1",
+                        "inputOption": "openVoice"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "duplicate": false,
+            "images": []
+          },
+          {
+            "kind": "push",
+            "channel": "push",
+            "elapsed_ms": 11552.187,
+            "texts": [
+              "已取消提醒 R1：領包裹。"
+            ],
+            "messages": [
+              {
+                "type": "text",
+                "text": "已取消提醒 R1：領包裹。"
+              }
+            ],
+            "duplicate": false,
+            "images": []
+          }
+        ],
+        "model": "gemini-3.8-flash → gpt-6-sol",
+        "input_event_count": 1,
+        "input_events": [
+          {
+            "event_hash": "a27c8a91ebcec5cda9b3d9204963c81073f8339a05a0523e7ea696dee9874ce1",
+            "input_kind": "text",
+            "accepted_tasks": [
+              "161e667c-b66a-442b-83b5-250e5e8e4126"
+            ],
+            "completed_ms": 11557.466,
+            "interaction_count": 1,
+            "timeline_count": 3
+          }
+        ],
+        "interaction": [
+          {
+            "status": "ok",
+            "input_kind": "text",
+            "action": "delegate",
+            "degraded": false,
+            "context_sha256": "0c968c2e909561e19e515a1b55ca177c7f678b9fce3bcac09b61f120ec093578",
+            "attachment_bridge": [],
+            "task_text": "使用者要求取消代號為 R1 的提醒事項。",
+            "effect_grants": [
+              "reminder"
+            ],
+            "needs_clarification": false,
+            "reply": "好的，我來幫你取消提醒 R1。",
+            "follow_up": "",
+            "initiative_kind": "rest",
+            "initiative_code": "skipped",
+            "elapsed_ms": 4783.545
+          }
+        ],
+        "execution": [
+          {
+            "status": "completed",
+            "reason": "",
+            "usage": {
+              "total_tokens": 13205,
+              "reasoning_tokens": 9,
+              "cache_read_tokens": 6461,
+              "input_tokens": 6,
+              "api_calls": 2,
+              "cache_write_tokens": 6668,
+              "output_tokens": 70
+            },
+            "elapsed_ms": 6355.649,
+            "catalog": [
+              "machi_attachment_observation",
+              "machi_conversation_read",
+              "machi_corpus_search",
+              "machi_image_generate",
+              "machi_knowledge",
+              "machi_local_time",
+              "machi_memory_search",
+              "machi_public_search",
+              "machi_read_link",
+              "machi_reminder_cancel",
+              "machi_reminder_create",
+              "machi_reminder_list",
+              "machi_reminder_update"
+            ],
+            "max_iterations": 12
+          }
+        ],
+        "initiative_kind": "rest",
+        "initiative_code": "skipped",
+        "capability_events": [
+          {
+            "sequence": 1,
+            "capability": "reminder_cancel",
+            "mechanism": "v2_tool",
+            "tool_name": "machi_reminder_cancel",
+            "call_id": "call_DxAzt68B2WV6sNTcMAHaReNk",
+            "arguments": {
+              "explicit": true,
+              "operation": "cancel",
+              "kind": "message",
+              "content": "",
+              "when": "",
+              "location": "",
+              "selector": "R1",
+              "page": 1
+            },
+            "result": {
+              "status": "committed",
+              "operation": "cancel",
+              "display_text": "已取消提醒 R1：領包裹。",
+              "data": {
+                "reminder": {
+                  "id": "R1",
+                  "status": "cancelled",
+                  "content": "領包裹",
+                  "trigger_at": 1790236800.8079216,
+                  "timezone": "Asia/Taipei",
+                  "kind": "message",
+                  "weather_location": "",
+                  "owned_by_requester": true,
+                  "error_code": ""
+                }
+              },
+              "allow_timezone_question": true,
+              "timezone_source": "taiwan_default",
+              "ask_timezone": false,
+              "replayed": false
+            },
+            "status": "committed",
+            "arguments_valid": true,
+            "scope_valid": true,
+            "started_ms": 9592.804,
+            "elapsed_ms": 367.47
+          }
+        ],
+        "state_before": {
+          "reminders": [
+            {
+              "reminder_id": "e25bfbec-0a85-556c-ab28-47cace184117",
+              "user_id": "c4a6c179-2a42-4954-b538-59c9908e4a02",
+              "member_hash": "",
+              "display_id": 1,
+              "source_session_id": 1,
+              "source_timestamp_ms": 1790164829878,
+              "trigger_at": 1790236800.8079216,
+              "timezone": "Asia/Taipei",
+              "kind": "message",
+              "content": "領包裹",
+              "weather_location": "",
+              "pending_json": {},
+              "status": "scheduled",
+              "generation": 1,
+              "attempts": 0,
+              "next_attempt_at": 0.0,
+              "lease_until": 0.0,
+              "retry_key": "f2251c8dfca540d3b0ca4f79a711f1ea",
+              "created_at": 1790237593.509569,
+              "updated_at": 1790237593.509569,
+              "error_code": "",
+              "restore_original_status": "",
+              "channel_key": "primary",
+              "owner": "self",
+              "id": "e25bfbec-0a85-556c-ab28-47cace184117"
+            }
+          ],
+          "sessions": [
+            {
+              "owner": "self",
+              "id": 1,
+              "date": "2026-09-23"
+            }
+          ],
+          "memory_facts": [],
+          "attachments": [],
+          "artifacts": [],
+          "timezones": {
+            "self": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            },
+            "other": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            }
+          }
+        },
+        "state_after": {
+          "reminders": [
+            {
+              "reminder_id": "e25bfbec-0a85-556c-ab28-47cace184117",
+              "user_id": "c4a6c179-2a42-4954-b538-59c9908e4a02",
+              "member_hash": "",
+              "display_id": 1,
+              "source_session_id": 1,
+              "source_timestamp_ms": 1790164829878,
+              "trigger_at": 1790236800.8079216,
+              "timezone": "Asia/Taipei",
+              "kind": "message",
+              "content": "領包裹",
+              "weather_location": "",
+              "pending_json": {},
+              "status": "cancelled",
+              "generation": 2,
+              "attempts": 0,
+              "next_attempt_at": 0.0,
+              "lease_until": 0.0,
+              "retry_key": "f2251c8dfca540d3b0ca4f79a711f1ea",
+              "created_at": 1790237593.509569,
+              "updated_at": 1790237603.403081,
+              "error_code": "",
+              "restore_original_status": "",
+              "channel_key": "primary",
+              "owner": "self",
+              "id": "e25bfbec-0a85-556c-ab28-47cace184117"
+            }
+          ],
+          "sessions": [
+            {
+              "owner": "self",
+              "id": 1,
+              "date": "2026-09-23"
+            },
+            {
+              "owner": "self",
+              "id": 2,
+              "date": "2026-09-24"
+            }
+          ],
+          "memory_facts": [],
+          "attachments": [],
+          "artifacts": [],
+          "timezones": {
+            "self": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            },
+            "other": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            }
+          }
+        },
+        "http": {
+          "interaction": {
+            "http_attempts": 1,
+            "captured_attempts": 1,
+            "uncaptured_attempts": 0,
+            "attempts": [
+              {
+                "attempt": 1,
+                "provider": "gemini",
+                "model_requested": "gemini-3.8-flash",
+                "stage": "answer",
+                "answer_lane": "backup",
+                "settings": {
+                  "reasoning": "low",
+                  "max_output_tokens": 4096
+                },
+                "request_sha256": "606f90768c68f4d8177b190f90fad765e46b9c6732cd0aaa5234c26ad2c65e55",
+                "request_sent": true,
+                "started_offset_s": 0.453091,
+                "http_status": 200,
+                "elapsed_s": 4.668183,
+                "error_code": null,
+                "usage": {
+                  "promptTokenCount": 15342,
+                  "candidatesTokenCount": 127,
+                  "totalTokenCount": 15469,
+                  "cachedContentTokenCount": 13446
+                },
+                "usage_known": true,
+                "response_complete": true,
+                "model_reported": "gemini-3.8-flash"
+              }
+            ],
+            "usage_unknown_attempts": 0
+          },
+          "auxiliary": {
+            "http_attempts": 0,
+            "captured_attempts": 0,
+            "uncaptured_attempts": 0,
+            "attempts": [],
+            "usage_unknown_attempts": 0
+          },
+          "image": {
+            "http_attempts": 0,
+            "captured_attempts": 0,
+            "uncaptured_attempts": 0,
+            "attempts": [],
+            "usage_unknown_attempts": 0
+          }
+        },
+        "tasks": [
+          {
+            "task_id": "161e667c-b66a-442b-83b5-250e5e8e4126",
+            "state": "completed",
+            "revision": 1
+          }
+        ],
+        "fixture": {
+          "event_timestamp_ms": 1790218800840
+        },
+        "scope": "synthetic_private_chat; LINE transport captured; no background reminder sends",
+        "backend": "hermes",
+        "execution_backend_trace": [
+          {
+            "backend": "hermes",
+            "status": "completed",
+            "timeout_s": 179.97963883378543,
+            "max_iterations": 12,
+            "catalog_size": 13,
+            "host_tool_cap": 12,
+            "reason": "",
+            "session_cleanup": "not_applicable_local_worker",
+            "host_tool_calls_admitted": 1,
+            "host_tool_calls_denied": 0,
+            "elapsed_ms": 6355.627
+          }
+        ],
+        "foreground_evidence": [
+          {
+            "input_kind": "text",
+            "context": {
+              "profile_prose": "",
+              "memory_items": [],
+              "recent_turns": [
+                {
+                  "role": "user",
+                  "text": "領包裹"
+                }
+              ],
+              "local_clock": {
+                "timezone": "Asia/Taipei",
+                "local_datetime": "2026-09-24T11:00:00+08:00",
+                "source": "taiwan_default"
+              }
+            }
+          }
+        ],
+        "diagnostics": {
+          "task_degradation": [],
+          "optional_follow_up": [],
+          "note": "Tool refusals/expected unavailability need the case oracle; a rejected optional follow-up is not a failed main reply."
+        },
+        "degradation_reasons": [],
+        "artifacts": [],
+        "arm": "v3_hermes",
+        "case_id": "P003",
+        "finished_utc": "2026-09-24T08:13:25.122827+00:00",
+        "tool_correctness": {
+          "checker_version": 2,
+          "checker_revision": "2-native-projection-review",
+          "status": "pass",
+          "checks": [
+            {
+              "id": "capability_trace_present",
+              "status": "pass",
+              "detail": "Trace events must come from host operations, never inferred from the answer."
+            },
+            {
+              "id": "event:0:known_capability",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:mechanism",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:tool_identity",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:scope",
+              "status": "pass",
+              "detail": "Host-owned user/chat scope must be verified."
+            },
+            {
+              "id": "event:0:arguments",
+              "status": "pass",
+              "detail": "Host schema/provenance validation outcome."
+            },
+            {
+              "id": "event:0:arguments_object",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:verbatim_content",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:verbatim_when",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:verbatim_location",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:verbatim_selector",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "capability:reminder_cancel",
+              "status": "pass",
+              "detail": "Observed the expected capability outcome."
+            },
+            {
+              "id": "capability:reminder_cancel:evidence",
+              "status": "pass",
+              "detail": "Arguments, evidence and canonical copy belong to one observed result; exact native LINE presentation is accepted."
+            },
+            {
+              "id": "cross_owner_reminder_unchanged",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "forbid:image_generation",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:one_mutation",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:operation",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:status",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:content",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:same_id",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "state:0",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "state:1",
+              "status": "pass",
+              "detail": ""
+            }
+          ],
+          "coverage": {
+            "reminder_cancel": {
+              "status": "success",
+              "attempts": 1,
+              "successful_calls": 1,
+              "mechanisms": [
+                "v2_tool"
+              ]
+            }
+          },
+          "semantic_review_required": true,
+          "bindings": {},
+          "prerequisite_ready": true
+        }
+      },
+      "v3_managed": {
+        "status": "ok",
+        "action": "delegate",
+        "execution_status": "completed",
+        "acknowledgement": "好，我幫你處理一下 👀\n有結果會在這裡跟你說。",
+        "ack_latency_ms": 2006.528,
+        "final_latency_ms": 24332.766,
+        "latency_ms": 24340.031,
+        "reply": "已取消提醒 R1：領包裹。",
+        "follow_up": "",
+        "messages": [
+          {
+            "kind": "loading",
+            "elapsed_ms": 35.813,
+            "seconds": 60
+          },
+          {
+            "kind": "reply",
+            "channel": "reply",
+            "elapsed_ms": 2006.528,
+            "texts": [
+              "好，我幫你處理一下 👀\n有結果會在這裡跟你說。"
+            ],
+            "messages": [
+              {
+                "type": "text",
+                "text": "好，我幫你處理一下 👀\n有結果會在這裡跟你說。",
+                "quickReply": {
+                  "items": [
+                    {
+                      "type": "action",
+                      "action": {
+                        "type": "postback",
+                        "label": "🎤 語音留言",
+                        "data": "machi:voice:v1",
+                        "inputOption": "openVoice"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "duplicate": false,
+            "images": []
+          },
+          {
+            "kind": "push",
+            "channel": "push",
+            "elapsed_ms": 24332.766,
+            "texts": [
+              "已取消提醒 R1：領包裹。"
+            ],
+            "messages": [
+              {
+                "type": "text",
+                "text": "已取消提醒 R1：領包裹。"
+              }
+            ],
+            "duplicate": false,
+            "images": []
+          }
+        ],
+        "model": "gemini-3.8-flash → gpt-6-sol",
+        "input_event_count": 1,
+        "input_events": [
+          {
+            "event_hash": "a27c8a91ebcec5cda9b3d9204963c81073f8339a05a0523e7ea696dee9874ce1",
+            "input_kind": "text",
+            "accepted_tasks": [
+              "393afd1d-a387-4536-bd0c-3b9259a7e660"
+            ],
+            "completed_ms": 24340.015,
+            "interaction_count": 1,
+            "timeline_count": 3
+          }
+        ],
+        "interaction": [
+          {
+            "status": "ok",
+            "input_kind": "text",
+            "action": "delegate",
+            "degraded": false,
+            "context_sha256": "0c968c2e909561e19e515a1b55ca177c7f678b9fce3bcac09b61f120ec093578",
+            "attachment_bridge": [],
+            "task_text": "使用者要求取消提醒，編號或代號為 R1。請檢查現有的提醒清單並取消該項提醒。",
+            "effect_grants": [
+              "reminder"
+            ],
+            "needs_clarification": false,
+            "reply": "好的，我來幫你取消提醒 R1。",
+            "follow_up": "",
+            "initiative_kind": "rest",
+            "initiative_code": "skipped",
+            "elapsed_ms": 1746.467
+          }
+        ],
+        "execution": [
+          {
+            "status": "completed",
+            "reason": "",
+            "usage": {},
+            "elapsed_ms": 22112.755,
+            "catalog": [
+              "machi_attachment_observation",
+              "machi_conversation_read",
+              "machi_corpus_search",
+              "machi_image_generate",
+              "machi_knowledge",
+              "machi_local_time",
+              "machi_memory_search",
+              "machi_public_search",
+              "machi_read_link",
+              "machi_reminder_cancel",
+              "machi_reminder_create",
+              "machi_reminder_list",
+              "machi_reminder_update"
+            ],
+            "max_iterations": 12
+          }
+        ],
+        "initiative_kind": "rest",
+        "initiative_code": "skipped",
+        "capability_events": [
+          {
+            "sequence": 1,
+            "capability": "reminder_cancel",
+            "mechanism": "v2_tool",
+            "tool_name": "machi_reminder_cancel",
+            "call_id": "exec_187e902f4bfd980cdc58a15a9653d92e7c3e3c997142f12c36",
+            "arguments": {
+              "content": "",
+              "explicit": true,
+              "kind": "message",
+              "location": "",
+              "operation": "cancel",
+              "page": 1,
+              "selector": "R1",
+              "when": ""
+            },
+            "result": {
+              "status": "committed",
+              "operation": "cancel",
+              "display_text": "已取消提醒 R1：領包裹。",
+              "data": {
+                "reminder": {
+                  "id": "R1",
+                  "status": "cancelled",
+                  "content": "領包裹",
+                  "trigger_at": 1790236800.830898,
+                  "timezone": "Asia/Taipei",
+                  "kind": "message",
+                  "weather_location": "",
+                  "owned_by_requester": true,
+                  "error_code": ""
+                }
+              },
+              "allow_timezone_question": true,
+              "timezone_source": "taiwan_default",
+              "ask_timezone": false,
+              "replayed": false
+            },
+            "status": "committed",
+            "arguments_valid": true,
+            "scope_valid": true,
+            "started_ms": 12040.784,
+            "elapsed_ms": 377.699
+          }
+        ],
+        "state_before": {
+          "reminders": [
+            {
+              "reminder_id": "95bad201-4bec-5af1-972c-cbc06b453b40",
+              "user_id": "1752751a-efda-4392-93b6-9dd28032fd3c",
+              "member_hash": "",
+              "display_id": 1,
+              "source_session_id": 1,
+              "source_timestamp_ms": 1790164829878,
+              "trigger_at": 1790236800.830898,
+              "timezone": "Asia/Taipei",
+              "kind": "message",
+              "content": "領包裹",
+              "weather_location": "",
+              "pending_json": {},
+              "status": "scheduled",
+              "generation": 1,
+              "attempts": 0,
+              "next_attempt_at": 0.0,
+              "lease_until": 0.0,
+              "retry_key": "093e75474ffc406e95e3b673e0927716",
+              "created_at": 1790237606.543757,
+              "updated_at": 1790237606.543757,
+              "error_code": "",
+              "restore_original_status": "",
+              "channel_key": "primary",
+              "owner": "self",
+              "id": "95bad201-4bec-5af1-972c-cbc06b453b40"
+            }
+          ],
+          "sessions": [
+            {
+              "owner": "self",
+              "id": 1,
+              "date": "2026-09-23"
+            }
+          ],
+          "memory_facts": [],
+          "attachments": [],
+          "artifacts": [],
+          "timezones": {
+            "self": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            },
+            "other": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            }
+          }
+        },
+        "state_after": {
+          "reminders": [
+            {
+              "reminder_id": "95bad201-4bec-5af1-972c-cbc06b453b40",
+              "user_id": "1752751a-efda-4392-93b6-9dd28032fd3c",
+              "member_hash": "",
+              "display_id": 1,
+              "source_session_id": 1,
+              "source_timestamp_ms": 1790164829878,
+              "trigger_at": 1790236800.830898,
+              "timezone": "Asia/Taipei",
+              "kind": "message",
+              "content": "領包裹",
+              "weather_location": "",
+              "pending_json": {},
+              "status": "cancelled",
+              "generation": 2,
+              "attempts": 0,
+              "next_attempt_at": 0.0,
+              "lease_until": 0.0,
+              "retry_key": "093e75474ffc406e95e3b673e0927716",
+              "created_at": 1790237606.543757,
+              "updated_at": 1790237618.888237,
+              "error_code": "",
+              "restore_original_status": "",
+              "channel_key": "primary",
+              "owner": "self",
+              "id": "95bad201-4bec-5af1-972c-cbc06b453b40"
+            }
+          ],
+          "sessions": [
+            {
+              "owner": "self",
+              "id": 1,
+              "date": "2026-09-23"
+            },
+            {
+              "owner": "self",
+              "id": 2,
+              "date": "2026-09-24"
+            }
+          ],
+          "memory_facts": [],
+          "attachments": [],
+          "artifacts": [],
+          "timezones": {
+            "self": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            },
+            "other": {
+              "timezone": "Asia/Taipei",
+              "known": false,
+              "asked": false,
+              "awaiting_answer": false,
+              "clarified": false
+            }
+          }
+        },
+        "http": {
+          "interaction": {
+            "http_attempts": 1,
+            "captured_attempts": 1,
+            "uncaptured_attempts": 0,
+            "attempts": [
+              {
+                "attempt": 1,
+                "provider": "gemini",
+                "model_requested": "gemini-3.8-flash",
+                "stage": "answer",
+                "answer_lane": "backup",
+                "settings": {
+                  "reasoning": "low",
+                  "max_output_tokens": 4096
+                },
+                "request_sha256": "606f90768c68f4d8177b190f90fad765e46b9c6732cd0aaa5234c26ad2c65e55",
+                "request_sent": true,
+                "started_offset_s": 0.462037,
+                "http_status": 200,
+                "elapsed_s": 1.630161,
+                "error_code": null,
+                "usage": {
+                  "promptTokenCount": 15342,
+                  "candidatesTokenCount": 148,
+                  "totalTokenCount": 15490,
+                  "cachedContentTokenCount": 13446
+                },
+                "usage_known": true,
+                "response_complete": true,
+                "model_reported": "gemini-3.8-flash"
+              }
+            ],
+            "usage_unknown_attempts": 0
+          },
+          "auxiliary": {
+            "http_attempts": 0,
+            "captured_attempts": 0,
+            "uncaptured_attempts": 0,
+            "attempts": [],
+            "usage_unknown_attempts": 0
+          },
+          "image": {
+            "http_attempts": 0,
+            "captured_attempts": 0,
+            "uncaptured_attempts": 0,
+            "attempts": [],
+            "usage_unknown_attempts": 0
+          }
+        },
+        "tasks": [
+          {
+            "task_id": "393afd1d-a387-4536-bd0c-3b9259a7e660",
+            "state": "completed",
+            "revision": 1
+          }
+        ],
+        "fixture": {
+          "event_timestamp_ms": 1790218800861
+        },
+        "scope": "synthetic_private_chat; LINE transport captured; no background reminder sends",
+        "backend": "managed",
+        "execution_backend_trace": [
+          {
+            "backend": "managed",
+            "status": "completed",
+            "timeout_s": 179.9782152089756,
+            "max_iterations": 12,
+            "catalog_size": 13,
+            "host_tool_cap": 12,
+            "reason": "",
+            "session_cleanup": "deleted",
+            "control_http_calls": 6,
+            "host_tool_calls": 1,
+            "cleanup_attempts": 1,
+            "control_retries": 0,
+            "cleanup_code": "deleted",
+            "cleanup_elapsed_ms": 2506.772,
+            "cleanup_cancel_requested": false,
+            "control_retry_events": [],
+            "host_tool_calls_admitted": 1,
+            "host_tool_calls_denied": 0,
+            "elapsed_ms": 22112.707
+          }
+        ],
+        "foreground_evidence": [
+          {
+            "input_kind": "text",
+            "context": {
+              "profile_prose": "",
+              "memory_items": [],
+              "recent_turns": [
+                {
+                  "role": "user",
+                  "text": "領包裹"
+                }
+              ],
+              "local_clock": {
+                "timezone": "Asia/Taipei",
+                "local_datetime": "2026-09-24T11:00:00+08:00",
+                "source": "taiwan_default"
+              }
+            }
+          }
+        ],
+        "diagnostics": {
+          "task_degradation": [],
+          "optional_follow_up": [],
+          "note": "Tool refusals/expected unavailability need the case oracle; a rejected optional follow-up is not a failed main reply."
+        },
+        "degradation_reasons": [],
+        "artifacts": [],
+        "arm": "v3_managed",
+        "case_id": "P003",
+        "finished_utc": "2026-09-24T08:13:50.944155+00:00",
+        "tool_correctness": {
+          "checker_version": 2,
+          "checker_revision": "2-native-projection-review",
+          "status": "pass",
+          "checks": [
+            {
+              "id": "capability_trace_present",
+              "status": "pass",
+              "detail": "Trace events must come from host operations, never inferred from the answer."
+            },
+            {
+              "id": "event:0:known_capability",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:mechanism",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:tool_identity",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:scope",
+              "status": "pass",
+              "detail": "Host-owned user/chat scope must be verified."
+            },
+            {
+              "id": "event:0:arguments",
+              "status": "pass",
+              "detail": "Host schema/provenance validation outcome."
+            },
+            {
+              "id": "event:0:arguments_object",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:verbatim_content",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:verbatim_when",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:verbatim_location",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "event:0:verbatim_selector",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "capability:reminder_cancel",
+              "status": "pass",
+              "detail": "Observed the expected capability outcome."
+            },
+            {
+              "id": "capability:reminder_cancel:evidence",
+              "status": "pass",
+              "detail": "Arguments, evidence and canonical copy belong to one observed result; exact native LINE presentation is accepted."
+            },
+            {
+              "id": "cross_owner_reminder_unchanged",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "forbid:image_generation",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:one_mutation",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:operation",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:status",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:content",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "effect:0:reminder:same_id",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "state:0",
+              "status": "pass",
+              "detail": ""
+            },
+            {
+              "id": "state:1",
+              "status": "pass",
+              "detail": ""
+            }
+          ],
+          "coverage": {
+            "reminder_cancel": {
+              "status": "success",
+              "attempts": 1,
+              "successful_calls": 1,
+              "mechanisms": [
+                "v2_tool"
+              ]
+            }
+          },
+          "semantic_review_required": true,
+          "bindings": {},
+          "prerequisite_ready": true
+        }
+      },
+      "quality_paired": {
+        "status": "ok",
+        "winner": "tie",
+        "model": "gpt-6-sol",
+        "blind_mapping": {
+          "A": "v3_managed",
+          "B": "v3_hermes"
+        },
+        "http_status": 200,
+        "blind_reason": "兩版的使用者可見回覆、成功回執與實際取消效果相同；內部識別碼及時間戳差異不影響任務。",
+        "reason": "兩版的使用者可見回覆、成功回執與實際取消效果相同；內部識別碼及時間戳差異不影響任務。",
+        "dimensions": {
+          "v3_managed": {
+            "task_completion": 5,
+            "grounding": 5,
+            "usefulness": 5,
+            "clarity": 5,
+            "character": 5,
+            "instruction_following": 5
+          },
+          "v3_hermes": {
+            "task_completion": 5,
+            "grounding": 5,
+            "usefulness": 5,
+            "clarity": 5,
+            "character": 5,
+            "instruction_following": 5
+          }
+        },
+        "variant_reasons": {
+          "v3_managed": "成功回執顯示已取消本人 R1「領包裹」提醒，實際狀態也為 cancelled；沒有新增提醒或更動他人資料。回覆簡短清楚，與結果一致。",
+          "v3_hermes": "成功回執顯示已取消本人 R1「領包裹」提醒，實際狀態也為 cancelled；沒有新增提醒或更動他人資料。回覆簡短清楚，與結果一致。"
+        },
+        "usage": {
+          "input_tokens": 2573,
+          "input_tokens_details": {
+            "cache_write_tokens": 2570,
+            "cached_tokens": 0
+          },
+          "output_tokens": 233,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 2806
+        },
+        "v3_managed_score": 5,
+        "v3_hermes_score": 5
+      }
+    }
+  ]
+}

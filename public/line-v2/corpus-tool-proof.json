@@ -1,0 +1,46 @@
+{
+  "schema": "heymachi-corpus-supplemental-proof/v1",
+  "date": "2026-09-24",
+  "status": "passed",
+  "runtime_release": "c4265d05447fee8054518ae9f2a3ca6edb9fc5d7",
+  "snapshot_id": "163d43d9c556104eb9dd6695850b435562a174b147ee04968f54b5f9a3b03624",
+  "backend": "isolated SQLite lexical",
+  "index_policy": "taiwan-literal-han-bigrams/v2",
+  "public_query": "台積電",
+  "raw_query_hit_count": 6,
+  "native_v3_tool": "machi_corpus_search",
+  "native_v3_hit_count": 6,
+  "native_v3_source_count": 6,
+  "raw_provenance_valid": true,
+  "native_live_provenance_valid": true,
+  "original_request_hash_verified": true,
+  "private_context_not_sent": true,
+  "revoked_synthetic_context_blocked": true,
+  "revoked_context_made_no_request": true,
+  "scope": {
+    "synthetic_conversation_and_memory": true,
+    "real_read_only_public_corpus": true,
+    "real_v3_host_tool_adapter": true,
+    "model_calls": 0,
+    "line_api_calls": 0,
+    "end_to_end_agent_run": false,
+    "original_cohort_results_unchanged": true,
+    "latency_or_ranking_comparison": false
+  },
+  "production": {
+    "retrieval_process_unchanged": true,
+    "qdrant_process_unchanged": true,
+    "restart_performed": false,
+    "configuration_or_credentials_changed": false,
+    "index_or_corpus_records_changed": false
+  },
+  "cleanup": {
+    "owned_supplemental_service_stopped": true,
+    "owned_private_token_deleted": true
+  },
+  "limitations": [
+    "This is a separate native capability and provenance proof, not a repaired production service or an additional model benchmark.",
+    "SQLite lexical ranking differs from the original Qdrant service; no latency or ranking comparison is claimed.",
+    "Original corpus-unavailable measurements remain unchanged."
+  ]
+}

@@ -85,6 +85,19 @@ jobs:
             "$RUNNER_TEMP/line-delegation-assets/line-delegation-images.zip" dist \
             --manifest scripts/line-delegation-assets.json
 
+      # V3 has separate namespaced assets for each immutable measured cohort.
+      - name: Install LINE v3 delegation benchmark images
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release download line-v3-delegation-benchmark-2026-09-24 \
+            --pattern line-v3-delegation-images.zip \
+            --dir "$RUNNER_TEMP/line-v3-delegation-assets"
+          python3 scripts/install-image-comparison-assets.py \
+            "$RUNNER_TEMP/line-v3-delegation-assets/line-v3-delegation-images.zip" dist \
+            --manifest scripts/line-v3-delegation-assets.json
+
       # Keep alive.
       #
       # GitHub disables scheduled workflows in a PUBLIC repo "when no repository
