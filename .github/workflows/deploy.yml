@@ -71,6 +71,20 @@ jobs:
           python3 -m unittest discover -s scripts -p 'test_taiwan_corpus_assets.py'
           python3 scripts/install-taiwan-corpus-assets.py dist
 
+      # Keep generated benchmark pixels outside Git; verify the pinned archive
+      # and each JPEG with the same installer used by the image comparison.
+      - name: Install LINE delegation benchmark images
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release download line-delegation-benchmark-2026-09-23 \
+            --pattern line-delegation-images.zip \
+            --dir "$RUNNER_TEMP/line-delegation-assets"
+          python3 scripts/install-image-comparison-assets.py \
+            "$RUNNER_TEMP/line-delegation-assets/line-delegation-images.zip" dist \
+            --manifest scripts/line-delegation-assets.json
+
       # Keep alive.
       #
       # GitHub disables scheduled workflows in a PUBLIC repo "when no repository

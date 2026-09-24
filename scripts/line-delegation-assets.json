@@ -1,0 +1,26 @@
+{
+  "destination": "line-v2/assets",
+  "archive_bytes": 590960,
+  "archive_sha256": "0a42d0023e04b4a971f86158f0ceaa9dd50bf22c9051ab387c706a5432b79b02",
+  "files": {
+    "D032-v1-0-original.jpg": {
+      "bytes": 342768,
+      "sha256": "995b33ac8b7c68c7b54e1a68a5463a5681c24b77f4fec816d1ff14a808e714e8"
+    },
+    "D032-v1-0-preview.jpg": {
+      "bytes": 101713,
+      "sha256": "c35b9007d54ef017ad7f372450f76dab92545ea956686c7cfd96bbd10b452ab7"
+    },
+    "D033-v1-0-original.jpg": {
+      "bytes": 107572,
+      "sha256": "0f19d0092b706f712e6b4cdfebc21b5b868aa640c4e0363698068c4cc257e174"
+    },
+    "D033-v1-0-preview.jpg": {
+      "bytes": 38542,
+      "sha256": "b536c79d75902536e22153ed58975a1fc48623b71afd7dce904023341dc6ee1f"
+    }
+  },
+  "release_tag": "line-delegation-benchmark-2026-09-23",
+  "archive_name": "line-delegation-images.zip",
+  "description": "Generated benchmark original/preview JPEGs; outside Git."
+}
