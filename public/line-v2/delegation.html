@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>HeyMachi · Delegation tasks</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f3f3ee;color:#172426;font-family:Inter,-apple-system,BlinkMacSystemFont,'PingFang TC','Noto Sans TC',sans-serif;line-height:1.7}.content{max-width:1370px;margin:auto;padding:45px 42px 55px}.brand{font-size:14px;font-weight:700;color:#257272;margin-bottom:34px}.eyebrow{font-size:11px;letter-spacing:.17em;font-weight:700;color:#637174}h1{font-size:clamp(30px,4vw,48px);line-height:1.2;letter-spacing:-.045em;margin:15px 0}p{font-size:14px;color:#637174;max-width:710px}.status{display:inline-block;border-radius:7px;background:#e4eae3;color:#486654;padding:4px 10px;font-size:11px;font-weight:700}.empty{margin-top:32px;padding:30px 32px;background:#fff;border:1px solid #d9dfdc;border-radius:17px;max-width:900px}.empty h2{font-size:20px;margin:0 0 10px}.empty p{font-size:13px}.scope{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:28px}.scope>div{padding:16px;border:1px solid #e0e6df;border-radius:10px;background:#f8faf6}.scope strong{display:block;font-size:12px}.scope span{font-size:11px;color:#637174}.download{display:inline-block;margin-top:12px;color:#257272;font-size:13px;text-decoration:none}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px}.record{margin-top:15px;padding:18px;background:#fff;border:1px solid #d9dfdc;border-radius:12px}.record h2{font-size:16px;margin:0}.record p{font-size:12px}.record summary{cursor:pointer;font-size:12px;color:#257272}.footer{margin-top:40px;padding-top:20px;border-top:1px solid #d9dfdc;font-size:11px;color:#637174}@media(max-width:760px){.content{padding:32px 18px}.empty{padding:23px 20px}.scope{grid-template-columns:1fr}.scope>div{padding:13px}.brand{margin-bottom:25px}}
+</style><style>
+.benchmark-tabs-wrap{max-width:1370px;margin:0 auto;padding:20px 42px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.benchmark-tabs{display:flex;gap:6px;padding:5px;background:#e4eae3;border:1px solid #d1dcd2;border-radius:12px;width:fit-content;max-width:100%;font-family:Inter,-apple-system,BlinkMacSystemFont,'PingFang TC',sans-serif}
+.benchmark-tabs a{display:block;padding:9px 17px;border-radius:8px;color:#5b7064;text-decoration:none;font-size:13px;font-weight:650;white-space:nowrap}
+.benchmark-tabs a[aria-current=page]{color:#183d32;background:#fff;box-shadow:0 1px 6px #17322c10}
+.benchmark-tabs a:focus-visible{outline:3px solid #54acaf;outline-offset:3px}
+.benchmark-previous{font:12px Inter,-apple-system,BlinkMacSystemFont,'PingFang TC',sans-serif;color:#257272;text-decoration:none;padding:8px 0}.benchmark-archive{max-width:1286px;margin:18px auto 0;padding:10px 16px;border:1px solid #dacda9;border-radius:9px;background:#faf4e4;color:#7e6530;font-size:12px}
+@media(min-width:1600px){.benchmark-tabs-wrap{max-width:1460px}}
+@media(max-width:760px){.benchmark-tabs-wrap{padding:16px 18px 0}.benchmark-tabs{width:100%}.benchmark-tabs a{flex:1;text-align:center;padding:9px 10px;font-size:12px}}
+</style><meta name="description" content="委派任務評測頁；工具任務尚未執行時不顯示量測結果。互動層調整完成後再啟動委派比較。">
+<meta property="og:title" content="HeyMachi · Delegation tasks">
+<meta property="og:description" content="委派任務評測頁；工具任務尚未執行時不顯示量測結果。互動層調整完成後再啟動委派比較。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="HeyMachi Benchmark">
+<link rel="canonical" href="https://jefflai108.github.io/line-v2/delegation.html">
+<meta property="og:url" content="https://jefflai108.github.io/line-v2/delegation.html">
+</head><body><div class="benchmark-tabs-wrap"><nav class="benchmark-tabs" aria-label="Benchmark tasks"><a href="index.html">Interaction tasks</a><a href="delegation.html" aria-current="page">Delegation tasks</a></nav></div>
+<main class="content"><div class="brand">HeyMachi / 對話實驗室</div><div class="eyebrow">ARCHITECTURE BENCHMARK</div><h1>Delegation tasks</h1><p>需要查資料、呼叫工具或持續執行的任務。</p><span class="status">尚未執行</span><section class="empty"><h2>先把對話體驗調好，再開始工具任務。</h2><p>委派評測暫停，等待互動層的人設、回應與接話調整完成。本頁沒有量測數字、虛構回答或模擬勝負。</p>
+<div class="scope" aria-label="Future delegation evaluation scope">
+ <div><strong>回應速度</strong><span>分開看接收任務的確認與最終結果完成時間。</span></div>
+ <div><strong>任務與工具</strong><span>檢查真實工具呼叫、結果，以及是否完成使用者要求。</span></div>
+ <div><strong>答案品質</strong><span>保留完整回覆、工具紀錄與圖片，供人工比較。</span></div>
+</div></section><footer class="footer">尚未量測的項目不顯示成效；模型成本、工具呼叫與 LINE 收件時間應分開記錄。</footer></main>
+<script type="application/json" id="delegation-data">{}</script>
+<script>
+'use strict';
+const benchmark = JSON.parse(document.getElementById('delegation-data').textContent);
+const records = document.getElementById('delegation-records');
+if (records) for (const row of benchmark.cases || []) {
+  const article = document.createElement('article'); article.className = 'record';
+  const title = document.createElement('h2'); title.textContent = String(row.user_text || row.task || row.id || 'Task'); article.append(title);
+  const details = document.createElement('details'); const summary = document.createElement('summary'); summary.textContent = '查看提供的紀錄'; details.append(summary);
+  const pre = document.createElement('pre'); pre.textContent = JSON.stringify(row, null, 2); details.append(pre); article.append(details); records.append(article);
+}
+</script></body></html>
