@@ -72,6 +72,20 @@ library; its offline archive validation tests run with:
 python3 -m unittest discover -s scripts -p 'test_image_comparison_assets.py'
 ```
 
+## LINE architecture comparison
+
+The shareable benchmark is at [/line-v2/](https://jefflai108.github.io/line-v2/).
+`public/line-v2/index.html` is a self-contained snapshot comparing v1, v2, and
+v2 + follow-up on 50 synthetic conversation turns. It includes measured responses,
+latency, three-way AI judging, and optional browser-local blind ratings.
+
+The original v1/v2 measurements and judging are preserved. The follow-up variant
+was measured later on the same development cases; the page documents that limit.
+This snapshot does not call model APIs or connect to production LINE or memory
+services. Ratings stay in each browser and can be exported; they are not synced.
+All page content is embedded text, with no generated images or external assets.
+The normal Pages build copies it from `public/` to `dist/line-v2/index.html`.
+
 ## 台灣語林 · TaiwanCorpus Discovery
 
 The interactive topic tree is served at `/taiwan-corpus/`. It shows a public
