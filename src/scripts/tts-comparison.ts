@@ -1,29 +1,43 @@
-type Benchmark = typeof import('../data/tts-benchmark.json');
+type Comparison = typeof import('../data/tts-comparison').comparison;
 export {};
 
 const dataNode = document.querySelector<HTMLScriptElement>('#tts-data');
-const modelSelect = document.querySelector<HTMLSelectElement>('#tts-model');
 const paragraphSelect = document.querySelector<HTMLSelectElement>('#tts-paragraph');
+const benchmarkSelect = document.querySelector<HTMLSelectElement>('#tts-benchmark-language');
 const playAll = document.querySelector<HTMLButtonElement>('[data-play-all]');
 const status = document.querySelector<HTMLElement>('[data-playback-status]');
 const players = Array.from(document.querySelectorAll<HTMLAudioElement>('audio[data-voice-name]'));
 
-if (dataNode && modelSelect && paragraphSelect && playAll && status && players.length) {
-  const data: Benchmark = JSON.parse(dataNode.textContent!);
+if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && players.length) {
+  const data: Comparison = JSON.parse(dataNode.textContent!);
   const previous = document.querySelector<HTMLButtonElement>('[data-previous]')!;
   const next = document.querySelector<HTMLButtonElement>('[data-next]')!;
-  const rows = players.map(player => player.closest<HTMLElement>('[data-voice-row]')!);
+  const panels = players.map(player => player.closest<HTMLElement>('[data-model-sample]')!);
   const records = new Map(data.records.map(record => [`${record.modelId}/${record.paragraphId}/${record.voiceId}`, record]));
-  let queued = false;
-  let queueIndex = -1;
+  const pairButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-play-pair]'));
+  const pairs = new Map(pairButtons.map(button => [button, Array.from(button.closest('[data-voice-row]')!.querySelectorAll<HTMLAudioElement>('audio'))]));
+  let queue: HTMLAudioElement[] = [];
+  let queuePosition = -1;
+  let queueOwner: HTMLButtonElement | null = null;
   let active: HTMLAudioElement | null = null;
   let playbackVersion = 0;
 
+  function updateButtons() {
+    playAll!.textContent = queue.length ? 'Stop playback' : 'Play all pairs';
+    pairButtons.forEach(button => {
+      const voice = pairs.get(button)![0].dataset.voiceName;
+      const playingPair = queue.length > 0 && queueOwner === button;
+      button.textContent = playingPair ? 'Stop pair' : 'Play pair';
+      button.setAttribute('aria-label', playingPair ? `Stop pair for ${voice}` : `Play both models for ${voice}`);
+    });
+  }
+
   function clearQueue() {
-    queued = false;
-    queueIndex = -1;
+    queue = [];
+    queuePosition = -1;
+    queueOwner = null;
     playbackVersion++;
-    playAll!.textContent = 'Play all seven';
+    updateButtons();
   }
 
   function stopPlayers() {
@@ -31,111 +45,143 @@ if (dataNode && modelSelect && paragraphSelect && playAll && status && players.l
     active = null;
     players.forEach((player, index) => {
       player.pause();
-      delete rows[index].dataset.playing;
+      delete panels[index].dataset.playing;
     });
   }
 
-  async function playNext(index: number) {
-    queueIndex = index;
+  function playerLabel(player: HTMLAudioElement) {
+    return `${player.dataset.voiceName} · ${player.dataset.modelName}`;
+  }
+
+  async function playNext(position: number) {
+    queuePosition = position;
     const version = playbackVersion;
-    const player = players[index];
+    const player = queue[position];
     player.currentTime = 0;
     try {
       await player.play();
     } catch {
-      if (!queued || queueIndex !== index || playbackVersion !== version) return;
+      if (queue[position] !== player || playbackVersion !== version) return;
       clearQueue();
-      status!.textContent = `Unable to play ${player.dataset.voiceName}. Try its player or download the MP3.`;
+      status!.textContent = `Unable to play ${playerLabel(player)}. Try its player or download the MP3.`;
     }
+  }
+
+  function startQueue(selected: HTMLAudioElement[], owner: HTMLButtonElement) {
+    stopPlayers();
+    queue = selected;
+    queueOwner = owner;
+    updateButtons();
+    void playNext(0);
+  }
+
+  function updateBenchmark(language: string) {
+    benchmarkSelect!.value = language;
+    document.querySelectorAll<HTMLElement>('[data-benchmark-cohort]').forEach(panel => {
+      panel.hidden = panel.dataset.language !== language;
+    });
   }
 
   function updateSelection(updateUrl = true) {
     stopPlayers();
     const paragraphIndex = data.paragraphs.findIndex(p => p.id === paragraphSelect!.value);
     const paragraph = data.paragraphs[paragraphIndex];
-    const model = data.models.find(m => m.id === modelSelect!.value)!;
-    document.querySelector('#sample-transcript')!.textContent = paragraph.text;
-    document.querySelector('[data-passage-category]')!.textContent = `${paragraph.category} · ${paragraph.sentences} ${paragraph.sentences === 1 ? 'sentence' : 'sentences'}`;
+    const transcript = document.querySelector<HTMLElement>('#sample-transcript')!;
+    transcript.textContent = paragraph.text;
+    transcript.lang = paragraph.language;
+    document.querySelector('[data-passage-category]')!.textContent = `${paragraph.languageLabel} · ${paragraph.category} · ${paragraph.sentences} ${paragraph.sentences === 1 ? 'sentence' : 'sentences'}`;
     document.querySelector('[data-passage-count]')!.textContent = `${String(paragraphIndex + 1).padStart(2, '0')} / ${data.paragraphs.length}`;
-    document.querySelector('[data-current-model]')!.textContent = `${model.label} · 07 voices`;
-    document.querySelector<HTMLElement>('[data-identity-note]')!.hidden = model.id !== 'eleven_v3_conversational';
     previous.disabled = paragraphIndex === 0;
     next.disabled = paragraphIndex === data.paragraphs.length - 1;
     players.forEach((player, index) => {
-      const row = rows[index];
-      const record = records.get(`${model.id}/${paragraph.id}/${row.dataset.voiceId}`)!;
+      const panel = panels[index];
+      const voiceId = player.closest<HTMLElement>('[data-voice-row]')!.dataset.voiceId;
+      const record = records.get(`${panel.dataset.modelId}/${paragraph.id}/${voiceId}`)!;
       if (player.getAttribute('src') !== record.audioPath) {
         player.src = record.audioPath;
         player.load();
       } else {
         player.currentTime = 0;
       }
-      row.querySelector('[data-duration]')!.textContent = `${record.durationSeconds.toFixed(2)}s audio`;
-      row.querySelector('[data-ttfb]')!.textContent = `${Math.round(record.ttfbMs).toLocaleString('en-US')} ms`;
-      row.querySelector('[data-total]')!.textContent = `${(record.totalMs / 1000).toFixed(2)} s`;
-      row.querySelector<HTMLAnchorElement>('[data-download]')!.href = record.audioPath;
+      panel.querySelector('[data-duration]')!.textContent = `${record.durationSeconds.toFixed(2)}s audio`;
+      panel.querySelector('[data-ttfb]')!.textContent = `${Math.round(record.ttfbMs).toLocaleString('en-US')} ms`;
+      panel.querySelector('[data-total]')!.textContent = `${(record.totalMs / 1000).toFixed(2)} s`;
+      panel.querySelector<HTMLAnchorElement>('[data-download]')!.href = record.audioPath;
     });
-    status!.textContent = `${model.label} · ${paragraph.title}. Choose a voice or play all seven.`;
+    updateBenchmark(paragraph.language);
+    status!.textContent = `${paragraph.title}. Choose a player, play one voice pair, or play all pairs.`;
     if (updateUrl) {
       const url = new URL(window.location.href);
-      url.searchParams.set('model', model.id);
+      url.searchParams.delete('model');
       url.searchParams.set('paragraph', paragraph.id);
       window.history.replaceState(null, '', url);
     }
   }
 
   players.forEach((player, index) => {
-    const row = rows[index];
+    const panel = panels[index];
     player.addEventListener('play', () => {
       if (player.paused) return;
-      if (queued && index !== queueIndex) clearQueue();
+      if (queue.length && queue[queuePosition] !== player) clearQueue();
       active = player;
       players.forEach(other => {
         if (other !== player) other.pause();
       });
-      row.dataset.playing = '';
-      status.textContent = `Playing ${queued ? `${index + 1} of ${players.length} · ` : ''}${player.dataset.voiceName}`;
+      panel.dataset.playing = '';
+      status.textContent = `Playing ${queue.length ? `${queuePosition + 1} of ${queue.length} · ` : ''}${playerLabel(player)}`;
     });
     player.addEventListener('pause', () => {
       if (!player.paused) return;
-      delete row.dataset.playing;
+      delete panel.dataset.playing;
       if (player !== active || player.ended) return;
       clearQueue();
-      status.textContent = `Paused · ${player.dataset.voiceName}`;
+      status.textContent = `Paused · ${playerLabel(player)}`;
     });
     player.addEventListener('ended', () => {
-      delete row.dataset.playing;
+      delete panel.dataset.playing;
       if (player !== active) return;
       active = null;
-      if (queued && queueIndex === index && index + 1 < players.length) {
-        void playNext(index + 1);
+      if (queue[queuePosition] === player && queuePosition + 1 < queue.length) {
+        void playNext(queuePosition + 1);
         return;
       }
-      const finishedQueue = queued;
+      const finishedCount = queue.length;
       clearQueue();
-      status.textContent = finishedQueue ? 'All seven samples played. Choose another passage or model.' : `Finished · ${player.dataset.voiceName}`;
+      status.textContent = finishedCount === players.length
+        ? 'All seven voice pairs played. Choose another passage.'
+        : finishedCount > 0
+          ? `${player.dataset.voiceName} · both models played. Choose another pair or passage.`
+          : `Finished · ${playerLabel(player)}`;
     });
     player.addEventListener('error', () => {
       if (!player.error) return;
-      delete row.dataset.playing;
-      if (player === active || (queued && queueIndex === index)) clearQueue();
-      status.textContent = `Audio unavailable for ${player.dataset.voiceName}. Try downloading the MP3.`;
+      delete panel.dataset.playing;
+      if (player === active || queue[queuePosition] === player) clearQueue();
+      status.textContent = `Audio unavailable for ${playerLabel(player)}. Try downloading the MP3.`;
     });
   });
 
   playAll.addEventListener('click', () => {
-    const wasQueued = queued;
-    stopPlayers();
-    if (wasQueued) {
-      status.textContent = 'Playback stopped. Choose a voice or play all seven again.';
+    if (queue.length) {
+      stopPlayers();
+      status.textContent = 'Playback stopped. Choose a player or play a voice pair.';
       return;
     }
-    queued = true;
-    playAll.textContent = 'Stop playback';
-    void playNext(0);
+    startQueue(players, playAll);
   });
-  modelSelect.addEventListener('change', () => updateSelection());
+  pairButtons.forEach(button => {
+    button.hidden = false;
+    button.addEventListener('click', () => {
+      if (queueOwner === button) {
+        stopPlayers();
+        status.textContent = 'Pair stopped. Choose a player or play another pair.';
+        return;
+      }
+      startQueue(pairs.get(button)!, button);
+    });
+  });
   paragraphSelect.addEventListener('change', () => updateSelection());
+  benchmarkSelect.addEventListener('change', () => updateBenchmark(benchmarkSelect.value));
   previous.addEventListener('click', () => {
     paragraphSelect.selectedIndex = Math.max(0, paragraphSelect.selectedIndex - 1);
     updateSelection();
@@ -145,14 +191,11 @@ if (dataNode && modelSelect && paragraphSelect && playAll && status && players.l
     updateSelection();
   });
 
-  const parameters = new URLSearchParams(window.location.search);
-  const requestedModel = parameters.get('model');
-  const requestedParagraph = parameters.get('paragraph');
-  if (data.models.some(m => m.id === requestedModel)) modelSelect.value = requestedModel!;
+  const requestedParagraph = new URLSearchParams(window.location.search).get('paragraph');
   if (data.paragraphs.some(p => p.id === requestedParagraph)) paragraphSelect.value = requestedParagraph!;
   updateSelection(false);
-  modelSelect.disabled = false;
   paragraphSelect.disabled = false;
+  benchmarkSelect.disabled = false;
   document.querySelector<HTMLElement>('[data-passage-navigation]')!.hidden = false;
   playAll.hidden = false;
 }

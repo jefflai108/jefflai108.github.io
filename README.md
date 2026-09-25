@@ -72,18 +72,23 @@ library; its offline archive validation tests run with:
 python3 -m unittest discover -s scripts -p 'test_image_comparison_assets.py'
 ```
 
-## Mandarin TTS voice comparison
+## Mandarin and English TTS voice comparison
 
 The unlisted listening page at `/tts/` compares seven voices across twenty mixed
-Taiwanese Mandarin passages (1–3 sentences each), using Eleven v3 by default and
-v3 Conversational as the comparison model. It is excluded from navigation and the
+Taiwanese Mandarin and ten English passages (1–3 sentences each), with Eleven v3
+first and v3 Conversational as the comparison model. It is excluded from navigation and the
 sitemap and has a `noindex` robots tag. This is an unlisted static page, not an
 authenticated page.
 
-`src/data/tts-corpus.json` defines the voices, passages, and shared settings.
-`src/data/tts-benchmark.json` contains 280 measured records, audio checksums, and
-summary statistics. The page offers model/passage selection, sequential playback,
-per-clip timings, median/p95 tables, CSV/JSON downloads, and v3 audio-tag examples.
+`src/data/tts-corpus.json` and `tts-corpus-en.json` define the voices, passages, and
+shared settings. `src/data/tts-benchmark.json` contains the 280 Mandarin records;
+`tts-benchmark-en.json` contains 140 English records. Each has audio checksums and
+separate latency summaries. `tts-comparison.ts` combines them for listening while
+preserving the separate benchmark groups. For each selected passage, both models appear together for
+each voice, with Eleven v3 first. Players sit side by side on larger screens and
+stack within each voice on phones. Play a voice pair or all seven pairs in order;
+starting another player or changing the passage stops the previous audio. The
+page includes per-clip timings, median/p95 tables, CSV/JSON downloads, and v3 tags.
 The client uses prerecorded audio and makes no ElevenLabs API calls.
 
 Reproduce the benchmark with `ELEVENLABS_API_KEY` set in the environment and
@@ -95,14 +100,18 @@ local file writing and decoding; neither is pure server processing time.
 ```bash
 python3 scripts/benchmark-tts.py --output /path/to/private-run
 python3 scripts/package-tts-benchmark.py /path/to/private-run
+python3 scripts/benchmark-tts.py --corpus src/data/tts-corpus-en.json --output /path/to/private-english-run
+python3 scripts/package-tts-benchmark.py /path/to/private-english-run --language en
 python3 -m unittest discover -s scripts -p 'test_tts_assets.py'
 ```
 
-The 280 MP3s are distributed through the pinned GitHub release
-`tts-v3-benchmark-2026-09-25`. CI verifies the archive inventory, byte counts, and
+The 420 MP3s are distributed through pinned GitHub releases
+`tts-v3-benchmark-2026-09-25` and `tts-v3-benchmark-en-2026-09-25`.
+CI verifies the archive inventory, byte counts, and
 SHA-256 hashes before installing it into `dist/`. For local preview, download
 the release archive and run `python3 scripts/install-tts-assets.py ARCHIVE.zip dist`
 after building, or use `public` as the destination before starting the dev server.
+For the English archive, pass `--manifest scripts/tts-benchmark-en-assets.json`.
 Generated audio is excluded from Git. Publish the archive before pushing code
 that references it to master.
 

@@ -32,11 +32,11 @@ def main():
     key = os.environ['ELEVENLABS_API_KEY'].strip()
     corpus_bytes = args.corpus.read_bytes()
     corpus = json.loads(corpus_bytes)
-    assert len(corpus['paragraphs']) == 20
-    assert len({p['id'] for p in corpus['paragraphs']}) == 20
+    assert corpus['paragraphs'], 'At least one paragraph is required'
+    assert len({p['id'] for p in corpus['paragraphs']}) == len(corpus['paragraphs'])
     assert len({v['id'] for v in corpus['voices']}) == 7
     for paragraph in corpus['paragraphs']:
-        assert len(re.findall('[。！？]', paragraph['text'])) == paragraph['sentences']
+        assert len(re.findall(r'[。！？]|[.!?](?=\s|$)', paragraph['text'])) == paragraph['sentences']
         assert 1 <= paragraph['sentences'] <= 3
         assert '[' not in paragraph['text'] and ']' not in paragraph['text']
     args.output.mkdir(parents=True, exist_ok=True)

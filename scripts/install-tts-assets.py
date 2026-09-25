@@ -20,7 +20,7 @@ def install(archive, destination, manifest):
     for entry in manifest['files']:
         path = entry['path']
         pure = PurePosixPath(path)
-        if pure.is_absolute() or '..' in pure.parts or '\\' in path or not re.fullmatch(r'tts/audio/v3-benchmark-[0-9-]+/eleven_v3(?:_conversational)?/[a-z0-9-]+/p[0-9]{2}\.mp3', path):
+        if pure.is_absolute() or '..' in pure.parts or '\\' in path or not re.fullmatch(r'tts/audio/v3-benchmark-(?:en-)?[0-9-]+/eleven_v3(?:_conversational)?/[a-z0-9-]+/(?:p|en)[0-9]{2}\.mp3', path):
             raise ValueError('Unsafe or unexpected audio path: ' + path)
         if path in expected:
             raise ValueError('Duplicate manifest member')

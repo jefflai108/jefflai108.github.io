@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "defaultModelId": "eleven_v3",
+  "models": [
+    {
+      "id": "eleven_v3",
+      "label": "Eleven v3"
+    },
+    {
+      "id": "eleven_v3_conversational",
+      "label": "v3 Conversational"
+    }
+  ],
+  "settings": {
+    "stability": 0.5,
+    "speed": 1.0
+  },
+  "outputFormat": "mp3_44100_128",
+  "scheduleSeed": 20260926,
+  "requestSeed": 42,
+  "warmupText": "Hello, this is a short voice test.",
+  "voices": [
+    {
+      "id": "R55vTH9XmVSyAcM6YvtV",
+      "slug": "yao-yuan-wu",
+      "label": "Yao Yuan Wu",
+      "description": "Warm, Sweet and Friendly"
+    },
+    {
+      "id": "4NQthjVhIGGVfL3Si000",
+      "slug": "chen",
+      "label": "Chen Mandarin Chinese",
+      "description": "Clear, warm, and natural delivery"
+    },
+    {
+      "id": "1AKkSX7KMPHIWuz76m0n",
+      "slug": "tiffy",
+      "label": "Tiffy",
+      "description": "Taiwanese Bilingual Narrator"
+    },
+    {
+      "id": "9lHjugDhwqoxA5MhX0az",
+      "slug": "anna-su",
+      "label": "Anna Su",
+      "description": "Casual, Friendly and Bright"
+    },
+    {
+      "id": "r6qgCCGI7RWKXCagm158",
+      "slug": "anna-su-2",
+      "label": "Anna Su 2",
+      "description": "Trustworthy, Clear and Natural"
+    },
+    {
+      "id": "SoLCar3sKHqXqvJc7jmm",
+      "slug": "hua",
+      "label": "Hua",
+      "description": "Social media"
+    },
+    {
+      "id": "DSyEP4HEaCKur8rFFOri",
+      "slug": "zack",
+      "label": "Zack",
+      "description": "Podcasts & video"
+    }
+  ],
+  "paragraphs": [
+    {
+      "id": "en01",
+      "title": "Catching up",
+      "category": "Conversation",
+      "sentences": 2,
+      "text": "Hey, it's been a while! I was just grabbing a coffee nearby, and I wondered if you had a few minutes to sit down and catch up."
+    },
+    {
+      "id": "en02",
+      "title": "Breakfast to go",
+      "category": "Everyday tasks",
+      "sentences": 3,
+      "text": "Could I get two egg sandwiches to go, please? No cheese on the first one, and a little extra pepper on the second. I'll take a small iced coffee as well."
+    },
+    {
+      "id": "en03",
+      "title": "Before you head out",
+      "category": "Conversation",
+      "sentences": 2,
+      "text": "It looks like the rain might start any minute, so remember to take an umbrella. Send me a quick message when you get home, just so I know you made it back safely."
+    },
+    {
+      "id": "en04",
+      "title": "A weekend by the water",
+      "category": "Narration",
+      "sentences": 1,
+      "text": "If the weather stays nice this weekend, we could take the train to the coast, walk along the water, and find a quiet place to watch the sunset."
+    },
+    {
+      "id": "en05",
+      "title": "Order and delivery",
+      "category": "Numbers",
+      "sentences": 2,
+      "text": "Your order comes to 128 dollars after the discount, and delivery is scheduled for October 3. You can pay by card or mobile wallet, and we'll email you a receipt."
+    },
+    {
+      "id": "en06",
+      "title": "Finding the connection",
+      "category": "Technical support",
+      "sentences": 3,
+      "text": "Let's check whether your laptop is connected to Wi-Fi. Try refreshing the page, or close the app and open it again. If that doesn't help, tell me exactly what the error message says."
+    },
+    {
+      "id": "en07",
+      "title": "One step at a time",
+      "category": "Reassurance",
+      "sentences": 2,
+      "text": "You've had a difficult day, and it's okay if everything didn't go according to plan. Take a breath, get some rest, and we can work out the next step together."
+    },
+    {
+      "id": "en08",
+      "title": "The good news",
+      "category": "Excitement",
+      "sentences": 2,
+      "text": "We finally got a reservation at the restaurant you've been talking about! I've already looked at the dessert menu, so please remind me to leave a little room after dinner."
+    },
+    {
+      "id": "en09",
+      "title": "A very serious decision",
+      "category": "Humor",
+      "sentences": 1,
+      "text": "Last night I promised myself I would go to bed early, but somehow I ended up standing in front of the fridge, debating whether the last slice of cake counted as a midnight snack."
+    },
+    {
+      "id": "en10",
+      "title": "The little fox",
+      "category": "Storytelling",
+      "sentences": 3,
+      "text": "The little fox followed the moonlit path back to her home on the hill. She placed a pine cone beside the window and whispered good night. Outside, the forest grew quiet as the wind moved through the leaves."
+    }
+  ],
+  "language": "en"
+}
