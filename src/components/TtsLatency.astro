@@ -1,33 +1,35 @@
 ---
-interface Props {
-  benchmark: typeof import('../data/tts-benchmark.json') & { method: { audioTags?: string[]; tagPlacement?: string } };
-  language: string;
-  label: string;
-  downloadSuffix: string;
-  hidden?: boolean;
-}
-const { benchmark, language, label, downloadSuffix, hidden = false } = Astro.props;
-const { models, voices, method } = benchmark;
-const audioTags = method.audioTags ?? [];
-type Stats = { count: number; p50TtfbMs: number; p95TtfbMs: number; p50TotalMs: number; p95TotalMs: number; medianAudioSeconds: number };
-const byModel = benchmark.byModel as Record<string, Stats>;
-const byVoice = benchmark.byVoice as Record<string, Record<string, Stats>>;
+import type { Cohort } from '../data/tts-comparison';
+interface Props { cohort: Cohort; hidden?: boolean }
+const { cohort, hidden = false } = Astro.props;
+const { language, label, benchmark, versions, runs } = cohort;
+const { voices } = benchmark;
+const scored = runs.reduce((sum, run) => sum + run.benchmark.method.scoredRequests, 0);
+const warmups = runs.reduce((sum, run) => sum + run.benchmark.method.warmupRequests, 0);
+const reused = runs.reduce((sum, run) => sum + run.benchmark.method.requestsWithReusedConnection, 0);
+const failed = runs.reduce((sum, run) => sum + run.benchmark.method.failedAttempts, 0);
+const minCharacters = Math.min(...runs.map(run => run.benchmark.method.minParagraphCharacters));
+const maxCharacters = Math.max(...runs.map(run => run.benchmark.method.maxParagraphCharacters));
 const ms = (value: number) => Math.round(value).toLocaleString('en-US');
 const seconds = (value: number) => (value / 1000).toFixed(2);
 ---
 
 <div class="benchmark-cohort" data-benchmark-cohort data-language={language} hidden={hidden}>
   <div class="cohort-heading">
-    <p class="section-description">{method.scoredRequests / models.length} measured requests per model: {benchmark.paragraphs.length} {label} passages across all seven voices. Lower is faster.</p>
-    <div class="data-links"><a href={`/tts/data/v3-benchmark${downloadSuffix}.csv`} download>CSV ↓</a><a href={`/tts/data/v3-benchmark${downloadSuffix}.json`} download>JSON ↓</a></div>
+    <p class="section-description">{benchmark.paragraphs.length * voices.length} measured requests per version: {benchmark.paragraphs.length} {label} passages across all seven voices. Lower is faster.</p>
+    <div class="data-links">
+      {runs.map(run => <div><span>{run.label}</span><a href={`/tts/data/v3-benchmark${run.downloadSuffix}.csv`} download>CSV ↓</a><a href={`/tts/data/v3-benchmark${run.downloadSuffix}.json`} download>JSON ↓</a></div>)}
+    </div>
   </div>
-  {audioTags.length > 0 && <p class="timing-note">Every English passage in this run starts with <code>{audioTags.join(' ')}</code>. The two models receive the same tagged input.</p>}
-  <div class="model-summaries">
-    {models.map(model => {
-      const stats = byModel[model.id];
-      return <article class="model-summary">
-        <p class="eyebrow">{model.id === benchmark.defaultModelId ? 'DEFAULT MODEL' : 'COMPARISON MODEL'}</p>
-        <h3>{model.label}</h3>
+  {language === 'zh-Hant-TW'
+    ? <p class="timing-note">The two original versions use plain text. The extra Eleven v3 versions add one emotion tag or one vocal reaction tag, chosen per passage. These three Mandarin runs were measured separately; tags may also change the generated audio length.</p>
+    : <p class="timing-note">Every English passage in this run starts with <code>[strong American accent]</code>. The two models receive the same tagged input.</p>}
+  <div class="model-summaries" data-versions={versions.length}>
+    {versions.map(version => {
+      const stats = version.benchmark.byModel[version.modelId];
+      return <article class="model-summary" data-summary-variant={version.id}>
+        <p class="eyebrow">{version.id === benchmark.defaultModelId ? 'DEFAULT' : version.style === 'Original' ? 'ORIGINAL COMPARISON' : version.style.toUpperCase() + ' TAG'}</p>
+        <h3>{version.label}</h3>
         <div class="headline-stat"><strong>{ms(stats.p50TtfbMs)}</strong><span>ms median to first byte</span></div>
         <dl class="summary-stats">
           <div><dt>First byte · p95</dt><dd>{ms(stats.p95TtfbMs)} ms</dd></div>
@@ -39,16 +41,16 @@ const seconds = (value: number) => (value / 1000).toFixed(2);
     })}
   </div>
   <p class="timing-note"><strong>First byte is not pure TTS processing time.</strong> It measures the request start to the first audio bytes received, including network time. Full request measures receipt of the entire audio file. Neither measures the moment sound starts playing.</p>
-  <div class="table-scroll" tabindex="0" role="region" aria-label={`${label} latency by voice and model; scroll horizontally on small screens`}>
+  <div class="table-scroll" tabindex="0" role="region" aria-label={`${label} latency by voice and version; scroll horizontally on small screens`}>
     <table>
-      <caption>{benchmark.paragraphs.length} different passages per voice and model · p95 is the 95th percentile</caption>
-      <thead><tr><th scope="col">Voice</th><th scope="col">Model</th><th scope="col">First byte<br />median (ms)</th><th scope="col">First byte<br />p95 (ms)</th><th scope="col">Full request<br />median (s)</th><th scope="col">Full request<br />p95 (s)</th></tr></thead>
+      <caption>{benchmark.paragraphs.length} different passages per voice and version · p95 is the 95th percentile</caption>
+      <thead><tr><th scope="col">Voice</th><th scope="col">Version</th><th scope="col">First byte<br />median (ms)</th><th scope="col">First byte<br />p95 (ms)</th><th scope="col">Full request<br />median (s)</th><th scope="col">Full request<br />p95 (s)</th></tr></thead>
       {voices.map((voice, index) => <tbody>
-        {models.map((model, modelIndex) => {
-          const stats = byVoice[voice.id][model.id];
+        {versions.map((version, versionIndex) => {
+          const stats = version.benchmark.byVoice[voice.id][version.modelId];
           return <tr class:list={{ 'voice-group': index % 2 === 0 }}>
-            {modelIndex === 0 && <th scope="rowgroup" rowspan={models.length}>{voice.label}</th>}
-            <th scope="row" class="model-name">{model.label}</th>
+            {versionIndex === 0 && <th scope="rowgroup" rowspan={versions.length}>{voice.label}</th>}
+            <th scope="row" class="model-name">{version.label}</th>
             <td>{ms(stats.p50TtfbMs)}</td><td>{ms(stats.p95TtfbMs)}</td>
             <td>{seconds(stats.p50TotalMs)}</td><td>{seconds(stats.p95TotalMs)}</td>
           </tr>;
@@ -59,19 +61,25 @@ const seconds = (value: number) => (value / 1000).toFixed(2);
   <details class="methodology">
     <summary>How the {label} benchmark was measured</summary>
     <div class="method-content">
-      <p>Requests were sent sequentially from the same client over the ElevenLabs HTTP streaming endpoint. Paragraph order was randomized, then voice/model order was randomized within each paragraph. One short warm-up per voice/model pair ({method.warmupRequests} total) was excluded from the results.</p>
-      <p>Each voice/model pair has one measurement for each of {benchmark.paragraphs.length} different passages, not repeated measurements of one sentence. The passages contain 1–3 spoken sentences and {method.minParagraphCharacters}–{method.maxParagraphCharacters} input characters, mixing conversation, narration, numbers, and technical terms. p95 uses linear interpolation across these {benchmark.paragraphs.length} samples and should be treated as descriptive. Mandarin and English were measured in separate runs.</p>
+      <p>Requests were sent sequentially from the same client over the ElevenLabs HTTP streaming endpoint. Within each run, paragraph order was randomized, then voice/model order was randomized within each paragraph. One short warm-up per voice/model pair was excluded: {warmups} across {runs.length === 1 ? 'this run' : `these ${runs.length} runs`}. Generation runs did not overlap.</p>
+      <p>Each voice/version has one measurement for each of {benchmark.paragraphs.length} different passages, not repeated measurements of one sentence. The passages contain 1–3 spoken sentences and {minCharacters}–{maxCharacters} input characters, mixing conversation, narration, numbers, and technical terms. p95 uses linear interpolation across these {benchmark.paragraphs.length} samples and should be treated as descriptive. Mandarin and English were measured in separate runs.</p>
       <dl>
         <div><dt>Endpoint</dt><dd><code>POST /v1/text-to-speech/&#123;voice_id&#125;/stream</code></dd></div>
-        <div><dt>Models</dt><dd><code>eleven_v3</code> / <code>eleven_v3_conversational</code></dd></div>
+        <div><dt>Models</dt><dd><code>eleven_v3</code> / <code>eleven_v3_conversational</code>{versions.length === 4 && ' · both extra styles use eleven_v3'}</dd></div>
         <div><dt>Voice settings</dt><dd>Stability 0.5 (Natural) · speed 1× · seed {benchmark.seed}</dd></div>
-        <div><dt>Audio tags</dt><dd>{audioTags.length ? <><code>{audioTags.join(' ')}</code> · {method.tagPlacement}</> : 'None'}</dd></div>
         <div><dt>Input / output</dt><dd>Automatic text normalization · MP3, 44.1 kHz, 128 kbps</dd></div>
-        <div><dt>Transport</dt><dd>HTTP/1.1 over TLS · one request at a time · {method.requestsWithReusedConnection}/{method.scoredRequests} requests reused a connection</dd></div>
-        <div><dt>Failures</dt><dd>{method.failedAttempts} failed attempts · only successful responses enter latency statistics</dd></div>
+        <div><dt>Transport</dt><dd>HTTP/1.1 over TLS · one request at a time · {reused}/{scored} requests reused a connection</dd></div>
+        <div><dt>Failures</dt><dd>{failed} failed attempts · only successful responses enter latency statistics</dd></div>
       </dl>
-      {method.requestsWithReusedConnection < method.scoredRequests && <p>{method.scoredRequests - method.requestsWithReusedConnection} measured request(s) opened a new connection; their timings include connection setup.</p>}
-      <p>A monotonic client clock measures first non-empty response-body bytes and the complete response. File writing and audio decoding happen afterward and are excluded. All {method.scoredRequests} clips were checked for valid MP3 decoding. Different generated clip lengths affect full-request time; these results describe this run, not a guaranteed speed ranking.</p>
+      <div class="run-notes">
+        {runs.map(run => {
+          const method = run.benchmark.method;
+          const tags = method.audioTags ?? [];
+          return <p><strong>{run.label}:</strong> {method.scoredRequests} measured clips, {method.warmupRequests} excluded warm-ups. {tags.length ? <>{method.tagsVaryByPassage ? 'One tag per passage, selected from ' : 'Each passage starts with '}<code>{tags.join(', ')}</code>. {method.tagPlacement}.</> : 'No audio tags.'} {method.warmupAudioTags?.length ? <>Warm-up tag: <code>{method.warmupAudioTags.join(' ')}</code>.</> : ''}</p>;
+        })}
+      </div>
+      {reused < scored && <p>{scored - reused} measured request(s) opened a new connection; their timings include connection setup.</p>}
+      <p>A monotonic client clock measures first non-empty response-body bytes and the complete response. File writing and audio decoding happen afterward and are excluded. All {scored} clips were checked for valid MP3 decoding. Different generated clip lengths affect full-request time; these results describe these recordings, not a guaranteed speed ranking.</p>
       <p>These are public professional voices. ElevenLabs notes that professional voice clones are not fully optimized for Eleven v3, and that v3 Conversational may not preserve their original voice identity. See the <a href="https://elevenlabs.io/docs/overview/capabilities/text-to-speech/best-practices#prompting-eleven-v3" target="_blank" rel="noopener noreferrer">v3 voice guidance ↗</a>, <a href="https://elevenlabs.io/docs/eleven-agents/customization/voice/expressive-mode#limitations" target="_blank" rel="noopener noreferrer">Conversational limitations ↗</a>, and <a href="https://elevenlabs.io/docs/api-reference/text-to-speech/stream" target="_blank" rel="noopener noreferrer">streaming API documentation ↗</a>.</p>
     </div>
   </details>
@@ -81,11 +89,13 @@ const seconds = (value: number) => (value / 1000).toFixed(2);
   [hidden] { display: none !important; }
   .cohort-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
   .section-description { max-width: 80ch; color: var(--fg-2); margin: 1rem 0 1.7rem; font-size: 0.88rem; line-height: 1.8; }
-  .data-links { display: flex; gap: 1rem; font: 0.72rem var(--mono); white-space: nowrap; }
+  .data-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.65rem 1.3rem; font: 0.72rem var(--mono); }
+  .data-links > div { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+  .data-links span { color: var(--fg-3); }
   .eyebrow { margin: 0 0 0.8rem; font: 600 0.6rem var(--mono); letter-spacing: 0.13em; color: var(--accent); }
-  .model-summaries { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .model-summaries { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem; }
   .model-summary { border: 1px solid var(--rule); background: var(--card); border-radius: 5px; padding: 1.5rem; }
-  h3 { margin: 0; font: 600 1.25rem var(--serif); }
+  h3 { margin: 0; font: 600 1.15rem var(--serif); }
   .headline-stat { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.3rem 0.7rem; margin: 0.7rem 0 1.2rem; }
   .headline-stat strong { font: 500 clamp(2rem, 4vw, 3rem)/1.2 var(--mono); letter-spacing: -0.07em; color: var(--accent); }
   .headline-stat span { color: var(--fg-3); font-size: 0.73rem; }
@@ -123,5 +133,9 @@ const seconds = (value: number) => (value / 1000).toFixed(2);
     .cohort-heading { align-items: start; flex-direction: column; gap: 0; margin-bottom: 1rem; }
     .section-description { margin-bottom: 0.8rem; }
     .method-content dl div { display: block; }
+  }
+  @media (min-width: 1200px) {
+    .model-summaries[data-versions='4'] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .model-summary { padding: 1.2rem; }
   }
 </style>

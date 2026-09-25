@@ -75,8 +75,10 @@ python3 -m unittest discover -s scripts -p 'test_image_comparison_assets.py'
 ## Mandarin and English TTS voice comparison
 
 The unlisted listening page at `/tts/` compares seven voices across twenty mixed
-Taiwanese Mandarin and ten English passages (1–3 sentences each), with Eleven v3
-first and v3 Conversational as the comparison model. It is excluded from navigation and the
+Taiwanese Mandarin and ten English passages (1–3 sentences each). Mandarin has
+four versions: Eleven v3, v3 Conversational, Eleven v3 with one emotion tag, and
+Eleven v3 with one vocal reaction tag. English retains its two models with the
+American accent tag. The page is excluded from navigation and the
 sitemap and has a `noindex` robots tag. This is an unlisted static page, not an
 authenticated page.
 
@@ -85,13 +87,19 @@ shared settings. `src/data/tts-benchmark.json` contains the 280 Mandarin records
 `tts-benchmark-en-us.json` contains 140 English records generated with
 `[strong American accent]` before each passage. The original words and settings
 are preserved; the exact tagged inputs appear in JSON/CSV and the listening page.
-Each dataset has audio checksums and
-separate latency summaries. `tts-comparison.ts` combines them for listening while
-preserving the separate benchmark groups. For each selected passage, both models appear together for
-each voice, with Eleven v3 first. Players sit side by side on larger screens and
-stack within each voice on phones. Play a voice pair or all seven pairs in order;
-starting another player or changing the passage stops the previous audio. The
-page includes per-clip timings, median/p95 tables, CSV/JSON downloads, and v3 tags.
+The Mandarin style corpora and results use the suffixes `-zh-emotion` and
+`-zh-vocal`. Each passage has exactly one tag chosen for its meaning, a selection
+reason, and the unchanged spoken text. Both extra styles use `eleven_v3` with the
+original settings. Each dataset has audio checksums and separate latency summaries.
+
+`tts-comparison.ts` combines them using a distinct variant ID while preserving
+the real model ID. Mandarin shows four columns on desktop, two on tablets, and
+one on phones; English has two versions. “Play all four” / “Play both” queues
+one voice, and “Play all voices” queues 28 Mandarin or 14 English clips. Starting
+another player or changing the passage cancels the queue. Hidden Mandarin style
+players have their sources removed when switching to English. The page shows
+chosen tags, reasons, expandable exact inputs, per-clip timings, median/p95
+tables, and CSV/JSON downloads.
 The client uses prerecorded audio and makes no ElevenLabs API calls.
 
 Reproduce the benchmark with `ELEVENLABS_API_KEY` set in the environment and
@@ -105,16 +113,26 @@ python3 scripts/benchmark-tts.py --output /path/to/private-run
 python3 scripts/package-tts-benchmark.py /path/to/private-run
 python3 scripts/benchmark-tts.py --corpus src/data/tts-corpus-en-us.json --output /path/to/private-english-run
 python3 scripts/package-tts-benchmark.py /path/to/private-english-run --language en-US
+python3 scripts/benchmark-tts.py --corpus src/data/tts-corpus-zh-emotion.json --output /path/to/private-emotion-run
+python3 scripts/package-tts-benchmark.py /path/to/private-emotion-run --style emotion
+python3 scripts/benchmark-tts.py --corpus src/data/tts-corpus-zh-vocal.json --output /path/to/private-vocal-run
+python3 scripts/package-tts-benchmark.py /path/to/private-vocal-run --style vocal
 python3 -m unittest discover -s scripts -p 'test_tts_assets.py'
 ```
 
-The 420 active MP3s are distributed through pinned GitHub releases
-`tts-v3-benchmark-2026-09-25` and `tts-v3-benchmark-en-us-2026-09-25`.
+The 700 active MP3s (560 Mandarin and 140 English) are distributed through pinned
+GitHub releases `tts-v3-benchmark-2026-09-25`,
+`tts-v3-benchmark-en-us-2026-09-25`,
+`tts-v3-benchmark-zh-emotion-2026-09-25`, and
+`tts-v3-benchmark-zh-vocal-2026-09-25`. Run generation sequentially; the original
+Mandarin benchmark and each style were measured in separate runs.
 CI verifies the archive inventory, byte counts, and
 SHA-256 hashes before installing it into `dist/`. For local preview, download
 the release archive and run `python3 scripts/install-tts-assets.py ARCHIVE.zip dist`
 after building, or use `public` as the destination before starting the dev server.
 For the active English archive, pass `--manifest scripts/tts-benchmark-en-us-assets.json`.
+For style archives, pass `--manifest scripts/tts-benchmark-zh-emotion-assets.json`
+or `--manifest scripts/tts-benchmark-zh-vocal-assets.json`.
 Generated audio is excluded from Git. Publish the archive before pushing code
 that references it to master.
 

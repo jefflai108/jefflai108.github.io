@@ -3,13 +3,15 @@ import Base from '../layouts/Base.astro';
 import { comparison, cohorts } from '../data/tts-comparison';
 import TtsLatency from '../components/TtsLatency.astro';
 
-const { models, voices, paragraphs } = comparison;
+const { variants, voices, paragraphs } = comparison;
 const firstParagraph = paragraphs[0];
-const initial = (voiceId: string, modelId: string) => comparison.records.find(r => r.voiceId === voiceId && r.modelId === modelId && r.paragraphId === firstParagraph.id)!;
+const initial = (voiceId: string, variantId: string) => comparison.records.find(r => r.voiceId === voiceId && r.variantId === variantId && r.paragraphId === firstParagraph.id)!;
+const firstEmotion = firstParagraph.versions.find(v => v.variantId === 'emotion')!;
+const firstVocal = firstParagraph.versions.find(v => v.variantId === 'vocal')!;
 const ms = (value: number) => Math.round(value).toLocaleString('en-US');
 const seconds = (value: number) => (value / 1000).toFixed(2);
 const tags = [
-  { title: 'Emotion', examples: ['[excited]', '[curious]', '[sarcastic]', '[crying]'] },
+  { title: 'Emotion', examples: ['[excited]', '[curious]', '[happy]', '[thoughtful]', '[sad]', '[sarcastic]', '[crying]'] },
   { title: 'Delivery & pacing', examples: ['[whispers]', '[shouts]', '[softly]', '[slowly]', '[rushed]', '[pause]'] },
   { title: 'Vocal reactions', examples: ['[laughs]', '[sighs]', '[exhales]', '[snorts]', '[clears throat]'] },
   { title: 'Sound effects', examples: ['[applause]', '[clapping]', '[gunshot]', '[explosion]'] },
@@ -21,13 +23,13 @@ const tags = [
   nav="tts"
   noindex
   title="Mandarin & English voice comparison — Cheng-I Jeff Lai"
-  description="Seven voices, twenty Mandarin and ten English passages, with Eleven v3 and v3 Conversational side by side."
+  description="Seven voices and thirty passages. Compare four Mandarin versions, including emotion and vocal reaction tags, and both v3 models in English."
 >
   <main id="main" class="tts-page">
     <header class="tts-intro">
       <p class="eyebrow">SPEECH / LISTENING ROOM</p>
       <h1>Mandarin & English voices</h1>
-      <p class="intro-text">Seven voices. Thirty passages. Both v3 models, side by side.</p>
+      <p class="intro-text">Seven voices. Thirty passages. Four Mandarin versions; both v3 models in English.</p>
       <div class="sample-meta">
         <span>Taiwanese Mandarin + English</span><span>{comparison.records.length} audio samples</span>
         <time datetime={comparison.generatedOn}>September 25, 2026</time>
@@ -53,20 +55,29 @@ const tags = [
           <span data-passage-count>01 / {paragraphs.length}</span>
           <button type="button" data-next aria-label="Next passage">Next →</button>
         </div>
-        <p class="listening-note">Changing the passage updates both models for every voice and stops playback.</p>
-        <noscript><p class="listening-note">Enable JavaScript to switch passages. Both models for the first passage are playable below.</p></noscript>
+        <p class="listening-note">Changing the passage updates every voice and version, and stops playback.</p>
+        <noscript><p class="listening-note">Enable JavaScript to switch passages. All four versions of the first passage are playable below.</p></noscript>
         </div>
         <div class="passage-text">
         <p class="passage-category" data-passage-category>{firstParagraph.languageLabel} · {firstParagraph.category} · {firstParagraph.sentences} sentences</p>
         <blockquote id="sample-transcript" lang="zh-Hant-TW">{firstParagraph.text}</blockquote>
-        <p class="listening-note" data-generation-note>Both models receive the same text, without audio tags. Each pair plays Eleven v3 first, then v3 Conversational.</p>
+        <p class="listening-note" data-generation-note>Four versions of the same words: the original two models, Eleven v3 with one emotion tag, and Eleven v3 with one vocal reaction tag.</p>
+        <div class="style-notes" data-style-notes>
+          <div><span>Emotion</span><code data-emotion-tag>{firstEmotion.audioTags.join(' ')}</code><p data-emotion-reason>{firstEmotion.tagReason}</p></div>
+          <div><span>Vocal reaction</span><code data-vocal-tag>{firstVocal.audioTags.join(' ')}</code><p data-vocal-reason>{firstVocal.tagReason}</p></div>
+          <details class="tagged-inputs">
+            <summary>Exact tagged inputs</summary>
+            <p><strong>Emotion</strong><span lang="zh-Hant-TW" data-emotion-input>{firstEmotion.text}</span></p>
+            <p><strong>Vocal reaction</strong><span lang="zh-Hant-TW" data-vocal-input>{firstVocal.text}</span></p>
+          </details>
+        </div>
         </div>
       </aside>
 
       <div class="samples">
         <div class="samples-toolbar">
-          <h2>Listen & compare <span>07 voices · 02 models per voice</span></h2>
-          <button type="button" class="play-all" data-play-all hidden>Play all pairs</button>
+          <h2>Listen & compare <span data-version-count>07 voices · 04 versions per voice</span></h2>
+          <button type="button" class="play-all" data-play-all hidden>Play all voices</button>
         </div>
         <p class="playback-status" data-playback-status role="status" aria-live="polite">Choose a voice below to start listening.</p>
         <ol id="voice-samples" class="voice-list">
@@ -81,23 +92,27 @@ const tags = [
                   </div>
                   <div class="voice-actions">
                     <a href={`https://elevenlabs.io/voices/${voice.id}`} target="_blank" rel="noopener noreferrer">Voice profile ↗</a>
-                    <button type="button" class="play-pair" data-play-pair aria-label={`Play both models for ${voice.label}`} hidden>Play pair</button>
+                    <button type="button" class="play-voice" data-play-voice aria-label={`Play all four versions for ${voice.label}`} hidden>Play all four</button>
                   </div>
                 </div>
-                <div class="model-pair">
-                  {models.map(model => {
-                    const sample = initial(voice.id, model.id);
-                    const labelId = `model-${voice.id}-${model.id}`;
-                    return <section class="model-sample" data-model-sample data-model-id={model.id} aria-labelledby={`voice-${voice.id} ${labelId}`}>
+                <div class="version-grid" data-version-grid data-versions="4">
+                  {variants.map(variant => {
+                    const sample = initial(voice.id, variant.id);
+                    const input = firstParagraph.versions.find(v => v.variantId === variant.id)!;
+                    const labelId = `version-${voice.id}-${variant.id}`;
+                    return <section class="model-sample" data-model-sample data-variant-id={variant.id} data-model-id={variant.modelId} aria-labelledby={`voice-${voice.id} ${labelId}`}>
                       <div class="model-heading">
-                        <h4 id={labelId}>{model.label} {model.id === comparison.defaultModelId && <span class="default-badge">Default</span>}</h4>
+                        <h4 id={labelId}>{variant.label} {variant.id === comparison.defaultModelId && <span class="default-badge">Default</span>}</h4>
+                      </div>
+                      <div class="sample-detail">
+                        <code id={`${labelId}-tags`} data-sample-tags>{input.audioTags.join(' ') || 'No tags'}</code>
                         <span class="duration" data-duration>{sample.durationSeconds.toFixed(2)}s audio</span>
                       </div>
-                      <audio controls preload="metadata" src={sample.audioPath} aria-labelledby={`voice-${voice.id} ${labelId}`} aria-describedby="sample-transcript" data-voice-name={voice.label} data-model-name={model.label}>
+                      <audio controls preload="metadata" src={sample.audioPath} aria-labelledby={`voice-${voice.id} ${labelId}`} aria-describedby={`sample-transcript ${labelId}-tags`} data-voice-name={voice.label} data-version-name={variant.label}>
                         Your browser does not support audio playback.
                       </audio>
                       <div class="clip-timing"><span>First byte <b data-ttfb>{ms(sample.ttfbMs)} ms</b></span><span>Full request <b data-total>{seconds(sample.totalMs)} s</b></span></div>
-                      <div class="voice-links"><a href={sample.audioPath} data-download download aria-label={`Download ${voice.label} — ${model.label} MP3`}>Download MP3 ↓</a></div>
+                      <div class="voice-links"><a href={sample.audioPath} data-download download aria-label={`Download ${voice.label} — ${variant.label} MP3`}>Download MP3 ↓</a></div>
                     </section>;
                   })}
                 </div>
@@ -120,7 +135,7 @@ const tags = [
         </select>
       </div>
       <p class="listening-note">English and Mandarin results are kept separate. Selecting a passage shows its language here; you can also switch the benchmark independently.</p>
-      {cohorts.map((cohort, index) => <TtsLatency {...cohort} hidden={index > 0} />)}
+      {cohorts.map((cohort, index) => <TtsLatency cohort={cohort} hidden={index > 0} />)}
     </section>
 
     <section id="audio-tags" class="report-section" aria-labelledby="tags-heading">
@@ -133,7 +148,7 @@ const tags = [
       <div class="tag-example"><p class="eyebrow">EXAMPLE PROMPT</p><p lang="zh-Hant-TW"><code>[curious]</code> 你有沒有想過，為什麼有些歌一響起，就會讓人想起某段回憶？<br /><code>[softly]</code> 明明過了好多年，卻還是記得那一天。</p></div>
       <p class="section-description">Natural stability (0.5) balances consistency and expression. Some voices respond more strongly than others; sound effects, accents, and singing are especially variable. v3 does not support SSML <code>&lt;break&gt;</code> tags.</p>
       <p class="section-description">v3 Conversational also supports expressive tags. Its guide lists <code>[laughs]</code>, <code>[whispers]</code>, <code>[sighs]</code>, <code>[slow]</code>, and <code>[excited]</code>, with effects lasting roughly the next 4–5 words. <a href="https://elevenlabs.io/docs/eleven-agents/customization/voice/expressive-mode#using-expressive-tags" target="_blank" rel="noopener noreferrer">Conversational tag guide ↗</a></p>
-      <p class="section-description"><strong>Automatic tags with Enhance:</strong> in the ElevenLabs editor, select Eleven v3, enter your text, click Enhance, review the tags, then generate speech. Enhance uses an LLM to prepare the text. In this comparison, English inputs include <code>[strong American accent]</code> and Mandarin uses plain text. <a href="https://elevenlabs.io/docs/overview/capabilities/text-to-speech/best-practices#enhancing-input" target="_blank" rel="noopener noreferrer">How Enhance works ↗</a></p>
+      <p class="section-description"><strong>Automatic tags with Enhance:</strong> in the ElevenLabs editor, select Eleven v3, enter your text, click Enhance, review the tags, then generate speech. Enhance uses an LLM to prepare the text. For this comparison, each Mandarin passage has two original recordings and two Eleven v3 recordings with one chosen tag apiece: emotion or vocal reaction. English inputs include <code>[strong American accent]</code>. <a href="https://elevenlabs.io/docs/overview/capabilities/text-to-speech/best-practices#enhancing-input" target="_blank" rel="noopener noreferrer">How Enhance works ↗</a></p>
       <p class="source-links"><a href="https://elevenlabs.io/docs/overview/capabilities/text-to-speech/best-practices#prompting-eleven-v3" target="_blank" rel="noopener noreferrer">Official v3 prompting guide ↗</a><a href="https://elevenlabs.io/blog/v3-audiotags" target="_blank" rel="noopener noreferrer">Audio tag examples ↗</a></p>
     </section>
 
@@ -147,7 +162,7 @@ const tags = [
 </script>
 
 <style>
-  .tts-page { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; }
+  .tts-page { max-width: 96rem; margin: 0 auto; padding: 0 1.5rem; }
   .tts-intro { padding: 3.7rem 0 1.8rem; border-bottom: 1px solid var(--rule); }
   .eyebrow { display: block; margin: 0 0 0.8rem; font: 600 0.68rem var(--mono); letter-spacing: 0.13em; color: var(--accent); }
   h1 { margin: 0; font: 900 clamp(2rem, 4.8vw, 3.2rem)/1.15 var(--serif); letter-spacing: -0.035em; }
@@ -169,6 +184,15 @@ const tags = [
   .passage-category { margin: 0; font: 0.69rem/1.7 var(--mono); color: var(--fg-3); }
   blockquote { margin: 0.9rem 0 1.3rem; font-family: 'PingFang TC', 'Microsoft JhengHei', var(--sans); font-size: clamp(1.25rem, 2vw, 1.5rem); font-weight: 500; line-height: 1.95; letter-spacing: 0.015em; }
   .listening-note { margin: 0.8rem 0 0; color: var(--fg-3); font-size: 0.79rem; line-height: 1.8; }
+  .style-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem 1.2rem; margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
+  .style-notes > div { min-width: 0; }
+  .style-notes > div > span { display: block; margin-bottom: 0.4rem; font-size: 0.72rem; color: var(--fg-3); }
+  .style-notes code { color: var(--accent); }
+  .style-notes p { margin: 0.4rem 0 0; font-size: 0.76rem; line-height: 1.7; color: var(--fg-2); }
+  .tagged-inputs { grid-column: 1 / -1; font-size: 0.76rem; }
+  .tagged-inputs summary { cursor: pointer; color: var(--fg-3); padding: 0.3rem 0; }
+  .tagged-inputs strong, .tagged-inputs span { display: block; }
+  .tagged-inputs span { margin-top: 0.4rem; line-height: 1.9; }
   .samples { min-width: 0; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
   .samples-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
   .samples-toolbar h2 { font-size: 1.2rem; }
@@ -181,14 +205,16 @@ const tags = [
   .voice-number { padding-top: 0.2rem; font: 0.72rem/1.5 var(--mono); color: var(--fg-3); }
   .voice-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem 1rem; margin-bottom: 0.9rem; }
   .voice-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; font: 0.66rem/1.8 var(--mono); }
-  .play-pair { border: 1px solid var(--accent); border-radius: 4px; background: transparent; color: var(--accent); padding: 0.5rem 0.8rem; font-size: 0.74rem; font-weight: 600; }
-  .play-pair:hover { background: var(--bg-2); }
-  .model-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .play-voice { border: 1px solid var(--accent); border-radius: 4px; background: transparent; color: var(--accent); padding: 0.5rem 0.8rem; font-size: 0.74rem; font-weight: 600; }
+  .play-voice:hover { background: var(--bg-2); }
+  .version-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
   .model-sample { min-width: 0; padding: 1rem; border: 1px solid var(--rule); border-radius: 4px; background: var(--card); transition: border-color 160ms ease, background 160ms ease; }
   .model-sample[data-playing] { border-color: var(--accent); background: var(--bg-2); }
-  .model-heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.4rem 0.75rem; margin-bottom: 0.85rem; }
+  .model-heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.4rem 0.75rem; margin-bottom: 0.7rem; min-height: 2.3em; }
   .model-heading h4 { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin: 0; font-size: 0.85rem; font-weight: 600; }
   .default-badge { border: 1px solid var(--rule); border-radius: 3px; padding: 0.1rem 0.3rem; font: 0.58rem/1.5 var(--mono); color: var(--fg-3); }
+  .sample-detail { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.8rem; }
+  .sample-detail code { font-size: 0.68rem; color: var(--fg-2); }
   .duration { margin-left: auto; font: 0.65rem var(--mono); color: var(--fg-3); white-space: nowrap; }
   .voice-description { margin: 0.2rem 0 0; color: var(--fg-3); font-size: 0.78rem; }
   audio { display: block; width: 100%; height: 40px; }
@@ -213,13 +239,16 @@ const tags = [
   .source-links { display: flex; flex-wrap: wrap; gap: 0.7rem 1.5rem; font-size: 0.78rem; }
   .site-footer { margin-top: 3rem; }
   .site-footer time { white-space: nowrap; }
+  @media (min-width: 1200px) {
+    .version-grid[data-versions='4'] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
   @media (max-width: 780px) {
     .sample-context { grid-template-columns: 1fr; gap: 1.5rem; }
     .tts-intro { padding-top: 2.6rem; }
     .tag-group { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
-    .model-pair { grid-template-columns: 1fr; gap: 0.75rem; }
+    .version-grid { grid-template-columns: 1fr; gap: 0.75rem; }
     .model-sample { padding: 0.85rem; }
   }
   @media (max-width: 480px) {

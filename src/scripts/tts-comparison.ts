@@ -13,9 +13,10 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
   const previous = document.querySelector<HTMLButtonElement>('[data-previous]')!;
   const next = document.querySelector<HTMLButtonElement>('[data-next]')!;
   const panels = players.map(player => player.closest<HTMLElement>('[data-model-sample]')!);
-  const records = new Map(data.records.map(record => [`${record.modelId}/${record.paragraphId}/${record.voiceId}`, record]));
-  const pairButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-play-pair]'));
-  const pairs = new Map(pairButtons.map(button => [button, Array.from(button.closest('[data-voice-row]')!.querySelectorAll<HTMLAudioElement>('audio'))]));
+  const records = new Map(data.records.map(record => [`${record.variantId}/${record.paragraphId}/${record.voiceId}`, record]));
+  const voiceButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-play-voice]'));
+  const groups = new Map(voiceButtons.map(button => [button, Array.from(button.closest('[data-voice-row]')!.querySelectorAll<HTMLAudioElement>('audio'))]));
+  const visible = (selected: HTMLAudioElement[]) => selected.filter(player => !player.closest<HTMLElement>('[data-model-sample]')!.hidden);
   let queue: HTMLAudioElement[] = [];
   let queuePosition = -1;
   let queueOwner: HTMLButtonElement | null = null;
@@ -23,12 +24,14 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
   let playbackVersion = 0;
 
   function updateButtons() {
-    playAll!.textContent = queue.length ? 'Stop playback' : 'Play all pairs';
-    pairButtons.forEach(button => {
-      const voice = pairs.get(button)![0].dataset.voiceName;
-      const playingPair = queue.length > 0 && queueOwner === button;
-      button.textContent = playingPair ? 'Stop pair' : 'Play pair';
-      button.setAttribute('aria-label', playingPair ? `Stop pair for ${voice}` : `Play both models for ${voice}`);
+    playAll!.textContent = queue.length ? 'Stop playback' : 'Play all voices';
+    voiceButtons.forEach(button => {
+      const group = groups.get(button)!;
+      const voice = group[0].dataset.voiceName;
+      const count = visible(group).length;
+      const playingGroup = queue.length > 0 && queueOwner === button;
+      button.textContent = playingGroup ? 'Stop playback' : count === 4 ? 'Play all four' : 'Play both';
+      button.setAttribute('aria-label', playingGroup ? `Stop playback for ${voice}` : `Play all ${count} versions for ${voice}`);
     });
   }
 
@@ -50,7 +53,7 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
   }
 
   function playerLabel(player: HTMLAudioElement) {
-    return `${player.dataset.voiceName} · ${player.dataset.modelName}`;
+    return `${player.dataset.voiceName} · ${player.dataset.versionName}`;
   }
 
   async function playNext(position: number) {
@@ -69,7 +72,8 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
 
   function startQueue(selected: HTMLAudioElement[], owner: HTMLButtonElement) {
     stopPlayers();
-    queue = selected;
+    queue = visible(selected);
+    if (!queue.length) return;
     queueOwner = owner;
     updateButtons();
     void playNext(0);
@@ -89,31 +93,52 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
     const transcript = document.querySelector<HTMLElement>('#sample-transcript')!;
     transcript.textContent = paragraph.text;
     transcript.lang = paragraph.language;
-    const inputNote = paragraph.audioTags.length
-      ? `Both models receive ${paragraph.audioTags.join(' ')} before this passage.`
-      : 'Both models receive the same text, without audio tags.';
-    document.querySelector('[data-generation-note]')!.textContent = `${inputNote} Each pair plays Eleven v3 first, then v3 Conversational.`;
+    const mandarin = paragraph.language === 'zh-Hant-TW';
+    document.querySelector('[data-generation-note]')!.textContent = mandarin
+      ? 'Four versions of the same words: the original two models, Eleven v3 with one emotion tag, and Eleven v3 with one vocal reaction tag.'
+      : 'Both models receive [strong American accent] before this passage. Eleven v3 plays first, then v3 Conversational.';
+    document.querySelector<HTMLElement>('[data-style-notes]')!.hidden = !mandarin;
+    for (const id of ['emotion', 'vocal']) {
+      const version = paragraph.versions.find(v => v.variantId === id);
+      document.querySelector(`[data-${id}-tag]`)!.textContent = version?.audioTags.join(' ') ?? '';
+      document.querySelector(`[data-${id}-reason]`)!.textContent = version?.tagReason ?? '';
+      document.querySelector(`[data-${id}-input]`)!.textContent = version?.text ?? '';
+    }
     document.querySelector('[data-passage-category]')!.textContent = `${paragraph.languageLabel} · ${paragraph.category} · ${paragraph.sentences} ${paragraph.sentences === 1 ? 'sentence' : 'sentences'}`;
     document.querySelector('[data-passage-count]')!.textContent = `${String(paragraphIndex + 1).padStart(2, '0')} / ${data.paragraphs.length}`;
+    document.querySelector('[data-version-count]')!.textContent = `07 voices · ${String(paragraph.versions.length).padStart(2, '0')} versions per voice`;
+    document.querySelectorAll<HTMLElement>('[data-version-grid]').forEach(grid => { grid.dataset.versions = String(paragraph.versions.length); });
     previous.disabled = paragraphIndex === 0;
     next.disabled = paragraphIndex === data.paragraphs.length - 1;
     players.forEach((player, index) => {
       const panel = panels[index];
       const voiceId = player.closest<HTMLElement>('[data-voice-row]')!.dataset.voiceId;
-      const record = records.get(`${panel.dataset.modelId}/${paragraph.id}/${voiceId}`)!;
+      const version = paragraph.versions.find(v => v.variantId === panel.dataset.variantId);
+      panel.hidden = !version;
+      if (!version) {
+        if (player.hasAttribute('src')) {
+          player.removeAttribute('src');
+          player.load();
+        }
+        panel.querySelector<HTMLAnchorElement>('[data-download]')!.removeAttribute('href');
+        return;
+      }
+      const record = records.get(`${version.variantId}/${paragraph.id}/${voiceId}`)!;
       if (player.getAttribute('src') !== record.audioPath) {
         player.src = record.audioPath;
         player.load();
       } else {
         player.currentTime = 0;
       }
+      panel.querySelector('[data-sample-tags]')!.textContent = version.audioTags.join(' ') || 'No tags';
       panel.querySelector('[data-duration]')!.textContent = `${record.durationSeconds.toFixed(2)}s audio`;
       panel.querySelector('[data-ttfb]')!.textContent = `${Math.round(record.ttfbMs).toLocaleString('en-US')} ms`;
       panel.querySelector('[data-total]')!.textContent = `${(record.totalMs / 1000).toFixed(2)} s`;
       panel.querySelector<HTMLAnchorElement>('[data-download]')!.href = record.audioPath;
     });
+    updateButtons();
     updateBenchmark(paragraph.language);
-    status!.textContent = `${paragraph.title}. Choose a player, play one voice pair, or play all pairs.`;
+    status!.textContent = `${paragraph.title}. Choose a player, compare one voice, or play all voices.`;
     if (updateUrl) {
       const url = new URL(window.location.href);
       url.searchParams.delete('model');
@@ -125,12 +150,11 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
   players.forEach((player, index) => {
     const panel = panels[index];
     player.addEventListener('play', () => {
+      if (panel.hidden) { player.pause(); return; }
       if (player.paused) return;
       if (queue.length && queue[queuePosition] !== player) clearQueue();
       active = player;
-      players.forEach(other => {
-        if (other !== player) other.pause();
-      });
+      players.forEach(other => { if (other !== player) other.pause(); });
       panel.dataset.playing = '';
       status.textContent = `Playing ${queue.length ? `${queuePosition + 1} of ${queue.length} · ` : ''}${playerLabel(player)}`;
     });
@@ -150,15 +174,16 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
         return;
       }
       const finishedCount = queue.length;
+      const allVoices = queueOwner === playAll;
       clearQueue();
-      status.textContent = finishedCount === players.length
-        ? 'All seven voice pairs played. Choose another passage.'
+      status.textContent = allVoices
+        ? `All seven voices played (${finishedCount} clips). Choose another passage.`
         : finishedCount > 0
-          ? `${player.dataset.voiceName} · both models played. Choose another pair or passage.`
+          ? `${player.dataset.voiceName} · all ${finishedCount} versions played. Choose another voice or passage.`
           : `Finished · ${playerLabel(player)}`;
     });
     player.addEventListener('error', () => {
-      if (!player.error) return;
+      if (!player.error || panel.hidden || !player.hasAttribute('src')) return;
       delete panel.dataset.playing;
       if (player === active || queue[queuePosition] === player) clearQueue();
       status.textContent = `Audio unavailable for ${playerLabel(player)}. Try downloading the MP3.`;
@@ -168,20 +193,20 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
   playAll.addEventListener('click', () => {
     if (queue.length) {
       stopPlayers();
-      status.textContent = 'Playback stopped. Choose a player or play a voice pair.';
+      status.textContent = 'Playback stopped. Choose a player or compare another voice.';
       return;
     }
     startQueue(players, playAll);
   });
-  pairButtons.forEach(button => {
+  voiceButtons.forEach(button => {
     button.hidden = false;
     button.addEventListener('click', () => {
       if (queueOwner === button) {
         stopPlayers();
-        status.textContent = 'Pair stopped. Choose a player or play another pair.';
+        status.textContent = 'Playback stopped. Choose a player or compare another voice.';
         return;
       }
-      startQueue(pairs.get(button)!, button);
+      startQueue(groups.get(button)!, button);
     });
   });
   paragraphSelect.addEventListener('change', () => updateSelection());

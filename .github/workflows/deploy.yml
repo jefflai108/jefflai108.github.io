@@ -74,6 +74,14 @@ jobs:
           python3 scripts/install-tts-assets.py \
             "$RUNNER_TEMP/tts-benchmark-assets/tts-v3-benchmark-en-us-2026-09-25.zip" dist \
             --manifest scripts/tts-benchmark-en-us-assets.json
+          for style in emotion vocal; do
+            gh release download "tts-v3-benchmark-zh-$style-2026-09-25" \
+              --pattern "tts-v3-benchmark-zh-$style-2026-09-25.zip" \
+              --dir "$RUNNER_TEMP/tts-benchmark-assets"
+            python3 scripts/install-tts-assets.py \
+              "$RUNNER_TEMP/tts-benchmark-assets/tts-v3-benchmark-zh-$style-2026-09-25.zip" dist \
+              --manifest "scripts/tts-benchmark-zh-$style-assets.json"
+          done
 
       # Generated JPEGs live in a release asset, never in the Git history.
       # Both the archive and every extracted image are pinned by SHA-256.

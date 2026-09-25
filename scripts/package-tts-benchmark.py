@@ -35,11 +35,19 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('run', type=Path)
     parser.add_argument('--language', choices=['zh-TW', 'en', 'en-US'], default='zh-TW')
+    parser.add_argument('--style', choices=['emotion', 'vocal'], help='Mandarin Eleven v3 style run')
     args = parser.parse_args()
+    assert not args.style or args.language == 'zh-TW', 'Style runs are Mandarin only'
     suffix = {'zh-TW': '', 'en': '-en', 'en-US': '-en-us'}[args.language]
+    if args.style:
+        suffix = '-zh-' + args.style
     tag = 'tts-v3-benchmark' + suffix + '-2026-09-25'
     prefix = 'tts/audio/v3-benchmark' + suffix + '-2026-09-25'
     corpus = json.loads((args.run / 'corpus.json').read_text())
+    if args.style:
+        assert corpus['audioTagCategory'] == args.style
+        assert [m['id'] for m in corpus['models']] == ['eleven_v3']
+        assert all(len(p['audioTags']) == 1 for p in corpus['paragraphs'])
     run = json.loads((args.run / 'run.json').read_text())
     assert hashlib.sha256((args.run / 'corpus.json').read_bytes()).hexdigest() == run['corpus_sha256']
     assert (ROOT / ('src/data/tts-corpus' + suffix + '.json')).read_bytes() == (args.run / 'corpus.json').read_bytes()
@@ -77,8 +85,11 @@ def main():
         'method': {
             'endpoint': run['endpoint'], 'transport': run['transport'],
             'outputFormat': corpus['outputFormat'], 'concurrency': 1,
-            'audioTags': corpus.get('audioTags', []),
-            'tagPlacement': 'Prefix each passage and warm-up' if corpus.get('audioTags') else 'None',
+            'audioTags': sorted({tag for p in corpus['paragraphs'] for tag in p.get('audioTags', corpus.get('audioTags', []))}),
+            'audioTagCategory': corpus.get('audioTagCategory'),
+            'tagsVaryByPassage': any('audioTags' in p for p in corpus['paragraphs']),
+            'warmupAudioTags': corpus.get('warmupAudioTags', corpus.get('audioTags', [])),
+            'tagPlacement': 'Prefix each passage and warm-up' if corpus.get('audioTags') or corpus.get('audioTagCategory') else 'None',
             'scoredRequests': len(measured), 'warmupRequests': len(warmups),
             'failedAttempts': sum(not r['ok'] for r in attempts),
             'requestsWithReusedConnection': sum(r['connection_reused'] for r in measured),

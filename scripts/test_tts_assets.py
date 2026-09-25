@@ -41,14 +41,17 @@ class AudioArchiveTests(unittest.TestCase):
         self.assertEqual(module.install(self.archive, self.destination, manifest), 1)
         self.assertEqual((self.destination / NAME).read_bytes(), b'authored test audio bytes')
 
-    def test_english_and_mandarin_coexist(self):
+    def test_languages_and_styles_coexist(self):
         module.install(self.archive, self.destination, self.fixture())
-        for variant in ['en', 'en-us']:
-            english = f'tts/audio/v3-benchmark-{variant}-2026-09-25/eleven_v3/hua/en01.mp3'
-            manifest = self.fixture([english])
-            manifest['files'][0]['path'] = english
+        installed = [NAME]
+        for variant, paragraph in [('en', 'en01'), ('en-us', 'en01'), ('zh-emotion', 'p01'), ('zh-vocal', 'p01')]:
+            name = f'tts/audio/v3-benchmark-{variant}-2026-09-25/eleven_v3/hua/{paragraph}.mp3'
+            manifest = self.fixture([name])
+            manifest['files'][0]['path'] = name
             self.assertEqual(module.install(self.archive, self.destination, manifest), 1)
-            self.assertEqual((self.destination / english).read_bytes(), (self.destination / NAME).read_bytes())
+            installed.append(name)
+            for path in installed:
+                self.assertEqual((self.destination / path).read_bytes(), b'authored test audio bytes')
 
     def test_rejects_changed_archive(self):
         manifest = self.fixture()

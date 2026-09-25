@@ -35,18 +35,26 @@ def main():
     assert corpus['paragraphs'], 'At least one paragraph is required'
     assert len({p['id'] for p in corpus['paragraphs']}) == len(corpus['paragraphs'])
     assert len({v['id'] for v in corpus['voices']}) == 7
-    tags = corpus.get('audioTags', [])
-    assert all(re.fullmatch(r'\[[^\[\]\r\n]+\]', tag) for tag in tags), 'Invalid audio tag'
-    prefix = ' '.join(tags) + ' ' if tags else ''
-    for paragraph in corpus['paragraphs']:
+    def validate_text(paragraph):
+        tags = paragraph.get('audioTags', corpus.get('audioTags', []))
+        assert all(re.fullmatch(r'\[[^\[\]\r\n]+\]', tag) for tag in tags), 'Invalid audio tag'
+        if corpus.get('audioTagCategory'):
+            assert len(tags) == 1, 'Style comparisons require exactly one tag per passage'
+        prefix = ' '.join(tags) + ' ' if tags else ''
         assert paragraph['text'].startswith(prefix)
         spoken_text = paragraph['text'][len(prefix):]
         if tags:
             assert spoken_text == paragraph['spokenText'], 'Only the declared tag prefix may change the spoken text'
+        assert '[' not in spoken_text and ']' not in spoken_text
+        return spoken_text
+
+    for paragraph in corpus['paragraphs']:
+        spoken_text = validate_text(paragraph)
         assert len(re.findall(r'[。！？]|[.!?](?=\s|$)', spoken_text)) == paragraph['sentences']
         assert 1 <= paragraph['sentences'] <= 3
-        assert '[' not in spoken_text and ']' not in spoken_text
-    assert corpus['warmupText'].startswith(prefix)
+    warmup_tags = corpus.get('warmupAudioTags', corpus.get('audioTags', []))
+    warmup_prefix = ' '.join(warmup_tags) + ' ' if warmup_tags else ''
+    validate_text({'text': corpus['warmupText'], 'spokenText': corpus['warmupText'][len(warmup_prefix):], 'audioTags': warmup_tags})
     args.output.mkdir(parents=True, exist_ok=True)
     corpus_hash = hashlib.sha256(corpus_bytes).hexdigest()
     meta_path = args.output / 'run.json'
