@@ -9,8 +9,6 @@ import statistics
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-PREFIX = 'tts/audio/v3-benchmark-2026-09-25'
-TAG = 'tts-v3-benchmark-2026-09-25'
 
 
 def percentile(values, q):
@@ -36,28 +34,32 @@ def summary(rows):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('run', type=Path)
+    parser.add_argument('--language', choices=['zh-TW', 'en'], default='zh-TW')
     args = parser.parse_args()
+    suffix = '-en' if args.language == 'en' else ''
+    tag = 'tts-v3-benchmark' + suffix + '-2026-09-25'
+    prefix = 'tts/audio/v3-benchmark' + suffix + '-2026-09-25'
     corpus = json.loads((args.run / 'corpus.json').read_text())
     run = json.loads((args.run / 'run.json').read_text())
     assert hashlib.sha256((args.run / 'corpus.json').read_bytes()).hexdigest() == run['corpus_sha256']
-    assert (ROOT / 'src/data/tts-corpus.json').read_bytes() == (args.run / 'corpus.json').read_bytes()
+    assert (ROOT / ('src/data/tts-corpus' + suffix + '.json')).read_bytes() == (args.run / 'corpus.json').read_bytes()
     attempts = [json.loads(line) for line in (args.run / 'attempts.jsonl').read_text().splitlines() if line.strip()]
     measured = [r for r in attempts if not r['warmup'] and r['ok']]
     expected = {(m['id'], v['id'], p['id']) for m in corpus['models'] for v in corpus['voices'] for p in corpus['paragraphs']}
     assert {(r['model_id'], r['voice_id'], r['paragraph_id']) for r in measured} == expected, 'Incomplete benchmark'
-    assert len(measured) == len(expected) == 280, 'Duplicate or missing successful measurements'
+    assert len(measured) == len(expected), 'Duplicate or missing successful measurements'
     warmups = [r for r in attempts if r['warmup'] and r['ok']]
-    assert len(warmups) == 14
+    assert len(warmups) == len(corpus['voices']) * len(corpus['models'])
     records = []
     members = []
-    archive = args.run / (TAG + '.zip')
+    archive = args.run / (tag + '.zip')
     with zipfile.ZipFile(archive, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=6) as target:
         for row in sorted(measured, key=lambda r: r['key']):
             source = Path(row['audio_file'])
             payload = source.read_bytes()
             assert hashlib.sha256(payload).hexdigest() == row['sha256']
             assert len(payload) == row['bytes']
-            member = PREFIX + '/' + row['model_id'] + '/' + row['voice_slug'] + '/' + row['paragraph_id'] + '.mp3'
+            member = prefix + '/' + row['model_id'] + '/' + row['voice_slug'] + '/' + row['paragraph_id'] + '.mp3'
             target.writestr(member, payload)
             members.append({'path': member, 'bytes': len(payload), 'sha256': row['sha256']})
             records.append({'modelId': row['model_id'], 'voiceId': row['voice_id'], 'paragraphId': row['paragraph_id'], 'audioPath': '/' + member, 'durationSeconds': row['duration_seconds'], 'ttfbMs': row['ttfb_ms'], 'totalMs': row['total_ms'], 'bytes': row['bytes'], 'sha256': row['sha256'], 'connectionReused': row['connection_reused']})
@@ -91,20 +93,20 @@ def main():
         'byModel': by_model,
         'records': records,
     }
-    (ROOT / 'src/data/tts-benchmark.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
+    (ROOT / ('src/data/tts-benchmark' + suffix + '.json')).write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
     public_data = ROOT / 'public/tts/data'
     public_data.mkdir(parents=True, exist_ok=True)
-    (public_data / 'v3-benchmark.json').write_text(json.dumps(result, ensure_ascii=False, separators=(',', ':')) + '\n')
+    (public_data / ('v3-benchmark' + suffix + '.json')).write_text(json.dumps(result, ensure_ascii=False, separators=(',', ':')) + '\n')
     paragraph_by_id = {p['id']: p for p in corpus['paragraphs']}
     voices_by_id = {v['id']: v for v in corpus['voices']}
     fields = ['model_id', 'voice', 'voice_id', 'paragraph_id', 'text', 'ttfb_ms', 'total_ms', 'audio_seconds', 'connection_reused', 'audio_url']
-    with (public_data / 'v3-benchmark.csv').open('w', newline='') as stream:
-        writer = csv.DictWriter(stream, fieldnames=fields)
+    with (public_data / ('v3-benchmark' + suffix + '.csv')).open('w', newline='') as stream:
+        writer = csv.DictWriter(stream, fieldnames=fields, lineterminator='\n')
         writer.writeheader()
         for row in records:
             writer.writerow({'model_id': row['modelId'], 'voice': voices_by_id[row['voiceId']]['label'], 'voice_id': row['voiceId'], 'paragraph_id': row['paragraphId'], 'text': paragraph_by_id[row['paragraphId']]['text'], 'ttfb_ms': row['ttfbMs'], 'total_ms': row['totalMs'], 'audio_seconds': row['durationSeconds'], 'connection_reused': row['connectionReused'], 'audio_url': 'https://jefflai108.github.io' + row['audioPath']})
-    manifest = {'version': 1, 'releaseTag': TAG, 'archiveName': archive.name, 'archiveBytes': archive.stat().st_size, 'archiveSha256': hashlib.sha256(archive.read_bytes()).hexdigest(), 'files': members}
-    (ROOT / 'scripts/tts-benchmark-assets.json').write_text(json.dumps(manifest, indent=2) + '\n')
+    manifest = {'version': 1, 'releaseTag': tag, 'archiveName': archive.name, 'archiveBytes': archive.stat().st_size, 'archiveSha256': hashlib.sha256(archive.read_bytes()).hexdigest(), 'files': members}
+    (ROOT / ('scripts/tts-benchmark' + suffix + '-assets.json')).write_text(json.dumps(manifest, indent=2) + '\n')
     print(json.dumps({'archive': str(archive), 'archive_bytes': archive.stat().st_size, 'records': len(records), 'by_model': by_model, 'failed_attempts': result['method']['failedAttempts'], 'reused_connections': result['method']['requestsWithReusedConnection']}, indent=2))
 
 
