@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "defaultModelId": "eleven_v3",
+  "models": [
+    { "id": "eleven_v3", "label": "Eleven v3" },
+    { "id": "eleven_v3_conversational", "label": "v3 Conversational" }
+  ],
+  "settings": { "stability": 0.5, "speed": 1.0 },
+  "outputFormat": "mp3_44100_128",
+  "scheduleSeed": 20260925,
+  "requestSeed": 42,
+  "warmupText": "你好，這是一段簡短的語音測試。",
+  "voices": [
+    { "id": "R55vTH9XmVSyAcM6YvtV", "slug": "yao-yuan-wu", "label": "Yao Yuan Wu", "description": "Warm, Sweet and Friendly" },
+    { "id": "4NQthjVhIGGVfL3Si000", "slug": "chen", "label": "Chen Mandarin Chinese", "description": "Clear, warm, and natural delivery" },
+    { "id": "1AKkSX7KMPHIWuz76m0n", "slug": "tiffy", "label": "Tiffy", "description": "Taiwanese Bilingual Narrator" },
+    { "id": "9lHjugDhwqoxA5MhX0az", "slug": "anna-su", "label": "Anna Su", "description": "Casual, Friendly and Bright" },
+    { "id": "r6qgCCGI7RWKXCagm158", "slug": "anna-su-2", "label": "Anna Su 2", "description": "Trustworthy, Clear and Natural" },
+    { "id": "SoLCar3sKHqXqvJc7jmm", "slug": "hua", "label": "Hua", "description": "Social media" },
+    { "id": "DSyEP4HEaCKur8rFFOri", "slug": "zack", "label": "Zack", "description": "Podcasts & video" }
+  ],
+  "paragraphs": [
+    { "id": "p01", "title": "好久不見", "category": "Conversation", "sentences": 2, "text": "好久不見，你最近過得怎麼樣？我剛好在附近買咖啡，要不要找個地方坐一下，慢慢聊聊近況？" },
+    { "id": "p02", "title": "早餐店點餐", "category": "Everyday tasks", "sentences": 2, "text": "老闆，麻煩給我兩份蛋餅，一份不要加辣，另一份多一點醬油。飲料都要無糖豆漿，等一下我再過來拿，謝謝。" },
+    { "id": "p03", "title": "出門前的提醒", "category": "Conversation", "sentences": 3, "text": "外面看起來快下雨了，你出門記得帶傘。薄外套也拿一件，晚上可能會有點涼。到家之後傳個訊息給我，我才不會擔心。" },
+    { "id": "p04", "title": "週末的約定", "category": "Conversation", "sentences": 1, "text": "這個週末如果天氣不錯，我們就搭捷運去淡水，沿著河邊慢慢散步，再找一家可以看夕陽的咖啡店坐到傍晚。" },
+    { "id": "p05", "title": "巷口怎麼走", "category": "Directions", "sentences": 3, "text": "你從捷運站二號出口出來，先往右邊走。看到便利商店之後，在下一個路口左轉。那間店就在巷子底，有一扇深綠色的門。" },
+    { "id": "p06", "title": "訂單金額", "category": "Numbers", "sentences": 2, "text": "這筆訂單原價是1,280元，使用九折優惠後，一共是1,152元。你可以用信用卡或行動支付，付款完成後會收到電子發票。" },
+    { "id": "p07", "title": "活動時間", "category": "Dates & times", "sentences": 2, "text": "活動訂在10月3日14:30開始，地點是台北車站附近的會議中心。建議你提前十五分鐘到場，這樣就有時間報到，順便找個喜歡的位子。" },
+    { "id": "p08", "title": "分享新的作品", "category": "Mixed language", "sentences": 2, "text": "我把新的demo放到GitHub了，你有空可以幫我看看。這次主要調整了介面和語音播放，手機上用Safari或Chrome都能直接打開。" },
+    { "id": "p09", "title": "連線小幫手", "category": "Mixed language", "sentences": 3, "text": "我們先確認一下Wi-Fi有沒有連上。你可以試著重新整理網頁，或是把App關掉再打開。如果還是不行，跟我說畫面上出現了什麼訊息。" },
+    { "id": "p10", "title": "陪你慢慢來", "category": "Reassurance", "sentences": 2, "text": "今天真的辛苦你了，事情沒有照計畫進行，也不代表你做得不好。我們先休息一下，等心情比較平靜，再一起想下一步怎麼走。" },
+    { "id": "p11", "title": "終於等到好消息", "category": "Excitement", "sentences": 2, "text": "太好了，我們終於訂到那間一直想去的餐廳了！我已經開始期待他們的招牌甜點，你可別在出門前就把肚子吃飽喔。" },
+    { "id": "p12", "title": "有禮貌地婉拒", "category": "Conversation", "sentences": 2, "text": "謝謝你特地邀請我，不過那天我已經有其他安排，這次可能沒辦法參加。下次如果還有機會，記得再找我，我也很想跟大家聚一聚。" },
+    { "id": "p13", "title": "不小心遲到了", "category": "Apology", "sentences": 3, "text": "不好意思，讓你等這麼久。剛才路上有點塞車，我應該早一點出門的。你想喝什麼，我請你，就當作是我的小小賠罪。" },
+    { "id": "p14", "title": "一個好奇的問題", "category": "Curiosity", "sentences": 2, "text": "你有沒有想過，為什麼有些歌只要聽到前奏，就會立刻想起某一段回憶？明明已經過了好多年，那個畫面卻還是清楚得像昨天一樣。" },
+    { "id": "p15", "title": "冰箱裡的決心", "category": "Humor", "sentences": 1, "text": "我昨天很有決心地告訴自己，今天一定要早點睡，結果半夜還站在冰箱前面，認真思考剩下那塊蛋糕到底算不算宵夜。" },
+    { "id": "p16", "title": "睡前的小故事", "category": "Storytelling", "sentences": 3, "text": "小狐狸沿著月光照亮的小路，慢慢走回山上的家。牠把白天撿到的松果放在窗邊，輕輕地說了一聲晚安。遠處的森林安靜下來，只剩風吹過樹葉的聲音。" },
+    { "id": "p17", "title": "城市剛醒來", "category": "Narration", "sentences": 2, "text": "清晨的市場才剛開門，空氣裡已經飄著熱豆漿和煎蘿蔔糕的香味。攤販一邊整理蔬菜，一邊和熟客打招呼，讓還沒完全醒來的街道慢慢熱鬧起來。" },
+    { "id": "p18", "title": "山上的旅行", "category": "Numbers", "sentences": 2, "text": "我們抵達海拔2,350公尺的觀景台時，溫度只有攝氏12度。雖然一路走得有點喘，但看到雲海從山谷裡慢慢升起，大家都覺得這趟來得很值得。" },
+    { "id": "p19", "title": "解釋語音串流", "category": "Explanation", "sentences": 3, "text": "你可以把語音串流想像成水龍頭。聲音一小段一小段送過來，播放器收到之後就能開始播放。不必等到整段內容都準備好了，才聽得到第一句話。" },
+    { "id": "p20", "title": "留一點時間給自己", "category": "Reflection", "sentences": 2, "text": "有時候，進步不是把每一天都排得滿滿的，而是願意留一點空白，聽聽自己真正需要什麼。走得慢一點沒有關係，只要那個方向，仍然是你想去的地方。" }
+  ]
+}

@@ -1,0 +1,1409 @@
+{
+  "version": 1,
+  "releaseTag": "tts-v3-benchmark-2026-09-25",
+  "archiveName": "tts-v3-benchmark-2026-09-25.zip",
+  "archiveBytes": 55274830,
+  "archiveSha256": "b017652c421872bcfd971f0d14a5fd8d32b2b17d08b58ebfe527541ace15b491",
+  "files": [
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p01.mp3",
+      "bytes": 160541,
+      "sha256": "47ab834ba48dd0e5b4313d1d2186fb447a4bc74a4729aef2f642513d97d45b1c"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p02.mp3",
+      "bytes": 195231,
+      "sha256": "5fdec377b63cc3aee341b45f6a9e4e72423e38fa89102aeeb58c6cffa924b1f8"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p03.mp3",
+      "bytes": 191470,
+      "sha256": "b502c15c110491c15ea9edc9defbf8ec7f11612104598f007610942d5c0c1285"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p04.mp3",
+      "bytes": 193978,
+      "sha256": "50b648d3ad9966a0e1d24ac467cbb5a2de15238a92378d922a257b5b6dcfbdf2"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p05.mp3",
+      "bytes": 237445,
+      "sha256": "9c87096369d203fb33f8b21d5070883cf545bbad700c15812f4d2a61cff8025b"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p06.mp3",
+      "bytes": 265449,
+      "sha256": "60fbe8f9f727dfc24e5fce3c2fb173a605f955b5d06ffe330b577c2febd776ab"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p07.mp3",
+      "bytes": 249148,
+      "sha256": "3859a20b339934ff63f5eef79efe918ea7aaa63da683ff9a324453a74b8ea65b"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p08.mp3",
+      "bytes": 214458,
+      "sha256": "74e2f5f919f998e40f3f85894ebcbd6398a91934e32dde1d9054c4fd0b2f7f7e"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p09.mp3",
+      "bytes": 259179,
+      "sha256": "6e1bae07930edafd0d50f62381028248c5618dd3ad9df4d006993813c733ad36"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p10.mp3",
+      "bytes": 210696,
+      "sha256": "d02ebcb34fdc73327feeda19830a7bd4462773330a58c46a0380666a6c7cbf05"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p11.mp3",
+      "bytes": 174751,
+      "sha256": "32b306215b79153667b4ff6e3831a8a8514c4341e3f857bbb4cd1af0b3d3e109"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p12.mp3",
+      "bytes": 214458,
+      "sha256": "1a225ab238cb221c73b71e26501b0cfa56f26d85a8d412720e284f55a1533247"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p13.mp3",
+      "bytes": 191470,
+      "sha256": "531eef94984d1df610a1ead9934a80a0b14f5817c1cc76f32a70148d9efb745d"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p14.mp3",
+      "bytes": 236191,
+      "sha256": "4e720795e5d3a472c53a5bf40284aec89db838ee284448bc1befbf4a45bae32c"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p15.mp3",
+      "bytes": 204009,
+      "sha256": "17f2fe9339a50d8d25319531f5395429552de1230fcfe0c87317e633da2502a5"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p16.mp3",
+      "bytes": 314350,
+      "sha256": "431dac95cdb89ece78d49fd376db57412846c5f1e85e6cfdf5514c0591c1b84e"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p17.mp3",
+      "bytes": 239953,
+      "sha256": "62f55ed63a5bed12b36e92c291bf4c4b41726dd2df01f05587621b23845eed9f"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p18.mp3",
+      "bytes": 274644,
+      "sha256": "91b70ba2c090a51c06c4976e42fbe4f7a4fd9639dcf9239e7a4927e5750fb3a4"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p19.mp3",
+      "bytes": 260433,
+      "sha256": "e76224e1b4f0996d3a358792ca3d4d2800eae487d6f4cdd2685fd86ffcc212c3"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su-2/p20.mp3",
+      "bytes": 297631,
+      "sha256": "8cc221944f8909e5aeb18c86d20aa9438eb9e0d8079f8f93168cec450d5682d9"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p01.mp3",
+      "bytes": 130030,
+      "sha256": "9c8a3da95f4842b615f21d6dec4a74c00241cb01c06d49e90488b5a6e8fca3c0"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p02.mp3",
+      "bytes": 172244,
+      "sha256": "6900dddce512eb4e960b33bbcaf34dc09f7e49e0ca58c5e9fb9d4a1242fbdf52"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p03.mp3",
+      "bytes": 177259,
+      "sha256": "48a64668a234e58733501ca99d429379565014534321fb167d50bbb146a07df3"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p04.mp3",
+      "bytes": 182275,
+      "sha256": "6691dcf333e798b6997cc31aa364c32ea1755f5125c285a33ae735a1f247b6b3"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p05.mp3",
+      "bytes": 218219,
+      "sha256": "5a7e3b9ec3c4392c94c90756f44ae67b4f2a9b67220cbe09340c30029ef015bf"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p06.mp3",
+      "bytes": 257925,
+      "sha256": "c38220984d05a1fc845967629361d795d719c4cb5ad2efef28ae15a775025e14"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p07.mp3",
+      "bytes": 228668,
+      "sha256": "8b1b137eae90b05d579b9f0d4d7a31f9049b2fa8d5408cb44d256e2b1a726b5e"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p08.mp3",
+      "bytes": 182275,
+      "sha256": "95c3c5bddf4cb1b85d5cc3b270f3de6b14ce709127a62f71365e89a537e68f59"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p09.mp3",
+      "bytes": 247894,
+      "sha256": "c8d0732cf085c08f326edd2070e20b39c4e2e21bb459fe68074ae2463694b141"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p10.mp3",
+      "bytes": 198993,
+      "sha256": "1518998d8eb91b2bafb0d9452063f58fad58681a1aef8edaec15b4abc76792c0"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p11.mp3",
+      "bytes": 178513,
+      "sha256": "2b90e065f8db9c5d27114429a0070d49417cbe085b6ff73b222d61de89e0460f"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p12.mp3",
+      "bytes": 220727,
+      "sha256": "94ae1d0238fa9df7e555846d17002ec93bd817a2fe5c7ce874612cc26fd5cb9e"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p13.mp3",
+      "bytes": 170990,
+      "sha256": "9466a6773d08cd215b6bc4eefd1d4d6525a980d501852a9d3d85b5f5d2cfbbcf"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p14.mp3",
+      "bytes": 228668,
+      "sha256": "b5e1a420e2dcb4f5b9fe7fdf98cf9aec49e223edb5d7077f96b2ad09428a0b10"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p15.mp3",
+      "bytes": 193978,
+      "sha256": "9c34cd65b8eaa0d2a1533b611c69c29c8ea865035b564fbf7415ac2eb3904f16"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p16.mp3",
+      "bytes": 319365,
+      "sha256": "f5e576922a2e68645a579734572b351a1075a0acf89d994403389b341bb87ced"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p17.mp3",
+      "bytes": 264195,
+      "sha256": "d49b52d30e40c13935efd31af1cbcb7b3a8336fad6bc4d20c8ad5c098d42d4c7"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p18.mp3",
+      "bytes": 274644,
+      "sha256": "242a9b86f4f2a74897151284599137948ee0dbbabc7e638c711d9fedff49ae7b"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p19.mp3",
+      "bytes": 257925,
+      "sha256": "b043e70916665a44ba130369c0c7e5e70e0bc4642ff93ce95a28baeb1bab645d"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/anna-su/p20.mp3",
+      "bytes": 265449,
+      "sha256": "00a669528528cdcf023f6f81328b5442c11e0639541cd21a7db76a0df6e3ea1d"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p01.mp3",
+      "bytes": 132538,
+      "sha256": "10612ce7ed6210ec659b0f87daf3260f40070505d03861618a77d090d9b31dfb"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p02.mp3",
+      "bytes": 179767,
+      "sha256": "87d796c63bf262cc002ea1213eac7b191a36aff90fbe177e29e1f9870fe02ae3"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p03.mp3",
+      "bytes": 163049,
+      "sha256": "1d9f48dc080ee821b3dee7ff29a75925c303f9d26b7f6af76931bdd050e7c031"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p04.mp3",
+      "bytes": 163049,
+      "sha256": "1941ac68b42f6b574c0d0812f729e1c4c23082254e3a37d040126107be00694e"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p05.mp3",
+      "bytes": 208188,
+      "sha256": "8a73d4eb4a83133260b1a988a5fe30cf35b5a9cf52250929ab2004c8a70bce06"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p06.mp3",
+      "bytes": 237445,
+      "sha256": "b0951b279fd7d02cecdced3f84a3c9493325544ae1630f2a2f997dc46bc9d529"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p07.mp3",
+      "bytes": 215711,
+      "sha256": "3c50bede2012f2f2b2372c64e46ff3a12dd74718d5991b49a1a579680003b8e4"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p08.mp3",
+      "bytes": 176005,
+      "sha256": "a0d164c472e30bcf9b9c1d3a80f141ff4cc9bf9812035d1ed1ee50fe02cc80fc"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p09.mp3",
+      "bytes": 221981,
+      "sha256": "31924d2c23d6b96336d45c717599ab3c1e1a4ce5738b60a4aba85962cdd2ac3c"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p10.mp3",
+      "bytes": 182275,
+      "sha256": "79e269b84accfabd34777978f899db02fc0951c59bb9e659c9940e09374aeeb5"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p11.mp3",
+      "bytes": 179767,
+      "sha256": "44c33106b7136b91b26c6b758600b9e98aa700280c375d623431b7e9d693bbf1"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p12.mp3",
+      "bytes": 191470,
+      "sha256": "7fa7baabf609498c7360e030692e4d44b21eb91f65cf4473050849ee67384726"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p13.mp3",
+      "bytes": 158033,
+      "sha256": "0130de9ba1275c0daf1d8ffe4e89ee1bfa34cf00bfa9f7568663073ffa386bc9"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p14.mp3",
+      "bytes": 216965,
+      "sha256": "bfcff7559e76fce924407886662d9cb90dbe9020c14e238d723092ad42024eed"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p15.mp3",
+      "bytes": 169736,
+      "sha256": "43f208d2325245d2138b495f37d6c7feb999fb2be92112f2fb4005bc86ad774c"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p16.mp3",
+      "bytes": 296378,
+      "sha256": "f97e81ef87d5e1985661f0c409b58adcc5a9d9f194dd6e3d942fe181f8f54986"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p17.mp3",
+      "bytes": 218219,
+      "sha256": "368767912275476b2445fd2e52ababb01686ae532dce8880cbebd88aae81d070"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p18.mp3",
+      "bytes": 241207,
+      "sha256": "c8b563b77a581e99d53e505a849875716af1a99c48d459e40a4e3a846baa3a1f"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p19.mp3",
+      "bytes": 224489,
+      "sha256": "b5c8e1cf39941d31d9eb3899465c1fc576c5d28485ddf5504d6e571adee9cd6c"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/chen/p20.mp3",
+      "bytes": 219473,
+      "sha256": "0a023513d0e2e510a91c9d0626e8fb0b1eb549e714f40bcbac06895407533280"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p01.mp3",
+      "bytes": 125014,
+      "sha256": "7391fc60fc33171995c27fd44c0c2c1d8ffc22318d0580ae70de03cb3598a327"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p02.mp3",
+      "bytes": 132538,
+      "sha256": "94c6f3ea0d6ae7f97f2e5f81073113325f947dc2f421b6cf934f55bf2360792e"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p03.mp3",
+      "bytes": 179767,
+      "sha256": "ff7ec5c4a79e97e32a2a5f9314dd8183521c68e7a12fac6affd15b02b9b3c87f"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p04.mp3",
+      "bytes": 161795,
+      "sha256": "ff6c9df0fa3a5dea0be760de776b0532cc646a983499001d13566e7a8aa261ef"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p05.mp3",
+      "bytes": 192724,
+      "sha256": "0fd7d69aacfca74ad3480aeee83e1cafd91bfe844b37be94966ce2454eecfaa4"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p06.mp3",
+      "bytes": 184782,
+      "sha256": "f2576b98ac5559ac9fa70c8afe0e54d445220b05edc973a4d4754ecebbba73d2"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p07.mp3",
+      "bytes": 211950,
+      "sha256": "60b9a5d2b3f729b9f825ef803406aad137be0e2bd195af742605d7845aa23af8"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p08.mp3",
+      "bytes": 168482,
+      "sha256": "609621a6bb765b3cfca2796c8c1104399f898ee4dece97252cf7891a2dd17633"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p09.mp3",
+      "bytes": 210696,
+      "sha256": "a1cc82339fd14beb05a4e909871c7910dddba811a4abf0fe1afe0084473e3dc4"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p10.mp3",
+      "bytes": 181021,
+      "sha256": "87d273db08e94da8bc6e35fcd5dc05bd05e0bea3cfeb88b68c4f4ad6b08ca511"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p11.mp3",
+      "bytes": 143822,
+      "sha256": "a7d45c757380b83b66e2dd5f96e673a2851de5a324408b882a40b20fa2628660"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p12.mp3",
+      "bytes": 177259,
+      "sha256": "ea47367937a83f49cd1447ff60f5d11c25b2f21aeea4f5adf736f17f52adee6d"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p13.mp3",
+      "bytes": 168482,
+      "sha256": "d70b07102fdcd4e479ac4144680a8cbb95321e7fc9eec1aabeefee106a1a7bfb"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p14.mp3",
+      "bytes": 178513,
+      "sha256": "93e42bfac63f55b34688900eb527dcc276da30e76b72d25534feb037a6b21fdf"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p15.mp3",
+      "bytes": 173498,
+      "sha256": "c4d0ab93ebe16512add9478c3cd8a0ce30b85691959e78680beabe2b1b72aa41"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p16.mp3",
+      "bytes": 251656,
+      "sha256": "fa2108a61496e056796b4224e6fbf3a457379837774c9b455a00a84621b7a545"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p17.mp3",
+      "bytes": 227414,
+      "sha256": "20dea888d659cee3ec373d5d2228c106546edd9418080fe3f1ea2d10ccec309d"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p18.mp3",
+      "bytes": 224489,
+      "sha256": "e77d272f6bd36e428154941b24ac50ceeb277ad17655aec3088bc57a4147b6e0"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p19.mp3",
+      "bytes": 198993,
+      "sha256": "327e2ef2e695fdc5dbabaafcbe68e4fd3247ed3230ee86fff53a9238a44450d1"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/hua/p20.mp3",
+      "bytes": 216965,
+      "sha256": "4da24237cb050c60a906ead656f2d939a9889d65ea0877ae86b0ed2ab2936847"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p01.mp3",
+      "bytes": 128776,
+      "sha256": "85bc0ba24ecfe771208a8c8da3e8624048b8f12bc513204465a5609ccc414c94"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p02.mp3",
+      "bytes": 159287,
+      "sha256": "8bd371ceb986a0330e2364c08aaf4e1eccf63b020c060fa008aac48a22035fb7"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p03.mp3",
+      "bytes": 163049,
+      "sha256": "c0bd264b7499cab8340110941c7b247628cf55fa87ad12b4e5168570712979b1"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p04.mp3",
+      "bytes": 163049,
+      "sha256": "96ae95fe0e11befa1acb5d9149823688b2e096f5badf4a13327064aecc02ef70"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p05.mp3",
+      "bytes": 201501,
+      "sha256": "85e640ece52e05b5def85e1913637ce2b91cc3e039a32f4fbede5a9594c9907f"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p06.mp3",
+      "bytes": 244969,
+      "sha256": "e68885abba1cadfd2f8ddb3256bf2dc0ea76243caf636d3d88cec6e33714391d"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p07.mp3",
+      "bytes": 215711,
+      "sha256": "f19549f8a5b7bec5b2d1f99c92f80703d444bbff67baa9321df3087f6d13840e"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p08.mp3",
+      "bytes": 168482,
+      "sha256": "79715b7fb258df9d5717473112aa8fae490a6d9c46716b5ee542d36324f42629"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p09.mp3",
+      "bytes": 223235,
+      "sha256": "c8172e94ea963c3c711a82a7cdd12d2ce1efe8aa3443764823c29a0aa4d7d137"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p10.mp3",
+      "bytes": 190216,
+      "sha256": "222542c9eddd16ed49f575db6cc47221364539a69edaa1edcf9ae3ed9ca3ea46"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p11.mp3",
+      "bytes": 160541,
+      "sha256": "f3bc3d660dbb1effbff3338d9023bd262b0f86cd197d9070f438dcfdd14a80f4"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p12.mp3",
+      "bytes": 219473,
+      "sha256": "2153aaa519110b253a401443bb8318583470858363486260e746989e984a7996"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p13.mp3",
+      "bytes": 172244,
+      "sha256": "b9fb0906d8ddb2591ff0061c4324f4ec357ce38ab3c17d0340d73ce22a9b5ae7"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p14.mp3",
+      "bytes": 196485,
+      "sha256": "4e1f91c3f904403229f214732c838a6b3b1ee9f41bb2984d00424935ccec91ea"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p15.mp3",
+      "bytes": 169736,
+      "sha256": "24ade108b688aa708f8a0357be06158dbcfc482da7c11d67f96ca2fb3dbdc7e4"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p16.mp3",
+      "bytes": 291362,
+      "sha256": "e745e9c14a8f7541027a7a262356aee18501167d792b51c051de93fb36fee867"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p17.mp3",
+      "bytes": 232430,
+      "sha256": "d4506c81e84c9b86a946367a085ade0f1f66199410a685284df963bb1fc772ff"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p18.mp3",
+      "bytes": 239953,
+      "sha256": "0b0e00a51ccedc54cb2e7b9251761717551c7f9123850c536a4b2d857c665b4b"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p19.mp3",
+      "bytes": 228668,
+      "sha256": "a2bf4da64f40926505a4a7b2899de50a5d3749714db36a10c2a578a1c0cfae30"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/tiffy/p20.mp3",
+      "bytes": 228668,
+      "sha256": "7a4c7c25c816b94e6518b66c19b65ce841abd0f4450ddb3ae9f1e8b149f56be1"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p01.mp3",
+      "bytes": 125014,
+      "sha256": "c3922ee6eeb39d1106f5bf8c01917a7defc9efcad8dcab18b7597c7a3e088c85"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p02.mp3",
+      "bytes": 154271,
+      "sha256": "4a75a3e7d7d0b0f4c3e4d1083e735d7a0a4f72132a15afed4877ede97762f9fe"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p03.mp3",
+      "bytes": 168482,
+      "sha256": "28ec4d7beb369fabf5a2b0a94b49b715d48791c9777b9fce36ca3801cd422148"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p04.mp3",
+      "bytes": 137553,
+      "sha256": "3076798559f82cec430aee8fe8319e4c5f14639c0db4c94b9270ef56ce498ced"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p05.mp3",
+      "bytes": 183529,
+      "sha256": "430c017b586f0ac4096308f51fadf90b6b4abf0141b63b783ecc6a6666c5c2a9"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p06.mp3",
+      "bytes": 192724,
+      "sha256": "d408b9faac6cf713d761c502a1051555e982a68e73111c32ba49b02164be7cc1"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p07.mp3",
+      "bytes": 198993,
+      "sha256": "f442ed9083cd44e8f2b6bc5b955c51af118eb76dd09362d153e0f7fad26d9208"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p08.mp3",
+      "bytes": 155525,
+      "sha256": "84b4c94f52070532641c6c61082236dd6b0650fdae55d522e2d3e0c3b17089be"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p09.mp3",
+      "bytes": 209442,
+      "sha256": "296e5469b40ae2671408845154332e2c636d9d8de20b294a7376f32048b1ebf9"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p10.mp3",
+      "bytes": 168482,
+      "sha256": "194889668e9ae7ed85a804f11bd25bdcd1aafb156d2beaca068fa13e455d8667"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p11.mp3",
+      "bytes": 143822,
+      "sha256": "b8017b4f00aa8b0f162aed274f8d1d15fd02ac182614cffcc86022921730c321"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p12.mp3",
+      "bytes": 160541,
+      "sha256": "715bdb5e8c1aaf72b98ea79eb39b5073c4bf1502ffd44500f703fee194a52f8a"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p13.mp3",
+      "bytes": 153018,
+      "sha256": "27f528829516047f487ad5cd869d3c8e18303d541ace4cd6348a803387cd305d"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p14.mp3",
+      "bytes": 190216,
+      "sha256": "494cce15cf886a93a771d2ec2f4009b0016b402d81164356f56c23ef5cca6797"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p15.mp3",
+      "bytes": 136299,
+      "sha256": "3e5488b048accce174075308b4ff9a57053abc1dcd6373da6700a87ba3f13740"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p16.mp3",
+      "bytes": 256671,
+      "sha256": "db1e211d167acf16531694db8c9d27864f854e36446e109109ddad424f68d896"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p17.mp3",
+      "bytes": 210696,
+      "sha256": "d0d23b4a295ce676abf45629d0d2f3f8895f0cb4d1cde6ad73f2cba72ba918c3"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p18.mp3",
+      "bytes": 201501,
+      "sha256": "7df86f23cd8b8b4913c708282958684f57e62b12f909e42e701e030d4689028b"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p19.mp3",
+      "bytes": 187708,
+      "sha256": "4cf024efc885123e5ded82f82d5e31cc85b8ffa5ffe865a76ae70cb5fce05d67"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/yao-yuan-wu/p20.mp3",
+      "bytes": 218219,
+      "sha256": "47e19e239b8863fdd9b1ea082e4e67a2031ba519ef9a658a0edc9a745c84f530"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p01.mp3",
+      "bytes": 130030,
+      "sha256": "3c12b2243c498aaae0029c40389a21684731b8367c5672631c4d62def35d2e98"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p02.mp3",
+      "bytes": 148002,
+      "sha256": "fa7e82214a07b409849c1d0e83475ccd9faa2bb1c6582829f5dfd0095a8c5b5f"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p03.mp3",
+      "bytes": 172244,
+      "sha256": "86c159c1e5a6df32103d59e604f606e09466c18a9214d49ecd224b7da3ba768c"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p04.mp3",
+      "bytes": 186454,
+      "sha256": "a147d38d7106a2915799c7fb32ce6d68614482f05ae2c23b61a4681b0d6f19d5"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p05.mp3",
+      "bytes": 205262,
+      "sha256": "eb87ac7394a4f87ff9ec17806063d343e19a983410d3d9cbc4ebf8f0fc28b662"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p06.mp3",
+      "bytes": 266702,
+      "sha256": "bcbd34956c346871340c273b1ab7f2085c459a1d5ab3b8f1a14ab3dc4993830c"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p07.mp3",
+      "bytes": 254164,
+      "sha256": "5a81f527deffaa94f9bf3bd7393cbeb8812f7853bfdff93104d0d2521d4e0df0"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p08.mp3",
+      "bytes": 174751,
+      "sha256": "300fda32a8a9788d0c9da31deb43fbcf8e4b2dcf9751db59b97a34763c260fa9"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p09.mp3",
+      "bytes": 201501,
+      "sha256": "a3dff0d684e9c4bb52caa484458c6841ba003484a578ee94a7f7c85830580901"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p10.mp3",
+      "bytes": 178513,
+      "sha256": "49fa64565a595a64ea7a0d499379832e71b8028db1eb6cc184dfaf967344d0ad"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p11.mp3",
+      "bytes": 160541,
+      "sha256": "54f5a3cb6d21d57f1d51e0a3cf79aaa7b84349de736e916d08f4bb6800cbe712"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p12.mp3",
+      "bytes": 183529,
+      "sha256": "7c2c941c429338da35ee2e9c3855a77d5a3991d0e677ee3102050c529f92b1da"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p13.mp3",
+      "bytes": 170990,
+      "sha256": "e3a3466e3eec34a704822f6d0263f56947908e1f31fd4c81e85abdd58cd667a4"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p14.mp3",
+      "bytes": 204009,
+      "sha256": "c3d5e6109757d3225f9e3dff5d9cd51677052ea2db97d9ad35000f286973d8f8"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p15.mp3",
+      "bytes": 176005,
+      "sha256": "21161b4cde52f01e8db98ff7bfbe2106ce26e2bdd6927dbe08d978fa292532a3"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p16.mp3",
+      "bytes": 282167,
+      "sha256": "a53d9e0197a2b5b6a03091ff891c3cc429c7de2c690c16b2ba7e06cc926d1455"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p17.mp3",
+      "bytes": 225742,
+      "sha256": "3825345019484a026b81eb7dc7cd925ee73214e885d45d86aad59baeeed66d33"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p18.mp3",
+      "bytes": 255418,
+      "sha256": "afc5d65d97756d87e80a64c2b1416ba1fc036480f61f7546745fab51e067a430"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p19.mp3",
+      "bytes": 225742,
+      "sha256": "dbc8883c51065f7f4be6a3232984a230e28147e21c7e2c6dcf5b9c9d88db6025"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3/zack/p20.mp3",
+      "bytes": 229922,
+      "sha256": "fdc50ee8853cf6c5bec5ce87414ae931053f7cbf0f468c5c67b3bdda4219b247"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p01.mp3",
+      "bytes": 153018,
+      "sha256": "3240a30479afad8d096dddd92e812d896755c078b018417e03a0a0b00f10465e"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p02.mp3",
+      "bytes": 174751,
+      "sha256": "3ace58607d35f973cd89766ac5def314230adea6a086066f1add5ba392b351dd"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p03.mp3",
+      "bytes": 183529,
+      "sha256": "60f80c2daba3112764bcd897c23a44a692b9015d43e60265943667f59fc8df73"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p04.mp3",
+      "bytes": 159287,
+      "sha256": "e255bc21eb17957708ed022698718539018fcf14f87a6540f42b55ea3aa4fc18"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p05.mp3",
+      "bytes": 206934,
+      "sha256": "2adc0ffd21438558a8c269f230a96b08ecf71bf6883f5f1b85d1d7df74f2e638"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p06.mp3",
+      "bytes": 214458,
+      "sha256": "7ef6d2efd68e149918b9bbe82c3db06c098a2b6f8e4b8da3638935b291bded95"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p07.mp3",
+      "bytes": 232430,
+      "sha256": "0c1543715d85b0a811790d9782c61c0cdf418b00c673648bd749a2e357fd9057"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p08.mp3",
+      "bytes": 195231,
+      "sha256": "ac2f4c5a3663958c2b473a068adb28d05a1833058c0fe0ae25ec4c2db2ce395e"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p09.mp3",
+      "bytes": 201501,
+      "sha256": "004cd1d24f4853d99e13f7ff2b2fec4cfac3a3b4d9ef5320aeff92a39a18d80d"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p10.mp3",
+      "bytes": 181021,
+      "sha256": "4336489d5a67d66816b8364bb7d8c6b67078cd357854e427ad273b5392e3311f"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p11.mp3",
+      "bytes": 172244,
+      "sha256": "c9a76b5e43cf8b6e7f41486dd56a965db10c727747568d5e8b342ccd8baf3a5b"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p12.mp3",
+      "bytes": 186454,
+      "sha256": "d092364642253fde4a6f1515b0643a351573c1023a35de06a697167f140dcd9f"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p13.mp3",
+      "bytes": 176005,
+      "sha256": "1de65495c1c23f18d9be524f2e502f26f697a512f35a8a31d893806e1b4eb733"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p14.mp3",
+      "bytes": 200247,
+      "sha256": "2c92365be98b5784a88bb2d621579c996fee6fbcec674fa08e57394dc7364db6"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p15.mp3",
+      "bytes": 191470,
+      "sha256": "339a3b7a6e0fa2d91e66968502a528744562ed1b1ac7a99dc845483e9e07efb5"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p16.mp3",
+      "bytes": 287182,
+      "sha256": "106ffd022dfe9232fe2ce68ab6ce2444dc1597e41ea4d2c890bf1db964fcaa80"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p17.mp3",
+      "bytes": 249148,
+      "sha256": "2631826a26710dfa169e4ea496bdc966dd282ad8e807f509b8541c1ecca62254"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p18.mp3",
+      "bytes": 260433,
+      "sha256": "39a550e3f68e7d10f488c5f5c178b743d834b12d27f1060e029d5c5d653c6287"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p19.mp3",
+      "bytes": 239953,
+      "sha256": "da710671ca7bc9068c1c1a58726cc40e0cb24c39e6441d159a1849e6efac0d8e"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su-2/p20.mp3",
+      "bytes": 260433,
+      "sha256": "a923f2d8dfcb50cdf5b9cea2e76aab29c003724975b5790f7cf1824e016ec99e"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p01.mp3",
+      "bytes": 137553,
+      "sha256": "edfad8ad93bf7b02e65b3f16795713e3d4a5bff6bd5a4375f6578bcac78dd98c"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p02.mp3",
+      "bytes": 190216,
+      "sha256": "d946fd08c70b6e186f00d366873d95a9dd03bfbca9a8325edf26c1b83c478b64"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p03.mp3",
+      "bytes": 184782,
+      "sha256": "a85cf1594ce8a064bca22b981c4c2cac61980708d99b988e17e539874a531079"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p04.mp3",
+      "bytes": 158033,
+      "sha256": "7f6e33dbca4a258b934189b1060d1b49e31963f129c45778ef9f54eef5b21a67"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p05.mp3",
+      "bytes": 209442,
+      "sha256": "4de30b2d11bd70e6e98054f30b49fb0907bccdc916c1430a781d81c09c977211"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p06.mp3",
+      "bytes": 225742,
+      "sha256": "afe0492c84310adfd7ad3a598ec910547046dd5761789bf9d8caefa33f4761dd"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p07.mp3",
+      "bytes": 216965,
+      "sha256": "dcd45bc2fa25329222bff2f3a7f79bfc5b873283a14fa351d6ea2f90da291c5d"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p08.mp3",
+      "bytes": 181021,
+      "sha256": "7989018508f0455774163522241f8c9aeb4a3f1976cbc1ca8557837e69b7d72a"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p09.mp3",
+      "bytes": 198993,
+      "sha256": "aa5a35535e01d9ff3686851b311615af9300311987d404dc320dac7a598cb317"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p10.mp3",
+      "bytes": 182275,
+      "sha256": "cf4ef41eebfd834c30c334752632d3c0f1ae101a69e8bffe37000f8ad3e8f446"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p11.mp3",
+      "bytes": 160541,
+      "sha256": "d95e06097ed422980cd21f261447b55b1228c16cc42c6565930f0611d0e8a4a4"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p12.mp3",
+      "bytes": 192724,
+      "sha256": "c349bd5fc73695c8079aeb5d396b026c745ed95c9ad2b444913eeca487d9637a"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p13.mp3",
+      "bytes": 177259,
+      "sha256": "046bcf4b5a9e83be62ea0a3682abb47192579dcd30608deeedbc734d27874c7c"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p14.mp3",
+      "bytes": 214458,
+      "sha256": "1d3b17893eeae1125486f7528fea521b5d6aaddf3b1c3b6b7fad6e02c95b14e6"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p15.mp3",
+      "bytes": 191470,
+      "sha256": "3ec817454ca88f715dae42c0d5efcb74ca02f5f66983b7984893f06bcbd3899b"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p16.mp3",
+      "bytes": 287182,
+      "sha256": "3c2322e5760c4cb6b03c54e6d2bddf47313ee19dffd2993d5dde97fa476ea192"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p17.mp3",
+      "bytes": 268374,
+      "sha256": "6ab271bc18e83a072f7948343612bb5fa70a9be3ace8819dcf96408f952fe8cf"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p18.mp3",
+      "bytes": 241207,
+      "sha256": "ac474ed26bf971eff48e348734e8fb1259bef03135da85e9245385ce2eabd2e8"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p19.mp3",
+      "bytes": 236191,
+      "sha256": "5975fd94fbe460dec0e09bf1d38b83af017545e8c311d667bfaf4e642ace9177"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/anna-su/p20.mp3",
+      "bytes": 250402,
+      "sha256": "033bd160bd8bc5f5c205f16a976c8a97a94e34da77c6e485b2be40617616925d"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p01.mp3",
+      "bytes": 122089,
+      "sha256": "d311a9a2491c83e0daf0232edd679dbe50e65282cfbc2cb8c47a453acf3cd446"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p02.mp3",
+      "bytes": 190216,
+      "sha256": "e27fb05c54d6a69fabba3403994edec77a899bb73474086ab7284ea16ef61b96"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p03.mp3",
+      "bytes": 170990,
+      "sha256": "03ada4ea78636e0ccf9af2b77abc221fbee11b76aa543299dd589d8ad0c1c523"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p04.mp3",
+      "bytes": 164302,
+      "sha256": "be4ce84ce0d0b5d40fa5f409305e22559540594e373862d2435fe230d5c52857"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p05.mp3",
+      "bytes": 201501,
+      "sha256": "85469bd4402f8d4fa74d587c96e2f4cbcaea200c23ac2159d2d7149c3b31b41a"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p06.mp3",
+      "bytes": 204009,
+      "sha256": "1662d92b49ef27343ab3a80ffb225a0cdfa7e3babda6ba83d1879b594f58620f"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p07.mp3",
+      "bytes": 216965,
+      "sha256": "05dd6d595a648e81d8edb4b90b860876ad76fca99316707f067546257af84365"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p08.mp3",
+      "bytes": 186454,
+      "sha256": "9c4e8b73081b92fd41603a61eb150259c633d3624ae0318b7254c51bc098d606"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p09.mp3",
+      "bytes": 204009,
+      "sha256": "811467ef6af482b307e94bf25c9c606f7d185835cddd4f639f39cdf9bed1300a"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p10.mp3",
+      "bytes": 181021,
+      "sha256": "4b98fb9ecde0d9bb4f3fb4207c7e8a24490eb1da365066e08a8237b353459cb8"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p11.mp3",
+      "bytes": 168482,
+      "sha256": "9b13d78474e7442349bb54c0fa32062f4bbdaab345ba8f8e94d644c7994f20c5"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p12.mp3",
+      "bytes": 187708,
+      "sha256": "f2bdc29e835eb03f11fcb7c013c1e19121b5391693bf7b2285169243f7577b98"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p13.mp3",
+      "bytes": 174751,
+      "sha256": "b2bcf9e8af099b0993aebf2335473735dc27d1b0e65b90de5447d1da6ee0f2e4"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p14.mp3",
+      "bytes": 188962,
+      "sha256": "dba3f8693adeedcf1e0800312e5d43f2e7119f72df3e122c77fe1aea2bb74c52"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p15.mp3",
+      "bytes": 173498,
+      "sha256": "f31b69d7f944550760a800cc10c0f71c3dce49355ea7b37da9e8c3a3c2a4833b"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p16.mp3",
+      "bytes": 292616,
+      "sha256": "ec92cae98670b5c8a85b9bf69f23d4fd061d74b1b4291bd87f6bf2d72f889bae"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p17.mp3",
+      "bytes": 244969,
+      "sha256": "d7ac4f954bf68765d13096865eef6a1df39b32bd25470c188b6c6e0fe445c9a5"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p18.mp3",
+      "bytes": 242461,
+      "sha256": "77fd8ebbc3a98903357f904de52018fe22641192cf4fbf4654b9fc28b7f50f4b"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p19.mp3",
+      "bytes": 210696,
+      "sha256": "074c94baaa8532fd999546acb12562244ede971a62652904807dc47ac917ca72"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/chen/p20.mp3",
+      "bytes": 224489,
+      "sha256": "446b02e7b7565d2a47862883b1a356e94e9a25acb6428f21e5d7b59ccfc47ed6"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p01.mp3",
+      "bytes": 145494,
+      "sha256": "6dfc07b56a64decae8ac6c2b912d04f418b4cfe5dc16b967bc652e87b8e34d45"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p02.mp3",
+      "bytes": 156779,
+      "sha256": "9b02eae284d268381378428865709858bbd291fe451cfcd9f18031ecd282f2c2"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p03.mp3",
+      "bytes": 169736,
+      "sha256": "0f6628fd9b0534aa7bb4ad4140e9b4b371a3204b026bb7834a610f69261ab599"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p04.mp3",
+      "bytes": 148002,
+      "sha256": "cc9abafca3556e2a623804a97026f71d71bc1324264e2e3f0be4bb1367c29e46"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p05.mp3",
+      "bytes": 174751,
+      "sha256": "f1d2f7498a4d13153cb1ea83225d0f289e5d7fc8424905faaf245a880692a30a"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p06.mp3",
+      "bytes": 196485,
+      "sha256": "2fcca3db3d9a7e016b93b5c656c0261f35270a6078c7a3b7ca6b9a47c10f3a0f"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p07.mp3",
+      "bytes": 227414,
+      "sha256": "17295a392a0f55be648c3d7887b74abd6d6804aad883f0f83d07b0939cf1f666"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p08.mp3",
+      "bytes": 179767,
+      "sha256": "7027eb3428754db3429b657afca44ce60b11a50293505991ebd7e051754a0a39"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p09.mp3",
+      "bytes": 210696,
+      "sha256": "92e94a29c41258a275aee7e6c0a5e5e11d9ff98f45d53499a060cd2ed16af39f"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p10.mp3",
+      "bytes": 170990,
+      "sha256": "f9ea26ab6b66d63811ae4416abef68b00b1fa50d9599ff76b0dc73983036311c"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p11.mp3",
+      "bytes": 159287,
+      "sha256": "15762652b821bc70fd6219fed301ec6207c4c92b591af188ecdd6ee18fd07b46"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p12.mp3",
+      "bytes": 196485,
+      "sha256": "17ecc88cb488280cdddde01238984ab4594f908f1f0d278f654fec6c0c2c03b9"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p13.mp3",
+      "bytes": 173498,
+      "sha256": "e2f05b96347626e72ef6a49f861c995dc080201b32d83323ceef1788a5f17d2f"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p14.mp3",
+      "bytes": 158033,
+      "sha256": "a40c15b8afe100daf98020e9b4636b72f15db819f65160d194dac31ff83cd186"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p15.mp3",
+      "bytes": 186454,
+      "sha256": "639a64af194e8fe2ee420808b3287b025ba85d35dfbb0083301e56f846db8e50"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p16.mp3",
+      "bytes": 273390,
+      "sha256": "cf17b2cbb2f040091bedbd53a4973d66568ddb0ad8484ff94844ffd95a191da2"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p17.mp3",
+      "bytes": 251656,
+      "sha256": "8f7e862584017473bc373961d9aa43ebaa1e1648ac6ed3019e3feef648dfb1ea"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p18.mp3",
+      "bytes": 233684,
+      "sha256": "1df78e8a7c412d6dc0054d94dce107f1dbd54c8a42eccac4152ef61441120496"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p19.mp3",
+      "bytes": 210696,
+      "sha256": "300cca0b04a77d2526638e91e06e7576fec9d11d7afe808f1765a98d497a4b43"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/hua/p20.mp3",
+      "bytes": 211950,
+      "sha256": "043e250c7a14b8850b752c6fd11b7468496929e8b73d6065e5166be5c83d31a9"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p01.mp3",
+      "bytes": 158033,
+      "sha256": "0ed5ae239a946c90d76d93935d9a91c6a8cb2b2c875b72da51f2d6cce3166e8b"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p02.mp3",
+      "bytes": 163049,
+      "sha256": "be4dffb0b4070c0bf040c88d08e8805a8ddb0a71f8e255c29afa9a9e1197103b"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p03.mp3",
+      "bytes": 164302,
+      "sha256": "4289dc72f2e370946d7e19279dc9baef3979d73569fcdbc2a712c8c6575098b8"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p04.mp3",
+      "bytes": 146748,
+      "sha256": "aec8162998f27edc17c42ff182d4c95ddbcf7b824d09274cb781925e14968ac1"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p05.mp3",
+      "bytes": 183529,
+      "sha256": "decfe012a7a72d29ee8a241edbcfe6b398c023e3e17b9a385b9b7f5cc386752a"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p06.mp3",
+      "bytes": 206934,
+      "sha256": "978b1e0c2292771df6e126b509ec4af08a451964283d4e335d49577b3c88bef8"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p07.mp3",
+      "bytes": 231176,
+      "sha256": "ab18dfc6dc95082c7833b06a504065a9192ce325b62bea572b51255103202c2d"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p08.mp3",
+      "bytes": 176005,
+      "sha256": "06034fa533a76ff8802216fade8e61996f5be8328dd1ca6bdc803f5030226647"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p09.mp3",
+      "bytes": 197739,
+      "sha256": "0d12fffc8b965b52b5c933d9090875d9fc7c598501dd41f4d3c576b9a6f0d3d3"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p10.mp3",
+      "bytes": 179767,
+      "sha256": "710d2ce5c673a5be3ff546ddd520e4f79734248eab6e554a0037409d8426bc7d"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p11.mp3",
+      "bytes": 164302,
+      "sha256": "752ddd69e427a702c8b73b810cedf70b4d132c80a3a4b8c9e774a5bfb17f3644"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p12.mp3",
+      "bytes": 197739,
+      "sha256": "e2fe62f511219195a00daf442bd096bf10c9de0afe69f8f5be558c59cdf3a4f6"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p13.mp3",
+      "bytes": 165974,
+      "sha256": "d26b2be1b57253760c0bfaebf418a3b39d7b6e8931f7471e816c20f6b7c522e2"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p14.mp3",
+      "bytes": 192724,
+      "sha256": "c0aa2082d6ceb5e6db1e0277053a8d489afbaef97a18fb161a42cc7ff437c402"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p15.mp3",
+      "bytes": 164302,
+      "sha256": "5c347b961777333fc49db6ed76e36a6bf8b622c82698533ba033ef9cda952ead"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p16.mp3",
+      "bytes": 268374,
+      "sha256": "2c6c29fd7820961b561cf81f0b34d7e8364d27bc6ac4eccd40e1533acefbdd6e"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p17.mp3",
+      "bytes": 249148,
+      "sha256": "286c0cb6cf299f1d2dd3ae8b38fdb9a6d4d1e5a40e729e028546887895d7a69a"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p18.mp3",
+      "bytes": 249148,
+      "sha256": "dd08520e9b883e83142567cbb1142a04f75aa0f5b1f1482bc0ae0a536e92341e"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p19.mp3",
+      "bytes": 227414,
+      "sha256": "0fd44877f83a808eb333912f41cb626ac5e32f02343e168378ba3604c6cff83f"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/tiffy/p20.mp3",
+      "bytes": 247894,
+      "sha256": "f6e6ff91811f5b2381f051099d9d5bbb3d6a18dc35b0e732ec8802b02b556fdc"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p01.mp3",
+      "bytes": 123342,
+      "sha256": "26436db7f34ab9cb0345e90c9dbeb88d18af352fd257e4d0e44b44bd35103708"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p02.mp3",
+      "bytes": 143822,
+      "sha256": "2ffdb5ee43dd57f38d966203654721d556cc89041743a45b0e39e8b63114dbff"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p03.mp3",
+      "bytes": 161795,
+      "sha256": "b58a48bf8065d6610f4df260cd6b22d8057344a0e526e46d334d1984da65725d"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p04.mp3",
+      "bytes": 137553,
+      "sha256": "1a5cd2e0ae7c9ef0a30478a19d5ff0de8922235da4a2f1621ae7bb3b1eed5e6b"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p05.mp3",
+      "bytes": 165974,
+      "sha256": "78d0741deeec23fe1437c7ae40bc68f036e7d048a332d23bbf38e29fdd202e47"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p06.mp3",
+      "bytes": 172244,
+      "sha256": "b994d46536605730efbdcbe856cce26cf353a8a78bfe0dbce7d7bf3e1b25a8a8"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p07.mp3",
+      "bytes": 193978,
+      "sha256": "f5339eb320c00e2a4277ecffe3098322f0b703da644c83768f956e6bfdf0e6be"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p08.mp3",
+      "bytes": 159287,
+      "sha256": "1fc7950673ca4617c8d08ebb7e6ddc8af5a731d9637a0747b37e4147acc7a6a8"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p09.mp3",
+      "bytes": 181021,
+      "sha256": "09a38909fa4f1e076ca21baaf8ace6eb0e6aa7442af32bd9e308b1b128ae8194"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p10.mp3",
+      "bytes": 165974,
+      "sha256": "ac9b7b5c6010cf422f5b5357c61dbc46ac8da0f50b1bd400c9e5f9cc37e1b1f2"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p11.mp3",
+      "bytes": 138807,
+      "sha256": "08d4009df54480f3019f1143879268f330311e1e8a1b295146ec887054aacfc7"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p12.mp3",
+      "bytes": 182275,
+      "sha256": "0a9b4d56151064225a57d018fedb965f1fdbcfbd8aae7011f17756d153f8da51"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p13.mp3",
+      "bytes": 163049,
+      "sha256": "9cad79813d272e78c2cf29fc9f1c53dc78740644dc088a28f1c3198a09ccc490"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p14.mp3",
+      "bytes": 173498,
+      "sha256": "66f217cc6bf529cab59018282f4f66b429674f2c2c20cbb2f3bb5091946c3069"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p15.mp3",
+      "bytes": 163049,
+      "sha256": "31808c97cf20c57d090e935780e98fe753ca08a5a201ee0152d550e2e456ec75"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p16.mp3",
+      "bytes": 236191,
+      "sha256": "1a60a837cfedc020a29ec2b5a62cb15e5e3f0dd210cdab0d2a1fe4e2a69e2b2d"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p17.mp3",
+      "bytes": 205262,
+      "sha256": "85f4947f751c3541ea4d5d62be2d9fe9b4fdb73499de18492a08790230802268"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p18.mp3",
+      "bytes": 224489,
+      "sha256": "ceed354093300cf9175481bf3d8723f4d44755f294681a6a8e981e0e77cb9e3d"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p19.mp3",
+      "bytes": 201501,
+      "sha256": "6aad6b25460cbbc1d7dc9c4a8379a8bfbfa0460373655cd900395828eea974de"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/yao-yuan-wu/p20.mp3",
+      "bytes": 211950,
+      "sha256": "5ec2882f8159dba5d440629bf547c689226775ef283a2db1f4f368cb4822b85b"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p01.mp3",
+      "bytes": 133791,
+      "sha256": "1ae200ef106a95e2c4820137139aa9b666241f4b8b78dd091bcc0288aa64671d"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p02.mp3",
+      "bytes": 151764,
+      "sha256": "4e997cfc1cda2a36bd529658e98e0ac897509358958cd31ce6e3162b57701476"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p03.mp3",
+      "bytes": 198993,
+      "sha256": "622db776208d589e8d95f57a8ef25009f0753c71597052ed0cebf849183b34e8"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p04.mp3",
+      "bytes": 159287,
+      "sha256": "b48afce07c9e2b58baea3b573d9c645da224e8259f2448dc1328b82a3d43eb7b"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p05.mp3",
+      "bytes": 198993,
+      "sha256": "50544268ff5951bdc783e50be45b817b6609ce1c64cbd3fcc56da82083dd62ba"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p06.mp3",
+      "bytes": 208188,
+      "sha256": "ceea1b46dece44239aea1cc791504d7a6131f5ef56d1741b9329f6dceebe0c10"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p07.mp3",
+      "bytes": 216965,
+      "sha256": "ee8d1221da219a15c6f2c5b775c16088835c7dcbce5343df5eba068acc9c3eb8"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p08.mp3",
+      "bytes": 178513,
+      "sha256": "c6c9220bf4e4ffa78ed0d606f4cc3e56bf1a982b54da55002cc0ee2b73d012b3"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p09.mp3",
+      "bytes": 206934,
+      "sha256": "707563812f1b0ee456fb0c9245794391e0bb728bfb592660e64cbcf9b51d1ad4"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p10.mp3",
+      "bytes": 182275,
+      "sha256": "6ecabdd3ba2ecf437da4d12e08297aef54f45dc8ad0731a18f655f659f78f88e"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p11.mp3",
+      "bytes": 151764,
+      "sha256": "61e055ad6e23496cbe1a3b7bb38f7cf0be10940ba1344d5fabdbaee7f0ffef0a"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p12.mp3",
+      "bytes": 225742,
+      "sha256": "40e669a196cefda73c5fd727912c49d91b05b186fc2164b833a5ae58e8a3bea0"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p13.mp3",
+      "bytes": 146748,
+      "sha256": "15df3e4d32a4707059d7446ce8588c58804ba45a9439501baa25e208199f3795"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p14.mp3",
+      "bytes": 173498,
+      "sha256": "3bc847dec4b8b3d8027080c4ca9c66b7cc612921644f594ae2f4d19fd72f0981"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p15.mp3",
+      "bytes": 176005,
+      "sha256": "7dc9338a6850b55a7666389da4189db8908890fcc3defa618a536e44fb434db0"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p16.mp3",
+      "bytes": 275898,
+      "sha256": "108ecc46851773c1e3fa9fb93c91c98bb78b0538cf2abebac4d2e768e5014aec"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p17.mp3",
+      "bytes": 225742,
+      "sha256": "0f5f9ce84c3010d6ee31f94e3d0992b532eca90679af0e8b8d295b89a68b28fe"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p18.mp3",
+      "bytes": 244969,
+      "sha256": "dd13ad4ddeff39e99fb054cb372daf8fc708afdfb804429c8c0b8377739734f1"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p19.mp3",
+      "bytes": 205262,
+      "sha256": "9c341545a6f0263e8132f6d4ab519ac76c75ba6d2cbda8496abd14acb85d342b"
+    },
+    {
+      "path": "tts/audio/v3-benchmark-2026-09-25/eleven_v3_conversational/zack/p20.mp3",
+      "bytes": 219473,
+      "sha256": "cc7a3ff63893653bfa5f363aad2ca0997c713da0bbc10dc8f7208270cec301e0"
+    }
+  ]
+}

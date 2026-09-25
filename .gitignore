@@ -24,3 +24,6 @@ __pycache__/
 # Public corpus snapshots arrive as verified release assets, never Git data.
 /public/taiwan-corpus/
 taiwan-corpus-public*.zip
+
+# Full TTS benchmark audio is installed from a checksum-pinned release archive.
+/public/tts/audio/v3-benchmark-*/

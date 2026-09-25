@@ -50,6 +50,19 @@ jobs:
           # Used by scripts/fetch-contributions.mjs to refresh the activity graph.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Keep the complete TTS listening set outside Git and verify every MP3.
+      - name: Install TTS benchmark audio
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_tts_assets.py'
+          gh release download tts-v3-benchmark-2026-09-25 \
+            --pattern tts-v3-benchmark-2026-09-25.zip \
+            --dir "$RUNNER_TEMP/tts-benchmark-assets"
+          python3 scripts/install-tts-assets.py \
+            "$RUNNER_TEMP/tts-benchmark-assets/tts-v3-benchmark-2026-09-25.zip" dist
+
       # Generated JPEGs live in a release asset, never in the Git history.
       # Both the archive and every extracted image are pinned by SHA-256.
       - name: Install image comparison assets
