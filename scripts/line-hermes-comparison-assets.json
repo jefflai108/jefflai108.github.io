@@ -1,0 +1,391 @@
+{
+  "destination": "line-v2/assets",
+  "archive_bytes": 15496283,
+  "archive_sha256": "32fb2283133676846449c6edcf2aef346bd714647d546d929e38f1c1d5b3f630",
+  "files": {
+    "hermes-20260924-delegation-933612f4d985990c/assets/C009-v1-0-original.jpg": {
+      "bytes": 251905,
+      "sha256": "0f42a5b8eae3e5be36a474cdbb0f9ee237a05df697233706865c24b2cd93286e"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/C009-v1-0-preview.jpg": {
+      "bytes": 74910,
+      "sha256": "2759d97e7a627edd71155deb9da24e343c96b45ac9c6a052e6d14954de2024c8"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/C009-v3_hermes_gemini-0-original.jpg": {
+      "bytes": 207681,
+      "sha256": "a1f52d37b9caea2cbd6ba6f9bfbcde4a61e045a9331a602fb04c6db0fcf138c5"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/C009-v3_hermes_gemini-0-preview.jpg": {
+      "bytes": 59005,
+      "sha256": "e140cba1b58abf18e3b12358b998d8771474a1b7896c9bc5d0d00d7d334264fe"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/D032-v1-0-original.jpg": {
+      "bytes": 322897,
+      "sha256": "799d9e9f57349406db2d5bb12dac1c9a9ba3b13326fb1d5ef3e8a4f9f0aa1377"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/D032-v1-0-preview.jpg": {
+      "bytes": 93086,
+      "sha256": "d099e686ad2c0eb980d42d6bdd7ae912c4d49577b0f6633026a66423eb3dca9d"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/D032-v3_hermes_gemini-0-original.jpg": {
+      "bytes": 305293,
+      "sha256": "b56c31296983f8631c30611ed80d4c6de2d1c9a8374270c69d3dcbe974d5615a"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/D032-v3_hermes_gemini-0-preview.jpg": {
+      "bytes": 93129,
+      "sha256": "0762e337800747f09dd1579639155c14a46a417f8f7fe1465607e98747e107c4"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/D032-v3_hermes_gpt6_sol-0-original.jpg": {
+      "bytes": 390464,
+      "sha256": "5c529e68db7a91237cedbaba2290c5e51cce911fc4d835ad2926083f7344e567"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/D032-v3_hermes_gpt6_sol-0-preview.jpg": {
+      "bytes": 112378,
+      "sha256": "d888f1daaa897824b599c7216422d08d97ae720e9c691c779e77b68e7c2046ca"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/D033-v1-0-original.jpg": {
+      "bytes": 109265,
+      "sha256": "b62c64a47c7d76b0973d20d16f4d26184f173be64cdab2e277b1cc889b974b1f"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/D033-v1-0-preview.jpg": {
+      "bytes": 40035,
+      "sha256": "60695b0ec636418adb034552e70ed4688ae991520b2ddfc8b03684316c72f529"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/D033-v3_hermes_gemini-0-original.jpg": {
+      "bytes": 138792,
+      "sha256": "ff926d3e6b02464588ab214b1f2953fe293cd795da9f0f670677e8642abaa850"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/D033-v3_hermes_gemini-0-preview.jpg": {
+      "bytes": 50008,
+      "sha256": "80ca0e4898ac544cd82a10aee272fb824f1006c6779ebcffc30a12721377f105"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/D033-v3_hermes_gpt6_sol-0-original.jpg": {
+      "bytes": 130763,
+      "sha256": "7e86449bbeb2736b020e54c6768419321b1240dd6c19db0c13f7f3819a9cf9c5"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/D033-v3_hermes_gpt6_sol-0-preview.jpg": {
+      "bytes": 47477,
+      "sha256": "e9f9705b06211e28e64fa3ddea69177bcde87a1bb2541515d27d77446caa7c87"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/H008-v1-0-original.jpg": {
+      "bytes": 117553,
+      "sha256": "eb90911971976cabd5cd373b8353d1714430b4036ae50a5b2e5db3b7f0f128eb"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/H008-v1-0-preview.jpg": {
+      "bytes": 28993,
+      "sha256": "eab51707a48082de222d3562e71530af4a89558dddef374ca7c3915945117d58"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/H008-v3_hermes_gemini-0-original.jpg": {
+      "bytes": 92514,
+      "sha256": "43a4af8ca9f18d28ca67e66d4d0c6cf0ee7e7c86087dea55cf040b5d7565c53a"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/H008-v3_hermes_gemini-0-preview.jpg": {
+      "bytes": 20830,
+      "sha256": "a5b47f07c8d6527222c4ace6e72209bcf5d8ae08e519dd5ca4aa5374a44f85a4"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/H008-v3_hermes_gpt6_sol-0-original.jpg": {
+      "bytes": 126954,
+      "sha256": "3636ef061e0096ec38bee5f52234717310ad14bfc787931dbe77b31ef042511f"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/H008-v3_hermes_gpt6_sol-0-preview.jpg": {
+      "bytes": 30167,
+      "sha256": "6fba72b99ef89b379880a355475c7649afd4f7f07d0ac6a8e7e1f20de56798d0"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/S009-v1-0-original.jpg": {
+      "bytes": 298387,
+      "sha256": "e5820c5ec025ecb263e1b45173345b62be393f5505ac00738300f674a7730007"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/S009-v1-0-preview.jpg": {
+      "bytes": 85993,
+      "sha256": "f7bc7845c5e2aa65cf92747f86535d18e064009dc5584d4a38f542bc3a029c30"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/S009-v3_hermes_gemini-0-original.jpg": {
+      "bytes": 343825,
+      "sha256": "311d76a25e327028a4a913d268404b7a617338aaa70af1c8c7fcdc3f54cdf0f9"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/S009-v3_hermes_gemini-0-preview.jpg": {
+      "bytes": 94688,
+      "sha256": "2f802206c1f161c55e052e5be39b76cea2c1bedca6bc139b4f15a3c822adca9d"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/S009-v3_hermes_gpt6_sol-0-original.jpg": {
+      "bytes": 291027,
+      "sha256": "dc5d3089b2afa4b6caad292309dd8219fd83352ad747b6289b9afd27d53d3675"
+    },
+    "hermes-20260924-delegation-933612f4d985990c/assets/S009-v3_hermes_gpt6_sol-0-preview.jpg": {
+      "bytes": 84600,
+      "sha256": "d7def3208ae0c0c0b72d4263c3248ff4b096cac06273e6837a91fd7fd88fd399"
+    },
+    "hermes-20260924-taiwan-0232ecb467ae42c5/assets/T031-v1-0-original.jpg": {
+      "bytes": 291348,
+      "sha256": "1f890f432ae8ed9fce921415909033af0688b4331ae5be3c77d9794d2dcedbd7"
+    },
+    "hermes-20260924-taiwan-0232ecb467ae42c5/assets/T031-v1-0-preview.jpg": {
+      "bytes": 88694,
+      "sha256": "6cef8dc1cda85a05f74f80d9209046d75fbfef0981a8b734d8fcad4b3307b233"
+    },
+    "hermes-20260924-taiwan-0232ecb467ae42c5/assets/T031-v3_hermes_gemini-0-original.jpg": {
+      "bytes": 297700,
+      "sha256": "62858e1a9980f478ab7c96b2256287907b6c8c13717cd4dc54cadcf4eadc25d6"
+    },
+    "hermes-20260924-taiwan-0232ecb467ae42c5/assets/T031-v3_hermes_gemini-0-preview.jpg": {
+      "bytes": 90972,
+      "sha256": "cdc539fddc671ec292a35467b7e3777f4eb9958c2d67722dceae7d6a91467274"
+    },
+    "hermes-20260924-taiwan-0232ecb467ae42c5/assets/T031-v3_hermes_gpt6_sol-0-original.jpg": {
+      "bytes": 287370,
+      "sha256": "51387ed90e077e7068a99ca39f438f8232c15e731c30a4dfcf24cd045e59c017"
+    },
+    "hermes-20260924-taiwan-0232ecb467ae42c5/assets/T031-v3_hermes_gpt6_sol-0-preview.jpg": {
+      "bytes": 87435,
+      "sha256": "5056d6dd353187d0bd078e19d18dc8f2a8fca54b1537421dfee4dd47350c45c1"
+    },
+    "latency-25fa7b866eb2549b/interaction-all-attempts.jpg": {
+      "bytes": 219961,
+      "sha256": "4326233f60166c0d5f3d06b8474099dc0fafe089f6d5a326f93fa531573963ab"
+    },
+    "latency-25fa7b866eb2549b/interaction-group-observation-all-attempts.jpg": {
+      "bytes": 186495,
+      "sha256": "4f265511890fb66871468e948c6c663217d88e5eeb768058bdf8b6d3269bbfc3"
+    },
+    "latency-25fa7b866eb2549b/interaction-group-replies-all-attempts.jpg": {
+      "bytes": 161963,
+      "sha256": "e4ef82b2b341e3f250f4ff45f8a886176fc04ce0cc388539d41128ae0a3331cf"
+    },
+    "latency-25fa7b866eb2549b/interaction-group-replies-matched.jpg": {
+      "bytes": 149848,
+      "sha256": "4ad3611eec459a3f4d820d9eb169bd4bcef6912f60e5fad93c535967bc6ae1c9"
+    },
+    "latency-25fa7b866eb2549b/interaction-matched.jpg": {
+      "bytes": 212025,
+      "sha256": "220dc5cf1e3e9b2625ead76c28741aea68e599143491364b61b899620e37e289"
+    },
+    "latency-25fa7b866eb2549b/interaction-stickers-all-attempts.jpg": {
+      "bytes": 175072,
+      "sha256": "279efba2cd0b15ebef6f499c97a6ae1603269701679105703ca30f1ff7e5b07d"
+    },
+    "latency-25fa7b866eb2549b/interaction-stickers-matched.jpg": {
+      "bytes": 167437,
+      "sha256": "677a35f990da051f1c3c410f51f435e79fb4dd5f0a86b709f91a680a978eeaad"
+    },
+    "latency-eb94059a4f4fa32e/taiwan-all-attempts.jpg": {
+      "bytes": 190102,
+      "sha256": "27248013979c07a8ad79cbc4bbbe5d916d6c4fcf714f5a78faed90567fca4fa2"
+    },
+    "latency-eb94059a4f4fa32e/taiwan-matched.jpg": {
+      "bytes": 191031,
+      "sha256": "c6237afa5f925758ba0146f3a81a5547ac9bcb13647b7355740c9640c0a3e170"
+    },
+    "latency-fbfebacea535f23b/delegation-all-attempts.jpg": {
+      "bytes": 252905,
+      "sha256": "16e2dac943a934c4d9a8da74d95d3e11cd8c1a409b387c0c2fa4946a05fc9a89"
+    },
+    "latency-fbfebacea535f23b/delegation-group-observation-all-attempts.jpg": {
+      "bytes": 175776,
+      "sha256": "74a18bda25f924233b905e8e0b20608b235db21fddb1cb5911f6a232be5c72c3"
+    },
+    "latency-fbfebacea535f23b/delegation-group-replies-all-attempts.jpg": {
+      "bytes": 164122,
+      "sha256": "e6f2ade77c8000d543ddb2db8896f306278e20d201af682fd1f87e159e617558"
+    },
+    "latency-fbfebacea535f23b/delegation-group-replies-matched.jpg": {
+      "bytes": 166157,
+      "sha256": "1cb00695bc3436b9a934ff26043fcc48db4cf0a92c745dd25dbf758cd9763d0b"
+    },
+    "latency-fbfebacea535f23b/delegation-matched.jpg": {
+      "bytes": 198253,
+      "sha256": "35472d730dee607ed2ef3bcec61ce0fa81159ca82267b7414a1867585c4b45cf"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/C009-v1-0-original.jpg": {
+      "bytes": 233375,
+      "sha256": "fe56a289b72fecb3217319bd96d517828ad4be6893edd914877b1a670bdbbd45"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/C009-v1-0-preview.jpg": {
+      "bytes": 74744,
+      "sha256": "c68947f72617f957b1fca368a2a0fbd72fecb3f5be238544c04c6b1d942dda6b"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/C009-v3_hermes_gemini-0-original.jpg": {
+      "bytes": 262451,
+      "sha256": "c1c767b6bb05e03432a6ece1cf5dfa4a3df4441ed5e7a8eab73c0c73ef5c6e1f"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/C009-v3_hermes_gemini-0-preview.jpg": {
+      "bytes": 77781,
+      "sha256": "ff0c3275f05d439699e685dc3aeb98d9091f77e35c9a061850a0a96c8879cae1"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/C009-v3_hermes_gpt6_sol-0-original.jpg": {
+      "bytes": 208882,
+      "sha256": "e1f4b9ba3023567201779b26367f9f09af1e17bc0c9c787906c94ca10ae12d63"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/C009-v3_hermes_gpt6_sol-0-preview.jpg": {
+      "bytes": 58689,
+      "sha256": "4406bb2853dc273003fe66427b9950c08993b78d2cf031b253d9e54d6c898b32"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D032-v1-0-original.jpg": {
+      "bytes": 318437,
+      "sha256": "3029d12d189cc604d8359794703f94f43b00464f4e4a38fb2b0243f2b3d2ccc8"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D032-v1-0-preview.jpg": {
+      "bytes": 93486,
+      "sha256": "c40763bbdeb785748b5ed8dae439c34a3cc1430560ede69cc84335f8c6a4ab5e"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D032-v3_hermes_gemini-0-original.jpg": {
+      "bytes": 341040,
+      "sha256": "aef03be576e84098dbe3da36a3824cc8873eb0faa0afdbda7b2f16fd2c841171"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D032-v3_hermes_gemini-0-preview.jpg": {
+      "bytes": 103715,
+      "sha256": "35b65b2e5e966f6d134f5e46ae749524f9dddc11f75c7875fa24b43d0cbcf9e1"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D032-v3_hermes_gpt6_sol-0-original.jpg": {
+      "bytes": 345020,
+      "sha256": "9d1a30f3cc3dcb43ba465bd8c75bb2b9f123290a5dd4c8140fa41fa2ee3a59e5"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D032-v3_hermes_gpt6_sol-0-preview.jpg": {
+      "bytes": 100448,
+      "sha256": "7667164896f555bf1620c600d77a021106da62f7f06d93637ed4889df18b2001"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D033-v1-0-original.jpg": {
+      "bytes": 193443,
+      "sha256": "5cfc03447ca4a17b397ed99c346a63df57580a2492aecb8fc8d3339751b225bc"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D033-v1-0-preview.jpg": {
+      "bytes": 69237,
+      "sha256": "9af46e665310c1612d72ff08360991187b264cab6a76f4e5ff373eab3312176f"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D033-v3_hermes_gemini-0-original.jpg": {
+      "bytes": 121253,
+      "sha256": "90b51ee515fe887040da83c7cd40fc0015bb641657091ed81b7172a611265dfc"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D033-v3_hermes_gemini-0-preview.jpg": {
+      "bytes": 43911,
+      "sha256": "679268622ee049df5fcec3b7001acfb6a4fc9a4e49a047b35b19bd42e33a7852"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D033-v3_hermes_gpt6_sol-0-original.jpg": {
+      "bytes": 143146,
+      "sha256": "302e08eb57c708e86a066b9624218bec6f7855a0535fa5fb5b9127f5bcb55e27"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D033-v3_hermes_gpt6_sol-0-preview.jpg": {
+      "bytes": 51628,
+      "sha256": "50418bf8580cfc71e86e0c5342e345754d2f5b61c1b6efc684addd9d7594c7a1"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/H008-v1-0-original.jpg": {
+      "bytes": 54690,
+      "sha256": "13651129a37df9b2dc4619373a9f28c419160a5db08f10e5472f1a5c3c102413"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/H008-v1-0-preview.jpg": {
+      "bytes": 15470,
+      "sha256": "4227e33a674eacd1f6b7f8a2f5a24ef63fdd1b119a15530365fffdceed805317"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/H008-v3_hermes_gpt6_sol-0-original.jpg": {
+      "bytes": 114643,
+      "sha256": "fc2df6d20139397293777d7c1275620109742a5945c9321240604851a650db6d"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/H008-v3_hermes_gpt6_sol-0-preview.jpg": {
+      "bytes": 26871,
+      "sha256": "80befb05d51d8fc0c623f4100b6feaee5280bb7e77c4806de42fd2840c37f4b7"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/S009-v1-0-original.jpg": {
+      "bytes": 297572,
+      "sha256": "861d1fe11ebdf8e841a0a272b292948e149ba1c87708bf3104b61e83e194d773"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/S009-v1-0-preview.jpg": {
+      "bytes": 89539,
+      "sha256": "c17f6dd516dec835ffaa121eb33bc064bb8b07a84f1fee954b09a109f896b278"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/S009-v3_hermes_gemini-0-original.jpg": {
+      "bytes": 257010,
+      "sha256": "c6294c381d141018ce0984dfd04fc080680a3123cb70aec4613e30ee48301834"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/S009-v3_hermes_gemini-0-preview.jpg": {
+      "bytes": 75530,
+      "sha256": "f4f4ab6f77ccb68b342696e0b11841db521c2cbd692029b5d3a86c547a5d1f6b"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/S009-v3_hermes_gpt6_sol-0-original.jpg": {
+      "bytes": 313279,
+      "sha256": "a4a33cbf0d17f8731d0d8d71052871289126b0749fe811cc505d2013a848d7e6"
+    },
+    "pre-r9-b0/assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/S009-v3_hermes_gpt6_sol-0-preview.jpg": {
+      "bytes": 89093,
+      "sha256": "ede9657e9a6bc38ed8890312179476b7dc6304250ee909416c1ae112d5ffe0e4"
+    },
+    "pre-r9-b0/assets/hermes-20260924-taiwan-c83f1dcd7c4dd202/assets/T031-v1-0-original.jpg": {
+      "bytes": 254347,
+      "sha256": "b94088ac0cf1999f0070e510710bfd9cb1285e34d82ae1ed71c7f40fed22f2bc"
+    },
+    "pre-r9-b0/assets/hermes-20260924-taiwan-c83f1dcd7c4dd202/assets/T031-v1-0-preview.jpg": {
+      "bytes": 79548,
+      "sha256": "282c288c6f2d8f433b1d578a5c9bd346dff65c36ca36b3199fd18a8739034afb"
+    },
+    "pre-r9-b0/assets/hermes-20260924-taiwan-c83f1dcd7c4dd202/assets/T031-v3_hermes_gemini-0-original.jpg": {
+      "bytes": 239319,
+      "sha256": "31f9da93a075563950e1ee15dfc2e835370619de04396670ac28ebc4de5bd0f7"
+    },
+    "pre-r9-b0/assets/hermes-20260924-taiwan-c83f1dcd7c4dd202/assets/T031-v3_hermes_gemini-0-preview.jpg": {
+      "bytes": 75022,
+      "sha256": "4d70853e72f219f45c808a45a31941c74040df8ecf5ec15cab626456b4170aaf"
+    },
+    "pre-r9-b0/assets/hermes-20260924-taiwan-c83f1dcd7c4dd202/assets/T031-v3_hermes_gpt6_sol-0-original.jpg": {
+      "bytes": 251720,
+      "sha256": "2f9e69b828d05df9b562da6197629c6067cbd1874101f62d5016c52c2a510dc2"
+    },
+    "pre-r9-b0/assets/hermes-20260924-taiwan-c83f1dcd7c4dd202/assets/T031-v3_hermes_gpt6_sol-0-preview.jpg": {
+      "bytes": 75414,
+      "sha256": "47ae4fb6a06d0f1c9325fba47d66749fbbf456179a81adaf6c17ad777eff00e0"
+    },
+    "pre-r9-b0/assets/latency-9a267b4c0397ece5/delegation-all-attempts.jpg": {
+      "bytes": 261452,
+      "sha256": "817c5c1b75107389300d610a7e89f4c568f9747473676d9b3daabb2c8204e391"
+    },
+    "pre-r9-b0/assets/latency-9a267b4c0397ece5/delegation-group-observation-all-attempts.jpg": {
+      "bytes": 155535,
+      "sha256": "94851c92cd5786205c152e4c2b2a806a05626386cc82a5270597354d5cb4a9b0"
+    },
+    "pre-r9-b0/assets/latency-9a267b4c0397ece5/delegation-group-replies-all-attempts.jpg": {
+      "bytes": 156282,
+      "sha256": "a905752e2ae240ae0a3e5e2de7994e0548c7d2731e68e79e5e937dd7cd6e7317"
+    },
+    "pre-r9-b0/assets/latency-9a267b4c0397ece5/delegation-group-replies-matched.jpg": {
+      "bytes": 145511,
+      "sha256": "271ee9e51a1636e2325581bd91034aaeeb38eb520a3206cad3e5bac71f27d747"
+    },
+    "pre-r9-b0/assets/latency-9a267b4c0397ece5/delegation-matched.jpg": {
+      "bytes": 192654,
+      "sha256": "b55df17a62e4266fd4a16532c58a145479b1e7d3ca2ff1687289a95b75ce00e3"
+    },
+    "pre-r9-b0/assets/latency-ba2aeaff8a2b8b24/interaction-all-attempts.jpg": {
+      "bytes": 235264,
+      "sha256": "c4c1fa79e9e4e86d4228a73bc39d42477a709bffc97282bf5a47e7b4bd923d73"
+    },
+    "pre-r9-b0/assets/latency-ba2aeaff8a2b8b24/interaction-group-observation-all-attempts.jpg": {
+      "bytes": 170939,
+      "sha256": "109e626c89c956503c8f36d9c260af06ecf36bbc9bf1fe1263811445d54d535a"
+    },
+    "pre-r9-b0/assets/latency-ba2aeaff8a2b8b24/interaction-group-replies-all-attempts.jpg": {
+      "bytes": 155774,
+      "sha256": "53be95c25041be1ae27f902701f0c8dc503b07509a9542f15b547ee45bbad619"
+    },
+    "pre-r9-b0/assets/latency-ba2aeaff8a2b8b24/interaction-group-replies-matched.jpg": {
+      "bytes": 143095,
+      "sha256": "09b78f02e1e5f3b59e1b36891f26dd10c4680a1340f065819aeb061af9a5cb14"
+    },
+    "pre-r9-b0/assets/latency-ba2aeaff8a2b8b24/interaction-matched.jpg": {
+      "bytes": 227360,
+      "sha256": "7f601b5b47174c7f30098ecf4ff24e0e825bc99e59db9a97a721ddf693b588db"
+    },
+    "pre-r9-b0/assets/latency-ba2aeaff8a2b8b24/interaction-stickers-all-attempts.jpg": {
+      "bytes": 155063,
+      "sha256": "c94fd6738f81a9640e93bdc3df2167b7e684dcea3d17cf653573524e22c3c9a9"
+    },
+    "pre-r9-b0/assets/latency-ba2aeaff8a2b8b24/interaction-stickers-matched.jpg": {
+      "bytes": 142324,
+      "sha256": "bb8368eeb2f4c5792bb85b335cb705baa2c29f0114018e66567eaf88355c95d8"
+    },
+    "pre-r9-b0/assets/latency-c660d90016e95d37/taiwan-all-attempts.jpg": {
+      "bytes": 190895,
+      "sha256": "db7c74ffd21fb6ff38f012123fa9007b92295624aa0ac9a630fc35befc8990b1"
+    },
+    "pre-r9-b0/assets/latency-c660d90016e95d37/taiwan-matched.jpg": {
+      "bytes": 193835,
+      "sha256": "f1380a00c6080b667df78f96d8efc26fd05f14e174996f3b89d270294a296755"
+    }
+  }
+}

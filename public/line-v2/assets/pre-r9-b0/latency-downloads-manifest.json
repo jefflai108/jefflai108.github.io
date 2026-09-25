@@ -1,0 +1,255 @@
+{
+  "version": 1,
+  "raster_format": "jpeg",
+  "input_files_preserved_except": [
+    "delegation.html",
+    "index.html",
+    "taiwan.html"
+  ],
+  "unchanged_input_files": {
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/C009-v1-0-original.jpg": "fe56a289b72fecb3217319bd96d517828ad4be6893edd914877b1a670bdbbd45",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/C009-v1-0-preview.jpg": "c68947f72617f957b1fca368a2a0fbd72fecb3f5be238544c04c6b1d942dda6b",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/C009-v3_hermes_gemini-0-original.jpg": "c1c767b6bb05e03432a6ece1cf5dfa4a3df4441ed5e7a8eab73c0c73ef5c6e1f",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/C009-v3_hermes_gemini-0-preview.jpg": "ff0c3275f05d439699e685dc3aeb98d9091f77e35c9a061850a0a96c8879cae1",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/C009-v3_hermes_gpt6_sol-0-original.jpg": "e1f4b9ba3023567201779b26367f9f09af1e17bc0c9c787906c94ca10ae12d63",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/C009-v3_hermes_gpt6_sol-0-preview.jpg": "4406bb2853dc273003fe66427b9950c08993b78d2cf031b253d9e54d6c898b32",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D032-v1-0-original.jpg": "3029d12d189cc604d8359794703f94f43b00464f4e4a38fb2b0243f2b3d2ccc8",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D032-v1-0-preview.jpg": "c40763bbdeb785748b5ed8dae439c34a3cc1430560ede69cc84335f8c6a4ab5e",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D032-v3_hermes_gemini-0-original.jpg": "aef03be576e84098dbe3da36a3824cc8873eb0faa0afdbda7b2f16fd2c841171",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D032-v3_hermes_gemini-0-preview.jpg": "35b65b2e5e966f6d134f5e46ae749524f9dddc11f75c7875fa24b43d0cbcf9e1",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D032-v3_hermes_gpt6_sol-0-original.jpg": "9d1a30f3cc3dcb43ba465bd8c75bb2b9f123290a5dd4c8140fa41fa2ee3a59e5",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D032-v3_hermes_gpt6_sol-0-preview.jpg": "7667164896f555bf1620c600d77a021106da62f7f06d93637ed4889df18b2001",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D033-v1-0-original.jpg": "5cfc03447ca4a17b397ed99c346a63df57580a2492aecb8fc8d3339751b225bc",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D033-v1-0-preview.jpg": "9af46e665310c1612d72ff08360991187b264cab6a76f4e5ff373eab3312176f",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D033-v3_hermes_gemini-0-original.jpg": "90b51ee515fe887040da83c7cd40fc0015bb641657091ed81b7172a611265dfc",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D033-v3_hermes_gemini-0-preview.jpg": "679268622ee049df5fcec3b7001acfb6a4fc9a4e49a047b35b19bd42e33a7852",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D033-v3_hermes_gpt6_sol-0-original.jpg": "302e08eb57c708e86a066b9624218bec6f7855a0535fa5fb5b9127f5bcb55e27",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/D033-v3_hermes_gpt6_sol-0-preview.jpg": "50418bf8580cfc71e86e0c5342e345754d2f5b61c1b6efc684addd9d7594c7a1",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/H008-v1-0-original.jpg": "13651129a37df9b2dc4619373a9f28c419160a5db08f10e5472f1a5c3c102413",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/H008-v1-0-preview.jpg": "4227e33a674eacd1f6b7f8a2f5a24ef63fdd1b119a15530365fffdceed805317",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/H008-v3_hermes_gpt6_sol-0-original.jpg": "fc2df6d20139397293777d7c1275620109742a5945c9321240604851a650db6d",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/H008-v3_hermes_gpt6_sol-0-preview.jpg": "80befb05d51d8fc0c623f4100b6feaee5280bb7e77c4806de42fd2840c37f4b7",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/S009-v1-0-original.jpg": "861d1fe11ebdf8e841a0a272b292948e149ba1c87708bf3104b61e83e194d773",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/S009-v1-0-preview.jpg": "c17f6dd516dec835ffaa121eb33bc064bb8b07a84f1fee954b09a109f896b278",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/S009-v3_hermes_gemini-0-original.jpg": "c6294c381d141018ce0984dfd04fc080680a3123cb70aec4613e30ee48301834",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/S009-v3_hermes_gemini-0-preview.jpg": "f4f4ab6f77ccb68b342696e0b11841db521c2cbd692029b5d3a86c547a5d1f6b",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/S009-v3_hermes_gpt6_sol-0-original.jpg": "a4a33cbf0d17f8731d0d8d71052871289126b0749fe811cc505d2013a848d7e6",
+    "assets/hermes-20260924-delegation-198e3a95baa24d0d/assets/S009-v3_hermes_gpt6_sol-0-preview.jpg": "ede9657e9a6bc38ed8890312179476b7dc6304250ee909416c1ae112d5ffe0e4",
+    "assets/hermes-20260924-taiwan-c83f1dcd7c4dd202/assets/T031-v1-0-original.jpg": "b94088ac0cf1999f0070e510710bfd9cb1285e34d82ae1ed71c7f40fed22f2bc",
+    "assets/hermes-20260924-taiwan-c83f1dcd7c4dd202/assets/T031-v1-0-preview.jpg": "282c288c6f2d8f433b1d578a5c9bd346dff65c36ca36b3199fd18a8739034afb",
+    "assets/hermes-20260924-taiwan-c83f1dcd7c4dd202/assets/T031-v3_hermes_gemini-0-original.jpg": "31f9da93a075563950e1ee15dfc2e835370619de04396670ac28ebc4de5bd0f7",
+    "assets/hermes-20260924-taiwan-c83f1dcd7c4dd202/assets/T031-v3_hermes_gemini-0-preview.jpg": "4d70853e72f219f45c808a45a31941c74040df8ecf5ec15cab626456b4170aaf",
+    "assets/hermes-20260924-taiwan-c83f1dcd7c4dd202/assets/T031-v3_hermes_gpt6_sol-0-original.jpg": "2f9e69b828d05df9b562da6197629c6067cbd1874101f62d5016c52c2a510dc2",
+    "assets/hermes-20260924-taiwan-c83f1dcd7c4dd202/assets/T031-v3_hermes_gpt6_sol-0-preview.jpg": "47ae4fb6a06d0f1c9325fba47d66749fbbf456179a81adaf6c17ad777eff00e0",
+    "delegation-group-observation-latency.svg": "cf0138600ad5421da8948bda6a37f82b5b8c4798af10b76b8aca6d2a7eea9271",
+    "delegation-group-observation-matched-latency.svg": "dafe6c0d43b5466c31e2153de7eaee06e8d268525c4386903a192f7398083bcd",
+    "delegation-group-replies-latency.svg": "fae588f9ffbb73ae7505296294e321acc6e8ac9e85d45fc067e88a03e97483b5",
+    "delegation-group-replies-matched-latency.svg": "e745aca93520a11def3fe2fd9b7666bdce2220cfd04c1037e140e3d47292f8dc",
+    "delegation-latency.svg": "9869890fbd2588fa88561d6546adbc38365247cb5fe518f7ebd7f6795e65bb7b",
+    "delegation-matched-latency.svg": "0c8f3874a12aba7cb6aff2eeb6833a69afe3e286cdbdd5a51e8b105b49ad31e8",
+    "delegation-results.public.json": "47d458b35f1ed450e1089ed0bad2a320f2e837ce376e9c0d104e2ca25d71b3a3",
+    "interaction-group-observation-latency.svg": "3acb87d68317c031c3bcf38f003c4719d993018f7f6e157dbc7202460a56532a",
+    "interaction-group-observation-matched-latency.svg": "30bc890c19876bb58af0ba6178fcf7f591c64408fd811e00ed24ef4f63009139",
+    "interaction-group-replies-latency.svg": "3cb6b815e0e8a04e5bc2bcc71f4ba4994cb6fc81716547d7bdf445db07eb2009",
+    "interaction-group-replies-matched-latency.svg": "2c597edb5196886a19e9197228169f9b4d153cb914b7d17046314fcb274ec596",
+    "interaction-latency.svg": "f50f3bb1128f6d870bb50af8b9fe65795aa994f8105caf0b125fb2088704baf3",
+    "interaction-matched-latency.svg": "0d78defa4f61a9c32a67bc19689bc8a4d3e46fd5b729b9306e4eb4d2c042d073",
+    "interaction-results.public.json": "6480a403accaef0bccd46bfe3ffa162c2a667011c9146b3cd6d24c74403d0690",
+    "interaction-stickers-latency.svg": "26d01be892eef05cb2261c4d56cbc20ae5b44a6c39a8f2ca9d0a45b7c7a3c7cc",
+    "interaction-stickers-matched-latency.svg": "1d97dfc3b5e975373a3cd60f2732dc648b18828de282517bcd1a8109c22923ec",
+    "taiwan-latency.svg": "693b7a3f757d2f9f1dd27f4aed81a7c5482004efbf54111167b05fb840f2d278",
+    "taiwan-matched-latency.svg": "21b8d9d8c03fc376f4ea9c043d8172e089e297fb3d4996f2aac42642e0b87478",
+    "taiwan-results.public.json": "329ed7bd70005a42b9f6fe381d066e6c49195e0dd1ec4f14ca0b5bdfce71e572"
+  },
+  "suites": {
+    "interaction": {
+      "source_ref": "b0ee94b24a42b0f3b4dcba4f95e642aa9c94e84e",
+      "run_id": "final-validated-interaction",
+      "results_sha256": "ba2aeaff8a2b8b24d20c3365a0f71adba3f1c8e57a3c3f73f4d5167fffada281",
+      "public_results_sha256": "6480a403accaef0bccd46bfe3ffa162c2a667011c9146b3cd6d24c74403d0690",
+      "plot_manifest_sha256": "adfdc2ddd79a081370b0e93db0bf662101a3f3072628a3b501b4bbcdd03410c0",
+      "page_before_sha256": "98eb3e327ba1d3372be0164f6db77d8f86b32c92037fc0b63ac61dded79b674b",
+      "page_after_sha256": "0ec3c92596062496aa33985aad2a9e990d3c8bf4ad73867ebcbd19efb3023085",
+      "downloads": [
+        {
+          "svg": "interaction-latency.svg",
+          "svg_sha256": "f50f3bb1128f6d870bb50af8b9fe65795aa994f8105caf0b125fb2088704baf3",
+          "jpeg": "assets/latency-ba2aeaff8a2b8b24/interaction-all-attempts.jpg",
+          "jpeg_sha256": "c4c1fa79e9e4e86d4228a73bc39d42477a709bffc97282bf5a47e7b4bd923d73",
+          "bytes": 235264
+        },
+        {
+          "svg": "interaction-matched-latency.svg",
+          "svg_sha256": "0d78defa4f61a9c32a67bc19689bc8a4d3e46fd5b729b9306e4eb4d2c042d073",
+          "jpeg": "assets/latency-ba2aeaff8a2b8b24/interaction-matched.jpg",
+          "jpeg_sha256": "7f601b5b47174c7f30098ecf4ff24e0e825bc99e59db9a97a721ddf693b588db",
+          "bytes": 227360
+        },
+        {
+          "svg": "interaction-stickers-latency.svg",
+          "svg_sha256": "26d01be892eef05cb2261c4d56cbc20ae5b44a6c39a8f2ca9d0a45b7c7a3c7cc",
+          "jpeg": "assets/latency-ba2aeaff8a2b8b24/interaction-stickers-all-attempts.jpg",
+          "jpeg_sha256": "c94fd6738f81a9640e93bdc3df2167b7e684dcea3d17cf653573524e22c3c9a9",
+          "bytes": 155063
+        },
+        {
+          "svg": "interaction-stickers-matched-latency.svg",
+          "svg_sha256": "1d97dfc3b5e975373a3cd60f2732dc648b18828de282517bcd1a8109c22923ec",
+          "jpeg": "assets/latency-ba2aeaff8a2b8b24/interaction-stickers-matched.jpg",
+          "jpeg_sha256": "bb8368eeb2f4c5792bb85b335cb705baa2c29f0114018e66567eaf88355c95d8",
+          "bytes": 142324
+        },
+        {
+          "svg": "interaction-group-replies-latency.svg",
+          "svg_sha256": "3cb6b815e0e8a04e5bc2bcc71f4ba4994cb6fc81716547d7bdf445db07eb2009",
+          "jpeg": "assets/latency-ba2aeaff8a2b8b24/interaction-group-replies-all-attempts.jpg",
+          "jpeg_sha256": "53be95c25041be1ae27f902701f0c8dc503b07509a9542f15b547ee45bbad619",
+          "bytes": 155774
+        },
+        {
+          "svg": "interaction-group-replies-matched-latency.svg",
+          "svg_sha256": "2c597edb5196886a19e9197228169f9b4d153cb914b7d17046314fcb274ec596",
+          "jpeg": "assets/latency-ba2aeaff8a2b8b24/interaction-group-replies-matched.jpg",
+          "jpeg_sha256": "09b78f02e1e5f3b59e1b36891f26dd10c4680a1340f065819aeb061af9a5cb14",
+          "bytes": 143095
+        },
+        {
+          "svg": "interaction-group-observation-latency.svg",
+          "svg_sha256": "3acb87d68317c031c3bcf38f003c4719d993018f7f6e157dbc7202460a56532a",
+          "jpeg": "assets/latency-ba2aeaff8a2b8b24/interaction-group-observation-all-attempts.jpg",
+          "jpeg_sha256": "109e626c89c956503c8f36d9c260af06ecf36bbc9bf1fe1263811445d54d535a",
+          "bytes": 170939
+        }
+      ]
+    },
+    "delegation": {
+      "source_ref": "b0ee94b24a42b0f3b4dcba4f95e642aa9c94e84e",
+      "run_id": "final-validated-delegation",
+      "results_sha256": "9a267b4c0397ece573d174445712a3c6771e16f95e746bf3d2e374c8c1b7864f",
+      "public_results_sha256": "47d458b35f1ed450e1089ed0bad2a320f2e837ce376e9c0d104e2ca25d71b3a3",
+      "plot_manifest_sha256": "3a15e1989644e58820e1e215d439f3ed67ae72c8a18b9cbec401dde50ee25c3e",
+      "page_before_sha256": "14f42c345fb8382b6eaefe1dd64f14e54072cd38ddfe49c0ef43c878ae33b72d",
+      "page_after_sha256": "2ea077278ee4d267216c0d7c7b9a61cd87d8634429cd9a42a4d82aed14ecb204",
+      "downloads": [
+        {
+          "svg": "delegation-latency.svg",
+          "svg_sha256": "9869890fbd2588fa88561d6546adbc38365247cb5fe518f7ebd7f6795e65bb7b",
+          "jpeg": "assets/latency-9a267b4c0397ece5/delegation-all-attempts.jpg",
+          "jpeg_sha256": "817c5c1b75107389300d610a7e89f4c568f9747473676d9b3daabb2c8204e391",
+          "bytes": 261452
+        },
+        {
+          "svg": "delegation-matched-latency.svg",
+          "svg_sha256": "0c8f3874a12aba7cb6aff2eeb6833a69afe3e286cdbdd5a51e8b105b49ad31e8",
+          "jpeg": "assets/latency-9a267b4c0397ece5/delegation-matched.jpg",
+          "jpeg_sha256": "b55df17a62e4266fd4a16532c58a145479b1e7d3ca2ff1687289a95b75ce00e3",
+          "bytes": 192654
+        },
+        {
+          "svg": "delegation-group-replies-latency.svg",
+          "svg_sha256": "fae588f9ffbb73ae7505296294e321acc6e8ac9e85d45fc067e88a03e97483b5",
+          "jpeg": "assets/latency-9a267b4c0397ece5/delegation-group-replies-all-attempts.jpg",
+          "jpeg_sha256": "a905752e2ae240ae0a3e5e2de7994e0548c7d2731e68e79e5e937dd7cd6e7317",
+          "bytes": 156282
+        },
+        {
+          "svg": "delegation-group-replies-matched-latency.svg",
+          "svg_sha256": "e745aca93520a11def3fe2fd9b7666bdce2220cfd04c1037e140e3d47292f8dc",
+          "jpeg": "assets/latency-9a267b4c0397ece5/delegation-group-replies-matched.jpg",
+          "jpeg_sha256": "271ee9e51a1636e2325581bd91034aaeeb38eb520a3206cad3e5bac71f27d747",
+          "bytes": 145511
+        },
+        {
+          "svg": "delegation-group-observation-latency.svg",
+          "svg_sha256": "cf0138600ad5421da8948bda6a37f82b5b8c4798af10b76b8aca6d2a7eea9271",
+          "jpeg": "assets/latency-9a267b4c0397ece5/delegation-group-observation-all-attempts.jpg",
+          "jpeg_sha256": "94851c92cd5786205c152e4c2b2a806a05626386cc82a5270597354d5cb4a9b0",
+          "bytes": 155535
+        }
+      ]
+    },
+    "taiwan": {
+      "source_ref": "b0ee94b24a42b0f3b4dcba4f95e642aa9c94e84e",
+      "run_id": "final-validated-taiwan",
+      "results_sha256": "c660d90016e95d379f29aec76fb3c504b6748fe427bb10d7bf5b8ba0b20b71fb",
+      "public_results_sha256": "329ed7bd70005a42b9f6fe381d066e6c49195e0dd1ec4f14ca0b5bdfce71e572",
+      "plot_manifest_sha256": "3d9b827c03e9efb5f42b06705ff4a4860310689802133ed5b7ccb0c4225cef23",
+      "page_before_sha256": "acb7a218a6cf91a141560e04a8a9c2a6cb21f63b6a9ce2c1f5423c815d2891e8",
+      "page_after_sha256": "2f2a7be7f9ca73613c3371a12d46bdd45bd32fb437641f5eaed8a44a2a72cb08",
+      "downloads": [
+        {
+          "svg": "taiwan-latency.svg",
+          "svg_sha256": "693b7a3f757d2f9f1dd27f4aed81a7c5482004efbf54111167b05fb840f2d278",
+          "jpeg": "assets/latency-c660d90016e95d37/taiwan-all-attempts.jpg",
+          "jpeg_sha256": "db7c74ffd21fb6ff38f012123fa9007b92295624aa0ac9a630fc35befc8990b1",
+          "bytes": 190895
+        },
+        {
+          "svg": "taiwan-matched-latency.svg",
+          "svg_sha256": "21b8d9d8c03fc376f4ea9c043d8172e089e297fb3d4996f2aac42642e0b87478",
+          "jpeg": "assets/latency-c660d90016e95d37/taiwan-matched.jpg",
+          "jpeg_sha256": "f1380a00c6080b667df78f96d8efc26fd05f14e174996f3b89d270294a296755",
+          "bytes": 193835
+        }
+      ]
+    }
+  },
+  "assets": {
+    "assets/latency-ba2aeaff8a2b8b24/interaction-all-attempts.jpg": {
+      "sha256": "c4c1fa79e9e4e86d4228a73bc39d42477a709bffc97282bf5a47e7b4bd923d73",
+      "bytes": 235264
+    },
+    "assets/latency-ba2aeaff8a2b8b24/interaction-matched.jpg": {
+      "sha256": "7f601b5b47174c7f30098ecf4ff24e0e825bc99e59db9a97a721ddf693b588db",
+      "bytes": 227360
+    },
+    "assets/latency-ba2aeaff8a2b8b24/interaction-stickers-all-attempts.jpg": {
+      "sha256": "c94fd6738f81a9640e93bdc3df2167b7e684dcea3d17cf653573524e22c3c9a9",
+      "bytes": 155063
+    },
+    "assets/latency-ba2aeaff8a2b8b24/interaction-stickers-matched.jpg": {
+      "sha256": "bb8368eeb2f4c5792bb85b335cb705baa2c29f0114018e66567eaf88355c95d8",
+      "bytes": 142324
+    },
+    "assets/latency-ba2aeaff8a2b8b24/interaction-group-replies-all-attempts.jpg": {
+      "sha256": "53be95c25041be1ae27f902701f0c8dc503b07509a9542f15b547ee45bbad619",
+      "bytes": 155774
+    },
+    "assets/latency-ba2aeaff8a2b8b24/interaction-group-replies-matched.jpg": {
+      "sha256": "09b78f02e1e5f3b59e1b36891f26dd10c4680a1340f065819aeb061af9a5cb14",
+      "bytes": 143095
+    },
+    "assets/latency-ba2aeaff8a2b8b24/interaction-group-observation-all-attempts.jpg": {
+      "sha256": "109e626c89c956503c8f36d9c260af06ecf36bbc9bf1fe1263811445d54d535a",
+      "bytes": 170939
+    },
+    "assets/latency-9a267b4c0397ece5/delegation-all-attempts.jpg": {
+      "sha256": "817c5c1b75107389300d610a7e89f4c568f9747473676d9b3daabb2c8204e391",
+      "bytes": 261452
+    },
+    "assets/latency-9a267b4c0397ece5/delegation-matched.jpg": {
+      "sha256": "b55df17a62e4266fd4a16532c58a145479b1e7d3ca2ff1687289a95b75ce00e3",
+      "bytes": 192654
+    },
+    "assets/latency-9a267b4c0397ece5/delegation-group-replies-all-attempts.jpg": {
+      "sha256": "a905752e2ae240ae0a3e5e2de7994e0548c7d2731e68e79e5e937dd7cd6e7317",
+      "bytes": 156282
+    },
+    "assets/latency-9a267b4c0397ece5/delegation-group-replies-matched.jpg": {
+      "sha256": "271ee9e51a1636e2325581bd91034aaeeb38eb520a3206cad3e5bac71f27d747",
+      "bytes": 145511
+    },
+    "assets/latency-9a267b4c0397ece5/delegation-group-observation-all-attempts.jpg": {
+      "sha256": "94851c92cd5786205c152e4c2b2a806a05626386cc82a5270597354d5cb4a9b0",
+      "bytes": 155535
+    },
+    "assets/latency-c660d90016e95d37/taiwan-all-attempts.jpg": {
+      "sha256": "db7c74ffd21fb6ff38f012123fa9007b92295624aa0ac9a630fc35befc8990b1",
+      "bytes": 190895
+    },
+    "assets/latency-c660d90016e95d37/taiwan-matched.jpg": {
+      "sha256": "f1380a00c6080b667df78f96d8efc26fd05f14e174996f3b89d270294a296755",
+      "bytes": 193835
+    }
+  }
+}
