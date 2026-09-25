@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "navigation_version": "recovery-r13-7d2c7110",
+  "suites": {
+    "interaction": {
+      "source_ref": "85d96a57db67d2b32911dfdd8847f43d284efa04",
+      "input_sha256": "25fa7b866eb2549beab75d5481ee0d1f017986a4d00a4078c9caabc08a888b28",
+      "public_sha256": "dd4874111e3fa676142716ca107ce1c0aace6f25ccd31e2e82c79e5a9d38cd45",
+      "cases": 69,
+      "variants": [
+        "v1",
+        "v2",
+        "v2_followup",
+        "v3_hermes_gpt6_sol",
+        "v3_hermes_gemini"
+      ],
+      "page_sha256": "00708e66c50f96bdc1d3b5738a596cbb9d7d3f2385fa56768079e15cc7204e8f"
+    },
+    "delegation": {
+      "source_ref": "85d96a57db67d2b32911dfdd8847f43d284efa04",
+      "input_sha256": "fbfebacea535f23b10ff5f4d19956bcd9c18d9ded5906342cebc21cd4e7ba499",
+      "public_sha256": "3052f47299c6f68fd45b5106a612f0ef8659746e282fc0ce4249e7c0d2c07cfb",
+      "cases": 75,
+      "variants": [
+        "v1",
+        "v2",
+        "v2_followup",
+        "v3_hermes_gpt6_sol",
+        "v3_hermes_gemini"
+      ],
+      "page_sha256": "d84f37914c3a7c432a10bd42fa77468e11ad69d76a2fe6ad1084c2db039c3822"
+    },
+    "taiwan": {
+      "source_ref": "85d96a57db67d2b32911dfdd8847f43d284efa04",
+      "input_sha256": "eb94059a4f4fa32e99770210d6719cfec69f8622958d572d3a753b319d3f7abd",
+      "public_sha256": "dd3617d10f109dba78e512196b95e316669113b311929f1e0daf3c18ca2f250c",
+      "cases": 35,
+      "variants": [
+        "v1",
+        "v2",
+        "v2_followup",
+        "v3_hermes_gpt6_sol",
+        "v3_hermes_gemini"
+      ],
+      "page_sha256": "5c4c0404c3f1821805857f9a47995c25c26eba9af966bf35d50703a1ba0e5606"
+    },
+    "recovery": {
+      "source_ref": "7d2c7110f56249e18c6134db981e446057b7ba29",
+      "input_sha256": "566f7c3f379babda583e049738d9400a63c7e2d4caa3b45f565c802c3d451170",
+      "public_sha256": "98e3a493f9e9ddfdfe97a986bdba051267618355625af87e83724babf65e5ba3",
+      "cases": 22,
+      "variants": [
+        "v1",
+        "v2",
+        "v2_followup",
+        "v3_hermes_gpt6_sol",
+        "v3_hermes_gemini"
+      ],
+      "page_sha256": "6e1b99b23c21c9c937eae0ecef67d6d3c278b2886e6fd08e205336ac9b1c4480"
+    }
+  }
+}

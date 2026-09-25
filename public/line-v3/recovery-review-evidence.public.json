@@ -1,0 +1,847 @@
+{
+  "source_ref": "7d2c7110f56249e18c6134db981e446057b7ba29",
+  "results_sha256": "566f7c3f379babda583e049738d9400a63c7e2d4caa3b45f565c802c3d451170",
+  "audit_kind": "independent_AI_and_code_evidence_audit_not_rerun_or_regrading",
+  "audit_report_sha256": "d8e4a8d446a8475d4c6350ba445e0dda98611a542b452627c6781d6963476a2f",
+  "cohorts": {
+    "natural_interaction": {
+      "case_ids": [
+        "R003",
+        "R004"
+      ],
+      "arms": {
+        "v1": {
+          "n": 2,
+          "task_completion_mean": 3.5,
+          "grounding_mean": 3.5,
+          "all_attempt_median_ms": 9552.823499999999,
+          "runtime_statuses": {
+            "ok": 2
+          },
+          "tool_grades": {
+            "fail": 1,
+            "pass": 1
+          }
+        },
+        "v2": {
+          "n": 2,
+          "task_completion_mean": 3.5,
+          "grounding_mean": 4.5,
+          "all_attempt_median_ms": 4016.319,
+          "runtime_statuses": {
+            "ok": 2
+          },
+          "tool_grades": {
+            "fail": 1,
+            "pass": 1
+          }
+        },
+        "v2_followup": {
+          "n": 2,
+          "task_completion_mean": 5,
+          "grounding_mean": 5,
+          "all_attempt_median_ms": 2298.0825,
+          "runtime_statuses": {
+            "ok": 2
+          },
+          "tool_grades": {
+            "pass": 2
+          }
+        },
+        "v3_hermes_gpt6_sol": {
+          "n": 2,
+          "task_completion_mean": 5,
+          "grounding_mean": 5,
+          "all_attempt_median_ms": 2203.94,
+          "runtime_statuses": {
+            "ok": 2
+          },
+          "tool_grades": {
+            "pass": 2
+          }
+        },
+        "v3_hermes_gemini": {
+          "n": 2,
+          "task_completion_mean": 5,
+          "grounding_mean": 4.5,
+          "all_attempt_median_ms": 4405.0505,
+          "runtime_statuses": {
+            "ok": 2
+          },
+          "tool_grades": {
+            "pass": 2
+          }
+        }
+      }
+    },
+    "natural_delegation": {
+      "case_ids": [
+        "R007",
+        "R008",
+        "R009",
+        "R010",
+        "R011",
+        "R012",
+        "R013",
+        "R014",
+        "R015",
+        "R016",
+        "R019",
+        "R020",
+        "R021",
+        "R022"
+      ],
+      "arms": {
+        "v1": {
+          "n": 14,
+          "task_completion_mean": 3.0714285714285716,
+          "grounding_mean": 3.5,
+          "all_attempt_median_ms": 10903.25,
+          "runtime_statuses": {
+            "ok": 14
+          },
+          "tool_grades": {
+            "fail": 5,
+            "partial": 4,
+            "pass": 5
+          }
+        },
+        "v2": {
+          "n": 14,
+          "task_completion_mean": 2.7142857142857144,
+          "grounding_mean": 3.857142857142857,
+          "all_attempt_median_ms": 3931.7185,
+          "runtime_statuses": {
+            "ok": 10,
+            "degraded": 4
+          },
+          "tool_grades": {
+            "pass": 4,
+            "partial": 5,
+            "fail": 5
+          }
+        },
+        "v2_followup": {
+          "n": 14,
+          "task_completion_mean": 2.357142857142857,
+          "grounding_mean": 3.857142857142857,
+          "all_attempt_median_ms": 2724.4584999999997,
+          "runtime_statuses": {
+            "ok": 8,
+            "degraded": 6
+          },
+          "tool_grades": {
+            "pass": 3,
+            "partial": 4,
+            "fail": 7
+          }
+        },
+        "v3_hermes_gpt6_sol": {
+          "n": 14,
+          "task_completion_mean": 4.571428571428571,
+          "grounding_mean": 4.928571428571429,
+          "all_attempt_median_ms": 10415.349,
+          "runtime_statuses": {
+            "ok": 14
+          },
+          "tool_grades": {
+            "pass": 8,
+            "partial": 6
+          }
+        },
+        "v3_hermes_gemini": {
+          "n": 14,
+          "task_completion_mean": 4.785714285714286,
+          "grounding_mean": 4.928571428571429,
+          "all_attempt_median_ms": 8386.984,
+          "runtime_statuses": {
+            "ok": 14
+          },
+          "tool_grades": {
+            "pass": 9,
+            "partial": 5
+          }
+        }
+      }
+    },
+    "injected_interaction": {
+      "case_ids": [
+        "R005",
+        "R006"
+      ],
+      "arms": {
+        "v1": {
+          "n": 2,
+          "task_completion_mean": 5,
+          "grounding_mean": 5,
+          "all_attempt_median_ms": 4969.7095,
+          "runtime_statuses": {
+            "ok": 2
+          },
+          "tool_grades": {
+            "pass": 2
+          }
+        },
+        "v2": {
+          "n": 2,
+          "task_completion_mean": 2,
+          "grounding_mean": 3,
+          "all_attempt_median_ms": 489.31899999999996,
+          "runtime_statuses": {
+            "degraded": 2
+          },
+          "tool_grades": {
+            "fail": 2
+          }
+        },
+        "v2_followup": {
+          "n": 2,
+          "task_completion_mean": 2,
+          "grounding_mean": 3,
+          "all_attempt_median_ms": 549.376,
+          "runtime_statuses": {
+            "degraded": 2
+          },
+          "tool_grades": {
+            "fail": 2
+          }
+        },
+        "v3_hermes_gpt6_sol": {
+          "n": 2,
+          "task_completion_mean": 3,
+          "grounding_mean": 5,
+          "all_attempt_median_ms": 1523.0605,
+          "runtime_statuses": {
+            "ok": 1,
+            "degraded": 1
+          },
+          "tool_grades": {
+            "pass": 1,
+            "fail": 1
+          }
+        },
+        "v3_hermes_gemini": {
+          "n": 2,
+          "task_completion_mean": 3,
+          "grounding_mean": 5,
+          "all_attempt_median_ms": 1483.7955,
+          "runtime_statuses": {
+            "ok": 1,
+            "degraded": 1
+          },
+          "tool_grades": {
+            "pass": 1,
+            "fail": 1
+          }
+        }
+      }
+    },
+    "injected_delegation": {
+      "case_ids": [
+        "R017",
+        "R018"
+      ],
+      "arms": {
+        "v1": {
+          "n": 2,
+          "task_completion_mean": 5,
+          "grounding_mean": 5,
+          "all_attempt_median_ms": 2146.349,
+          "runtime_statuses": {
+            "ok": 2
+          },
+          "tool_grades": {
+            "pass": 2
+          }
+        },
+        "v2": {
+          "n": 2,
+          "task_completion_mean": 5,
+          "grounding_mean": 5,
+          "all_attempt_median_ms": 9680.0105,
+          "runtime_statuses": {
+            "degraded": 2
+          },
+          "tool_grades": {
+            "fail": 2
+          }
+        },
+        "v2_followup": {
+          "n": 2,
+          "task_completion_mean": 5,
+          "grounding_mean": 5,
+          "all_attempt_median_ms": 9658.059,
+          "runtime_statuses": {
+            "degraded": 2
+          },
+          "tool_grades": {
+            "fail": 2
+          }
+        },
+        "v3_hermes_gpt6_sol": {
+          "n": 2,
+          "task_completion_mean": 5,
+          "grounding_mean": 5,
+          "all_attempt_median_ms": 10914.002,
+          "runtime_statuses": {
+            "ok": 1,
+            "degraded": 1
+          },
+          "tool_grades": {
+            "pass": 1,
+            "fail": 1
+          }
+        },
+        "v3_hermes_gemini": {
+          "n": 2,
+          "task_completion_mean": 5,
+          "grounding_mean": 5,
+          "all_attempt_median_ms": 6338.7625,
+          "runtime_statuses": {
+            "ok": 1,
+            "degraded": 1
+          },
+          "tool_grades": {
+            "pass": 1,
+            "fail": 1
+          }
+        }
+      }
+    }
+  },
+  "fault_review": [
+    {
+      "case_id": "R005",
+      "arm": "v1",
+      "receipt_sha256": "69bfc96da7e033a2a50c4aca148d5100252746ef6c1b4fd37afb9f96f1a733f7",
+      "database_sha256": "d62b9b85d8dd3b4adc33bae0974664c9d455d493d04a15c446aa528894c4b161",
+      "database_matches_captured_state": true,
+      "raw_status": "ok",
+      "raw_task_completed": false,
+      "audited_task_completed": true,
+      "strict_literal_match": false,
+      "reminder_count": 0,
+      "duplicate_delivery_events": 0,
+      "limitation": "semantic closure is satisfied; measured exact-text checker preserves punctuation mismatch 收到。 vs 收到"
+    },
+    {
+      "case_id": "R005",
+      "arm": "v2",
+      "receipt_sha256": "db4359834ffc06932fc26015401afba754a396f0161373ca4067f45f03322691",
+      "database_sha256": "a0380449ecb19c542e34faa649e152260df745a14d96d5dcb9747aad3709f46e",
+      "database_matches_captured_state": true,
+      "raw_status": "degraded",
+      "raw_task_completed": false,
+      "audited_task_completed": false,
+      "strict_literal_match": false,
+      "reminder_count": 0,
+      "duplicate_delivery_events": 0,
+      "limitation": "legacy outage copy and unrequested follow-up; requested closure not completed"
+    },
+    {
+      "case_id": "R005",
+      "arm": "v2_followup",
+      "receipt_sha256": "e33a1d078e02c9cb8105680e6fc26e7c5cd42ea3532589a04db9a37359dc37c2",
+      "database_sha256": "85757ae7cedd236f0f0d746b14d927d6faccf174ff430fe65bb62be79879e6a8",
+      "database_matches_captured_state": true,
+      "raw_status": "degraded",
+      "raw_task_completed": false,
+      "audited_task_completed": false,
+      "strict_literal_match": false,
+      "reminder_count": 0,
+      "duplicate_delivery_events": 0,
+      "limitation": "legacy outage copy and unrequested follow-up; requested closure not completed"
+    },
+    {
+      "case_id": "R005",
+      "arm": "v3_hermes_gpt6_sol",
+      "receipt_sha256": "73b4d59a01189449666190e5ae127843dcadabd77c04ebf15f370b3f5372bf0a",
+      "database_sha256": "36eda5b84146b89d61482a09953ce37168fba480c317cc8f8b272ccdb9008314",
+      "database_matches_captured_state": true,
+      "raw_status": "ok",
+      "raw_task_completed": true,
+      "audited_task_completed": true,
+      "strict_literal_match": true,
+      "reminder_count": 0,
+      "duplicate_delivery_events": 0,
+      "limitation": ""
+    },
+    {
+      "case_id": "R005",
+      "arm": "v3_hermes_gemini",
+      "receipt_sha256": "7807bd2bfd008355fcfe11e048e66817eba99e4ae7ae349016465593e6c8ca40",
+      "database_sha256": "9cd63f3d534ab12b6f6a49f1bf73bf7478844e2b06395bce41fea2ad5b8831c0",
+      "database_matches_captured_state": true,
+      "raw_status": "ok",
+      "raw_task_completed": true,
+      "audited_task_completed": true,
+      "strict_literal_match": true,
+      "reminder_count": 0,
+      "duplicate_delivery_events": 0,
+      "limitation": ""
+    },
+    {
+      "case_id": "R006",
+      "arm": "v1",
+      "receipt_sha256": "885c975031e6ad686dd9f0ebcf8693b32ffc359fec7bb5e72f5833f6537611d7",
+      "database_sha256": "e5fd0939dc2638d343350bd36b160ab831611ca239d4b5bbbb2fe5dd853da054",
+      "database_matches_captured_state": true,
+      "raw_status": "ok",
+      "raw_task_completed": true,
+      "audited_task_completed": true,
+      "strict_literal_match": true,
+      "reminder_count": 0,
+      "duplicate_delivery_events": 0,
+      "limitation": ""
+    },
+    {
+      "case_id": "R006",
+      "arm": "v2",
+      "receipt_sha256": "5242bb07cb7b9b25b489b9322f3c029548282f84b5496297082259465d44810f",
+      "database_sha256": "2581dce66dfd521f7778fc8ddd4bd9229a5d405c90c81308bb3bf5f7f72665c8",
+      "database_matches_captured_state": true,
+      "raw_status": "degraded",
+      "raw_task_completed": false,
+      "audited_task_completed": false,
+      "strict_literal_match": false,
+      "reminder_count": 0,
+      "duplicate_delivery_events": 0,
+      "limitation": "legacy outage copy and unrequested follow-up; requested closure not completed"
+    },
+    {
+      "case_id": "R006",
+      "arm": "v2_followup",
+      "receipt_sha256": "9307858df06ea62389837bd671bdfc456ab559901873b25ba8227ba68c5e50aa",
+      "database_sha256": "e5ad9d257368352158b25dd284483e99e0829e56dfd7bdb630a72b82972e0e87",
+      "database_matches_captured_state": true,
+      "raw_status": "degraded",
+      "raw_task_completed": false,
+      "audited_task_completed": false,
+      "strict_literal_match": false,
+      "reminder_count": 0,
+      "duplicate_delivery_events": 0,
+      "limitation": "legacy outage copy and unrequested follow-up; requested closure not completed"
+    },
+    {
+      "case_id": "R006",
+      "arm": "v3_hermes_gpt6_sol",
+      "receipt_sha256": "db68237ee1587edf74f5181124880cda3c7fdcb39e46b59db544f1313eb91720",
+      "database_sha256": "40407c6395c2423ec03ade0395b52398217e552c148cf5dae55dafaedd7d7260",
+      "database_matches_captured_state": true,
+      "raw_status": "degraded",
+      "raw_task_completed": false,
+      "audited_task_completed": false,
+      "strict_literal_match": false,
+      "reminder_count": 0,
+      "duplicate_delivery_events": 0,
+      "limitation": "bounded honest outage reply; requested exact closure not completed"
+    },
+    {
+      "case_id": "R006",
+      "arm": "v3_hermes_gemini",
+      "receipt_sha256": "68c7e15c7a94b2039f8a05ab1dd878876d2a4a40c0a02932bfaf47eeb50f106a",
+      "database_sha256": "c87f37e699f62dc77b5b01a4cbe558f19f5c2bfd20075b4d9d5ffe4dab194c5c",
+      "database_matches_captured_state": true,
+      "raw_status": "degraded",
+      "raw_task_completed": false,
+      "audited_task_completed": false,
+      "strict_literal_match": false,
+      "reminder_count": 0,
+      "duplicate_delivery_events": 0,
+      "limitation": "bounded honest outage reply; requested exact closure not completed"
+    },
+    {
+      "case_id": "R017",
+      "arm": "v1",
+      "receipt_sha256": "2646c9c4cca5301db60f6c095e003d3f96e121bd7d99028f35cd42effe385c2b",
+      "database_sha256": "bcea819fd773cf724ecdcb70cccddb4d2fb6503ce7178ffdeca6ca21f4791cce",
+      "database_matches_captured_state": true,
+      "raw_status": "ok",
+      "raw_task_completed": false,
+      "audited_task_completed": true,
+      "strict_literal_match": null,
+      "reminder_count": 1,
+      "duplicate_delivery_events": 0,
+      "limitation": "v1 native result.data lacks display_text, causing the frozen finite evaluator to report false despite matched DB+delivery"
+    },
+    {
+      "case_id": "R017",
+      "arm": "v2",
+      "receipt_sha256": "3d955fabf9b2d2f7b4eefd34f3af47d944ab61741d0dae881730ea0a19a1bb1b",
+      "database_sha256": "18c2e85f0c233fa71adf1ddc908e2c284663f7c14381405cac9b4ffe0bd4ebe6",
+      "database_matches_captured_state": true,
+      "raw_status": "degraded",
+      "raw_task_completed": true,
+      "audited_task_completed": true,
+      "strict_literal_match": null,
+      "reminder_count": 1,
+      "duplicate_delivery_events": 0,
+      "limitation": "raw degraded retains failed foreground interaction even though the native task was completed"
+    },
+    {
+      "case_id": "R017",
+      "arm": "v2_followup",
+      "receipt_sha256": "feaf4eab42fe89a2d846addfa9491a6b1aa4e1ce14dd486f1d43fe1a726c53a0",
+      "database_sha256": "11b29b8119e303ad33163d3bec96b33132c8e5920674b4e1ad967fae218e51d2",
+      "database_matches_captured_state": true,
+      "raw_status": "degraded",
+      "raw_task_completed": true,
+      "audited_task_completed": true,
+      "strict_literal_match": null,
+      "reminder_count": 1,
+      "duplicate_delivery_events": 0,
+      "limitation": "raw degraded retains failed foreground interaction even though the native task was completed"
+    },
+    {
+      "case_id": "R017",
+      "arm": "v3_hermes_gpt6_sol",
+      "receipt_sha256": "3d2cf76a5731953d76cde330f87c7db17c4cafd76042124ed901892d209924b4",
+      "database_sha256": "29ce4e374a1502026e7aeb3fa46f9bb690046912cf82a8699168c192b790fd38",
+      "database_matches_captured_state": true,
+      "raw_status": "ok",
+      "raw_task_completed": true,
+      "audited_task_completed": true,
+      "strict_literal_match": null,
+      "reminder_count": 1,
+      "duplicate_delivery_events": 0,
+      "limitation": ""
+    },
+    {
+      "case_id": "R017",
+      "arm": "v3_hermes_gemini",
+      "receipt_sha256": "805832f209b6e320430495dd9a16217cf0f3d446e7a55876e32c75a9af0a4f7a",
+      "database_sha256": "756d79a690bc89c40dfd23963baf099a9147a47bb5935f9383fe7bddfb81d642",
+      "database_matches_captured_state": true,
+      "raw_status": "ok",
+      "raw_task_completed": true,
+      "audited_task_completed": true,
+      "strict_literal_match": null,
+      "reminder_count": 1,
+      "duplicate_delivery_events": 0,
+      "limitation": ""
+    },
+    {
+      "case_id": "R018",
+      "arm": "v1",
+      "receipt_sha256": "36f2eeda5a19f6dd77b49d4d49a97d7e9674138a6b88a7458cb876c268688b6d",
+      "database_sha256": "09f805ca6bf3cd868a85c1744b9cd24808a6a814da71c1e8628829a66eff1e88",
+      "database_matches_captured_state": true,
+      "raw_status": "ok",
+      "raw_task_completed": false,
+      "audited_task_completed": true,
+      "strict_literal_match": null,
+      "reminder_count": 1,
+      "duplicate_delivery_events": 0,
+      "limitation": "v1 native result.data lacks display_text, causing the frozen finite evaluator to report false despite matched DB+delivery"
+    },
+    {
+      "case_id": "R018",
+      "arm": "v2",
+      "receipt_sha256": "484aa8431faee6fcd503595525e283fc10eeb9c89ae264a85b80304423fa1913",
+      "database_sha256": "1c1b74bc49787dae25a79512321bb30023882aa41cd4d4bca4494db574f5cf44",
+      "database_matches_captured_state": true,
+      "raw_status": "degraded",
+      "raw_task_completed": true,
+      "audited_task_completed": true,
+      "strict_literal_match": null,
+      "reminder_count": 1,
+      "duplicate_delivery_events": 0,
+      "limitation": "raw degraded retains failed foreground interaction even though the native task was completed"
+    },
+    {
+      "case_id": "R018",
+      "arm": "v2_followup",
+      "receipt_sha256": "4edd982943efcc216c02d0cb7b6b9475cb276f71e9d2b8f640a60186dc8b2b60",
+      "database_sha256": "53ff88d3a8cf0204eb7420f5196e8705cd7327e15d6a20aef86de92d491dee58",
+      "database_matches_captured_state": true,
+      "raw_status": "degraded",
+      "raw_task_completed": true,
+      "audited_task_completed": true,
+      "strict_literal_match": null,
+      "reminder_count": 1,
+      "duplicate_delivery_events": 0,
+      "limitation": "raw degraded retains failed foreground interaction even though the native task was completed"
+    },
+    {
+      "case_id": "R018",
+      "arm": "v3_hermes_gpt6_sol",
+      "receipt_sha256": "42614651360897817d9a8a2563fa74926eafb1135df514937315ae9de219a427",
+      "database_sha256": "c57deb3bc2a4722a7189270a62b9296db958301c2953732dedf6a538cf8471cd",
+      "database_matches_captured_state": true,
+      "raw_status": "degraded",
+      "raw_task_completed": true,
+      "audited_task_completed": true,
+      "strict_literal_match": null,
+      "reminder_count": 1,
+      "duplicate_delivery_events": 0,
+      "limitation": "raw degraded retains failed foreground interaction even though the native task was completed"
+    },
+    {
+      "case_id": "R018",
+      "arm": "v3_hermes_gemini",
+      "receipt_sha256": "e7042f235f1971e4a6adbb5479111d6862b1e44be066b3bb27d4171dd62c0737",
+      "database_sha256": "1364644470d9edde5ba05559ccee96df103820b5287c296ccbe54747c43f9764",
+      "database_matches_captured_state": true,
+      "raw_status": "degraded",
+      "raw_task_completed": true,
+      "audited_task_completed": true,
+      "strict_literal_match": null,
+      "reminder_count": 1,
+      "duplicate_delivery_events": 0,
+      "limitation": "raw degraded retains failed foreground interaction even though the native task was completed"
+    }
+  ],
+  "pixels": {
+    "v1": {
+      "artifacts": [
+        {
+          "kind": "original",
+          "file": "assets/R014-v1-0-original.jpg",
+          "sha256": "869cd8fb1028732e8702bd7d60285d0db7ce3abd8e455996081941427ae39d05",
+          "bytes": 255393,
+          "size": [
+            1024,
+            1024
+          ],
+          "pixels_viewed_by_root": true
+        },
+        {
+          "kind": "preview",
+          "file": "assets/R014-v1-0-preview.jpg",
+          "sha256": "e36b620baeb730262733e9ef291690d1e59d154c281799b2b5e4c3baf319e1f9",
+          "bytes": 76421,
+          "size": [
+            512,
+            512
+          ],
+          "pixels_viewed_by_root": false
+        }
+      ],
+      "findings": {
+        "no_text": "failed_visible_TW_hat_and_shop_signage",
+        "composition": "square; black bear/yellow cap/egg pancake/rain/warm illustration visible; one cup beside main subject, another background diner cup",
+        "limitation": "AI visual review; exact drink identity cannot be proven from pixels"
+      }
+    },
+    "v2": {
+      "artifacts": [],
+      "findings": {
+        "no_text": "not_assessed_no_image_delivered"
+      }
+    },
+    "v2_followup": {
+      "artifacts": [],
+      "findings": {
+        "no_text": "not_assessed_no_image_delivered"
+      }
+    },
+    "v3_hermes_gpt6_sol": {
+      "artifacts": [
+        {
+          "kind": "original",
+          "file": "assets/R014-v3_hermes_gpt6_sol-0-original.jpg",
+          "sha256": "568590c30bffa9e68cd6aa5d65f8e3dd1f7a9ec42cd31c26b11b90d5844358af",
+          "bytes": 258905,
+          "size": [
+            1024,
+            1024
+          ],
+          "pixels_viewed_by_root": true
+        },
+        {
+          "kind": "preview",
+          "file": "assets/R014-v3_hermes_gpt6_sol-0-preview.jpg",
+          "sha256": "65009c0b491aa0743d9e1000cb4df7b74f35356fc5170b9bb85f0275da60e6a1",
+          "bytes": 79611,
+          "size": [
+            512,
+            512
+          ],
+          "pixels_viewed_by_root": false
+        }
+      ],
+      "findings": {
+        "no_text": "uncertain_visible_glyph_like_marks_on_wall_frame_and_clothing",
+        "composition": "square; centered black bear/yellow hat/pancake/one cup/rain/warm illustration; narrow white border",
+        "limitation": "No legible brand confirmed, but not a strict no-lettering pass; AI visual review, not OCR proof"
+      }
+    },
+    "v3_hermes_gemini": {
+      "artifacts": [
+        {
+          "kind": "original",
+          "file": "assets/R014-v3_hermes_gemini-0-original.jpg",
+          "sha256": "47fa1e82b2c9db7db9e7619317b7059ded27a8e42d0f606e65647fb7feb2cc1b",
+          "bytes": 206886,
+          "size": [
+            1024,
+            1024
+          ],
+          "pixels_viewed_by_root": true
+        },
+        {
+          "kind": "preview",
+          "file": "assets/R014-v3_hermes_gemini-0-preview.jpg",
+          "sha256": "1b0b9aeb26a870f2f8963e44c61f40f4de53b81a0533abd8331b423e37afe93a",
+          "bytes": 60080,
+          "size": [
+            512,
+            512
+          ],
+          "pixels_viewed_by_root": false
+        }
+      ],
+      "findings": {
+        "no_text": "no_obvious_legible_text_or_brand",
+        "composition": "square; black bear/yellow hat/pancake/one cup/rain/warm illustration with broad whitespace",
+        "limitation": "AI visual review, not independent OCR verification"
+      }
+    }
+  },
+  "cache": {
+    "v3_hermes_gpt6_sol": {
+      "execution_runs": 10,
+      "fields": {
+        "api_calls": {
+          "observed_runs": 10,
+          "observed_sum": 22,
+          "complete_run_coverage": true
+        },
+        "usage_attempted_requests": {
+          "observed_runs": 0,
+          "observed_sum": null,
+          "complete_run_coverage": false
+        },
+        "usage_completed_requests": {
+          "observed_runs": 0,
+          "observed_sum": null,
+          "complete_run_coverage": false
+        },
+        "prompt_tokens": {
+          "observed_runs": 0,
+          "observed_sum": null,
+          "complete_run_coverage": false
+        },
+        "prompt_tokens_observed_requests": {
+          "observed_runs": 0,
+          "observed_sum": null,
+          "complete_run_coverage": false
+        },
+        "cache_read_tokens": {
+          "observed_runs": 10,
+          "observed_sum": 238581,
+          "complete_run_coverage": true
+        },
+        "cache_read_tokens_observed_sum": {
+          "observed_runs": 0,
+          "observed_sum": null,
+          "complete_run_coverage": false
+        },
+        "cache_read_tokens_observed_requests": {
+          "observed_runs": 0,
+          "observed_sum": null,
+          "complete_run_coverage": false
+        },
+        "cache_read_tokens_positive_requests": {
+          "observed_runs": 0,
+          "observed_sum": null,
+          "complete_run_coverage": false
+        },
+        "cache_read_tokens_zero_requests": {
+          "observed_runs": 0,
+          "observed_sum": null,
+          "complete_run_coverage": false
+        },
+        "cache_read_tokens_missing_requests": {
+          "observed_runs": 0,
+          "observed_sum": null,
+          "complete_run_coverage": false
+        }
+      },
+      "note": "Execution traces are deduplicated. Missing is not zero; complete run totals do not establish per-request hit rate."
+    },
+    "v3_hermes_gemini": {
+      "execution_runs": 10,
+      "fields": {
+        "api_calls": {
+          "observed_runs": 10,
+          "observed_sum": 22,
+          "complete_run_coverage": true
+        },
+        "usage_attempted_requests": {
+          "observed_runs": 10,
+          "observed_sum": 22,
+          "complete_run_coverage": true
+        },
+        "usage_completed_requests": {
+          "observed_runs": 10,
+          "observed_sum": 22,
+          "complete_run_coverage": true
+        },
+        "prompt_tokens": {
+          "observed_runs": 10,
+          "observed_sum": 289373,
+          "complete_run_coverage": true
+        },
+        "prompt_tokens_observed_requests": {
+          "observed_runs": 10,
+          "observed_sum": 22,
+          "complete_run_coverage": true
+        },
+        "cache_read_tokens": {
+          "observed_runs": 0,
+          "observed_sum": null,
+          "complete_run_coverage": false
+        },
+        "cache_read_tokens_observed_sum": {
+          "observed_runs": 1,
+          "observed_sum": 16285,
+          "complete_run_coverage": false
+        },
+        "cache_read_tokens_observed_requests": {
+          "observed_runs": 10,
+          "observed_sum": 1,
+          "complete_run_coverage": true
+        },
+        "cache_read_tokens_positive_requests": {
+          "observed_runs": 10,
+          "observed_sum": 1,
+          "complete_run_coverage": true
+        },
+        "cache_read_tokens_zero_requests": {
+          "observed_runs": 10,
+          "observed_sum": 0,
+          "complete_run_coverage": true
+        },
+        "cache_read_tokens_missing_requests": {
+          "observed_runs": 10,
+          "observed_sum": 21,
+          "complete_run_coverage": true
+        }
+      },
+      "note": "Execution traces are deduplicated. Missing is not zero; complete run totals do not establish per-request hit rate."
+    }
+  },
+  "old_fallback": {
+    "v1": [],
+    "v2": [
+      "R005",
+      "R006",
+      "R021"
+    ],
+    "v2_followup": [
+      "R005",
+      "R006",
+      "R021"
+    ],
+    "v3_hermes_gpt6_sol": [],
+    "v3_hermes_gemini": []
+  },
+  "limitations": [
+    "All raw statuses, finite checker values and quality grades remain unchanged.",
+    "This audit verifies the synthetic native state and captured LINE transport messages, not real LINE recipient receipt or later scheduled reminder delivery.",
+    "Retries remains null in measured recovery metadata when no coordinator recovery record exists; HTTP attempt/injection records separately prove foreground retry.",
+    "The persistent injection applies at captured native Gemini HTTP only, not every provider or child executor boundary.",
+    "R005 v1 punctuation is disclosed separately from literal compliance; v1 R017/R018 false values are a native receipt schema blindspot."
+  ]
+}
