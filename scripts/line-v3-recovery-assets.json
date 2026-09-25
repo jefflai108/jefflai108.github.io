@@ -1,0 +1,63 @@
+{
+  "destination": "line-v3/assets",
+  "archive_bytes": 2279936,
+  "archive_sha256": "722f52828288daa346fd6bf3e9ff43fdce65f8e01324be978599f219e8e8f349",
+  "files": {
+    "hermes-20260924-recovery-8c56142537b3fb9f/assets/R014-v1-0-original.jpg": {
+      "bytes": 255393,
+      "sha256": "869cd8fb1028732e8702bd7d60285d0db7ce3abd8e455996081941427ae39d05"
+    },
+    "hermes-20260924-recovery-8c56142537b3fb9f/assets/R014-v1-0-preview.jpg": {
+      "bytes": 76421,
+      "sha256": "e36b620baeb730262733e9ef291690d1e59d154c281799b2b5e4c3baf319e1f9"
+    },
+    "hermes-20260924-recovery-8c56142537b3fb9f/assets/R014-v3_hermes_gemini-0-original.jpg": {
+      "bytes": 206886,
+      "sha256": "47fa1e82b2c9db7db9e7619317b7059ded27a8e42d0f606e65647fb7feb2cc1b"
+    },
+    "hermes-20260924-recovery-8c56142537b3fb9f/assets/R014-v3_hermes_gemini-0-preview.jpg": {
+      "bytes": 60080,
+      "sha256": "1b0b9aeb26a870f2f8963e44c61f40f4de53b81a0533abd8331b423e37afe93a"
+    },
+    "hermes-20260924-recovery-8c56142537b3fb9f/assets/R014-v3_hermes_gpt6_sol-0-original.jpg": {
+      "bytes": 258905,
+      "sha256": "568590c30bffa9e68cd6aa5d65f8e3dd1f7a9ec42cd31c26b11b90d5844358af"
+    },
+    "hermes-20260924-recovery-8c56142537b3fb9f/assets/R014-v3_hermes_gpt6_sol-0-preview.jpg": {
+      "bytes": 79611,
+      "sha256": "65009c0b491aa0743d9e1000cb4df7b74f35356fc5170b9bb85f0275da60e6a1"
+    },
+    "recovery-latency-566f7c3f379babda/recovery-injected-delegation-all-attempts.jpg": {
+      "bytes": 172293,
+      "sha256": "2c2a10b442793693223935c6e80a7f0a81a3efd692fe75aac8a3eaa171787a2b"
+    },
+    "recovery-latency-566f7c3f379babda/recovery-injected-delegation-matched.jpg": {
+      "bytes": 163213,
+      "sha256": "db754cce95781423f732005c36212e9bf56548b00c62a61af3c876deabdc1fe7"
+    },
+    "recovery-latency-566f7c3f379babda/recovery-injected-interaction-all-attempts.jpg": {
+      "bytes": 170671,
+      "sha256": "0dbbe05a67fa30c83dc6c98d972c2213e6c5187e626ca4cf4a8ec219ac6aabab"
+    },
+    "recovery-latency-566f7c3f379babda/recovery-injected-interaction-matched.jpg": {
+      "bytes": 162583,
+      "sha256": "2383e76d085d2c08cba7bb9e5ede373497f60884b0153df4f22575d9557a3559"
+    },
+    "recovery-latency-566f7c3f379babda/recovery-natural-delegation-all-attempts.jpg": {
+      "bytes": 188732,
+      "sha256": "1d9f5123b1172ec47469316fb88793f184113099d4dcf28c0a248d9b40c8af4d"
+    },
+    "recovery-latency-566f7c3f379babda/recovery-natural-delegation-matched.jpg": {
+      "bytes": 162146,
+      "sha256": "1a8f697110fce50c9ce1abc098cebc06e3d15fd00a05a5007f5740bf6d1d97de"
+    },
+    "recovery-latency-566f7c3f379babda/recovery-natural-interaction-all-attempts.jpg": {
+      "bytes": 160475,
+      "sha256": "88da25ce73bdc519bd4291f66e998cdcbbd0fcb49389dbce962835ac7219634a"
+    },
+    "recovery-latency-566f7c3f379babda/recovery-natural-interaction-matched.jpg": {
+      "bytes": 159251,
+      "sha256": "2ff75243ba59d6d727e7a466e5aca3a12d5d6ce97cd7e3c28e1b43d7f0cc6a7c"
+    }
+  }
+}
