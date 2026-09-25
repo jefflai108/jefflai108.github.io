@@ -43,11 +43,12 @@ class AudioArchiveTests(unittest.TestCase):
 
     def test_english_and_mandarin_coexist(self):
         module.install(self.archive, self.destination, self.fixture())
-        english = 'tts/audio/v3-benchmark-en-2026-09-25/eleven_v3/hua/en01.mp3'
-        manifest = self.fixture([english])
-        manifest['files'][0]['path'] = english
-        self.assertEqual(module.install(self.archive, self.destination, manifest), 1)
-        self.assertEqual((self.destination / english).read_bytes(), (self.destination / NAME).read_bytes())
+        for variant in ['en', 'en-us']:
+            english = f'tts/audio/v3-benchmark-{variant}-2026-09-25/eleven_v3/hua/en01.mp3'
+            manifest = self.fixture([english])
+            manifest['files'][0]['path'] = english
+            self.assertEqual(module.install(self.archive, self.destination, manifest), 1)
+            self.assertEqual((self.destination / english).read_bytes(), (self.destination / NAME).read_bytes())
 
     def test_rejects_changed_archive(self):
         manifest = self.fixture()

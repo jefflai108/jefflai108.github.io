@@ -80,9 +80,12 @@ first and v3 Conversational as the comparison model. It is excluded from navigat
 sitemap and has a `noindex` robots tag. This is an unlisted static page, not an
 authenticated page.
 
-`src/data/tts-corpus.json` and `tts-corpus-en.json` define the voices, passages, and
+`src/data/tts-corpus.json` and `tts-corpus-en-us.json` define the voices, passages, and
 shared settings. `src/data/tts-benchmark.json` contains the 280 Mandarin records;
-`tts-benchmark-en.json` contains 140 English records. Each has audio checksums and
+`tts-benchmark-en-us.json` contains 140 English records generated with
+`[strong American accent]` before each passage. The original words and settings
+are preserved; the exact tagged inputs appear in JSON/CSV and the listening page.
+Each dataset has audio checksums and
 separate latency summaries. `tts-comparison.ts` combines them for listening while
 preserving the separate benchmark groups. For each selected passage, both models appear together for
 each voice, with Eleven v3 first. Players sit side by side on larger screens and
@@ -100,20 +103,24 @@ local file writing and decoding; neither is pure server processing time.
 ```bash
 python3 scripts/benchmark-tts.py --output /path/to/private-run
 python3 scripts/package-tts-benchmark.py /path/to/private-run
-python3 scripts/benchmark-tts.py --corpus src/data/tts-corpus-en.json --output /path/to/private-english-run
-python3 scripts/package-tts-benchmark.py /path/to/private-english-run --language en
+python3 scripts/benchmark-tts.py --corpus src/data/tts-corpus-en-us.json --output /path/to/private-english-run
+python3 scripts/package-tts-benchmark.py /path/to/private-english-run --language en-US
 python3 -m unittest discover -s scripts -p 'test_tts_assets.py'
 ```
 
-The 420 MP3s are distributed through pinned GitHub releases
-`tts-v3-benchmark-2026-09-25` and `tts-v3-benchmark-en-2026-09-25`.
+The 420 active MP3s are distributed through pinned GitHub releases
+`tts-v3-benchmark-2026-09-25` and `tts-v3-benchmark-en-us-2026-09-25`.
 CI verifies the archive inventory, byte counts, and
 SHA-256 hashes before installing it into `dist/`. For local preview, download
 the release archive and run `python3 scripts/install-tts-assets.py ARCHIVE.zip dist`
 after building, or use `public` as the destination before starting the dev server.
-For the English archive, pass `--manifest scripts/tts-benchmark-en-assets.json`.
+For the active English archive, pass `--manifest scripts/tts-benchmark-en-us-assets.json`.
 Generated audio is excluded from Git. Publish the archive before pushing code
 that references it to master.
+
+The original untagged English corpus, results, and release are retained as
+`tts-corpus-en.json`, `tts-benchmark-en.json`, and `tts-v3-benchmark-en-2026-09-25`.
+CI still installs that archive so previously shared MP3 and data URLs keep working.
 
 The original five Multilingual v2 clips and metadata remain at
 `public/tts/audio/2026-09-25/` and `src/data/tts.json`, preserving their published URLs.

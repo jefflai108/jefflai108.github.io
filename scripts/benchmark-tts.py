@@ -35,10 +35,18 @@ def main():
     assert corpus['paragraphs'], 'At least one paragraph is required'
     assert len({p['id'] for p in corpus['paragraphs']}) == len(corpus['paragraphs'])
     assert len({v['id'] for v in corpus['voices']}) == 7
+    tags = corpus.get('audioTags', [])
+    assert all(re.fullmatch(r'\[[^\[\]\r\n]+\]', tag) for tag in tags), 'Invalid audio tag'
+    prefix = ' '.join(tags) + ' ' if tags else ''
     for paragraph in corpus['paragraphs']:
-        assert len(re.findall(r'[。！？]|[.!?](?=\s|$)', paragraph['text'])) == paragraph['sentences']
+        assert paragraph['text'].startswith(prefix)
+        spoken_text = paragraph['text'][len(prefix):]
+        if tags:
+            assert spoken_text == paragraph['spokenText'], 'Only the declared tag prefix may change the spoken text'
+        assert len(re.findall(r'[。！？]|[.!?](?=\s|$)', spoken_text)) == paragraph['sentences']
         assert 1 <= paragraph['sentences'] <= 3
-        assert '[' not in paragraph['text'] and ']' not in paragraph['text']
+        assert '[' not in spoken_text and ']' not in spoken_text
+    assert corpus['warmupText'].startswith(prefix)
     args.output.mkdir(parents=True, exist_ok=True)
     corpus_hash = hashlib.sha256(corpus_bytes).hexdigest()
     meta_path = args.output / 'run.json'

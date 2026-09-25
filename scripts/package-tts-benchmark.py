@@ -34,9 +34,9 @@ def summary(rows):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('run', type=Path)
-    parser.add_argument('--language', choices=['zh-TW', 'en'], default='zh-TW')
+    parser.add_argument('--language', choices=['zh-TW', 'en', 'en-US'], default='zh-TW')
     args = parser.parse_args()
-    suffix = '-en' if args.language == 'en' else ''
+    suffix = {'zh-TW': '', 'en': '-en', 'en-US': '-en-us'}[args.language]
     tag = 'tts-v3-benchmark' + suffix + '-2026-09-25'
     prefix = 'tts/audio/v3-benchmark' + suffix + '-2026-09-25'
     corpus = json.loads((args.run / 'corpus.json').read_text())
@@ -77,6 +77,8 @@ def main():
         'method': {
             'endpoint': run['endpoint'], 'transport': run['transport'],
             'outputFormat': corpus['outputFormat'], 'concurrency': 1,
+            'audioTags': corpus.get('audioTags', []),
+            'tagPlacement': 'Prefix each passage and warm-up' if corpus.get('audioTags') else 'None',
             'scoredRequests': len(measured), 'warmupRequests': len(warmups),
             'failedAttempts': sum(not r['ok'] for r in attempts),
             'requestsWithReusedConnection': sum(r['connection_reused'] for r in measured),

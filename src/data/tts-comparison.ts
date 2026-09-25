@@ -1,9 +1,11 @@
 import mandarin from './tts-benchmark.json';
-import english from './tts-benchmark-en.json';
+import english from './tts-benchmark-en-us.json';
 
-export const cohorts = [
+type Benchmark = typeof mandarin & { method: { audioTags?: string[]; tagPlacement?: string } };
+
+export const cohorts: { language: string; label: string; benchmark: Benchmark; downloadSuffix: string }[] = [
   { language: 'zh-Hant-TW', label: 'Taiwanese Mandarin', benchmark: mandarin, downloadSuffix: '' },
-  { language: 'en', label: 'English', benchmark: english, downloadSuffix: '-en' },
+  { language: 'en-US', label: 'English', benchmark: english, downloadSuffix: '-en-us' },
 ];
 
 export const comparison = {
@@ -15,6 +17,7 @@ export const comparison = {
     ...paragraph,
     language: cohort.language,
     languageLabel: cohort.label,
+    audioTags: cohort.benchmark.method.audioTags ?? [],
   }))),
   records: cohorts.flatMap(cohort => cohort.benchmark.records),
 };

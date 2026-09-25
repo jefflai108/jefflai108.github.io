@@ -13,7 +13,7 @@ const tags = [
   { title: 'Delivery & pacing', examples: ['[whispers]', '[shouts]', '[softly]', '[slowly]', '[rushed]', '[pause]'] },
   { title: 'Vocal reactions', examples: ['[laughs]', '[sighs]', '[exhales]', '[snorts]', '[clears throat]'] },
   { title: 'Sound effects', examples: ['[applause]', '[clapping]', '[gunshot]', '[explosion]'] },
-  { title: 'Experimental', examples: ['[sings]', '[strong French accent]'] },
+  { title: 'Experimental', examples: ['[sings]', '[strong American accent]', '[strong French accent]'] },
 ];
 ---
 
@@ -59,7 +59,7 @@ const tags = [
         <div class="passage-text">
         <p class="passage-category" data-passage-category>{firstParagraph.languageLabel} · {firstParagraph.category} · {firstParagraph.sentences} sentences</p>
         <blockquote id="sample-transcript" lang="zh-Hant-TW">{firstParagraph.text}</blockquote>
-        <p class="listening-note">The same text, without audio tags. Each pair plays Eleven v3 first, then v3 Conversational.</p>
+        <p class="listening-note" data-generation-note>Both models receive the same text, without audio tags. Each pair plays Eleven v3 first, then v3 Conversational.</p>
         </div>
       </aside>
 
@@ -133,7 +133,7 @@ const tags = [
       <div class="tag-example"><p class="eyebrow">EXAMPLE PROMPT</p><p lang="zh-Hant-TW"><code>[curious]</code> 你有沒有想過，為什麼有些歌一響起，就會讓人想起某段回憶？<br /><code>[softly]</code> 明明過了好多年，卻還是記得那一天。</p></div>
       <p class="section-description">Natural stability (0.5) balances consistency and expression. Some voices respond more strongly than others; sound effects, accents, and singing are especially variable. v3 does not support SSML <code>&lt;break&gt;</code> tags.</p>
       <p class="section-description">v3 Conversational also supports expressive tags. Its guide lists <code>[laughs]</code>, <code>[whispers]</code>, <code>[sighs]</code>, <code>[slow]</code>, and <code>[excited]</code>, with effects lasting roughly the next 4–5 words. <a href="https://elevenlabs.io/docs/eleven-agents/customization/voice/expressive-mode#using-expressive-tags" target="_blank" rel="noopener noreferrer">Conversational tag guide ↗</a></p>
-      <p class="section-description"><strong>Automatic tags with Enhance:</strong> in the ElevenLabs editor, select Eleven v3, enter your text, click Enhance, review the tags, then generate speech. Enhance uses an LLM to prepare the text; these benchmark recordings use the original untagged passages. <a href="https://elevenlabs.io/docs/overview/capabilities/text-to-speech/best-practices#enhancing-input" target="_blank" rel="noopener noreferrer">How Enhance works ↗</a></p>
+      <p class="section-description"><strong>Automatic tags with Enhance:</strong> in the ElevenLabs editor, select Eleven v3, enter your text, click Enhance, review the tags, then generate speech. Enhance uses an LLM to prepare the text. In this comparison, English inputs include <code>[strong American accent]</code> and Mandarin uses plain text. <a href="https://elevenlabs.io/docs/overview/capabilities/text-to-speech/best-practices#enhancing-input" target="_blank" rel="noopener noreferrer">How Enhance works ↗</a></p>
       <p class="source-links"><a href="https://elevenlabs.io/docs/overview/capabilities/text-to-speech/best-practices#prompting-eleven-v3" target="_blank" rel="noopener noreferrer">Official v3 prompting guide ↗</a><a href="https://elevenlabs.io/blog/v3-audiotags" target="_blank" rel="noopener noreferrer">Audio tag examples ↗</a></p>
     </section>
 

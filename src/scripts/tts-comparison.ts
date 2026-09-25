@@ -89,6 +89,10 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
     const transcript = document.querySelector<HTMLElement>('#sample-transcript')!;
     transcript.textContent = paragraph.text;
     transcript.lang = paragraph.language;
+    const inputNote = paragraph.audioTags.length
+      ? `Both models receive ${paragraph.audioTags.join(' ')} before this passage.`
+      : 'Both models receive the same text, without audio tags.';
+    document.querySelector('[data-generation-note]')!.textContent = `${inputNote} Each pair plays Eleven v3 first, then v3 Conversational.`;
     document.querySelector('[data-passage-category]')!.textContent = `${paragraph.languageLabel} · ${paragraph.category} · ${paragraph.sentences} ${paragraph.sentences === 1 ? 'sentence' : 'sentences'}`;
     document.querySelector('[data-passage-count]')!.textContent = `${String(paragraphIndex + 1).padStart(2, '0')} / ${data.paragraphs.length}`;
     previous.disabled = paragraphIndex === 0;
