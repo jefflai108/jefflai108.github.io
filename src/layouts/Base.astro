@@ -9,12 +9,14 @@ interface Props {
   description?: string;
   /** which top-nav item is current */
   nav?: 'home' | 'blog' | 'tts';
+  noindex?: boolean;
 }
 
 const {
   title = site.name,
   description = `${site.name} — ${site.role} at ${site.org}. Building real-time speech-to-speech LLMs.`,
   nav = 'home',
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).toString();
@@ -27,6 +29,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).toString()
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonical} />
     <meta name="author" content={site.name} />
 
@@ -101,7 +104,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).toString()
         <nav aria-label="Primary">
           <a href="/" aria-current={nav === 'home' ? 'page' : undefined}>Homepage</a>
           <a href="/blog/" aria-current={nav === 'blog' ? 'page' : undefined}>Blog</a>
-          <a href="/tts/" aria-current={nav === 'tts' ? 'page' : undefined}>TTS</a>
         </nav>
         <span class="spacer"></span>
         <button type="button" data-theme-toggle class="toggle" aria-label="Toggle dark mode">

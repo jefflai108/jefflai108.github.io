@@ -7,7 +7,9 @@ export default defineConfig({
   site: 'https://jefflai108.github.io',
   // Keep whitespace around inline links when upgrading from Astro 5.
   compressHTML: true,
-  integrations: [sitemap()],
+  integrations: [sitemap({
+    filter: (page) => !/^\/tts(?:\/|$)/.test(new URL(page).pathname),
+  })],
   markdown: {
     shikiConfig: { theme: 'github-light', wrap: true },
   },
