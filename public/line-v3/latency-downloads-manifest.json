@@ -171,7 +171,7 @@
       "public_results_sha256": "dd4874111e3fa676142716ca107ce1c0aace6f25ccd31e2e82c79e5a9d38cd45",
       "plot_manifest_sha256": "77ef40b4f28e49b550d5c25a3efdb78c1c13876fff2f09073a1c31e287bb8525",
       "page_before_sha256": "63245a13bd9850ac354dc357d9dedfe3a80639129e6ab5219251195e3290d6f7",
-      "page_after_sha256": "5fe4cf777134000a7ce65d11a8d3c57254d24f285881c889b4e7471d7c09f113",
+      "page_after_sha256": "a2d1d9a70f068a8f009cc919840e01b3be37eb3619ace26cb1d2931adba29c46",
       "downloads": [
         {
           "svg": "interaction-latency.svg",
@@ -222,7 +222,8 @@
           "jpeg_sha256": "4f265511890fb66871468e948c6c663217d88e5eeb768058bdf8b6d3269bbfc3",
           "bytes": 186495
         }
-      ]
+      ],
+      "page_before_navigation_sha256": "5fe4cf777134000a7ce65d11a8d3c57254d24f285881c889b4e7471d7c09f113"
     },
     "delegation": {
       "source_ref": "85d96a57db67d2b32911dfdd8847f43d284efa04",
@@ -231,7 +232,7 @@
       "public_results_sha256": "3052f47299c6f68fd45b5106a612f0ef8659746e282fc0ce4249e7c0d2c07cfb",
       "plot_manifest_sha256": "e7d3c1a59970a5e5a9f75299f4a627abd2b8224cb2c193c784f037c3e311b501",
       "page_before_sha256": "2993a9136a532c3813a9f9712e7f11eda45c1134a3aa10baf4485d044c1b8a78",
-      "page_after_sha256": "f0a81dcb026b8ed0d8ad9cae12e637b161ddaf133320b213bccf959b676f9b11",
+      "page_after_sha256": "c654c9ce80e6aab70ba2839c692b3d33d8cf77fc57b0c07d7de84259b493cf82",
       "downloads": [
         {
           "svg": "delegation-latency.svg",
@@ -268,7 +269,8 @@
           "jpeg_sha256": "74a18bda25f924233b905e8e0b20608b235db21fddb1cb5911f6a232be5c72c3",
           "bytes": 175776
         }
-      ]
+      ],
+      "page_before_navigation_sha256": "f0a81dcb026b8ed0d8ad9cae12e637b161ddaf133320b213bccf959b676f9b11"
     },
     "taiwan": {
       "source_ref": "85d96a57db67d2b32911dfdd8847f43d284efa04",
@@ -277,7 +279,7 @@
       "public_results_sha256": "dd3617d10f109dba78e512196b95e316669113b311929f1e0daf3c18ca2f250c",
       "plot_manifest_sha256": "04ad502d60740f2076c48d8d00d7a03e8996ed7f19bbac7fa1f4a72bf8c3ded3",
       "page_before_sha256": "81d3714daf864ee01b474119d1e3b852705e7823f3ffa6c5a41591195e69afbe",
-      "page_after_sha256": "cfa5c19d8e0c48484f98a69ff9c68adae0dae501c14501742d40ea9c39beb822",
+      "page_after_sha256": "6f5c6fda7578ef6f88bcb1bb115691b63164f9122cb0abf0cbf94b2b3c560cd7",
       "downloads": [
         {
           "svg": "taiwan-latency.svg",
@@ -293,7 +295,8 @@
           "jpeg_sha256": "c6237afa5f925758ba0146f3a81a5547ac9bcb13647b7355740c9640c0a3e170",
           "bytes": 191031
         }
-      ]
+      ],
+      "page_before_navigation_sha256": "cfa5c19d8e0c48484f98a69ff9c68adae0dae501c14501742d40ea9c39beb822"
     }
   },
   "assets": {
@@ -353,5 +356,6 @@
       "sha256": "c6237afa5f925758ba0146f3a81a5547ac9bcb13647b7355740c9640c0a3e170",
       "bytes": 191031
     }
-  }
+  },
+  "navigation_version": "final-reviewed-85d96a57"
 }

@@ -112,6 +112,10 @@ jobs:
             "$RUNNER_TEMP/line-hermes-comparison-assets/line-hermes-comparison-images.zip" dist \
             --manifest scripts/line-hermes-comparison-assets.json
 
+      # Older shared pages redirect; old download URLs retain the exact bytes.
+      - name: Preserve previously shared LINE v2 URLs
+        run: python3 scripts/install-line-v2-redirects.py dist
+
       # Keep alive.
       #
       # GitHub disables scheduled workflows in a PUBLIC repo "when no repository
