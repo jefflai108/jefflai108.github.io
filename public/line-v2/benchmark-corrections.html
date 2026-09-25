@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>HeyMachi｜這次基準測試修正了什麼</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#f5f5ef;color:#193b31;font:16px/1.8 system-ui,-apple-system,"PingFang TC",sans-serif}main{max-width:1000px;margin:auto;padding:30px 24px 60px}h1{font-size:clamp(29px,5vw,43px);line-height:1.25}h2{font-size:23px;line-height:1.4}nav{display:flex;gap:12px 22px;flex-wrap:wrap;margin:18px 0}a{color:#176c60;text-underline-offset:3px}section{background:white;border:1px solid #d9e4db;border-radius:14px;padding:24px;margin:22px 0}.notice{background:#e9f1e8;border-left:4px solid #39846d;padding:18px 20px}.warning{background:#fff3db;border-color:#b77b24}.small{font-size:13px;color:#52665d}code{font:13px/1.6 ui-monospace,monospace;overflow-wrap:anywhere}li{margin:10px 0}summary{cursor:pointer;font-weight:650}dl{margin:18px 0}dt{font-weight:650;margin-top:15px}dd{margin:5px 0 0}strong{font-weight:650}@media(max-width:600px){main{padding:18px 14px 40px}section{padding:18px}.notice{padding:15px}}
+  </style>
+</head>
+<body><main>
+  <p class="small">HeyMachi · 基準測試補充說明 · 2026-09-25</p>
+  <h1>這次基準測試修正了什麼</h1>
+  <nav aria-label="回到比較分頁">
+    <a href="index.html">Interaction tasks</a>
+    <a href="delegation.html">Delegation tasks</a>
+    <a href="taiwan.html">台灣用語</a>
+  </nav>
+  <p class="notice">第一批擴充測試發現 <strong>v2 + follow-up 的實驗包裝程式有缺陷</strong>，因此停止該批次，保留原始紀錄，修正後重新收集完整五版本資料。本頁是測試說明，不是第四個比較分頁，也不預先宣稱新一輪的成績。</p>
+
+  <section>
+    <h2>為什麼重測</h2>
+    <p>舊批次停在 <strong>332 筆互動紀錄</strong>：324 筆正常返回、8 筆降級。這是執行狀態，並不等於任務完成率或 API 呼叫數。當時執行中的工作先正常完成，才停止收集；委派與台灣用語題組尚未開始。</p>
+    <p>兩個缺陷會讓比較失真：</p>
+    <ul>
+      <li><strong>群組被擋在模型呼叫之前。</strong> Character 實驗版本沿用了「只支援私訊」的限制，收到群組訊息就回報 <code>benchmark_private_scope_required</code>。這不能拿來評斷模型的群聊能力。</li>
+      <li><strong>選擇不接話，也可能清掉使用者要求的貼圖。</strong> 舊提示要求 <code>rest</code> 時貼圖意圖為空，解析器又會在接話留白時清除貼圖。S004 的舊回執是解析後資料，沒有保留原始模型提議；無法確定當次模型原本有沒有選貼圖，但可以確認程式存在這條抑制路徑。</li>
+    </ul>
+    <p>舊答案、失敗、時間與雜湊完整保留。v1 自己漏送貼圖的觀察也沒有被改寫；沒有只替換某個版本或某幾題的較差答案。</p>
+  </section>
+
+  <section>
+    <h2>修正範圍刻意保守</h2>
+    <p>Character 只有在外加的私訊記憶與主題資料皆為空時，才走原有 v2 群組流程；有私人資料仍在呼叫模型前拒絕。既有來源、隱私與群友身分檢查保留，私訊流程不變，也沒有套入 v3「只有真正標註麻吉才回覆」的政策。</p>
+    <p>貼圖只在<strong>合法直接回答、沒有澄清需求、有效且留白的 rest、主機允許貼圖、當前使用者明確要求</strong>全部成立後，保留原生目錄驗證過的意圖。無效接話、委派、否定或引用內容不會因此獲得貼圖。沒有新增模型呼叫、強迫選工具，或繞過貼圖頻率與傳送檢查。</p>
+    <p class="small">另有顯示修正：純模型互動若只是缺少原生副作用快照，會另列「原生副作用未量測」，保留原本的部分通過判定；它不是工具失敗，也不是副作用安全通過。真正失敗與其他未評估結果仍可查看。</p>
+  </section>
+
+  <section>
+    <h2>已驗證的部分，以及仍保留的限制</h2>
+    <p><strong>106 項聚焦離線檢查通過</strong>，涵蓋群組隱私、單次模型呼叫、實際貼圖傳送與歷史版本控制。這個總數已包含相關子測試，不重複加總。</p>
+    <p>R8 再以真實模型做一個獨立的 v2 + follow-up 小型驗證：<strong>14 筆正常返回，14 筆通用工具檢查通過</strong>。其中 11 個被舊政策接收的群組回合，各有一次成功的 Gemini 呼叫；另兩個回合沿用舊版忽略行為。加上 S004，共 12 次前景 HTTP 請求，沒有執行腦呼叫。</p>
+    <ul>
+      <li><strong>S004 確實送出慶祝貼圖</strong>，位於兩段文字之間；但該次接話不為空，因此不能用它證明 rest 分支已運作。接話內容是否自然仍是品質評審的問題。</li>
+      <li><strong>G013 才是有效 rest 的實測證據：</strong>接話為空、貼圖意圖保留，捕捉到對指定群友的原生 <code>textV2</code> 標註，以及實際 LINE 鼓勵貼圖訊息。這不只是模型說「要送貼圖」。</li>
+    </ul>
+    <p class="notice warning">通用工具通過不等於群聊契約全過。R8 原始群聊判定仍是 <strong>5 通過、5 部分、3 未通過</strong>：兩個舊版忽略回合沒有保存原文；一個回合多標註了未要求的群友；部分 v3 專屬安靜／接收檢查不適用舊架構。這些差異沒有被改成全數通過。</p>
+    <p class="small">原生傳送證據來自本機捕捉的實際 LINE 訊息格式，並不代表已驗證真實手機收到通知。R8 是單一版本的開發驗證，不是五版本最終評比。</p>
+  </section>
+
+  <section>
+    <h2>新的最終比較怎麼做</h2>
+    <p>替代批次使用新的儲存目錄與同一份凍結程式碼，重新量測 <strong>69 題互動、75 題委派、35 題台灣用語 × 5 版本，共 895 筆</strong>。不從舊批次複製答案或延遲，也不挑選前幾輪中最好的一次。</p>
+    <p>新資料必須獨立完成收集與審查，才納入三個比較分頁；本頁不預填分數、延遲排名或改善幅度。被停止的舊批次、R8 開發資料與新最終研究各自保存。</p>
+    <p><a href="https://github.com/jefflai108/streaming_taiwanese/pull/373">PR #373</a> · <a href="https://github.com/jefflai108/streaming_taiwanese/blob/0c037651de63b91699db9d25553bfdc9da1d12aa/docs/LINE_HERMES_BENCHMARK_CORRECTION_20260925.md">固定版本的修正說明</a></p>
+  </section>
+
+  <details>
+    <summary>來源版本與 SHA-256</summary>
+    <p class="small">只公開版本、題號與雜湊；不包含私人路徑、貼文原文、憑證或原生使用者識別碼。</p>
+    <dl>
+      <dt>停止使用的舊批次版本</dt><dd><code>3239e698ee13efa79e1981a960f50b5135ecdd24</code></dd>
+      <dt>332 筆舊紀錄封存清單</dt><dd><code>c491eb625da5fa7ce997e1e9fdd9d1e2770b0d4d201a0e1b618cfe68b85c647d</code></dd>
+      <dt>R8 與替代最終批次的凍結程式碼</dt><dd><code>b0ee94b24a42b0f3b4dcba4f95e642aa9c94e84e</code></dd>
+      <dt>R8 結構證據清單</dt><dd><code>f1e03b736e34d4a3227109e4f76c7ae0c70d93262e99ffdc04b0cec92c6452bb</code></dd>
+      <dt>R8 獨立人工審查紀錄</dt><dd><code>f92c497144c6d9d12e3e172cea495da4f914a8c99676040452a8a2ba7b58ceb8</code></dd>
+      <dt>G013 原始實測回執</dt><dd><code>07fcecba1fc9b81779c09f76508fb481e4192d408bdd51a4b79bbc54bdd88f12</code></dd>
+    </dl>
+  </details>
+  <nav aria-label="返回比較"><a href="index.html">互動比較</a><a href="delegation.html">委派比較</a><a href="taiwan.html">台灣用語比較</a></nav>
+</main></body>
+</html>
