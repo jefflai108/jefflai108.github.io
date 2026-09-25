@@ -1,0 +1,56 @@
+{
+  "generatedOn": "2026-09-25",
+  "modelId": "eleven_multilingual_v2",
+  "text": "你好，很高興認識你。今天想聊些什麼呢？",
+  "translation": "Hi, it's nice to meet you. What would you like to talk about today?",
+  "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.0,
+    "use_speaker_boost": true,
+    "speed": 1.0
+  },
+  "seed": 42,
+  "samples": [
+    {
+      "label": "Yao Yuan Wu",
+      "description": "Warm, Sweet and Friendly",
+      "voiceId": "R55vTH9XmVSyAcM6YvtV",
+      "audioPath": "/tts/audio/2026-09-25/01-yao-yuan-wu.mp3",
+      "durationSeconds": 3.529433,
+      "sha256": "588d785e67faa2547c3bdb001d7eb3ffc61e6793da4dcc973cf9ad01977b5a25"
+    },
+    {
+      "label": "Chen Mandarin Chinese",
+      "description": "Clear, warm, and natural delivery",
+      "voiceId": "4NQthjVhIGGVfL3Si000",
+      "audioPath": "/tts/audio/2026-09-25/02-chen-mandarin-chinese.mp3",
+      "durationSeconds": 3.854512,
+      "sha256": "65957465af4327c94cc58e5578780f4c454638ab5dd42b7819f575c68c77b79c"
+    },
+    {
+      "label": "Tiffy",
+      "description": "Taiwanese Bilingual Narrator",
+      "voiceId": "1AKkSX7KMPHIWuz76m0n",
+      "audioPath": "/tts/audio/2026-09-25/03-tiffy.mp3",
+      "durationSeconds": 3.250794,
+      "sha256": "2cf0ae3c919141ea0efea0cb47e17748104c72256b52f1f899c821dcb1871bdd"
+    },
+    {
+      "label": "Anna Su",
+      "description": "Casual, Friendly and Bright",
+      "voiceId": "9lHjugDhwqoxA5MhX0az",
+      "audioPath": "/tts/audio/2026-09-25/04-anna-su.mp3",
+      "durationSeconds": 3.529433,
+      "sha256": "a8a4b833b8a9b908305d5e81f6aa1c4100e54ab63e607d14375783a5a7085609"
+    },
+    {
+      "label": "Anna Su 2",
+      "description": "Trustworthy, Clear and Natural",
+      "voiceId": "r6qgCCGI7RWKXCagm158",
+      "audioPath": "/tts/audio/2026-09-25/05-anna-su-2.mp3",
+      "durationSeconds": 4.272472,
+      "sha256": "5cab888a98c64aa63acc091801936d05a550338b08f28b588012cff65e12f025"
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+---
+import Base from '../layouts/Base.astro';
+import comparison from '../data/tts.json';
+
+const { samples, settings } = comparison;
+---
+
+<Base
+  nav="tts"
+  title="Mandarin voice comparison — Cheng-I Jeff Lai"
+  description="Listen to five ElevenLabs voices reading the same Mandarin sentence with Multilingual v2: Yao Yuan Wu, Chen, Tiffy, and two Anna Su voices."
+>
+  <main id="main" class="tts-page">
+    <header class="tts-intro">
+      <p class="eyebrow">SPEECH / LISTENING ROOM</p>
+      <h1>Mandarin voice comparison</h1>
+      <p class="intro-text">Five ElevenLabs voices. The same sentence, model, and settings.</p>
+      <div class="sample-meta">
+        <span>Taiwanese Mandarin</span>
+        <span>Multilingual v2</span>
+        <time datetime={comparison.generatedOn}>September 25, 2026</time>
+      </div>
+    </header>
+
+    <div class="comparison-layout">
+      <aside class="sample-context" aria-label="Shared sample and generation settings">
+        <section aria-labelledby="transcript-heading">
+          <h2 id="transcript-heading" class="eyebrow">THE SHARED TEXT</h2>
+          <blockquote id="sample-transcript" lang="zh-Hant-TW">
+            {comparison.text.split(/(?<=。)/u).map((sentence) => <span>{sentence}</span>)}
+          </blockquote>
+          <p class="translation">{comparison.translation}</p>
+          <p class="listening-note">Listen for differences in tone, rhythm, and pronunciation.</p>
+        </section>
+
+        <details class="generation-details">
+          <summary>Generation settings</summary>
+          <dl>
+            <div><dt>Model</dt><dd><code>{comparison.modelId}</code></dd></div>
+            <div><dt>Stability</dt><dd>{settings.stability}</dd></div>
+            <div><dt>Similarity</dt><dd>{settings.similarity_boost}</dd></div>
+            <div><dt>Style</dt><dd>{settings.style}</dd></div>
+            <div><dt>Speed</dt><dd>{settings.speed}×</dd></div>
+            <div><dt>Speaker boost</dt><dd>{settings.use_speaker_boost ? 'On' : 'Off'}</dd></div>
+            <div><dt>Seed</dt><dd>{comparison.seed}</dd></div>
+            <div><dt>Audio format</dt><dd>MP3 · 44.1 kHz · 128 kbps</dd></div>
+          </dl>
+          <p>One generated sample per voice, with the original audio preserved.</p>
+        </details>
+      </aside>
+
+      <section class="samples" aria-labelledby="samples-heading">
+        <div class="samples-toolbar">
+          <h2 id="samples-heading">Listen & compare <span>05 voices</span></h2>
+          <button type="button" class="play-all" data-play-all aria-controls="voice-samples" hidden>
+            Play all five
+          </button>
+        </div>
+        <p class="playback-status" data-playback-status role="status" aria-live="polite">
+          Choose a voice below to start listening.
+        </p>
+
+        <ol id="voice-samples" class="voice-list">
+          {samples.map((sample, index) => (
+            <li class="voice-row" data-voice-row>
+              <span class="voice-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+              <div class="voice-content">
+                <div class="voice-heading">
+                  <h3 id={`voice-${sample.voiceId}`}>{sample.label}</h3>
+                  <span class="duration">{sample.durationSeconds.toFixed(2)}s audio</span>
+                </div>
+                <p class="voice-description">{sample.description}</p>
+                <audio
+                  controls
+                  preload="metadata"
+                  src={sample.audioPath}
+                  aria-labelledby={`voice-${sample.voiceId}`}
+                  aria-describedby="sample-transcript"
+                  data-voice-name={sample.label}
+                >
+                  Your browser does not support audio playback. <a href={sample.audioPath}>Download the MP3</a>.
+                </audio>
+                <div class="voice-links">
+                  <a href={`https://elevenlabs.io/voices/${sample.voiceId}`} target="_blank" rel="noopener noreferrer">
+                    Voice profile <span aria-hidden="true">↗</span>
+                  </a>
+                  <a href={sample.audioPath} download>Download MP3 <span aria-hidden="true">↓</span></a>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <p class="sample-caption">AI-generated speech. Voice descriptions are from the ElevenLabs listings.</p>
+      </section>
+    </div>
+
+    <footer class="site-footer">
+      <a href="/">Cheng-I Jeff Lai</a> · Speech experiments · <time datetime={comparison.generatedOn}>{comparison.generatedOn}</time>
+    </footer>
+  </main>
+</Base>
+
+<script>
+  import '../scripts/tts-comparison';
+</script>
+
+<style>
+  .tts-page { max-width: 68rem; margin: 0 auto; padding: 0 1.4rem; }
+  .tts-intro { padding: 3.7rem 0 2.3rem; border-bottom: 1px solid var(--rule); }
+  .eyebrow { margin: 0 0 0.9rem; font: 600 0.68rem var(--mono); letter-spacing: 0.16em; color: var(--accent); }
+  h1 { margin: 0; font: 900 clamp(2rem, 4.8vw, 3.2rem)/1.15 var(--serif); letter-spacing: -0.035em; }
+  .intro-text { margin: 1rem 0 1.3rem; color: var(--fg-2); font-size: 1rem; }
+  .sample-meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; font: 0.71rem/1.6 var(--mono); color: var(--fg-3); }
+  .comparison-layout { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.4fr); gap: 3.5rem; padding-top: 2.5rem; }
+  .sample-context { align-self: start; position: sticky; top: 5.5rem; }
+  blockquote { margin: 1.2rem 0; font-family: 'PingFang TC', 'Microsoft JhengHei', var(--sans); font-size: clamp(1.6rem, 2.5vw, 2rem); font-weight: 500; line-height: 1.9; letter-spacing: 0.02em; }
+  blockquote span { display: block; }
+  .translation { max-width: 31ch; margin: 0; font-size: 0.88rem; line-height: 1.7; color: var(--fg-2); }
+  .listening-note { max-width: 31ch; margin: 1.5rem 0 0; color: var(--fg-3); font-size: 0.8rem; line-height: 1.7; }
+  .generation-details { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: 0.8rem; }
+  summary { cursor: pointer; color: var(--fg-2); font-weight: 500; }
+  summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  dl { margin: 1rem 0; }
+  dl div { display: flex; justify-content: space-between; gap: 1rem; padding: 0.3rem 0; }
+  dt { color: var(--fg-3); }
+  dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
+  code { font: 0.7rem var(--mono); }
+  .generation-details > p { color: var(--fg-3); line-height: 1.7; }
+  .samples { min-width: 0; }
+  .samples-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .samples-toolbar h2 { margin: 0; font: 900 1.15rem/1.4 var(--serif); }
+  .samples-toolbar h2 span { display: block; margin-top: 0.2rem; font: 0.65rem var(--mono); color: var(--fg-3); }
+  .play-all { flex-shrink: 0; border: 1px solid var(--accent); background: var(--accent); color: var(--bg); padding: 0.6rem 0.95rem; border-radius: 4px; font: 600 0.78rem var(--sans); cursor: pointer; }
+  .play-all:hover { background: var(--accent-2); border-color: var(--accent-2); }
+  .playback-status { min-height: 2.6em; margin: 0.9rem 0 0; color: var(--fg-3); font-size: 0.74rem; }
+  .voice-row { display: grid; grid-template-columns: 1.5rem minmax(0, 1fr); gap: 0.8rem; padding: 1.35rem 0.65rem 1.35rem 0; border-top: 1px solid var(--rule); transition: background 160ms ease; }
+  .voice-row[data-playing] { background: var(--bg-2); }
+  .voice-number { padding-top: 0.2rem; font: 0.72rem/1.5 var(--mono); color: var(--fg-3); }
+  .voice-row[data-playing] .voice-number { color: var(--accent); }
+  .voice-heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.3rem 1rem; }
+  h3 { margin: 0; font-size: 0.98rem; font-weight: 600; }
+  .duration { margin-left: auto; font: 0.65rem var(--mono); color: var(--fg-3); white-space: nowrap; }
+  .voice-description { margin: 0.25rem 0 0.8rem; color: var(--fg-3); font-size: 0.78rem; }
+  audio { display: block; width: 100%; height: 40px; }
+  audio:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+  .voice-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; margin-top: 0.6rem; font: 0.66rem/1.8 var(--mono); }
+  .sample-caption { margin: 0.8rem 0 0; color: var(--fg-3); font-size: 0.72rem; line-height: 1.7; }
+  .site-footer time { white-space: nowrap; }
+  @media (max-width: 780px) {
+    .comparison-layout { grid-template-columns: 1fr; gap: 2.2rem; }
+    .sample-context { position: static; }
+    .translation, .listening-note { max-width: none; }
+    .generation-details { margin-top: 1.3rem; }
+    blockquote { max-width: 22ch; font-size: 1.7rem; }
+    .tts-intro { padding-top: 2.6rem; }
+  }
+  @media (max-width: 460px) {
+    .tts-page { padding: 0 1rem; }
+    .tts-intro { padding-top: 2rem; }
+    .sample-meta { gap: 0.35rem 1rem; font-size: 0.65rem; }
+    .comparison-layout { padding-top: 2rem; }
+    .voice-row { gap: 0.5rem; padding-right: 0; }
+    .duration { font-size: 0.6rem; }
+    .play-all { padding: 0.65rem 0.8rem; }
+  }
+</style>
