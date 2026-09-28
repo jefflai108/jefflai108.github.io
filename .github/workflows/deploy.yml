@@ -82,6 +82,20 @@ jobs:
               "$RUNNER_TEMP/tts-benchmark-assets/tts-v3-benchmark-zh-$style-2026-09-25.zip" dist \
               --manifest "scripts/tts-benchmark-zh-$style-assets.json"
           done
+          for suffix in '' '-zh-emotion' '-zh-vocal' '-en-us'; do
+            gh release download "tts-v4-benchmark$suffix-2026-09-28" \
+              --pattern "tts-v4-benchmark$suffix-2026-09-28.zip" \
+              --dir "$RUNNER_TEMP/tts-benchmark-assets"
+            python3 scripts/install-tts-assets.py \
+              "$RUNNER_TEMP/tts-benchmark-assets/tts-v4-benchmark$suffix-2026-09-28.zip" dist \
+              --manifest "scripts/tts-benchmark-v4$suffix-assets.json"
+          done
+          gh release download tts-microphone-pilot-2026-09-28 \
+            --pattern tts-microphone-pilot-2026-09-28.zip \
+            --dir "$RUNNER_TEMP/tts-benchmark-assets"
+          python3 scripts/install-tts-assets.py \
+            "$RUNNER_TEMP/tts-benchmark-assets/tts-microphone-pilot-2026-09-28.zip" dist \
+            --manifest scripts/tts-benchmark-microphone-assets.json
 
       # Generated JPEGs live in a release asset, never in the Git history.
       # Both the archive and every extracted image are pinned by SHA-256.

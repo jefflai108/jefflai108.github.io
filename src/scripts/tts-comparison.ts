@@ -3,12 +3,15 @@ export {};
 
 const dataNode = document.querySelector<HTMLScriptElement>('#tts-data');
 const paragraphSelect = document.querySelector<HTMLSelectElement>('#tts-paragraph');
+const styleSelect = document.querySelector<HTMLSelectElement>('#tts-style');
+const benchmarkStyleSelect = document.querySelector<HTMLSelectElement>('#tts-benchmark-style');
 const benchmarkSelect = document.querySelector<HTMLSelectElement>('#tts-benchmark-language');
 const playAll = document.querySelector<HTMLButtonElement>('[data-play-all]');
 const status = document.querySelector<HTMLElement>('[data-playback-status]');
 const players = Array.from(document.querySelectorAll<HTMLAudioElement>('audio[data-voice-name]'));
 
-if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && players.length) {
+
+if (dataNode && paragraphSelect && styleSelect && benchmarkStyleSelect && benchmarkSelect && playAll && status && players.length) {
   const data: Comparison = JSON.parse(dataNode.textContent!);
   const previous = document.querySelector<HTMLButtonElement>('[data-previous]')!;
   const next = document.querySelector<HTMLButtonElement>('[data-next]')!;
@@ -22,6 +25,8 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
   let queueOwner: HTMLButtonElement | null = null;
   let active: HTMLAudioElement | null = null;
   let playbackVersion = 0;
+  let selectedStyle = 'plain';
+  const allowedStyles = ['plain', 'emotion', 'vocal', 'all'];
 
   function updateButtons() {
     playAll!.textContent = queue.length ? 'Stop playback' : 'Play all voices';
@@ -30,7 +35,7 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
       const voice = group[0].dataset.voiceName;
       const count = visible(group).length;
       const playingGroup = queue.length > 0 && queueOwner === button;
-      button.textContent = playingGroup ? 'Stop playback' : count === 4 ? 'Play all four' : 'Play both';
+      button.textContent = playingGroup ? 'Stop playback' : `Play all ${count}`;
       button.setAttribute('aria-label', playingGroup ? `Stop playback for ${voice}` : `Play all ${count} versions for ${voice}`);
     });
   }
@@ -51,6 +56,18 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
       delete panels[index].dataset.playing;
     });
   }
+
+  // Switching to the fixed-passage pilot cancels the main queue immediately.
+  document.addEventListener('play', event => {
+    if (!(event.target instanceof HTMLAudioElement)) return;
+    if (!players.includes(event.target)) {
+      stopPlayers();
+      status!.textContent = 'Use the microphone pilot players below to compare this tag.';
+    }
+    document.querySelectorAll('audio').forEach(player => {
+      if (player !== event.target) player.pause();
+    });
+  }, true);
 
   function playerLabel(player: HTMLAudioElement) {
     return `${player.dataset.voiceName} · ${player.dataset.versionName}`;
@@ -79,10 +96,17 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
     void playNext(0);
   }
 
-  function updateBenchmark(language: string) {
+  function updateBenchmark(language: string, style = benchmarkStyleSelect!.value) {
     benchmarkSelect!.value = language;
+    const mandarin = language === 'zh-Hant-TW';
+    benchmarkStyleSelect!.disabled = !mandarin;
+    benchmarkStyleSelect!.value = mandarin ? style : 'plain';
+    benchmarkStyleSelect!.options[0].text = mandarin ? 'Plain text · 4 models' : 'American accent · 4 models';
     document.querySelectorAll<HTMLElement>('[data-benchmark-cohort]').forEach(panel => {
       panel.hidden = panel.dataset.language !== language;
+      panel.querySelectorAll<HTMLElement>('[data-benchmark-style]').forEach(group => {
+        group.hidden = benchmarkStyleSelect!.value !== 'all' && group.dataset.benchmarkStyle !== benchmarkStyleSelect!.value;
+      });
     });
   }
 
@@ -91,12 +115,17 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
     const paragraphIndex = data.paragraphs.findIndex(p => p.id === paragraphSelect!.value);
     const paragraph = data.paragraphs[paragraphIndex];
     const transcript = document.querySelector<HTMLElement>('#sample-transcript')!;
-    transcript.textContent = paragraph.text;
+    transcript.textContent = paragraph.spokenText ?? paragraph.text;
     transcript.lang = paragraph.language;
     const mandarin = paragraph.language === 'zh-Hant-TW';
+    const currentStyle = mandarin ? selectedStyle : 'plain';
+    styleSelect!.value = currentStyle;
+    styleSelect!.disabled = !mandarin;
+    styleSelect!.options[0].text = mandarin ? 'Plain text · 4 models' : 'American accent · 4 models';
+    const selectedVersions = paragraph.versions.filter(v => currentStyle === 'all' || v.style === currentStyle);
     document.querySelector('[data-generation-note]')!.textContent = mandarin
-      ? 'Four versions of the same words: the original two models, Eleven v3 with one emotion tag, and Eleven v3 with one vocal reaction tag.'
-      : 'Both models receive [strong American accent] before this passage. Eleven v3 plays first, then v3 Conversational.';
+      ? 'Compare four models with plain text, or three models with the exact same emotion or vocal-reaction tag. All styles shows all ten versions.'
+      : 'All four models receive the same passage prefixed with [strong American accent].';
     document.querySelector<HTMLElement>('[data-style-notes]')!.hidden = !mandarin;
     for (const id of ['emotion', 'vocal']) {
       const version = paragraph.versions.find(v => v.variantId === id);
@@ -106,14 +135,21 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
     }
     document.querySelector('[data-passage-category]')!.textContent = `${paragraph.languageLabel} · ${paragraph.category} · ${paragraph.sentences} ${paragraph.sentences === 1 ? 'sentence' : 'sentences'}`;
     document.querySelector('[data-passage-count]')!.textContent = `${String(paragraphIndex + 1).padStart(2, '0')} / ${data.paragraphs.length}`;
-    document.querySelector('[data-version-count]')!.textContent = `07 voices · ${String(paragraph.versions.length).padStart(2, '0')} versions per voice`;
-    document.querySelectorAll<HTMLElement>('[data-version-grid]').forEach(grid => { grid.dataset.versions = String(paragraph.versions.length); });
+    document.querySelector('[data-version-count]')!.textContent = `07 voices · ${String(selectedVersions.length).padStart(2, '0')} of ${String(paragraph.versions.length).padStart(2, '0')} versions per voice`;
+    document.querySelectorAll<HTMLElement>('[data-comparison-style]').forEach(group => {
+      const style = group.dataset.comparisonStyle;
+      const versions = selectedVersions.filter(v => v.style === style);
+      group.hidden = versions.length === 0;
+      group.querySelector<HTMLElement>('[data-version-grid]')!.dataset.versions = String(versions.length);
+      group.querySelector('[data-style-title]')!.textContent = !mandarin ? 'American accent' : data.styles.find(s => s.id === style)!.label;
+      group.querySelector('[data-style-tag]')!.textContent = versions[0]?.audioTags.join(' ') || 'No tags';
+    });
     previous.disabled = paragraphIndex === 0;
     next.disabled = paragraphIndex === data.paragraphs.length - 1;
     players.forEach((player, index) => {
       const panel = panels[index];
       const voiceId = player.closest<HTMLElement>('[data-voice-row]')!.dataset.voiceId;
-      const version = paragraph.versions.find(v => v.variantId === panel.dataset.variantId);
+      const version = selectedVersions.find(v => v.variantId === panel.dataset.variantId);
       panel.hidden = !version;
       if (!version) {
         if (player.hasAttribute('src')) {
@@ -131,18 +167,21 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
         player.currentTime = 0;
       }
       panel.querySelector('[data-sample-tags]')!.textContent = version.audioTags.join(' ') || 'No tags';
+      panel.querySelector('[data-recording-date]')!.textContent = version.generatedOn;
       panel.querySelector('[data-duration]')!.textContent = `${record.durationSeconds.toFixed(2)}s audio`;
       panel.querySelector('[data-ttfb]')!.textContent = `${Math.round(record.ttfbMs).toLocaleString('en-US')} ms`;
       panel.querySelector('[data-total]')!.textContent = `${(record.totalMs / 1000).toFixed(2)} s`;
       panel.querySelector<HTMLAnchorElement>('[data-download]')!.href = record.audioPath;
     });
     updateButtons();
-    updateBenchmark(paragraph.language);
+    updateBenchmark(paragraph.language, currentStyle);
     status!.textContent = `${paragraph.title}. Choose a player, compare one voice, or play all voices.`;
     if (updateUrl) {
       const url = new URL(window.location.href);
       url.searchParams.delete('model');
       url.searchParams.set('paragraph', paragraph.id);
+      if (mandarin && currentStyle !== 'plain') url.searchParams.set('style', currentStyle);
+      else url.searchParams.delete('style');
       window.history.replaceState(null, '', url);
     }
   }
@@ -210,7 +249,12 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
     });
   });
   paragraphSelect.addEventListener('change', () => updateSelection());
+  styleSelect.addEventListener('change', () => {
+    selectedStyle = styleSelect.value;
+    updateSelection();
+  });
   benchmarkSelect.addEventListener('change', () => updateBenchmark(benchmarkSelect.value));
+  benchmarkStyleSelect.addEventListener('change', () => updateBenchmark(benchmarkSelect.value));
   previous.addEventListener('click', () => {
     paragraphSelect.selectedIndex = Math.max(0, paragraphSelect.selectedIndex - 1);
     updateSelection();
@@ -220,7 +264,10 @@ if (dataNode && paragraphSelect && benchmarkSelect && playAll && status && playe
     updateSelection();
   });
 
-  const requestedParagraph = new URLSearchParams(window.location.search).get('paragraph');
+  const params = new URLSearchParams(window.location.search);
+  const requestedStyle = params.get('style');
+  if (requestedStyle && allowedStyles.includes(requestedStyle)) selectedStyle = requestedStyle;
+  const requestedParagraph = params.get('paragraph');
   if (data.paragraphs.some(p => p.id === requestedParagraph)) paragraphSelect.value = requestedParagraph!;
   updateSelection(false);
   paragraphSelect.disabled = false;

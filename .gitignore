@@ -27,3 +27,5 @@ taiwan-corpus-public*.zip
 
 # Full TTS benchmark audio is installed from a checksum-pinned release archive.
 /public/tts/audio/v3-benchmark-*/
+/public/tts/audio/v4-benchmark-*/
+/public/tts/audio/microphone-pilot-*/

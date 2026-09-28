@@ -1,0 +1,62 @@
+---
+import microphone from '../data/tts-benchmark-microphone.json';
+import { comparison } from '../data/tts-comparison';
+const passage = microphone.paragraphs[0];
+const ms = (value: number) => Math.round(value).toLocaleString('en-US');
+---
+
+<p class="pilot-description">One passage, all seven voices, three models. The exact tag <code>[speaking into the microphone]</code> is added before the same words. Listen to each plain reference and tagged recording to judge the effect.</p>
+<blockquote lang="zh-Hant-TW">{passage.spokenText}</blockquote>
+<details class="pilot-details">
+  <summary>Exact input and pilot method</summary>
+  <p lang="zh-Hant-TW">{passage.text}</p>
+  <p>21 tagged recordings generated on {microphone.generatedOn}, with one excluded warm-up per voice/model pair. Stability 0.5, similarity 0.75, seed {microphone.seed}; no Speed or Style setting. These are single samples, kept separate from the full latency benchmark.</p>
+  <p>The plain references come from the comparison above. v4 uses the same settings; the original v3 references used stability 0.5 and speed 1× without explicitly setting similarity. Their generation dates and timings are shown below.</p>
+  <p><a href="/tts/data/microphone-pilot.json" download>JSON ↓</a> · <a href="/tts/data/microphone-pilot.csv" download>CSV ↓</a> · <a href="https://elevenlabs.io/docs/overview/capabilities/text-to-speech/best-practices#prompting-eleven-v4" target="_blank" rel="noopener noreferrer">Audio-tag prompting guide ↗</a></p>
+</details>
+<div class="pilot-voices">
+  {microphone.voices.map(voice => <article class="pilot-voice" data-microphone-voice-row data-voice-id={voice.id}>
+    <h3>{voice.label}</h3>
+    <div class="pilot-models">
+      {microphone.models.map(model => {
+        const tagged = microphone.records.find(r => r.voiceId === voice.id && r.modelId === model.id)!;
+        const plain = comparison.records.find(r => r.voiceId === voice.id && r.variantId === model.id && r.paragraphId === passage.id)!;
+        const plainDate = comparison.paragraphs[0].versions.find(v => v.variantId === model.id)!.generatedOn;
+        return <section class="pilot-model" data-microphone-model={model.id}>
+          <h4>{model.label}</h4>
+          {[{label:'Plain reference', record:plain, date:plainDate, tag:'No tags', kind:'plain'}, {label:'Microphone direction', record:tagged, date:microphone.generatedOn, tag:'[speaking into the microphone]', kind:'tagged'}].map(sample => <div class="pilot-clip">
+            <p class="clip-label">{sample.label}</p>
+            <code>{sample.tag}</code>
+            <audio controls preload="none" src={sample.record.audioPath} data-microphone-voice={voice.label} data-microphone-kind={sample.kind} aria-label={`${voice.label} · ${model.label} · ${sample.label} · 好久不見`}>
+              Your browser does not support audio playback.
+            </audio>
+            <p class="pilot-timing">{sample.record.durationSeconds.toFixed(2)}s audio · first byte {ms(sample.record.ttfbMs)} ms · full request {(sample.record.totalMs / 1000).toFixed(2)} s</p>
+            <div class="pilot-download"><span>{sample.date}</span><a href={sample.record.audioPath} download aria-label={`Download ${voice.label} · ${model.label} · ${sample.label}`}>MP3 ↓</a></div>
+          </div>)}
+        </section>;
+      })}
+    </div>
+  </article>)}
+</div>
+
+<style>
+  .pilot-description { max-width: 85ch; color: var(--fg-2); line-height: 1.8; font-size: 0.88rem; }
+  blockquote { margin: 1.2rem 0; max-width: 65ch; font: 500 1.1rem/1.9 var(--sans); }
+  .pilot-details { color: var(--fg-2); font-size: 0.8rem; line-height: 1.8; max-width: 90ch; }
+  summary { cursor: pointer; font-weight: 600; }
+  summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  .pilot-voice { padding: 1.5rem 0; border-bottom: 1px solid var(--rule); }
+  h3 { margin: 0 0 0.8rem; font-size: 0.98rem; font-weight: 600; }
+  h4 { margin: 0; font-size: 0.85rem; }
+  .pilot-models { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+  .pilot-model { min-width: 0; padding: 1rem; background: var(--card); border: 1px solid var(--rule); border-radius: 4px; }
+  .pilot-clip { margin-top: 1rem; }
+  .pilot-clip + .pilot-clip { border-top: 1px solid var(--rule); padding-top: 0.8rem; }
+  .clip-label { font-size: 0.76rem; font-weight: 600; margin: 0 0 0.35rem; }
+  code { font: 0.68rem/1.7 var(--mono); overflow-wrap: anywhere; color: var(--fg-3); }
+  audio { display: block; width: 100%; height: 40px; margin-top: 0.7rem; }
+  audio:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+  .pilot-timing { margin: 0.6rem 0; font: 0.65rem/1.8 var(--mono); color: var(--fg-3); }
+  .pilot-download { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; font: 0.66rem/1.8 var(--mono); color: var(--fg-3); }
+  @media (max-width: 900px) { .pilot-models { grid-template-columns: 1fr; } }
+</style>

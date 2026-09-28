@@ -74,74 +74,102 @@ python3 -m unittest discover -s scripts -p 'test_image_comparison_assets.py'
 
 ## Mandarin and English TTS voice comparison
 
-The unlisted listening page at `/tts/` compares seven voices across twenty mixed
-Taiwanese Mandarin and ten English passages (1–3 sentences each). Mandarin has
-four versions: Eleven v3, v3 Conversational, Eleven v3 with one emotion tag, and
-Eleven v3 with one vocal reaction tag. English retains its two models with the
-American accent tag. The page is excluded from navigation and the
-sitemap and has a `noindex` robots tag. This is an unlisted static page, not an
-authenticated page.
+The unlisted `/tts/` page compares seven voices across twenty mixed Taiwanese
+Mandarin and ten English passages (1–3 sentences each). The four models are Eleven
+v3, v3 Conversational, Eleven v4, and Eleven v4 Turbo. Mandarin has ten versions:
+plain text for all four models, plus the same emotion and vocal-reaction inputs
+for v3, v4, and v4 Turbo. English has four versions, all prefixed with
+`[strong American accent]`. Navigation and sitemap omit the page, and its robots
+meta tag is `noindex, nofollow`. The static page is unlisted, not authenticated.
 
-`src/data/tts-corpus.json` and `tts-corpus-en-us.json` define the voices, passages, and
-shared settings. `src/data/tts-benchmark.json` contains the 280 Mandarin records;
-`tts-benchmark-en-us.json` contains 140 English records generated with
-`[strong American accent]` before each passage. The original words and settings
-are preserved; the exact tagged inputs appear in JSON/CSV and the listening page.
-The Mandarin style corpora and results use the suffixes `-zh-emotion` and
-`-zh-vocal`. Each passage has exactly one tag chosen for its meaning, a selection
-reason, and the unchanged spoken text. Both extra styles use `eleven_v3` with the
-original settings. Each dataset has audio checksums and separate latency summaries.
+The original `src/data/tts-corpus*.json` and `tts-benchmark*.json` datasets are
+preserved. New v4 corpora and results use `tts-corpus-v4` / `tts-benchmark-v4`,
+with suffixes `-zh-emotion`, `-zh-vocal`, and `-en-us` for the other runs.
+The v4 corpora copy the original voices, passages, exact tag prefixes, selection
+reasons, request seeds, and output format. Their stability is 0.5 and similarity
+is 0.75; Speed and Style settings are omitted because v4 does not support them.
+Original v3 requests used stability 0.5 and speed 1.0, without explicitly setting
+similarity. v3 was measured on September 25 and v4 on September 28, 2026;
+the page identifies these separate sessions instead of implying simultaneous
+measurements. Each dataset has per-clip checksums and separate latency summaries.
 
-`tts-comparison.ts` combines them using a distinct variant ID while preserving
-the real model ID. Mandarin shows four columns on desktop, two on tablets, and
-one on phones; English has two versions. “Play all four” / “Play both” queues
-one voice, and “Play all voices” queues 28 Mandarin or 14 English clips. Starting
-another player or changing the passage cancels the queue. Hidden Mandarin style
-players have their sources removed when switching to English. The page shows
-chosen tags, reasons, expandable exact inputs, per-clip timings, median/p95
-tables, and CSV/JSON downloads.
-The client uses prerecorded audio and makes no ElevenLabs API calls.
+`tts-comparison.ts` validates that every voice/passage/version has a recording
+and that models within a style receive exactly the same input and tags. It keeps
+version IDs distinct from model IDs. The comparison selector switches between
+Plain text (4 models), Emotion (3), Vocal reaction (3), and All styles (10).
+Models appear side by side within each style, then stack on smaller screens.
+`?paragraph=p11&style=emotion` links directly to a comparison. English always
+shows four models with the American accent tag. The latency language/style
+selectors can also be changed independently of the players.
 
-Reproduce the benchmark with `ELEVENLABS_API_KEY` set in the environment and
-`ffmpeg`/`ffprobe` installed. Generation consumes ElevenLabs credits; raw logs stay
-outside the repository. Warm-ups are excluded, calls are sequential, and order is
-randomized. First-byte and full-request timings include network time and exclude
-local file writing and decoding; neither is pure server processing time.
+“Play all N” queues the visible versions for one voice; “Play all voices” queues
+all seven voices in that view (28 plain, 21 emotion/vocal, or 70 for all Mandarin
+styles; 28 English). Changing the passage or style stops playback and clears
+hidden player sources. Tags, reasons, exact inputs, generation dates, per-clip
+timings, median/p95 tables, and CSV/JSON downloads are available. Audio is loaded
+on demand, and the browser makes no ElevenLabs API calls.
+
+Reproduce a run with `ELEVENLABS_API_KEY` set in the environment and
+`ffmpeg`/`ffprobe` installed. Generation consumes credits; raw logs stay outside
+the repository. Calls and whole runs are sequential, with randomized passage
+and voice/model order. One warm-up per voice/model pair is excluded in each run.
+Timings include network time and exclude local file writing and decoding;
+neither first byte nor full request is pure server processing time or audible
+playback latency. Runs resume from successful jobs without charging for them
+again. Check the account allowance before starting a batch.
 
 ```bash
-python3 scripts/benchmark-tts.py --output /path/to/private-run
-python3 scripts/package-tts-benchmark.py /path/to/private-run
-python3 scripts/benchmark-tts.py --corpus src/data/tts-corpus-en-us.json --output /path/to/private-english-run
-python3 scripts/package-tts-benchmark.py /path/to/private-english-run --language en-US
-python3 scripts/benchmark-tts.py --corpus src/data/tts-corpus-zh-emotion.json --output /path/to/private-emotion-run
-python3 scripts/package-tts-benchmark.py /path/to/private-emotion-run --style emotion
-python3 scripts/benchmark-tts.py --corpus src/data/tts-corpus-zh-vocal.json --output /path/to/private-vocal-run
-python3 scripts/package-tts-benchmark.py /path/to/private-vocal-run --style vocal
+# Original family (retained for reproducibility)
+python3 scripts/benchmark-tts.py --output /path/to/private-v3-run
+python3 scripts/package-tts-benchmark.py /path/to/private-v3-run
+
+# New v4 family: plain Mandarin
+python3 scripts/benchmark-tts.py --corpus src/data/tts-corpus-v4.json --output /path/to/private-v4-plain
+python3 scripts/package-tts-benchmark.py /path/to/private-v4-plain --family v4 --date 2026-09-28
+
+# Matching Mandarin emotion / vocal reaction (repeat with vocal)
+python3 scripts/benchmark-tts.py --corpus src/data/tts-corpus-v4-zh-emotion.json --output /path/to/private-v4-emotion
+python3 scripts/package-tts-benchmark.py /path/to/private-v4-emotion --family v4 --date 2026-09-28 --style emotion
+
+# English with the same American accent tag
+python3 scripts/benchmark-tts.py --corpus src/data/tts-corpus-v4-en-us.json --output /path/to/private-v4-english
+python3 scripts/package-tts-benchmark.py /path/to/private-v4-english --family v4 --date 2026-09-28 --language en-US
 python3 -m unittest discover -s scripts -p 'test_tts_assets.py'
 ```
 
-The 700 active MP3s (560 Mandarin and 140 English) are distributed through pinned
-GitHub releases `tts-v3-benchmark-2026-09-25`,
-`tts-v3-benchmark-en-us-2026-09-25`,
-`tts-v3-benchmark-zh-emotion-2026-09-25`, and
-`tts-v3-benchmark-zh-vocal-2026-09-25`. Run generation sequentially; the original
-Mandarin benchmark and each style were measured in separate runs.
-CI verifies the archive inventory, byte counts, and
-SHA-256 hashes before installing it into `dist/`. For local preview, download
-the release archive and run `python3 scripts/install-tts-assets.py ARCHIVE.zip dist`
-after building, or use `public` as the destination before starting the dev server.
-For the active English archive, pass `--manifest scripts/tts-benchmark-en-us-assets.json`.
-For style archives, pass `--manifest scripts/tts-benchmark-zh-emotion-assets.json`
-or `--manifest scripts/tts-benchmark-zh-vocal-assets.json`.
-Generated audio is excluded from Git. Publish the archive before pushing code
-that references it to master.
+The 1,680 benchmark MP3s (1,400 Mandarin and 280 English) are distributed through
+checksum-pinned GitHub release archives. Original releases are named
+`tts-v3-benchmark{suffix}-2026-09-25`; new releases are named
+`tts-v4-benchmark{suffix}-2026-09-28`. In each family the active suffixes are
+empty, `-zh-emotion`, `-zh-vocal`, and `-en-us`. The v4 packaging command verifies
+that each passage and tag matches its original corpus before creating the archive.
+CI verifies the entire inventory, byte counts, and SHA-256 hashes before installing
+an archive into `dist/`. For a local preview, install into `public` before starting
+the dev server, or into `dist` after building:
 
-The original untagged English corpus, results, and release are retained as
-`tts-corpus-en.json`, `tts-benchmark-en.json`, and `tts-v3-benchmark-en-2026-09-25`.
-CI still installs that archive so previously shared MP3 and data URLs keep working.
+```bash
+python3 scripts/install-tts-assets.py ARCHIVE.zip dist --manifest scripts/tts-benchmark-v4-zh-emotion-assets.json
+```
 
-The original five Multilingual v2 clips and metadata remain at
-`public/tts/audio/2026-09-25/` and `src/data/tts.json`, preserving their published URLs.
+Select the matching manifest for each archive. Generated MP3s stay outside Git;
+publish each archive before pushing code that references it to master. Existing
+release assets are never overwritten. The original untagged English dataset and
+`tts-v3-benchmark-en-2026-09-25` release remain installed for old shared URLs.
+The original five Multilingual v2 clips and metadata also remain at
+`public/tts/audio/2026-09-25/` and `src/data/tts.json`.
+
+The separate microphone pilot adds 21 recordings: one shared Mandarin passage
+(`p01`) across seven voices and v3, v4, and v4 Turbo, prefixed with the exact tag
+`[speaking into the microphone]`. `/tts/#microphone` pairs each with its existing
+plain reference. Pilot settings are stability 0.5, similarity 0.75, seed 42;
+original v3 reference settings differ as disclosed on the page. Pilot statistics
+are not pooled into the full benchmark. Playback is exclusive across both sections.
+
+The corpus/results use the `-microphone` suffix. Package with
+`python3 scripts/package-tts-benchmark.py RUN --pilot microphone --date 2026-09-28`;
+the release is `tts-microphone-pilot-2026-09-28`, and its manifest is
+`scripts/tts-benchmark-microphone-assets.json`. This brings the active set to
+1,701 unique recordings while preserving the older shared URLs.
 
 ## LINE architecture comparison
 

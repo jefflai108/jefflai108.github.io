@@ -53,6 +53,40 @@ class AudioArchiveTests(unittest.TestCase):
             for path in installed:
                 self.assertEqual((self.destination / path).read_bytes(), b'authored test audio bytes')
 
+    def test_v4_models_and_styles_coexist_with_v3(self):
+        module.install(self.archive, self.destination, self.fixture())
+        installed = [NAME]
+        for model in ['eleven_v4', 'eleven_v4_turbo']:
+            for variant, paragraph in [('', 'p01'), ('en-us-', 'en01'), ('zh-emotion-', 'p01'), ('zh-vocal-', 'p01')]:
+                name = f'tts/audio/v4-benchmark-{variant}2026-09-28/{model}/hua/{paragraph}.mp3'
+                manifest = self.fixture([name])
+                manifest['files'][0]['path'] = name
+                self.assertEqual(module.install(self.archive, self.destination, manifest), 1)
+                installed.append(name)
+                for path in installed:
+                    self.assertEqual((self.destination / path).read_bytes(), b'authored test audio bytes')
+
+    def test_rejects_model_in_wrong_family_namespace(self):
+        for family, model in [('v3', 'eleven_v4'), ('v4', 'eleven_v3')]:
+            name = f'tts/audio/{family}-benchmark-2026-09-28/{model}/hua/p01.mp3'
+            manifest = self.fixture([name])
+            manifest['files'][0]['path'] = name
+            self.rejected(manifest)
+
+    def test_microphone_pilot_models(self):
+        for model in ['eleven_v3', 'eleven_v4', 'eleven_v4_turbo']:
+            name = f'tts/audio/microphone-pilot-2026-09-28/{model}/hua/p01.mp3'
+            manifest = self.fixture([name])
+            manifest['files'][0]['path'] = name
+            self.assertEqual(module.install(self.archive, self.destination, manifest), 1)
+            self.assertEqual((self.destination / name).read_bytes(), b'authored test audio bytes')
+
+    def test_rejects_unexpected_pilot_passage(self):
+        name = 'tts/audio/microphone-pilot-2026-09-28/eleven_v4/hua/p02.mp3'
+        manifest = self.fixture([name])
+        manifest['files'][0]['path'] = name
+        self.rejected(manifest)
+
     def test_rejects_changed_archive(self):
         manifest = self.fixture()
         manifest['archiveSha256'] = '0' * 64

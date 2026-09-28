@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "releaseTag": "tts-microphone-pilot-2026-09-28",
+  "archiveName": "tts-microphone-pilot-2026-09-28.zip",
+  "archiveBytes": 2660659,
+  "archiveSha256": "e5785caf515a4e4eee4eab5e7d7b9f97d8ee14831fd374595dbba94d06fa297b",
+  "files": [
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v3/anna-su-2/p01.mp3",
+      "bytes": 154271,
+      "sha256": "718f4627e1395bbd9e660a9204556f58f7eb63cceb250a14a9729a10696ccb3a"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v3/anna-su/p01.mp3",
+      "bytes": 138807,
+      "sha256": "11f19964c56ca35880a46dd4613f12b4103f0ca9474727576460f83f74a6d707"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v3/chen/p01.mp3",
+      "bytes": 151764,
+      "sha256": "56cfae0986489a539dd2d337f634a1deae54de40561455c41250e10028dccf59"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v3/hua/p01.mp3",
+      "bytes": 137553,
+      "sha256": "fd78c21cb50b779a2f6d8bfe08f4fd4a0c654ce7386c9448fa5459634830c571"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v3/tiffy/p01.mp3",
+      "bytes": 148002,
+      "sha256": "0d6291157e72da70119b7bb7776515d69d915b42ee952c5b01bb8ee23a6fc458"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v3/yao-yuan-wu/p01.mp3",
+      "bytes": 127522,
+      "sha256": "d11f00a717b4c839e5f382a266eed36f5d5c91d2743ecac106095962cc6dc7df"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v3/zack/p01.mp3",
+      "bytes": 150510,
+      "sha256": "d5ac7d356924d3155741ab215e9afe59ec690388494a428949f8faf67f6a47d6"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v4/anna-su-2/p01.mp3",
+      "bytes": 119581,
+      "sha256": "f7318a7c869c36098095eceaf3fb3a33a2173d93cafb029d50a92b1de812f701"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v4/anna-su/p01.mp3",
+      "bytes": 114565,
+      "sha256": "7fe119f77dee8bee10755e3426fb672770cf1b28a3e3199ebb9eecb907f49859"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v4/chen/p01.mp3",
+      "bytes": 125014,
+      "sha256": "8f0012bb7ee918459ba854dc90a4a543848b3df09f2376c9da373a65cfb33d71"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v4/hua/p01.mp3",
+      "bytes": 123342,
+      "sha256": "2c3f675b9244c57f551a71c37e98b8cf35173f8911f0294aa59f2eb38ff676be"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v4/tiffy/p01.mp3",
+      "bytes": 123342,
+      "sha256": "5680a533b371aeea279398e9f3a020b9eea0f41d5ace98497deac0ce476cb20d"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v4/yao-yuan-wu/p01.mp3",
+      "bytes": 109550,
+      "sha256": "8c5a911045f620ed15c35a6a8a4d358b217ecf8ccf3eac2bf303d7833b32f053"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v4/zack/p01.mp3",
+      "bytes": 115819,
+      "sha256": "d146814a5c570dd1e34be408a71f6dea1a3a9e26e1155bf9815ec8b7a6a2fd3a"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v4_turbo/anna-su-2/p01.mp3",
+      "bytes": 119581,
+      "sha256": "fa2a580ca04bac95642c85f6fed09d928dd86ce7dca23c5f462a6724efb28f64"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v4_turbo/anna-su/p01.mp3",
+      "bytes": 114565,
+      "sha256": "ee200877da197d39b74c76e26788f30923cd5ae690d8a66ef957f9b70659a5f5"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v4_turbo/chen/p01.mp3",
+      "bytes": 130030,
+      "sha256": "0dcd45c392d457c86a16227b682ddcfcc82c09f02a9d282557e42b092c66c83c"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v4_turbo/hua/p01.mp3",
+      "bytes": 123342,
+      "sha256": "a6615055b22cfe17f9fface1e134408cd8c24e95ce780aba6eca70e9888614c9"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v4_turbo/tiffy/p01.mp3",
+      "bytes": 123342,
+      "sha256": "29d210ca53f147ffd2360f773cf59bbc6eca64d02b59aadff6b1a3cef891908f"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v4_turbo/yao-yuan-wu/p01.mp3",
+      "bytes": 112058,
+      "sha256": "5fc2958a0439ca4124be2d325b7b224efee2622e5c475a425b8cc55b23665cba"
+    },
+    {
+      "path": "tts/audio/microphone-pilot-2026-09-28/eleven_v4_turbo/zack/p01.mp3",
+      "bytes": 115819,
+      "sha256": "b8f8c7ab46d6a092f4453944ab225167524b2f666296d560eb18546c8921ba09"
+    }
+  ]
+}
