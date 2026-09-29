@@ -2,61 +2,67 @@
   "version": 1,
   "raster_format": "jpeg",
   "navigation_version": "recovery-r13-7d2c7110",
-  "comparison_manifest_before_sha256": "0504a5bb43cee7f19e4a7db56a5fc6c72eaf625392aa50e9a6dfc6719d92df7d",
-  "comparison_manifest_sha256": "daaaa7e6c24625dcec43684acd997aa26d41c1d78560d5b286e208da79e70c3a",
+  "comparison_manifest_before_sha256": "d69395273676dc60fd5a10c19b455ebc2a9885fbae6b10ca1b4f0695ca856231",
+  "comparison_manifest_sha256": "0504a5bb43cee7f19e4a7db56a5fc6c72eaf625392aa50e9a6dfc6719d92df7d",
   "suites": {
     "interaction": {
-      "source_ref": "40e341388d795c39f693ca124c7aa9ba6558ad35",
-      "run_id": "interaction-six-arm-minimal-20260928",
-      "results_sha256": "c16f8e570ee62b2d40223a83dd477c629d5c1b05e5f54625b172668d17f149c1",
-      "public_results_sha256": "298a505199bbfa991b8670f60b38717d2224b2c1024e6608ea682f07562ec660",
-      "render_manifest_sha256": "d55e55ae8a35ef2f0256db516bde5cc579cae642aaf292599891759e337a417a",
-      "download_format": "svg",
-      "raster_format": null,
-      "note": "Fresh interaction downloads are SVG only. Prior interaction JPEGs remain in the unchanged archive.",
-      "page_before_sha256": "6e61b68bd017e096e2c5fbef7864bd8c6d593c834d71c8522ec6cbce02a20a58",
+      "source_ref": "85d96a57db67d2b32911dfdd8847f43d284efa04",
+      "run_id": "final-reviewed-interaction",
+      "results_sha256": "25fa7b866eb2549beab75d5481ee0d1f017986a4d00a4078c9caabc08a888b28",
+      "public_results_sha256": "dd4874111e3fa676142716ca107ce1c0aace6f25ccd31e2e82c79e5a9d38cd45",
+      "plot_manifest_sha256": "77ef40b4f28e49b550d5c25a3efdb78c1c13876fff2f09073a1c31e287bb8525",
+      "page_before_sha256": "c41017b0343d66c76340960e6b7520ee4d28c8dde58a85ba311422347f82abb1",
       "page_before_binding": "first_installer_observation",
-      "page_after_sha256": "f7ef94c2f8d5cb1a30af9354535b4d1d6c43b5351e3f3f8e40a12b2adb4e9a92",
+      "page_after_sha256": "00708e66c50f96bdc1d3b5738a596cbb9d7d3f2385fa56768079e15cc7204e8f",
       "downloads": [
         {
           "svg": "interaction-latency.svg",
-          "svg_sha256": "215050fb4ffe2264a6b6e2be7fe7512947b3705eb2323bc13ae08a8bcdc7b888",
-          "bytes": 60170
+          "svg_sha256": "1d64d7da4c6d23f36071cc818a86f5dca76679c762e1ddb92924bce9af1820e3",
+          "jpeg": "assets/latency-25fa7b866eb2549b/interaction-all-attempts.jpg",
+          "jpeg_sha256": "4326233f60166c0d5f3d06b8474099dc0fafe089f6d5a326f93fa531573963ab",
+          "bytes": 219961
         },
         {
           "svg": "interaction-matched-latency.svg",
-          "svg_sha256": "dc6702a39c86fc3488f66672083f54f94f8d39bbdf53a9a2474d03434982aa99",
-          "bytes": 59028
+          "svg_sha256": "6708874f75b874b23b61b3fefabbac719c4c62f0279d0d9d55ef31ebe9e11973",
+          "jpeg": "assets/latency-25fa7b866eb2549b/interaction-matched.jpg",
+          "jpeg_sha256": "220dc5cf1e3e9b2625ead76c28741aea68e599143491364b61b899620e37e289",
+          "bytes": 212025
         },
         {
           "svg": "interaction-stickers-latency.svg",
-          "svg_sha256": "6c2828ad230a95ae2f68cd87e7a2b6c97dc17049c5e201953ead4912242b935c",
-          "bytes": 9869
+          "svg_sha256": "f385e24887569ab9340230933b929a537b81704c2273f2cd67a06825a8a146d9",
+          "jpeg": "assets/latency-25fa7b866eb2549b/interaction-stickers-all-attempts.jpg",
+          "jpeg_sha256": "279efba2cd0b15ebef6f499c97a6ae1603269701679105703ca30f1ff7e5b07d",
+          "bytes": 175072
         },
         {
           "svg": "interaction-stickers-matched-latency.svg",
-          "svg_sha256": "9b24a2ac55491414102b6eebfc0a4c06c1102a449182bd7345812c97e51800a0",
-          "bytes": 9857
+          "svg_sha256": "ff202574700c03bbdbfd869e7617b9e79df913e6f37f4dcf3f2b44557fcb2b0c",
+          "jpeg": "assets/latency-25fa7b866eb2549b/interaction-stickers-matched.jpg",
+          "jpeg_sha256": "677a35f990da051f1c3c410f51f435e79fb4dd5f0a86b709f91a680a978eeaad",
+          "bytes": 167437
         },
         {
           "svg": "interaction-group-replies-latency.svg",
-          "svg_sha256": "b5e0b0e5bedfb3c5adc817457f6fd67806fe7b0f8befcff20be717266bd2cbe4",
-          "bytes": 8641
+          "svg_sha256": "9299918fe5e94fe45c18f717c673678d90e9d3e0cc4c901966129ceaa01a349e",
+          "jpeg": "assets/latency-25fa7b866eb2549b/interaction-group-replies-all-attempts.jpg",
+          "jpeg_sha256": "e4ef82b2b341e3f250f4ff45f8a886176fc04ce0cc388539d41128ae0a3331cf",
+          "bytes": 161963
         },
         {
           "svg": "interaction-group-replies-matched-latency.svg",
-          "svg_sha256": "f4d6f47061e651111155eb55758b30e3c3e7f8bee02d4ccf08ca0fea5fb64730",
-          "bytes": 8628
+          "svg_sha256": "a573cb817cc315502cd0da35bb40dd9a366b995d5c96586c0ca473a9078c01d5",
+          "jpeg": "assets/latency-25fa7b866eb2549b/interaction-group-replies-matched.jpg",
+          "jpeg_sha256": "4ad3611eec459a3f4d820d9eb169bd4bcef6912f60e5fad93c535967bc6ae1c9",
+          "bytes": 149848
         },
         {
           "svg": "interaction-group-observation-latency.svg",
-          "svg_sha256": "c322c0c2d84c98bbeecbff92393acc0c1a442c3700edd643951f84d474cd4f53",
-          "bytes": 12377
-        },
-        {
-          "svg": "interaction-group-observation-matched-latency.svg",
-          "svg_sha256": "65817aabdc3ef4cee72331a784246f6d23f903a97bfc52d3184255ff07436599",
-          "bytes": 3425
+          "svg_sha256": "29155de194b56a006a5b387e006a1f52dec1a143b161a26d331d03b6891532fe",
+          "jpeg": "assets/latency-25fa7b866eb2549b/interaction-group-observation-all-attempts.jpg",
+          "jpeg_sha256": "4f265511890fb66871468e948c6c663217d88e5eeb768058bdf8b6d3269bbfc3",
+          "bytes": 186495
         }
       ]
     },
@@ -292,20 +298,24 @@
       "sha256": "db754cce95781423f732005c36212e9bf56548b00c62a61af3c876deabdc1fe7"
     }
   },
-  "new_assets": [],
+  "new_assets": [
+    "assets/recovery-latency-566f7c3f379babda/recovery-injected-delegation-all-attempts.jpg",
+    "assets/recovery-latency-566f7c3f379babda/recovery-injected-delegation-matched.jpg",
+    "assets/recovery-latency-566f7c3f379babda/recovery-injected-interaction-all-attempts.jpg",
+    "assets/recovery-latency-566f7c3f379babda/recovery-injected-interaction-matched.jpg",
+    "assets/recovery-latency-566f7c3f379babda/recovery-natural-delegation-all-attempts.jpg",
+    "assets/recovery-latency-566f7c3f379babda/recovery-natural-delegation-matched.jpg",
+    "assets/recovery-latency-566f7c3f379babda/recovery-natural-interaction-all-attempts.jpg",
+    "assets/recovery-latency-566f7c3f379babda/recovery-natural-interaction-matched.jpg"
+  ],
   "input_files_preserved_except": [
     "comparison-manifest.json",
+    "delegation.html",
     "index.html",
-    "interaction-group-observation-latency.svg",
-    "interaction-group-observation-matched-latency.svg",
-    "interaction-group-replies-latency.svg",
-    "interaction-group-replies-matched-latency.svg",
-    "interaction-latency.svg",
-    "interaction-matched-latency.svg",
-    "interaction-results.public.json",
-    "interaction-stickers-latency.svg",
-    "interaction-stickers-matched-latency.svg",
-    "latency-downloads-manifest.json"
+    "latency-downloads-before-recovery-5db2738b118b254f.json",
+    "latency-downloads-manifest.json",
+    "recovery.html",
+    "taiwan.html"
   ],
   "unchanged_input_files": {
     "answer-review-notes.html": "3b0c51c15c06a2e9244e9f1314a46593d8f6bb50b8c0c0c5ab22d29d5ecaba25",
@@ -512,6 +522,15 @@
     "delegation-v3-round-5-results.json": "cd9d24409d3e32786f66480e86477acc773ea3d9a4482f63f48fcd45147cce6f",
     "delegation-v3-round-5.html": "dcbde2f6208bee4110687aa2e721a3e1e0eab36f54ded264127886ced55c47ee",
     "interaction-before-hermes-refresh.html": "09833a012824a15cbcabe6cdb8b3dec564cd571241f4b4ce3da860245888a74c",
+    "interaction-group-observation-latency.svg": "29155de194b56a006a5b387e006a1f52dec1a143b161a26d331d03b6891532fe",
+    "interaction-group-observation-matched-latency.svg": "30bc890c19876bb58af0ba6178fcf7f591c64408fd811e00ed24ef4f63009139",
+    "interaction-group-replies-latency.svg": "9299918fe5e94fe45c18f717c673678d90e9d3e0cc4c901966129ceaa01a349e",
+    "interaction-group-replies-matched-latency.svg": "a573cb817cc315502cd0da35bb40dd9a366b995d5c96586c0ca473a9078c01d5",
+    "interaction-latency.svg": "1d64d7da4c6d23f36071cc818a86f5dca76679c762e1ddb92924bce9af1820e3",
+    "interaction-matched-latency.svg": "6708874f75b874b23b61b3fefabbac719c4c62f0279d0d9d55ef31ebe9e11973",
+    "interaction-results.public.json": "dd4874111e3fa676142716ca107ce1c0aace6f25ccd31e2e82c79e5a9d38cd45",
+    "interaction-stickers-latency.svg": "f385e24887569ab9340230933b929a537b81704c2273f2cd67a06825a8a146d9",
+    "interaction-stickers-matched-latency.svg": "ff202574700c03bbdbfd869e7617b9e79df913e6f37f4dcf3f2b44557fcb2b0c",
     "pixel-review.html": "70c678f6ad3a2c4e948a5142aae3f3fcfe53e62d7d049d5dec0873833efdb087",
     "poststudy-corrections.html": "e0d57dc1530cb20f8f476f754560823f5f3c01ddb8712971702d04e5d0baa197",
     "previous.html": "987cf4b3b676c4fed53b027eb3e43c9b1fa3f5f0e7a28c60c894eb646e473a37",
@@ -530,28 +549,6 @@
     "study-notes.html": "684dd18d0931527245379744cbe2dc8c6deeafa774d6b0ff82529c44cfe18627",
     "taiwan-latency.svg": "35090688260f39951649ec1eb28c324e7bbf1aaf6e8c29728e3423f891c1f0f9",
     "taiwan-matched-latency.svg": "815789e601e2e0f8cf4e6c9822b1918f8afff6fa5f2b70c236727b6600530dd9",
-    "taiwan-results.public.json": "dd3617d10f109dba78e512196b95e316669113b311929f1e0daf3c18ca2f250c",
-    "recovery.html": "6e1b99b23c21c9c937eae0ecef67d6d3c278b2886e6fd08e205336ac9b1c4480",
-    "latency-downloads-before-recovery-5db2738b118b254f.json": "5db2738b118b254f4ae105a6b9051f9852770b75980bd8d25972b39cc9f7f5ed",
-    "delegation.html": "d84f37914c3a7c432a10bd42fa77468e11ad69d76a2fe6ad1084c2db039c3822",
-    "taiwan.html": "5c4c0404c3f1821805857f9a47995c25c26eba9af966bf35d50703a1ba0e5606",
-    "interaction-before-minimal-20260928-results.public.json": "dd4874111e3fa676142716ca107ce1c0aace6f25ccd31e2e82c79e5a9d38cd45",
-    "interaction-before-minimal-20260928-group-observation-latency.svg": "29155de194b56a006a5b387e006a1f52dec1a143b161a26d331d03b6891532fe",
-    "interaction-before-minimal-20260928-group-observation-matched-latency.svg": "30bc890c19876bb58af0ba6178fcf7f591c64408fd811e00ed24ef4f63009139",
-    "interaction-before-minimal-20260928-group-replies-latency.svg": "9299918fe5e94fe45c18f717c673678d90e9d3e0cc4c901966129ceaa01a349e",
-    "interaction-before-minimal-20260928-group-replies-matched-latency.svg": "a573cb817cc315502cd0da35bb40dd9a366b995d5c96586c0ca473a9078c01d5",
-    "interaction-before-minimal-20260928-latency.svg": "1d64d7da4c6d23f36071cc818a86f5dca76679c762e1ddb92924bce9af1820e3",
-    "interaction-before-minimal-20260928-matched-latency.svg": "6708874f75b874b23b61b3fefabbac719c4c62f0279d0d9d55ef31ebe9e11973",
-    "interaction-before-minimal-20260928-stickers-latency.svg": "f385e24887569ab9340230933b929a537b81704c2273f2cd67a06825a8a146d9",
-    "interaction-before-minimal-20260928-stickers-matched-latency.svg": "ff202574700c03bbdbfd869e7617b9e79df913e6f37f4dcf3f2b44557fcb2b0c",
-    "interaction-before-minimal-20260928.html": "f99e7df86d31d816aad2b2b7388f4eacdc1afa4bbfe4dd290c6c686b29325dbd"
-  },
-  "previous_manifest": {
-    "path": "latency-downloads-before-minimal-20260928.json",
-    "sha256": "a05cdc2ca112c4dba78f34db976f9c053e4f0518d62f95a6feb017abcc801311"
-  },
-  "download_formats": [
-    "svg",
-    "jpeg"
-  ]
+    "taiwan-results.public.json": "dd3617d10f109dba78e512196b95e316669113b311929f1e0daf3c18ca2f250c"
+  }
 }

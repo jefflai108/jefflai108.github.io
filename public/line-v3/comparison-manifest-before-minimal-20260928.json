@@ -3,19 +3,18 @@
   "navigation_version": "recovery-r13-7d2c7110",
   "suites": {
     "interaction": {
-      "source_ref": "40e341388d795c39f693ca124c7aa9ba6558ad35",
-      "input_sha256": "c16f8e570ee62b2d40223a83dd477c629d5c1b05e5f54625b172668d17f149c1",
-      "public_sha256": "298a505199bbfa991b8670f60b38717d2224b2c1024e6608ea682f07562ec660",
+      "source_ref": "85d96a57db67d2b32911dfdd8847f43d284efa04",
+      "input_sha256": "25fa7b866eb2549beab75d5481ee0d1f017986a4d00a4078c9caabc08a888b28",
+      "public_sha256": "dd4874111e3fa676142716ca107ce1c0aace6f25ccd31e2e82c79e5a9d38cd45",
       "cases": 69,
       "variants": [
         "v1",
         "v2",
         "v2_followup",
         "v3_hermes_gpt6_sol",
-        "v3_hermes_gemini",
-        "v3_gemini_minimal"
+        "v3_hermes_gemini"
       ],
-      "page_sha256": "f7ef94c2f8d5cb1a30af9354535b4d1d6c43b5351e3f3f8e40a12b2adb4e9a92"
+      "page_sha256": "00708e66c50f96bdc1d3b5738a596cbb9d7d3f2385fa56768079e15cc7204e8f"
     },
     "delegation": {
       "source_ref": "85d96a57db67d2b32911dfdd8847f43d284efa04",
