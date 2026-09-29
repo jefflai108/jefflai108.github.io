@@ -41,6 +41,23 @@ class AudioArchiveTests(unittest.TestCase):
         self.assertEqual(module.install(self.archive, self.destination, manifest), 1)
         self.assertEqual((self.destination / NAME).read_bytes(), b'authored test audio bytes')
 
+    def test_line_followup_namespace_preserves_existing_audio(self):
+        module.install(self.archive, self.destination, self.fixture())
+        name = 'line-v3/audio/tts-followup-2026-09-29/E001.mp3'
+        manifest = self.fixture([name])
+        manifest['files'][0]['path'] = name
+        self.assertEqual(module.install(self.archive, self.destination, manifest), 1)
+        self.assertTrue((self.destination / NAME).exists())
+        self.assertEqual((self.destination / name).read_bytes(), b'authored test audio bytes')
+
+    def test_line_followup_rejects_delegation_or_arbitrary_paths(self):
+        for name in ['line-v3/audio/tts-followup-2026-09-29/D001.mp3',
+                     'line-v3/audio/tts-followup-2026-09-29/../../index.html',
+                     'line-v3/audio/tts-followup-2026-09-29/E001.wav']:
+            manifest = self.fixture([name])
+            manifest['files'][0]['path'] = name
+            self.rejected(manifest)
+
     def test_languages_and_styles_coexist(self):
         module.install(self.archive, self.destination, self.fixture())
         installed = [NAME]
