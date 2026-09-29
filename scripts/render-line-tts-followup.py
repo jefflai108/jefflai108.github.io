@@ -63,8 +63,9 @@ def main():
         for url, label in [('index.html', 'Interaction tasks'), ('delegation.html', 'Delegation tasks'), ('taiwan.html', '台灣用語'), ('recovery.html', '困難任務與失敗恢復'), ('tts-followup.html', 'TTS follow-up')]) + '</nav>'
     parts = [f'<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HeyMachi · TTS follow-up</title><meta name="robots" content="noindex,nofollow"><link rel="canonical" href="https://jefflai108.github.io/line-v3/tts-followup.html"><style>{css}</style></head><body><a class="skip" href="#main">跳至比較內容</a><div class="navwrap">{nav}</div>',
         '<header><p class="muted">HeyMachi / LINE v3 · 獨立實測</p><h1>接話，換成 Zack 的聲音</h1><p>Eleven v4 Turbo · Zack · v3 (Hermes, gemini-3.8-flash medium)</p>',
-        '<p class="notice">本頁強制為所有符合條件的國語接話產生語音。正式服務的提案機率為 10%，本次沒有啟用。主回答仍是文字；無接話、非國語、委派工作與安靜觀察皆不產生音訊。</p>',
+        '<p class="notice">本頁強制為所有符合條件的國語接話產生語音。目前正式服務的提案機率為 20%，本次沒有啟用。主回答仍是文字；無接話、非國語、委派工作與安靜觀察皆不產生音訊。</p>',
         '<p class="small muted">同一批 69 個合成案例重新量測，各題一次，不挑最好結果。前景 Gemini 3.8 Flash 使用 low；標籤中的 medium 是 Hermes 執行腦設定，直接互動不會呼叫 Hermes。語言標註加入原本的同一次推論。</p>',
+        '<p class="small muted">正式服務提案於量測後由 10% 調整為 20%；下載的凍結紀錄保留量測當時的提案值。本頁實測仍為符合條件後 100%，音訊與延遲不變。</p>',
         f'<p class="small">凍結來源 <code>{e(meta["source_ref"])}</code> · {e(meta["created_utc"][:10])} · <a href="tts-followup-results.public.json" download>下載完整結果 JSON</a> · <a href="tts-followup-line-validation.json" download>LINE 驗證紀錄</a></p></header><main id="main">']
     headline = [c for c in cases if cohort(c) != 'G-observation']
     audio = [c[ARM]['tts'] for c in headline if c[ARM].get('tts', {}).get('status') == 'ok']
