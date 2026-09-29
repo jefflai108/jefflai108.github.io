@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "releaseTag": "line-v3-tts-followup-2026-09-29",
+  "archiveName": "line-v3-tts-followup-2026-09-29.zip",
+  "archiveBytes": 728803,
+  "archiveSha256": "538155bdce14aaee0e8e0b40485cf285676c8c1bf231894d847eecfa5a02ba55",
+  "files": [
+    {
+      "path": "line-v3/audio/tts-followup-2026-09-29/E001.mp3",
+      "bytes": 54379,
+      "sha256": "82b3fa54d0e27cc8aa3b1fb8f7c6b11ed8f40fa29e1c1fe093ca3c821d084dab"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-2026-09-29/E002.mp3",
+      "bytes": 74859,
+      "sha256": "c970f84b77ef3fc3e00b11f57e6f2b3010d70ba5976ccda4b3e6a1a4b57b5ac7"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-2026-09-29/E003.mp3",
+      "bytes": 64828,
+      "sha256": "4e6a1c9c0e74b164f72cbf052f95b35de1d84e522e05878a7149204d2b51d66c"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-2026-09-29/E004.mp3",
+      "bytes": 69844,
+      "sha256": "acd53b03f9dac8e51e06105e383b6b925c39ff12e44993a45e5c896582d7f7dd"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-2026-09-29/E006.mp3",
+      "bytes": 78621,
+      "sha256": "ff2473e09f73a0ed3d535f107e2c49363cd701b76c538fd608398b9cc36b620f"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-2026-09-29/E041.mp3",
+      "bytes": 78621,
+      "sha256": "22e2020b06792222057bd31ad6818c28f972b3209d957b545fb9d1cfccf5d59b"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-2026-09-29/E042.mp3",
+      "bytes": 92831,
+      "sha256": "021f6d272c2c03d998163099a746d490243a85b47b211c951d789265ab13328e"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-2026-09-29/E043.mp3",
+      "bytes": 72351,
+      "sha256": "fc4ac2d5fdb132eb14417235259c47158cbc441a98c456a83b3ca35f9805c1e3"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-2026-09-29/E049.mp3",
+      "bytes": 73605,
+      "sha256": "61d39316607566788d2177dc6ca38e7a710e21acbd0349982814ac549c1f2a9b"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-2026-09-29/S005.mp3",
+      "bytes": 74859,
+      "sha256": "10e4ace311663973107401204cc716c3b5f70f5dfce3f1c3cabb5329953a78d9"
+    }
+  ]
+}
