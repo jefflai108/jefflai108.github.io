@@ -1,13 +1,13 @@
 {
-  "checked_utc": "2026-09-30T01:15:15.761151+00:00",
+  "checked_utc": "2026-09-29T07:30:44.890997+00:00",
   "case_id": "E001",
   "message_types": [
     "text",
     "audio"
   ],
   "audio": {
-    "url": "https://jefflai108.github.io/line-v3/audio/tts-followup-tagged-2026-09-29/E001.mp3",
-    "duration_ms": 3788
+    "url": "https://jefflai108.github.io/line-v3/audio/tts-followup-2026-09-29/E001.mp3",
+    "duration_ms": 3396
   },
   "actual_messages_sent": 0,
   "checks": [
