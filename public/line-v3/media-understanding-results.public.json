@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "study": "media-understanding-20260930",
+  "source_ref": "acca8b3316627f2f06b10dcd1e26320737e0250b",
+  "provider": "Gemini native API",
+  "exact_model_version": "not_recorded_in_these_receipts",
+  "sample_count": 3,
+  "samples_per_case": 1,
+  "synthetic_only": true,
+  "real_line_calls": 0,
+  "production_database_access": false,
+  "methodology": {
+    "routing": "實際模型自行選擇 action；未在宿主硬改為 direct。",
+    "inputs": "只用人工撰寫的圖片、合成貼圖事件與空白私人上下文。",
+    "execution": "依序執行，每題一次，不重試、不挑最好的一次。LINE 傳輸採本機捕捉，沒有傳給真實帳號。",
+    "whole_turn": "從合成簽章事件送入宿主，至該事件處理返回；含前置處理、供應商呼叫、驗證與模擬 LINE 傳送。",
+    "provider_http": "供應商 HTTP request 呼叫至返回的計時；不是純模型運算時間。",
+    "limits": "三個各一次的冒煙測試，不計算 P95、不宣稱速度勝過另一個版本；不包含手機收件或播放延遲，也不是上線後全部情境的成功率。"
+  },
+  "cases": [
+    {
+      "id": "M001",
+      "kind": "chart_document",
+      "title": "複雜圖表與文件備註",
+      "channel": "primary",
+      "measured_at_utc": "2026-09-30T23:19:50.384882+00:00",
+      "input": {
+        "message_type": "image",
+        "typed_text": "",
+        "recent_turns": 0,
+        "memory_items": 0,
+        "image": {
+          "path": "fixtures/media-understanding-chart-document.jpg",
+          "bytes": 41015,
+          "sha256": "1fb239b3559c8b4e49d40e73fa867ba27715f8244f3ae21f5ac0754dd4900edc",
+          "mime_type": "image/jpeg",
+          "width": 1200,
+          "height": 880,
+          "origin": "人工撰寫的合成圖表；與模型收到的正規化 JPEG 位元組完全相同。"
+        },
+        "visible_instruction": "Compare the series and summarize the notes."
+      },
+      "result": {
+        "reply": "幫你整理這份季度圖表的數據比較與備註摘要：\n\n一、 Alpha 與 Beta 數據比較\n- Alpha（藍色長條）：呈現持續成長趨勢。Q1 為 10，Q2 上升到 15（增加 50%），Q3 進一步增加到 20（比 Q1 翻倍）。\n- Beta（橘色長條）：走勢持平後略降。Q1 與 Q2 皆維持在 8，Q3 則微幅下滑至 6。\n- 整體對比：Alpha 在三個季度均高於 Beta，且差距從 Q1 的 2 逐漸擴大到 Q3 的 14。\n\n二、 備註摘要\n- 計畫事項（PLAN）：檢視 Q3 的成長情況（Review Q3 growth）。\n- 待決議事項（OPEN）：上線日期尚未決定（Launch date undecided）。",
+        "action": "direct",
+        "foreground_http_calls": 1,
+        "http_status": 200,
+        "accepted_tasks": 0,
+        "delegation_executions": 0,
+        "simulated_line_reply": true,
+        "whole_turn_s": 4.446,
+        "provider_http_s": 3.891,
+        "turn_to_request_s": 0.395,
+        "image_observation": {
+          "description": "圖表標題為 QUARTERLY REPORT - SYNTHETIC EXAMPLE。左上方有一組簡短數據表格，列出 Q1 至 Q3 的 Alpha 與 Beta 數值。下方有三組並排長條圖，藍色代表 Alpha，橘色代表 Beta，分別呈現 Q1、Q2、Q3 的變化趨勢。長條圖下方列有 PLAN 與 OPEN 兩項備註，底端有一行提示文字說明比較序列與摘要備註。",
+          "readable_text": "QUARTERLY REPORT - SYNTHETIC EXAMPLE\nQuarter Alpha Beta\nQ1 10 8\nQ2 15 8\nQ3 20 6\nBLUE: Alpha ORANGE: Beta\nQ1 Q2 Q3\nPLAN: Review Q3 growth.\nOPEN: Launch date undecided.\nCompare the series and summarize the notes.",
+          "uncertainty": "圖表無垂直座標軸與刻度線，數值依左上方表格文字標示。",
+          "version": 1
+        }
+      },
+      "semantic_review": {
+        "reviewer": "開發代理逐項閱讀（非獨立人工盲評）",
+        "notes": [
+          "Alpha 的 10 → 15 → 20、Q2 成長 50% 與 Q1 到 Q3 翻倍均正確。",
+          "Beta 的 8 → 8 → 6、先持平再下降均正確；兩組差距由 2 擴大到 14 也正確。",
+          "正確保留「檢視 Q3 成長」與「上線日期尚未決定」，沒有把待辦說成完成。"
+        ]
+      }
+    },
+    {
+      "id": "M002",
+      "kind": "known_sticker",
+      "title": "已知貼圖：慶祝",
+      "channel": "secondary",
+      "measured_at_utc": "2026-09-30T23:20:02.324426+00:00",
+      "input": {
+        "message_type": "sticker",
+        "typed_text": "",
+        "recent_turns": 0,
+        "memory_items": 0,
+        "sticker_metadata": {
+          "catalog_hint": {
+            "description": "Brown firing party popper; celebration",
+            "source": "reviewed_official_preview"
+          },
+          "keywords": [],
+          "package_id": "11537",
+          "resource_type": "STATIC",
+          "sticker_id": "52002734"
+        },
+        "sticker_pixels_provided": false
+      },
+      "result": {
+        "reply": "耶！一大早就這麼有活力慶祝，是有什麼好事發生嗎？",
+        "action": "direct",
+        "foreground_http_calls": 1,
+        "http_status": 200,
+        "accepted_tasks": 0,
+        "delegation_executions": 0,
+        "simulated_line_reply": true,
+        "whole_turn_s": 2.231,
+        "provider_http_s": 1.551,
+        "turn_to_request_s": 0.538
+      },
+      "semantic_review": {
+        "reviewer": "開發代理逐項閱讀（非獨立人工盲評）",
+        "notes": [
+          "接話的慶祝含義有目錄提示支持；沒有宣稱取得貼圖像素、動畫或聲音。",
+          "這是依已提供描述自然回應，不是對貼圖影像重新辨識。"
+        ]
+      }
+    },
+    {
+      "id": "M003",
+      "kind": "unknown_sticker",
+      "title": "未知貼圖：沒有描述提示",
+      "channel": "secondary",
+      "measured_at_utc": "2026-09-30T23:20:15.567374+00:00",
+      "input": {
+        "message_type": "sticker",
+        "typed_text": "",
+        "recent_turns": 0,
+        "memory_items": 0,
+        "sticker_metadata": {
+          "keywords": [],
+          "package_id": "999999999",
+          "resource_type": "STATIC",
+          "sticker_id": "999999999"
+        },
+        "sticker_pixels_provided": false
+      },
+      "result": {
+        "reply": "早安！今天這麼早起，有什麼想聊的嗎？",
+        "action": "direct",
+        "foreground_http_calls": 1,
+        "http_status": 200,
+        "accepted_tasks": 0,
+        "delegation_executions": 0,
+        "simulated_line_reply": true,
+        "whole_turn_s": 1.919,
+        "provider_http_s": 1.408,
+        "turn_to_request_s": 0.374
+      },
+      "semantic_review": {
+        "reviewer": "開發代理逐項閱讀（非獨立人工盲評）",
+        "notes": [
+          "沒有編造貼圖角色、表情、動作或聲音；採用一般打招呼。",
+          "「早起」是由早晨時間推測的聊天用語；輸入並不能證明使用者何時起床。此瑕疵保留，不美化原始回答。"
+        ]
+      }
+    }
+  ]
+}

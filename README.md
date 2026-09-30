@@ -72,6 +72,26 @@ library; its offline archive validation tests run with:
 python3 -m unittest discover -s scripts -p 'test_image_comparison_assets.py'
 ```
 
+## LINE image and sticker understanding
+
+`/line-v3/images-stickers.html` presents three authored native Gemini probes from
+2026-09-30. The sanitized results and verbatim answers are in
+`public/line-v3/media-understanding-results.public.json`; regenerate the page and
+active navigation with `python3 scripts/render-line-media-understanding.py`.
+
+The 41 KB JPEG in `public/line-v3/fixtures/` is an authored **test input**, not a
+model-generated gallery output. Its SHA-256 matches the normalized bytes sent to
+the model and is checked by the renderer. This small fixture is tracked with the
+benchmark. Generated comparison outputs remain in the release assets described
+above. No private chats, system prompts, credentials or local receipt paths are
+included. The three single-sample runs use simulated LINE transport and are not
+P95 measurements or a production/mobile latency guarantee.
+
+The separate Queue isolation section uses `queue-isolation-results.public.json`:
+both providers and LINE are simulated. It verifies six later replies are accepted
+while an earlier foreground request and delegation remain held, on both accounts.
+These observations are not merged into the three native-model latency samples.
+
 ## Mandarin and English TTS voice comparison
 
 The unlisted `/tts/` page compares seven voices across twenty mixed Taiwanese

@@ -22,7 +22,8 @@ MANUAL_NOTES = {
 }
 TABS = (("index.html", "Interaction tasks"), ("delegation.html", "Delegation tasks"),
         ("taiwan.html", "台灣用語"), ("recovery.html", "困難任務與失敗恢復"),
-        ("tts-followup.html", "TTS follow-up"), ("burst-turns.html", "Burst turns"))
+        ("tts-followup.html", "TTS follow-up"), ("images-stickers.html", "Images &amp; Stickers"),
+        ("burst-turns.html", "Burst turns"))
 LABELS = {"baseline": "原有逐則處理", "a": "A · 固定穩定窗", "b": "B · 版本更新",
           "c": "C · 語意承接", "composite": "A + B + C"}
 COLORS = {"baseline": "#66766c", "a": "#2965a2", "b": "#bf641c", "c": "#9461b5", "composite": "#227a65"}

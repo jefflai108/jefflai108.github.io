@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "study": "queue-isolation-20260930",
+  "source_ref": "651e09c27ea948af106a9a057906e43c0d485fcb",
+  "synthetic_only": true,
+  "provider": "simulated",
+  "line_transport": "simulated",
+  "real_provider_calls": 0,
+  "real_line_calls": 0,
+  "loader": "actual_published_snapshot_and_isolated_direct_loader",
+  "production_database_access": false,
+  "accepted_later_replies": 6,
+  "attempted_later_replies": 6,
+  "accounts": [
+    {
+      "channel": "primary",
+      "accepted_history_count": 10,
+      "earlier_ordinary_provider_held": true,
+      "earlier_delegation_held": true,
+      "peer_delivery_count": 0,
+      "foreground_errors": [],
+      "later_deliveries": [
+        {
+          "kind": "text",
+          "accepted_while_both_earlier_waits_held": true,
+          "simulated_line_acceptance_s": 4.396
+        },
+        {
+          "kind": "sticker",
+          "accepted_while_both_earlier_waits_held": true,
+          "simulated_line_acceptance_s": 4.373
+        },
+        {
+          "kind": "image",
+          "accepted_while_both_earlier_waits_held": true,
+          "simulated_line_acceptance_s": 4.877
+        }
+      ]
+    },
+    {
+      "channel": "secondary",
+      "accepted_history_count": 10,
+      "earlier_ordinary_provider_held": true,
+      "earlier_delegation_held": true,
+      "peer_delivery_count": 0,
+      "foreground_errors": [],
+      "later_deliveries": [
+        {
+          "kind": "text",
+          "accepted_while_both_earlier_waits_held": true,
+          "simulated_line_acceptance_s": 4.239
+        },
+        {
+          "kind": "sticker",
+          "accepted_while_both_earlier_waits_held": true,
+          "simulated_line_acceptance_s": 3.457
+        },
+        {
+          "kind": "image",
+          "accepted_while_both_earlier_waits_held": true,
+          "simulated_line_acceptance_s": 3.948
+        }
+      ]
+    }
+  ],
+  "meaning": "在較早的一般前景供應商與委派工作同時維持等待時，較晚的文字、貼圖、圖片已由模擬 LINE 傳輸接受；不只是模型啟動。",
+  "limitations": "供應商與 LINE 都是模擬。計時含合成資料、SQL 追蹤與檔案存取稽核的額外成本，不代表原生模型速度、手機延遲或正式服務 SLA。"
+}
