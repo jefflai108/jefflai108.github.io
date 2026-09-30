@@ -15,7 +15,7 @@
         "v3_hermes_gemini",
         "v3_hermes_astra_ultrafast"
       ],
-      "page_sha256": "294232cb46bf5862191993dbb04d7eba0875a96b3c0f790097757f72c6a5f3e3"
+      "page_sha256": "bdf13b21603ea9c07c6b0cb983755203bb9587030186dd626373019536af5d63"
     },
     "delegation": {
       "source_ref": "85d96a57db67d2b32911dfdd8847f43d284efa04",
