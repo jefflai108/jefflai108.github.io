@@ -2,62 +2,61 @@
   "version": 1,
   "raster_format": "jpeg",
   "navigation_version": "recovery-r13-7d2c7110",
-  "comparison_manifest_before_sha256": "daaaa7e6c24625dcec43684acd997aa26d41c1d78560d5b286e208da79e70c3a",
-  "comparison_manifest_sha256": "7a46fc80282de15cee71aba5a49af8f41ba80a886cc6115c6392e5be70256ace",
+  "comparison_manifest_before_sha256": "0504a5bb43cee7f19e4a7db56a5fc6c72eaf625392aa50e9a6dfc6719d92df7d",
+  "comparison_manifest_sha256": "daaaa7e6c24625dcec43684acd997aa26d41c1d78560d5b286e208da79e70c3a",
   "suites": {
     "interaction": {
-      "source_ref": "3fd79c8be4f8903509d5f0f54633d67f882718cc",
-      "run_id": "astra-ultrafast-interaction-final-r2-20260929",
-      "results_sha256": "23f1b35cbef97d6276ecc2163a88ee0992ce09862a8d47caffb5c4c799085700",
-      "public_results_sha256": "1a0cc167d62c12fd250de79d7743a585130782377c396e859533be2f03787749",
-      "render_manifest_sha256": "5b63278464615299958524b05bbc7b878bae7d75e6ac37f91e61aa65dbb82e39",
+      "source_ref": "40e341388d795c39f693ca124c7aa9ba6558ad35",
+      "run_id": "interaction-six-arm-minimal-20260928",
+      "results_sha256": "c16f8e570ee62b2d40223a83dd477c629d5c1b05e5f54625b172668d17f149c1",
+      "public_results_sha256": "298a505199bbfa991b8670f60b38717d2224b2c1024e6608ea682f07562ec660",
+      "render_manifest_sha256": "d55e55ae8a35ef2f0256db516bde5cc579cae642aaf292599891759e337a417a",
       "download_format": "svg",
       "raster_format": null,
       "note": "Fresh interaction downloads are SVG only. Prior interaction JPEGs remain in the unchanged archive.",
-      "page_before_sha256": "14c7b9f427be74f92ab0933c70a88144b93d7eab2535817fc26b94662528941c",
-      "page_before_binding": "fresh_render_before_canonical_tags",
-      "previous_active_page_sha256": "519b044a1bdc0bba34fd4152b876f34cf001f049985daf10fc471f5e82fbd2c5",
-      "page_after_sha256": "294232cb46bf5862191993dbb04d7eba0875a96b3c0f790097757f72c6a5f3e3",
+      "page_before_sha256": "6e61b68bd017e096e2c5fbef7864bd8c6d593c834d71c8522ec6cbce02a20a58",
+      "page_before_binding": "first_installer_observation",
+      "page_after_sha256": "f7ef94c2f8d5cb1a30af9354535b4d1d6c43b5351e3f3f8e40a12b2adb4e9a92",
       "downloads": [
         {
           "svg": "interaction-latency.svg",
-          "svg_sha256": "a5293d406095efdbb5fb9919253d725f39dbffd219bdfa3a98108296c15960f9",
-          "bytes": 61182
+          "svg_sha256": "215050fb4ffe2264a6b6e2be7fe7512947b3705eb2323bc13ae08a8bcdc7b888",
+          "bytes": 60170
         },
         {
           "svg": "interaction-matched-latency.svg",
-          "svg_sha256": "6df5914e290f45ab9d3304c5a82a7ced58d4461a453e2261d7f7548c67c27087",
-          "bytes": 61170
+          "svg_sha256": "dc6702a39c86fc3488f66672083f54f94f8d39bbdf53a9a2474d03434982aa99",
+          "bytes": 59028
         },
         {
           "svg": "interaction-stickers-latency.svg",
-          "svg_sha256": "152e5fa1fe2444900429ee717f0491c17a44461d2252126676a55d8737e67a4c",
-          "bytes": 10005
+          "svg_sha256": "6c2828ad230a95ae2f68cd87e7a2b6c97dc17049c5e201953ead4912242b935c",
+          "bytes": 9869
         },
         {
           "svg": "interaction-stickers-matched-latency.svg",
-          "svg_sha256": "1ec82faf534db41bb517782002db565e7758849cf9ef391f353cc2e6a9fcb8da",
-          "bytes": 9993
+          "svg_sha256": "9b24a2ac55491414102b6eebfc0a4c06c1102a449182bd7345812c97e51800a0",
+          "bytes": 9857
         },
         {
           "svg": "interaction-group-replies-latency.svg",
-          "svg_sha256": "b19e50772c7132a2e1c8d4b67a6cb7f97719100649e3cd3299f7227adaeb9944",
-          "bytes": 8754
+          "svg_sha256": "b5e0b0e5bedfb3c5adc817457f6fd67806fe7b0f8befcff20be717266bd2cbe4",
+          "bytes": 8641
         },
         {
           "svg": "interaction-group-replies-matched-latency.svg",
-          "svg_sha256": "7a77720ce2b5d5fa0cd7bbaadc6202c53c771dd23b48734fd0f4eaad017e70bd",
-          "bytes": 8742
+          "svg_sha256": "f4d6f47061e651111155eb55758b30e3c3e7f8bee02d4ccf08ca0fea5fb64730",
+          "bytes": 8628
         },
         {
           "svg": "interaction-group-observation-latency.svg",
-          "svg_sha256": "2f692af438b3c1566146a81296983ec24f4c14cb2673f0a4a299812f33e41db8",
-          "bytes": 12539
+          "svg_sha256": "c322c0c2d84c98bbeecbff92393acc0c1a442c3700edd643951f84d474cd4f53",
+          "bytes": 12377
         },
         {
           "svg": "interaction-group-observation-matched-latency.svg",
-          "svg_sha256": "32adbe8ad238ccd82ca574a6fd37a730ea88b85aa538a4fe568f6152d07969af",
-          "bytes": 3437
+          "svg_sha256": "65817aabdc3ef4cee72331a784246f6d23f903a97bfc52d3184255ff07436599",
+          "bytes": 3425
         }
       ]
     },
@@ -69,7 +68,7 @@
       "plot_manifest_sha256": "e7d3c1a59970a5e5a9f75299f4a627abd2b8224cb2c193c784f037c3e311b501",
       "page_before_sha256": "327692c592b5abaff20655bfa4befd9340a08a27520b1670eb444198f011dba8",
       "page_before_binding": "first_installer_observation",
-      "page_after_sha256": "f26d377547ee5143ea9da854f5eff7a7658c937868bc8aafef5488d24bbd3627",
+      "page_after_sha256": "d84f37914c3a7c432a10bd42fa77468e11ad69d76a2fe6ad1084c2db039c3822",
       "downloads": [
         {
           "svg": "delegation-latency.svg",
@@ -116,7 +115,7 @@
       "plot_manifest_sha256": "04ad502d60740f2076c48d8d00d7a03e8996ed7f19bbac7fa1f4a72bf8c3ded3",
       "page_before_sha256": "4696e5931d340b836fd5909d10caeb55611910fc22077096a3eddfea62e8037d",
       "page_before_binding": "first_installer_observation",
-      "page_after_sha256": "dabdd24fcc355332cd163237439b77464f674c91c6cc482dbb33dd7328ba5032",
+      "page_after_sha256": "5c4c0404c3f1821805857f9a47995c25c26eba9af966bf35d50703a1ba0e5606",
       "downloads": [
         {
           "svg": "taiwan-latency.svg",
@@ -142,7 +141,7 @@
       "plot_manifest_sha256": "5fa95fc4811408e2994f5b8d3a732dd211150951a5ad501eeab2406508de8f11",
       "page_before_sha256": "80e2b544d4175c86c0551e8b015ea7687969fc55c4b514908577a201ac1841db",
       "page_before_binding": "first_installer_observation",
-      "page_after_sha256": "5eefe7ef2569f297fa1c5a185af0f26aa831c16601fe39b28b8176edf2542021",
+      "page_after_sha256": "6e1b99b23c21c9c937eae0ecef67d6d3c278b2886e6fd08e205336ac9b1c4480",
       "downloads": [
         {
           "svg": "recovery-natural-interaction-latency.svg",
@@ -532,10 +531,10 @@
     "taiwan-latency.svg": "35090688260f39951649ec1eb28c324e7bbf1aaf6e8c29728e3423f891c1f0f9",
     "taiwan-matched-latency.svg": "815789e601e2e0f8cf4e6c9822b1918f8afff6fa5f2b70c236727b6600530dd9",
     "taiwan-results.public.json": "dd3617d10f109dba78e512196b95e316669113b311929f1e0daf3c18ca2f250c",
-    "recovery.html": "5eefe7ef2569f297fa1c5a185af0f26aa831c16601fe39b28b8176edf2542021",
+    "recovery.html": "6e1b99b23c21c9c937eae0ecef67d6d3c278b2886e6fd08e205336ac9b1c4480",
     "latency-downloads-before-recovery-5db2738b118b254f.json": "5db2738b118b254f4ae105a6b9051f9852770b75980bd8d25972b39cc9f7f5ed",
-    "delegation.html": "f26d377547ee5143ea9da854f5eff7a7658c937868bc8aafef5488d24bbd3627",
-    "taiwan.html": "dabdd24fcc355332cd163237439b77464f674c91c6cc482dbb33dd7328ba5032",
+    "delegation.html": "d84f37914c3a7c432a10bd42fa77468e11ad69d76a2fe6ad1084c2db039c3822",
+    "taiwan.html": "5c4c0404c3f1821805857f9a47995c25c26eba9af966bf35d50703a1ba0e5606",
     "interaction-before-minimal-20260928-results.public.json": "dd4874111e3fa676142716ca107ce1c0aace6f25ccd31e2e82c79e5a9d38cd45",
     "interaction-before-minimal-20260928-group-observation-latency.svg": "29155de194b56a006a5b387e006a1f52dec1a143b161a26d331d03b6891532fe",
     "interaction-before-minimal-20260928-group-observation-matched-latency.svg": "30bc890c19876bb58af0ba6178fcf7f591c64408fd811e00ed24ef4f63009139",
@@ -545,67 +544,14 @@
     "interaction-before-minimal-20260928-matched-latency.svg": "6708874f75b874b23b61b3fefabbac719c4c62f0279d0d9d55ef31ebe9e11973",
     "interaction-before-minimal-20260928-stickers-latency.svg": "f385e24887569ab9340230933b929a537b81704c2273f2cd67a06825a8a146d9",
     "interaction-before-minimal-20260928-stickers-matched-latency.svg": "ff202574700c03bbdbfd869e7617b9e79df913e6f37f4dcf3f2b44557fcb2b0c",
-    "interaction-before-minimal-20260928.html": "f99e7df86d31d816aad2b2b7388f4eacdc1afa4bbfe4dd290c6c686b29325dbd",
-    "comparison-manifest-before-minimal-20260928.json": "0504a5bb43cee7f19e4a7db56a5fc6c72eaf625392aa50e9a6dfc6719d92df7d",
-    "latency-downloads-before-minimal-20260928.json": "a05cdc2ca112c4dba78f34db976f9c053e4f0518d62f95a6feb017abcc801311",
-    "tts-followup-line-validation.json": "a17e8db58595adc310bc5aedfa070a2ac3cdfeeefdcb14953535435ee9267e85",
-    "tts-followup-results.public.json": "6db7676098bb52d1828e52cec5155703d11d2f1b7dde8aacf4244e2a0828323c",
-    "tts-followup.html": "6340621f8e12fb363dfa59312b27375b17278d18c780cb9f2693c32448f6db6c",
-    "interaction-before-astra-ultrafast-20260929.html": "1e0456953c3195575aeffd180af3498083131a34a9dc5729d4ed9c727ae14ab6",
-    "interaction-before-astra-ultrafast-20260929-results.public.json": "298a505199bbfa991b8670f60b38717d2224b2c1024e6608ea682f07562ec660",
-    "interaction-before-astra-ultrafast-20260929-latency.svg": "215050fb4ffe2264a6b6e2be7fe7512947b3705eb2323bc13ae08a8bcdc7b888",
-    "interaction-before-astra-ultrafast-20260929-matched-latency.svg": "dc6702a39c86fc3488f66672083f54f94f8d39bbdf53a9a2474d03434982aa99",
-    "interaction-before-astra-ultrafast-20260929-stickers-latency.svg": "6c2828ad230a95ae2f68cd87e7a2b6c97dc17049c5e201953ead4912242b935c",
-    "interaction-before-astra-ultrafast-20260929-stickers-matched-latency.svg": "9b24a2ac55491414102b6eebfc0a4c06c1102a449182bd7345812c97e51800a0",
-    "interaction-before-astra-ultrafast-20260929-group-replies-latency.svg": "b5e0b0e5bedfb3c5adc817457f6fd67806fe7b0f8befcff20be717266bd2cbe4",
-    "interaction-before-astra-ultrafast-20260929-group-replies-matched-latency.svg": "f4d6f47061e651111155eb55758b30e3c3e7f8bee02d4ccf08ca0fea5fb64730",
-    "interaction-before-astra-ultrafast-20260929-group-observation-latency.svg": "c322c0c2d84c98bbeecbff92393acc0c1a442c3700edd643951f84d474cd4f53",
-    "interaction-before-astra-ultrafast-20260929-group-observation-matched-latency.svg": "65817aabdc3ef4cee72331a784246f6d23f903a97bfc52d3184255ff07436599",
-    "interaction-before-astra-ultrafast-20260929-comparison-manifest.json": "daaaa7e6c24625dcec43684acd997aa26d41c1d78560d5b286e208da79e70c3a",
-    "interaction-before-astra-ultrafast-20260929-latency-downloads-manifest.json": "7f2b7ea296ce229ca232cef0e5e2efa10e6dfc9a86689f0214bc39fd3a42cb06",
-    "interaction-before-astra-ultrafast-20260929-manifest.json": "391e7a42b04d30ebb205a7c656fb1cc518237a65a8d35b36e4f1b2acc4ef8f97"
+    "interaction-before-minimal-20260928.html": "f99e7df86d31d816aad2b2b7388f4eacdc1afa4bbfe4dd290c6c686b29325dbd"
   },
   "previous_manifest": {
-    "path": "interaction-before-astra-ultrafast-20260929-latency-downloads-manifest.json",
-    "sha256": "7f2b7ea296ce229ca232cef0e5e2efa10e6dfc9a86689f0214bc39fd3a42cb06"
+    "path": "latency-downloads-before-minimal-20260928.json",
+    "sha256": "a05cdc2ca112c4dba78f34db976f9c053e4f0518d62f95a6feb017abcc801311"
   },
   "download_formats": [
     "svg",
     "jpeg"
-  ],
-  "page_binding_reconciliation": {
-    "archive_manifest": "interaction-before-astra-ultrafast-20260929-manifest.json",
-    "unchanged_study_pages": {
-      "delegation": {
-        "page": "delegation.html",
-        "declared_page_sha256": "d84f37914c3a7c432a10bd42fa77468e11ad69d76a2fe6ad1084c2db039c3822",
-        "observed_page_sha256": "f26d377547ee5143ea9da854f5eff7a7658c937868bc8aafef5488d24bbd3627",
-        "page_binding_matches": false,
-        "downloads_declared_page_after_sha256": "d84f37914c3a7c432a10bd42fa77468e11ad69d76a2fe6ad1084c2db039c3822",
-        "public_results_sha256": "3052f47299c6f68fd45b5106a612f0ef8659746e282fc0ce4249e7c0d2c07cfb",
-        "source_ref": "85d96a57db67d2b32911dfdd8847f43d284efa04",
-        "action": "Rebind the observed existing HTML without changing its bytes, result JSON, source ref or download assets. The preexisting declared hash predates the TTS navigation tab; archived manifests preserve that discrepancy."
-      },
-      "taiwan": {
-        "page": "taiwan.html",
-        "declared_page_sha256": "5c4c0404c3f1821805857f9a47995c25c26eba9af966bf35d50703a1ba0e5606",
-        "observed_page_sha256": "dabdd24fcc355332cd163237439b77464f674c91c6cc482dbb33dd7328ba5032",
-        "page_binding_matches": false,
-        "downloads_declared_page_after_sha256": "5c4c0404c3f1821805857f9a47995c25c26eba9af966bf35d50703a1ba0e5606",
-        "public_results_sha256": "dd3617d10f109dba78e512196b95e316669113b311929f1e0daf3c18ca2f250c",
-        "source_ref": "85d96a57db67d2b32911dfdd8847f43d284efa04",
-        "action": "Rebind the observed existing HTML without changing its bytes, result JSON, source ref or download assets. The preexisting declared hash predates the TTS navigation tab; archived manifests preserve that discrepancy."
-      },
-      "recovery": {
-        "page": "recovery.html",
-        "declared_page_sha256": "6e1b99b23c21c9c937eae0ecef67d6d3c278b2886e6fd08e205336ac9b1c4480",
-        "observed_page_sha256": "5eefe7ef2569f297fa1c5a185af0f26aa831c16601fe39b28b8176edf2542021",
-        "page_binding_matches": false,
-        "downloads_declared_page_after_sha256": "6e1b99b23c21c9c937eae0ecef67d6d3c278b2886e6fd08e205336ac9b1c4480",
-        "public_results_sha256": "98e3a493f9e9ddfdfe97a986bdba051267618355625af87e83724babf65e5ba3",
-        "source_ref": "7d2c7110f56249e18c6134db981e446057b7ba29",
-        "action": "Rebind the observed existing HTML without changing its bytes, result JSON, source ref or download assets. The preexisting declared hash predates the TTS navigation tab; archived manifests preserve that discrepancy."
-      }
-    }
-  }
+  ]
 }
