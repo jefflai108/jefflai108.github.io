@@ -48,6 +48,14 @@ The headline statistics retain their observed and planned denominators:
   and message boundaries. It excludes unused candidates, notices, duplicates,
   and final answers. This descriptive count is not a quality score.
 
+Both arms share the benchmark wrapper's cap of **12 admitted host tool calls
+per task attempt**. Production V3 has no such benchmark cap. The Hermes
+executor otherwise uses V3's unbounded execution mode; the outer slot timeout
+is also a benchmark limit. The renderer preserves the study's
+`metadata.host_tool_budget` disclosure in the public JSON and presents it in
+the methodology so a shared benchmark constraint is not presented as
+production behavior.
+
 `npm test` covers metric attribution and publication binding, including an
 adapter contract test double in a temporary frozen study. Tests write only
 temporary fixture pages; no example result page is installed in `public/`.

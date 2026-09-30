@@ -9,6 +9,7 @@ import {spawnSync} from 'node:child_process';
 
 const renderer=fileURLToPath(new URL('../../scripts/render-natural-bridges.mjs',import.meta.url));
 const sha=value=>crypto.createHash('sha256').update(value).digest('hex');
+const hostToolBudget='Both arms share a benchmark-only cap of 12 admitted host tool calls per task attempt; production has no such benchmark cap.';
 function render({text='合成問題',mismatch=false,extraQuality=false,amendStudy=()=>{},amendQuality=()=>{},
   corruptGuard=false,guardReject=[],reason=null}={}){
   const root=fs.mkdtempSync(path.join(os.tmpdir(),'bridge-publication-'));
@@ -17,7 +18,7 @@ function render({text='合成問題',mismatch=false,extraQuality=false,amendStud
     for(const page of ['index','delegation','taiwan','recovery','tts-followup','burst-turns'])
       fs.writeFileSync(path.join(publicDir,page+'.html'),'<nav class="tabs"></nav>');
     const source='a'.repeat(40);
-    const data={metadata:{source_ref:source,accounts:['primary'],repeats:1,models:{foreground:'fixture',executor:'fixture'}},
+    const data={metadata:{source_ref:source,accounts:['primary'],repeats:1,models:{foreground:'fixture',executor:'fixture'},host_tool_budget:hostToolBudget},
       cases:[{id:'NB001',category:'fixture',rubric:[],turns:[{text}]}],receipts:['baseline','natural'].map(arm=>
         ({case_id:'NB001',account:'primary',repeat:1,arm,status:'error',turns:[]}))};
     amendStudy(data);
@@ -139,6 +140,9 @@ test('captured metrics reach the page and public JSON with paired denominators',
   assert.match(actual.html,/前景模型呼叫耗時/);assert.match(actual.html,/背景執行起點/);
   assert.match(actual.html,/可比較配對 \/ 任一側有觀測/);
   assert.match(actual.html,/實際承接文字的完全相同率與差異/);
+  assert.match(actual.html,/每次任務嘗試最多接納 12 次呼叫/);
+  assert.match(actual.html,/正式環境沒有這項限制/);
+  assert.equal(actual.public.host_tool_budget,hostToolBudget);
   assert.deepEqual(actual.public.statistics.paired_delta_ms.final,
     {n:1,median:-100,p95:-100,observed_either:1,planned_pairs:1});
   assert.equal(actual.public.receipts[0].turns[0].messages[0].texts[0],'捕捉的承接文字。');
