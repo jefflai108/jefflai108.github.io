@@ -1,0 +1,851 @@
+{
+  "version": "eleven-v4-documented-examples-2026-09-29",
+  "scope": "All concrete positive bracketed audio-tag examples found in the four cited guides on this date, plus the project microphone pilot. ElevenLabs tags are open-ended natural-language instructions; this is a reproducible catalog, not an exhaustive provider enum or a guarantee every tag works with every voice.",
+  "templates": [
+    {
+      "example": "strong X accent",
+      "note": "Documentation template, not a literal tag. This benchmark selects concrete entries only; documented French and Russian examples are included."
+    }
+  ],
+  "sources": [
+    {
+      "id": "prompting",
+      "url": "https://elevenlabs.io/docs/overview/capabilities/text-to-speech/best-practices",
+      "retrieved_date": "2026-09-29",
+      "markdown_sha256": "5fd7cf3beab230b45a0ac4702d4331c20889ef3e5e6f89194c9087ee407ca0a1"
+    },
+    {
+      "id": "dialogue",
+      "url": "https://elevenlabs.io/docs/overview/capabilities/text-to-dialogue",
+      "retrieved_date": "2026-09-29",
+      "markdown_sha256": "49e53f0385243a1363eccd7598b99c2715cbf96822d216a6e18b78804d6c76dc"
+    },
+    {
+      "id": "product",
+      "url": "https://elevenlabs.io/docs/eleven-creative/playground/text-to-speech",
+      "retrieved_date": "2026-09-29",
+      "markdown_sha256": "b421360683c3584637ceedc221f3007a6a3dad7eada8ae861548597479f25e56"
+    },
+    {
+      "id": "expressive",
+      "url": "https://elevenlabs.io/docs/eleven-agents/customization/voice/expressive-mode",
+      "retrieved_date": "2026-09-29",
+      "markdown_sha256": "ad554caf970b20d6abc2c282a194f4e5ecb2e729d00a6e1843a71cf92ec7af22"
+    },
+    {
+      "id": "project_pilot",
+      "url": "https://jefflai108.github.io/tts",
+      "note": "Previously tested project instruction, not claimed as an officially enumerated tag."
+    }
+  ],
+  "tags": [
+    {
+      "name": "alarmed",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "amazed",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "angry",
+      "category": "emotion_and_tone",
+      "sources": [
+        "product",
+        "prompting"
+      ]
+    },
+    {
+      "name": "annoyed",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "appalled",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "applause",
+      "category": "sound_effects",
+      "sources": [
+        "dialogue",
+        "prompting"
+      ]
+    },
+    {
+      "name": "auctioneer",
+      "category": "delivery_and_accents",
+      "sources": [
+        "dialogue"
+      ]
+    },
+    {
+      "name": "binary beeping",
+      "category": "sound_effects",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "Brief pause",
+      "category": "timing",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "Building tension, measured pace",
+      "category": "narration_directions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "cautiously",
+      "category": "emotion_and_tone",
+      "sources": [
+        "dialogue",
+        "prompting"
+      ]
+    },
+    {
+      "name": "cheerfully",
+      "category": "emotion_and_tone",
+      "sources": [
+        "dialogue"
+      ]
+    },
+    {
+      "name": "chuckles",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "clapping",
+      "category": "sound_effects",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "clears throat",
+      "category": "vocal_reactions",
+      "sources": [
+        "product",
+        "prompting"
+      ]
+    },
+    {
+      "name": "cracking up",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "crying",
+      "category": "vocal_reactions",
+      "sources": [
+        "product",
+        "prompting"
+      ]
+    },
+    {
+      "name": "curious",
+      "category": "emotion_and_tone",
+      "sources": [
+        "product",
+        "prompting"
+      ]
+    },
+    {
+      "name": "curiously",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "cute",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "deadpan",
+      "category": "delivery_and_accents",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "delighted",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "desperately",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "dismissive",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "dramatically",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "elated",
+      "category": "emotion_and_tone",
+      "sources": [
+        "dialogue"
+      ]
+    },
+    {
+      "name": "excited",
+      "category": "emotion_and_tone",
+      "sources": [
+        "expressive",
+        "prompting"
+      ]
+    },
+    {
+      "name": "excitedly",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "exhales",
+      "category": "vocal_reactions",
+      "sources": [
+        "product",
+        "prompting"
+      ]
+    },
+    {
+      "name": "exhales sharply",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "explosion",
+      "category": "sound_effects",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "fart",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "football",
+      "category": "delivery_and_accents",
+      "sources": [
+        "dialogue"
+      ]
+    },
+    {
+      "name": "frustrated",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "frustrated sigh",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "gentle footsteps",
+      "category": "sound_effects",
+      "sources": [
+        "dialogue"
+      ]
+    },
+    {
+      "name": "Gentle laugh, then sincere",
+      "category": "narration_directions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "Gentle pause, then quiet realization",
+      "category": "narration_directions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "giggles",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "giggling",
+      "category": "vocal_reactions",
+      "sources": [
+        "dialogue",
+        "prompting"
+      ]
+    },
+    {
+      "name": "groaning",
+      "category": "vocal_reactions",
+      "sources": [
+        "dialogue"
+      ]
+    },
+    {
+      "name": "gulps",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "gunshot",
+      "category": "sound_effects",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "happily",
+      "category": "emotion_and_tone",
+      "sources": [
+        "product"
+      ]
+    },
+    {
+      "name": "happy",
+      "category": "emotion_and_tone",
+      "sources": [
+        "product",
+        "prompting"
+      ]
+    },
+    {
+      "name": "happy gasp",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "impressed",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "indecisive",
+      "category": "emotion_and_tone",
+      "sources": [
+        "dialogue"
+      ]
+    },
+    {
+      "name": "inhales deeply",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "interrupting, then stopping abruptly",
+      "category": "delivery_and_accents",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "jumping in",
+      "category": "delivery_and_accents",
+      "sources": [
+        "dialogue",
+        "prompting"
+      ]
+    },
+    {
+      "name": "laughing",
+      "category": "vocal_reactions",
+      "sources": [
+        "dialogue",
+        "prompting"
+      ]
+    },
+    {
+      "name": "laughing hysterically",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "laughing loudly",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "laughs",
+      "category": "vocal_reactions",
+      "sources": [
+        "dialogue",
+        "expressive",
+        "product",
+        "prompting"
+      ]
+    },
+    {
+      "name": "laughs harder",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "leaves rustling",
+      "category": "sound_effects",
+      "sources": [
+        "dialogue"
+      ]
+    },
+    {
+      "name": "long pause",
+      "category": "timing",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "low, gravelly voice",
+      "category": "delivery_and_accents",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "Low, steady voice, restrained urgency",
+      "category": "narration_directions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "mischievously",
+      "category": "emotion_and_tone",
+      "sources": [
+        "product",
+        "prompting"
+      ]
+    },
+    {
+      "name": "muttering",
+      "category": "delivery_and_accents",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "nervously",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "overlapping",
+      "category": "delivery_and_accents",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "panicking",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "pause",
+      "category": "timing",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "pause, then normally",
+      "category": "delivery_and_accents",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "pauses",
+      "category": "timing",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "professional",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "questioning",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "Quiet, reflective narration",
+      "category": "narration_directions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "Quietly, with controlled fear",
+      "category": "narration_directions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "quizzically",
+      "category": "emotion_and_tone",
+      "sources": [
+        "dialogue"
+      ]
+    },
+    {
+      "name": "reassuring",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "robotic voice",
+      "category": "delivery_and_accents",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "sad",
+      "category": "emotion_and_tone",
+      "sources": [
+        "dialogue",
+        "product",
+        "prompting"
+      ]
+    },
+    {
+      "name": "sarcastic",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "sheepishly",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "short pause",
+      "category": "timing",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "shouting",
+      "category": "delivery_and_accents",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "shouts",
+      "category": "delivery_and_accents",
+      "sources": [
+        "product"
+      ]
+    },
+    {
+      "name": "sigh",
+      "category": "vocal_reactions",
+      "sources": [
+        "dialogue",
+        "prompting"
+      ]
+    },
+    {
+      "name": "sighing",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "sighs",
+      "category": "vocal_reactions",
+      "sources": [
+        "expressive",
+        "product",
+        "prompting"
+      ]
+    },
+    {
+      "name": "singing",
+      "category": "delivery_and_accents",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "singing quickly",
+      "category": "delivery_and_accents",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "sings",
+      "category": "delivery_and_accents",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "slow",
+      "category": "delivery_and_accents",
+      "sources": [
+        "expressive"
+      ]
+    },
+    {
+      "name": "snorts",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "Softening, reflective",
+      "category": "narration_directions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "Softly, with wonder",
+      "category": "narration_directions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "speaking into the microphone",
+      "category": "delivery_and_accents",
+      "sources": [
+        "project_pilot"
+      ]
+    },
+    {
+      "name": "starting to speak",
+      "category": "delivery_and_accents",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "starts laughing",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "stifling laughter",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "strong French accent",
+      "category": "delivery_and_accents",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "strong Russian accent",
+      "category": "delivery_and_accents",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "surprised",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "swallows",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "sympathetic",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "thoughtful",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "Voice rising into firm resolve",
+      "category": "narration_directions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "Warm, conversational tone, faint amusement",
+      "category": "narration_directions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "Warm, intimate narration",
+      "category": "narration_directions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "warmly",
+      "category": "emotion_and_tone",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "wheezing",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "whisper",
+      "category": "delivery_and_accents",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "whispering",
+      "category": "delivery_and_accents",
+      "sources": [
+        "dialogue",
+        "prompting"
+      ]
+    },
+    {
+      "name": "whispers",
+      "category": "delivery_and_accents",
+      "sources": [
+        "expressive",
+        "product",
+        "prompting"
+      ]
+    },
+    {
+      "name": "with genuine belly laugh",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "woo",
+      "category": "vocal_reactions",
+      "sources": [
+        "prompting"
+      ]
+    },
+    {
+      "name": "wrestling match",
+      "category": "delivery_and_accents",
+      "sources": [
+        "dialogue"
+      ]
+    }
+  ]
+}

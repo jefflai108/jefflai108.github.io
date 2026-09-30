@@ -16,11 +16,16 @@ DIMS = {'task_completion': '任務完成', 'grounding': '依據', 'usefulness': 
 REASONS = {'selected': '符合條件，已選用語音', 'no_follow_up': '模型選擇不接話',
            'not_verified_mandarin': '非國語或語言驗證未通過', 'not_direct_interaction': '委派／任務控制，禁止 TTS',
            'not_interaction': '安靜觀察，沒有回覆', 'response_not_ok': '回覆失敗或降級',
-           'probability_not_selected': '未抽中語音'}
+           'probability_not_selected': '未抽中語音', 'invalid_tagged_follow_up': '標籤或逐字一致檢查未通過，保留純文字'}
 
 
 def e(value):
     return html.escape(str(value), quote=True)
+
+
+def tagged_markup(value):
+    return ''.join(f'<mark class="audio-tag">{e(part)}</mark>' if part.startswith('[') else e(part)
+                   for part in re.split(r'(\[[^\[\]\n]+\])', value))
 
 
 def seconds(value):
@@ -58,30 +63,51 @@ def main():
     data = json.loads((PUBLIC / 'tts-followup-results.public.json').read_text())
     cases, meta = data['cases'], data['metadata']
     css = re.search(r'<style>(.*?)</style>', (PUBLIC / 'index.html').read_text(), re.S)[1]
-    css += '''\n.steps{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}.step{min-width:0;background:#f8faf7;padding:16px;border:1px solid #dce5de;border-radius:10px}.step h3{font-size:15px}.step .text{margin-bottom:0}.step audio{width:100%;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.metrics strong{display:block;font-size:28px}.step .empty{color:#65766e}.case h2{font-size:19px}.cohort-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.case .quality{font-size:11px}.case .quality th,.case .quality td{white-space:normal}.summary-table{min-width:690px}.text{font-size:15px}audio:focus-visible{outline:3px solid #258f9e;outline-offset:4px}@media(max-width:900px){.steps,.cohort-grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}}'''
+    css += '''\n.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.step{min-width:0;background:#f8faf7;padding:16px;border:1px solid #dce5de;border-radius:10px}.step h3{font-size:15px}.step .text{margin-bottom:0}.step audio{width:100%;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.metrics strong{display:block;font-size:28px}.step .empty{color:#65766e}.case h2{font-size:19px}.cohort-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.case .quality{font-size:11px}.case .quality th,.case .quality td{white-space:normal}.summary-table{min-width:690px}.text{font-size:15px}.audio-tag{background:#e9e2f8;color:#54337a;border-radius:3px;font-size:12px;overflow-wrap:anywhere}.tag-catalog{line-height:2;overflow-wrap:anywhere}audio:focus-visible{outline:3px solid #258f9e;outline-offset:4px}@media(max-width:1100px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.steps,.cohort-grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}}'''
     nav = '<nav class="tabs" aria-label="比較分頁">' + ''.join(f'<a href="{url}"' + (' aria-current="page"' if url == 'tts-followup.html' else '') + f'>{label}</a>'
         for url, label in [('index.html', 'Interaction tasks'), ('delegation.html', 'Delegation tasks'), ('taiwan.html', '台灣用語'), ('recovery.html', '困難任務與失敗恢復'), ('tts-followup.html', 'TTS follow-up')]) + '</nav>'
     parts = [f'<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HeyMachi · TTS follow-up</title><meta name="robots" content="noindex,nofollow"><link rel="canonical" href="https://jefflai108.github.io/line-v3/tts-followup.html"><style>{css}</style></head><body><a class="skip" href="#main">跳至比較內容</a><div class="navwrap">{nav}</div>',
-        '<header><p class="muted">HeyMachi / LINE v3 · 獨立實測</p><h1>接話，換成 Zack 的聲音</h1><p>Eleven v4 Turbo · Zack · v3 (Hermes, gemini-3.8-flash medium)</p>',
+        '<header><p class="muted">HeyMachi / LINE v3 · 帶 audio tags 的重新實測</p><h1>同一句接話，讓聲音有語氣</h1><p>Eleven v4 Turbo · Zack · v3 (Hermes, gemini-3.8-flash medium)</p>',
         '<p class="notice">本頁強制為所有符合條件的國語接話產生語音。目前正式服務的提案機率為 20%，本次沒有啟用。主回答仍是文字；無接話、非國語、委派工作與安靜觀察皆不產生音訊。</p>',
-        '<p class="small muted">同一批 69 個合成案例重新量測，各題一次，不挑最好結果。前景 Gemini 3.8 Flash 使用 low；標籤中的 medium 是 Hermes 執行腦設定，直接互動不會呼叫 Hermes。語言標註加入原本的同一次推論。</p>',
-        '<p class="small muted">正式服務提案於量測後由 10% 調整為 20%；下載的凍結紀錄保留量測當時的提案值。本頁實測仍為符合條件後 100%，音訊與延遲不變。</p>',
+        '<p class="small muted">同一批 69 個合成案例重新量測，各題一次，不挑最好結果。前景 Gemini 3.8 Flash 使用 low；標籤中的 medium 是 Hermes 執行腦設定，直接互動不會呼叫 Hermes。純文字接話、帶 tags 的接話與語言標註在同一次 LLM 推論產生，沒有第二次改寫。</p>',
+        '<p class="small muted">移除 tags 後必須逐字等於純文字接話；不符即保留純文字並跳過 TTS。符合互動、既有接話、國語與逐字一致檢查後，才進入 20% 抽樣。<a href="tts-followup-plain-20260929.html">查看上一次無標籤結果與原始音訊</a>；本次重新取樣的接話可能不同，兩次差異不等於 tags 的因果影響。</p>',
         f'<p class="small">凍結來源 <code>{e(meta["source_ref"])}</code> · {e(meta["created_utc"][:10])} · <a href="tts-followup-results.public.json" download>下載完整結果 JSON</a> · <a href="tts-followup-line-validation.json" download>LINE 驗證紀錄</a></p></header><main id="main">']
     headline = [c for c in cases if cohort(c) != 'G-observation']
     audio = [c[ARM]['tts'] for c in headline if c[ARM].get('tts', {}).get('status') == 'ok']
     follow = sum(bool(c[ARM].get('follow_up')) for c in headline)
     eligible = sum(c[ARM].get('tts', {}).get('gate', {}).get('eligible', False) for c in headline)
     failures = sum(c[ARM].get('tts', {}).get('status') == 'error' for c in headline)
+    valid_tagged = [c[ARM] for c in headline if c[ARM].get('follow_up') and c[ARM].get('audio_tag_validation', {}).get('valid')]
+    invalid_tagged = [c['id'] for c in headline if c[ARM].get('follow_up') and not c[ARM].get('audio_tag_validation', {}).get('valid')]
+    discarded_candidates = [c['id'] for c in headline if not c[ARM].get('follow_up') and c[ARM].get('follow_up_audio_candidate')]
     parts.append('<section class="panel"><h2>這次產生了多少語音？</h2><div class="metrics">' + ''.join(
         f'<div><strong>{value}</strong>{label}</div>' for value,label in [(len(headline),'回覆情境（另有 8 題安靜觀察）'),(follow,'有接話文字'),(eligible,'符合國語 TTS 條件'),(len(audio),'成功音訊')]) + '</div>'
         f'<p class="small">TTS 失敗 {failures}；若失敗，保留接話文字。國語允許少量英文名稱或術語；模型語言標註＋漢字比例檢查仍可能誤判，不宣稱能完美分辨所有漢語。</p></section>')
-    parts.append('<section class="panel"><h2>延遲：LLM → 接話音訊可用</h2><p>各欄為中位數 / p95。p95 使用 nearest rank。整體可用時間＝LLM 回覆時間＋TTS 階段（含檔案寫入、長度探測及完整解碼），是兩段量測的加總。未產生音訊的題目保留文字路徑。</p><div class="scroll" tabindex="0"><table class="quality summary-table"><thead><tr><th>情境</th><th>全部 LLM 嘗試</th><th>LLM 有回覆</th><th>整體可用</th><th>有音訊題的整體可用</th></tr></thead><tbody>')
+    catalog = meta['tts']['tag_catalog']
+    tag_groups = {}
+    for tag in catalog['tags']:
+        tag_groups.setdefault(tag['category'], []).append('[' + tag['name'] + ']')
+    parts.append('<section class="panel"><h2>同一次推論，兩個接話版本</h2>'
+        f'<p>模型看到 {len(catalog["tags"])} 個具體 tag 範例，依語意插入 1–4 個，可放句首、句中或句尾。{len(valid_tagged)} / {follow} 段接話通過逐字一致檢查；'
+        + (f'未通過：{e(", ".join(invalid_tagged))}。' if invalid_tagged else '沒有因 tags 改變原文的案例。')
+        + '</p>' + (f'<p class="small">{e(", ".join(discarded_candidates))} 的原始語音候選因最終沒有可用的純文字接話而捨棄；沒有抽樣，也沒有送出 TTS。候選仍保留在案例紀錄。</p>' if discarded_candidates else '')
+        + '<p class="small">ElevenLabs 的 tags 是開放式自然語言指令，沒有有限的完整官方清單。本次提供四份官方指南的具體正面範例，另含先前測過的 [speaking into the microphone]；不保證每個 tag 在每個聲音上都有相同效果。</p>'
+        + '<p class="small">實際選用：' + counts(tag['name'] for row in valid_tagged for tag in row['audio_tag_validation']['tags']) + '</p>'
+        + '<details><summary>查看模型可選的完整實驗目錄與來源</summary><p><a href="tts-followup-tag-catalog.json" download>下載版本化目錄 JSON</a></p>'
+        + ''.join(f'<h3>{e(group)}</h3><p class="small tag-catalog">{e(" · ".join(tags))}</p>' for group,tags in tag_groups.items())
+        + '<p class="small">來源：' + ' · '.join(f'<a href="{e(source["url"])}">{e(source["id"])}</a>' for source in catalog['sources']) + '</p></details></section>')
+    parts.append('<section class="panel"><h2>延遲：LLM → 接話音訊可用</h2><p>各欄為中位數 / p95。p95 使用 nearest rank。整體可用時間＝LLM／原生回覆時間＋TTS 階段（含檔案寫入、長度探測及完整解碼），是兩段量測的加總。未產生音訊的題目保留文字路徑；安靜觀察沒有呼叫 LLM。</p><div class="scroll" tabindex="0"><table class="quality summary-table"><thead><tr><th>情境</th><th>回合量測（含未回覆）</th><th>LLM／原生回覆</th><th>整體可用</th><th>有音訊題的整體可用</th></tr></thead><tbody>')
     names = {'E': 'E · 模型互動（50）', 'S': 'S · 原生貼圖（6）', 'G-reply': 'G · 群組回覆（5）', 'G-observation': 'G · 安靜觀察（8）'}
     for key,title in names.items():
         rows = [c[ARM] for c in cases if cohort(c) == key]
         parts.append(f'<tr><th scope="row">{title}</th>' + ''.join(f'<td>{stats(r.get(metric) for r in rows)}</td>' for metric in ('latency_ms','llm_latency_ms','overall_ready_ms'))
             + f'<td>{stats(r.get("overall_ready_ms") for r in rows if r.get("tts",{}).get("status")=="ok")}</td></tr>')
-    parts.append('</tbody></table></div><div class="cohort-grid"><div><h3>成功音訊的新增時間</h3>'
+    parts.append('</tbody></table></div><h3>只看同一批成功音訊案例</h3><div class="scroll" tabindex="0"><table class="quality summary-table"><thead><tr><th>情境</th><th>同題 LLM／原生回覆</th><th>新增 TTS 階段</th><th>整體可用</th></tr></thead><tbody>')
+    for key,title in names.items():
+        rows = [c[ARM] for c in cases if cohort(c)==key and c[ARM].get('tts', {}).get('status')=='ok']
+        if rows:
+            parts.append(f'<tr><th scope="row">{e(title.split("（")[0])} · n={len(rows)}</th><td>{stats(r.get("llm_latency_ms") for r in rows)}</td><td>{stats(r["tts"].get("stage_ms") for r in rows)}</td><td>{stats(r.get("overall_ready_ms") for r in rows)}</td></tr>')
+    parts.append('</tbody></table></div><p class="small muted">各欄中位數分別計算，不能直接相加。小樣本的 p95 可能就是最大值，並非尾端延遲保證。</p><div class="cohort-grid"><div><h3>成功音訊的新增時間</h3>'
         f'<p>第一個音訊 byte（TTFB）：{stats(r.get("ttfb_ms") for r in audio)}</p><p>完整請求：{stats(r.get("request_ms") for r in audio)}</p><p>檔案可用：{stats(r.get("ready_ms") for r in audio)}</p></div>'
         '<div><h3>量測範圍</h3><p>每段音訊使用新的 HTTPS 連線。TTFB 包含 DNS、TLS 與網路；不是伺服器純處理時間，也不是第一句可聽見的時間。</p><p>整體可用時間不包含上傳、LINE 傳送、手機通知或播放。本次沒有傳送訊息給使用者。</p></div></div></section>')
     parts.append('<section class="panel"><h2>回應品質與行為檢查</h2><p>沿用 Interaction tasks 的七項文字品質指標與證據規則，gpt-6-sol low 匿名單版本評分。排除 8 題安靜觀察；無文字時的風格項目為空值。這不是聲音自然度或口音評分，也不與歷史取樣混算勝率。</p><div class="cohort-grid"><div>' + quality(headline) + '</div><div>')
@@ -96,19 +122,24 @@ def main():
         r, identity = c[ARM], c['id']
         t = r.get('tts', {})
         reason = REASONS.get(t.get('gate',{}).get('reason'),t.get('error','沒有音訊紀錄'))
-        search = ' '.join(str(v) for v in (identity,c.get('user_text',''),r.get('reply',''),r.get('follow_up',''))).lower()
+        search = ' '.join(str(v) for v in (identity,c.get('user_text',''),r.get('reply',''),r.get('follow_up',''),r.get('follow_up_audio',''))).lower()
         parts.append(f'<article class="case" id="{e(identity)}" data-cohort="{cohort(c)}" data-audio="{e(t.get("status","error"))}" data-search="{e(search)}"><h2>{e(identity)} · {e(c.get("scenario_title",c.get("category","")))}</h2><p class="question">{e(c.get("user_text",""))}</p>'
             f'<p class="small"><span class="badge">{e(r["status"])}</span> · 路由 {e(r.get("action","unknown"))} · LLM {seconds(r.get("llm_latency_ms"))} · 整體可用 {seconds(r.get("overall_ready_ms"))}</p><div class="steps">')
         for title,text in [('1 · LLM 主回答（文字）',r.get('reply','')),('2 · 接話原文',r.get('follow_up',''))]:
             parts.append(f'<div class="step"><h3>{title}</h3>' + (f'<div class="text">{e(text)}</div>' if text else '<p class="empty">（無）</p>') + '</div>')
-        parts.append(f'<div class="step"><h3>3 · 接話語音 · Zack</h3><p class="small">{e(reason)}</p>')
+        tagged = r.get('follow_up_audio', '')
+        parts.append('<div class="step"><h3>3 · 接話＋audio tags</h3>'
+            + (f'<div class="text">{tagged_markup(tagged)}</div><p class="small muted">移除 tags 後逐字一致 ✓</p>' if tagged else '<p class="empty">（無）</p>'))
+        if not r.get('audio_tag_validation', {}).get('valid', True):
+            parts.append(f'<p class="notice warning">{e(r.get("audio_tag_validation", {}).get("reason", "missing"))}</p><details><summary>原始候選（未送出）</summary><pre>{e(r.get("follow_up_audio_candidate", ""))}</pre></details>')
+        parts.append(f'</div><div class="step"><h3>4 · 接話語音 · Zack</h3><p class="small">{e(reason)}</p>')
         if t.get('status') == 'ok':
             parts.append(f'<audio controls preload="none" aria-label="{e(identity)} 接話語音"><source src="{e(t["audio_url"])}" type="audio/mpeg">瀏覽器不支援音訊播放。</audio><a class="small" href="{e(t["audio_url"])}" download>下載 MP3</a><p class="small">TTFB {seconds(t.get("ttfb_ms"))}<br>完整請求 {seconds(t.get("request_ms"))}<br>音訊長度 {seconds(t.get("duration_ms"))}</p>')
         elif t.get('status')=='error':
             parts.append(f'<p class="notice warning">TTS 失敗：{e(t.get("error","unknown"))}。接話文字保留。</p>')
         parts.append('</div></div><details><summary>文字品質、證據與模型紀錄</summary>' + quality([c])
             + f'<p>{e(c.get("quality_five_way",{}).get("variant_reasons",{}).get(ARM,"未評分"))}</p><pre>{e(json.dumps({"context":c.get("context"),"expectation":c.get("expectation"),"record":r},ensure_ascii=False,indent=2))}</pre></details></article>')
-    parts.append('<p class="footer">本頁為獨立 benchmark；原始各版本结果保持不變。音訊來自 Eleven v4 Turbo，Zack，seed 42，stability 0.5，similarity 0.75；無 audio tags。</p></main><script>const cards=[...document.querySelectorAll(".case")];const search=document.querySelector("#search"),cohort=document.querySelector("#cohort"),audioFilter=document.querySelector("#audio-filter");function filter(){let shown=0;for(const card of cards){card.hidden=!(card.dataset.search.includes(search.value.trim().toLowerCase())&&(!cohort.value||cohort.value===card.dataset.cohort)&&(!audioFilter.value||audioFilter.value===card.dataset.audio));if(!card.hidden)shown++;}document.querySelector("#count").textContent=`${shown} / ${cards.length} 題`;}[search,cohort,audioFilter].forEach(el=>el.addEventListener("input",filter));filter();</script></body></html>')
+    parts.append('<p class="footer">本頁為獨立 benchmark；原始各版本结果保持不變。音訊來自 Eleven v4 Turbo，Zack，seed 42，stability 0.5，similarity 0.75；使用同次推論選出的 audio tags。</p></main><script>const cards=[...document.querySelectorAll(".case")];const search=document.querySelector("#search"),cohort=document.querySelector("#cohort"),audioFilter=document.querySelector("#audio-filter");function filter(){let shown=0;for(const card of cards){card.hidden=!(card.dataset.search.includes(search.value.trim().toLowerCase())&&(!cohort.value||cohort.value===card.dataset.cohort)&&(!audioFilter.value||audioFilter.value===card.dataset.audio));if(!card.hidden)shown++;}document.querySelector("#count").textContent=`${shown} / ${cards.length} 題`;}[search,cohort,audioFilter].forEach(el=>el.addEventListener("input",filter));filter();</script></body></html>')
     (PUBLIC / 'tts-followup.html').write_text(''.join(parts), encoding='utf-8')
 
 
