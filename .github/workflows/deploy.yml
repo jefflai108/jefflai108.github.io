@@ -44,6 +44,9 @@ jobs:
       - run: npm ci
       - run: npm test
 
+      - name: Verify LINE burst report renderer
+        run: python3 -m unittest discover -s scripts -p test_line_burst_turns.py
+
       - name: Build
         run: npm run build
         env:
