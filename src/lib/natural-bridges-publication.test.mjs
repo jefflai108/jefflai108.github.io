@@ -173,3 +173,31 @@ test('NB006 failed control does not imply an old-result capture that was never o
     assert.equal(actual.public.observed_limitations[0].includes('各回合另有交付'),coverage==='all');
   }
 });
+test('NB007 counts mixed status outcomes and never credits missing or unconfirmed turns',()=>{
+  for(const [kinds,observed,degraded,confirmed] of [
+    [['ok','degraded','degraded','degraded'],4,3,1],
+    [['degraded','degraded','degraded','degraded'],4,4,0],
+    [['degraded','missing','unknown','uncaptured'],3,1,0],
+  ]){
+    const actual=render({amendStudy:data=>{
+      data.metadata.accounts=['primary','secondary'];
+      data.cases[0]={id:'NB007',category:'status',rubric:[],turns:[{text:'先查台中公園。'},{text:'查得怎麼樣了？'}]};
+      data.receipts=data.metadata.accounts.flatMap(account=>['baseline','natural'].map(arm=>
+        ({case_id:'NB007',account,arm,repeat:1,status:'measured',turns:[]})));
+      data.receipts.forEach((row,index)=>{
+        const kind=kinds[index];
+        if(kind==='missing'){row.status='error';return;}
+        const goodRoute=kind==='ok'||kind==='uncaptured';
+        row.turns=[{turn_index:1,user_text:'查得怎麼樣了？',status:'foreground_captured',drain_requested:true,
+          metrics:{routing_calls:1,frontend_latency_ms:100},foreground_ledger:{response_phase:goodRoute
+            ?{role:'terminal_notice',outcome:'status',awaiting_result:false}:null},
+          interaction:goodRoute?[{action:'status',status:'ok',degraded:false}]
+            :kind==='degraded'?[{action:'unknown',status:'failed',degraded:true,error_code:'invalid_task_selection'}]:[],
+          messages:kind==='ok'?[{semantic_role:'terminal_notice',texts:['還在處理中。'],elapsed_ms:150,kind:'reply'}]
+            :kind==='degraded'?[{semantic_role:'direct_answer',texts:['需要先確認是哪個工作。'],elapsed_ms:150,kind:'reply'}]:[]}];
+      });
+    }});
+    assert.equal(actual.status,0,actual.stderr);
+    assert.deepEqual(actual.public.observed_limitations,[`NB007 的狀態詢問已記錄 ${observed} / 4 個計畫回合；${degraded} 回合交付降級回覆，${confirmed} 回合有成功的 status 路由及宿主確認的狀態通知。缺失或未確認的回合不推定成功。`]);
+  }
+});

@@ -78,8 +78,17 @@ if(allObserved('NB006',1,t=>t.interaction?.some(x=>x.error_code==='task_control_
   data.observed_limitations.push('NB006 的修改回合皆出現 task_control_not_requested，並交付直接回覆；未觀測到 revised 狀態。'
     +(priorResults?'各回合另有交付，標為另一個任務／版本的結果，不計為本次修訂完成。':''));
 }
-if(allObserved('NB007',1,t=>t.interaction?.some(x=>x.status==='failed'&&x.degraded)))
-  data.observed_limitations.push('NB007 的狀態詢問全部出現降級回覆，未成功走過預期的狀態查詢路由。');
+const statusPlanned=study.cases.some(c=>c.id==='NB007'&&c.turns.length>1)
+  ?study.metadata.accounts.length*2*study.metadata.repeats:0;
+const statusTurns=study.receipts.filter(r=>r.case_id==='NB007').flatMap(r=>(r.turns??[]).filter(t=>t.turn_index===1));
+const statusDegraded=statusTurns.filter(t=>t.interaction?.some(x=>x.status==='failed'&&x.degraded)
+  &&t.messages?.some(m=>m.semantic_role==='direct_answer'&&m.texts?.length)).length;
+const statusConfirmed=statusTurns.filter(t=>t.interaction?.some(x=>x.action==='status'&&x.status==='ok')
+  &&t.foreground_ledger?.response_phase?.outcome==='status'
+  &&t.foreground_ledger.response_phase.role==='terminal_notice'
+  &&t.messages?.some(m=>m.semantic_role==='terminal_notice'&&m.texts?.length)).length;
+if(statusPlanned&&(statusDegraded||statusConfirmed<statusPlanned))
+  data.observed_limitations.push(`NB007 的狀態詢問已記錄 ${statusTurns.length} / ${statusPlanned} 個計畫回合；${statusDegraded} 回合交付降級回覆，${statusConfirmed} 回合有成功的 status 路由及宿主確認的狀態通知。缺失或未確認的回合不推定成功。`);
 if(allObserved('NB008',1,t=>t.foreground_ledger?.response_phase?.outcome==='accepted'
   &&t.interaction?.some(x=>x.action==='delegate')))
   data.observed_limitations.push('NB008 的第二回合均以新委派 accepted 承接，沒有觀測到 resubmitted 分支。');
