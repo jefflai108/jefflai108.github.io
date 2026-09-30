@@ -44,7 +44,7 @@ class AudioArchiveTests(unittest.TestCase):
     def test_line_followup_namespace_preserves_existing_audio(self):
         module.install(self.archive, self.destination, self.fixture())
         installed = [NAME]
-        for namespace in ['tts-followup-2026-09-29', 'tts-followup-tagged-2026-09-29']:
+        for namespace in ['tts-followup-2026-09-29', 'tts-followup-tagged-2026-09-29', 'tts-followup-tagged-v2-2026-09-29']:
             name = f'line-v3/audio/{namespace}/E001.mp3'
             manifest = self.fixture([name])
             manifest['files'][0]['path'] = name
@@ -60,7 +60,11 @@ class AudioArchiveTests(unittest.TestCase):
                      'line-v3/audio/tts-followup-tagged-2026-09-29/D001.mp3',
                      'line-v3/audio/tts-followup-tagged-2026-09-29/../E001.mp3',
                      'line-v3/audio/tts-followup-tagged-2026-09-29/E001.wav',
-                     'line-v3/audio/tts-followup-invented-2026-09-29/E001.mp3']:
+                     'line-v3/audio/tts-followup-invented-2026-09-29/E001.mp3',
+                     'line-v3/audio/tts-followup-tagged-v2-2026-09-29/D001.mp3',
+                     'line-v3/audio/tts-followup-tagged-v2-2026-09-29/../E001.mp3',
+                     'line-v3/audio/tts-followup-tagged-v2-2026-09-29/E001.wav',
+                     'line-v3/audio/tts-followup-tagged-v99-2026-09-29/E001.mp3']:
             manifest = self.fixture([name])
             manifest['files'][0]['path'] = name
             self.rejected(manifest)
