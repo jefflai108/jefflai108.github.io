@@ -3,7 +3,7 @@
   "raster_format": "jpeg",
   "navigation_version": "recovery-r13-7d2c7110",
   "comparison_manifest_before_sha256": "daaaa7e6c24625dcec43684acd997aa26d41c1d78560d5b286e208da79e70c3a",
-  "comparison_manifest_sha256": "7a46fc80282de15cee71aba5a49af8f41ba80a886cc6115c6392e5be70256ace",
+  "comparison_manifest_sha256": "f058ef5ed01f522201d6c2f4c986933cc42fe61fed5f2418c88c2ac688e6e1ca",
   "suites": {
     "interaction": {
       "source_ref": "3fd79c8be4f8903509d5f0f54633d67f882718cc",
@@ -17,7 +17,7 @@
       "page_before_sha256": "14c7b9f427be74f92ab0933c70a88144b93d7eab2535817fc26b94662528941c",
       "page_before_binding": "fresh_render_before_canonical_tags",
       "previous_active_page_sha256": "519b044a1bdc0bba34fd4152b876f34cf001f049985daf10fc471f5e82fbd2c5",
-      "page_after_sha256": "294232cb46bf5862191993dbb04d7eba0875a96b3c0f790097757f72c6a5f3e3",
+      "page_after_sha256": "bdf13b21603ea9c07c6b0cb983755203bb9587030186dd626373019536af5d63",
       "downloads": [
         {
           "svg": "interaction-latency.svg",
