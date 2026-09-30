@@ -65,6 +65,23 @@ const data = {schema_version:1,source_ref:study.metadata.source_ref,models:study
     turns:c.turns.map(t=>({text:t.text,drain_requested:t.drain??true}))})),
   receipts:study.receipts.map(r=>({case_id:r.case_id,account:r.account,arm:r.arm,repeat:r.repeat,status:r.status,
     checks:r.checks,error_type:r.error_type,turns:(r.turns??[]).map(publicTurn)})),quality};
+const allObserved=(caseId,index,check)=>{
+  const receipts=study.receipts.filter(r=>r.case_id===caseId);
+  return receipts.length===study.metadata.accounts.length*2*study.metadata.repeats
+    &&receipts.every(r=>r.turns?.some(t=>t.turn_index===index&&check(t)));
+};
+data.observed_limitations=[];
+if(allObserved('NB006',1,t=>t.interaction?.some(x=>x.error_code==='task_control_not_requested')))
+  data.observed_limitations.push('NB006 的修改回合全部回到澄清，未觀測到成功修訂；原任務的後續結果另標為另一個任務／版本的結果。');
+if(allObserved('NB007',1,t=>t.interaction?.some(x=>x.status==='failed'&&x.degraded)))
+  data.observed_limitations.push('NB007 的狀態詢問全部出現降級回覆，未成功走過預期的狀態查詢路由。');
+if(allObserved('NB008',1,t=>t.foreground_ledger?.response_phase?.outcome==='accepted'
+  &&t.interaction?.some(x=>x.action==='delegate')))
+  data.observed_limitations.push('NB008 的第二回合均以新委派 accepted 承接，沒有觀測到 resubmitted 分支。');
+if(allObserved('NB009',0,t=>t.interaction?.some(x=>x.action==='direct')
+  &&Array.isArray(t.capability_events)&&t.capability_events.length===0))
+  data.observed_limitations.push('NB009 的危機查詢均直接回覆，沒有工具呼叫，不計為危機情境的背景查詢覆蓋。');
+const observedNotes=data.observed_limitations.length?`<div class="note"><p>題目分類記錄測試意圖，不代表成功走過同名分支。本次實際觀測：</p><ul>${data.observed_limitations.map(note=>`<li>${esc(note)}</li>`).join('')}</ul></div>`:'';
 const arms=['baseline','natural'];
 const toolBudgetText=data.host_tool_budget==='Both arms share a benchmark-only cap of 12 admitted host tool calls per task attempt; production has no such benchmark cap.'
   ?'兩個版本共用基準測試的宿主工具呼叫上限：每次任務嘗試最多接納 12 次呼叫。這個上限只用於基準測試，正式環境沒有這項限制。'
@@ -133,7 +150,7 @@ const html=`<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><met
 <h3>相同回合的延遲差：自然承接 − 固定承接</h3><div class="scroll"><table><thead><tr><th>階段</th><th>可比較配對 / 任一側有觀測</th><th>配對差 p50</th><th>配對差 p95</th></tr></thead><tbody>${deltaRows}</tbody></table></div>
 <p class="small">共計畫 ${paired.size} 個配對回合。只比較同情境、帳號、重複次數及回合，且兩側都觀測到同一語意階段的配對；沒有配對觀測就不推算差值。負值表示自然承接較快，正值表示較慢。此表是配對差的分布，不是兩側 p50 或 p95 相減。</p></section>
 <section class="panel"><h2>Bridge quality</h2><p>隨機 A/B 標籤，${esc(quality.model)} 評分；${successful.length} / ${quality.results.length} 組評審紀錄有效，計畫共有 ${paired.size} 個配對回合。只看實際送出的訊息與所附宿主／工具證據。這是 AI 盲評與開發用題組，沒有獨立真人評審或未見測試集。</p><div class="scroll"><table><thead><tr><th>指標</th><th>固定承接</th><th>自然承接</th></tr></thead><tbody>${qRows('bridge')}</tbody></table></div><p class="small">自然承接勝 ${wins.natural} · 固定承接勝 ${wins.baseline} · 平手 ${wins.tie} · 不適用 ${wins.not_applicable}。沒有承接的回合不計承接平均。</p>${diversityHtml}<details><summary>最終文字的既有七項品質指標</summary><div class="scroll"><table><thead><tr><th>指標</th><th>固定承接</th><th>自然承接</th></tr></thead><tbody>${qRows('final')}</tbody></table></div></details></section>
-<section class="panel"><h2>測試範圍與版本</h2><p>前景 ${esc(data.models.foreground)}（${esc(data.models.foreground_thinking)}）；Hermes 執行後端 ${esc(data.models.executor)}（${esc(data.models.executor_reasoning)}）。兩側使用相同來源快照，只切換自然承接 prompt／呈現；語意階段的觀测與執行腦的歷史角色規則共用。</p><p>${esc(toolBudgetText)}</p><p>包含查詢、讀取連結、提醒、修改、取消、狀態、危機與缺附件。額外的 admission／held／unresolved 情境會明示注入條件及是否觸發，不能拿來估計生產失敗率。保留模型實際路由、缺失與錯誤，不把等待訊息補成成果。</p><p class="small">Source <code>${esc(data.source_ref)}</code> · <a href="natural-bridges-results.public.json" download>下載合成結果 JSON</a></p></section>
+<section class="panel"><h2>測試範圍與版本</h2><p>前景 ${esc(data.models.foreground)}（${esc(data.models.foreground_thinking)}）；Hermes 執行後端 ${esc(data.models.executor)}（${esc(data.models.executor_reasoning)}）。兩側使用相同來源快照，只切換自然承接 prompt／呈現；語意階段的觀测與執行腦的歷史角色規則共用。</p><p>${esc(toolBudgetText)}</p><p>包含查詢、讀取連結、提醒、修改、取消、狀態、危機與缺附件。額外的 admission／held／unresolved 情境會明示注入條件及是否觸發，不能拿來估計生產失敗率。保留模型實際路由、缺失與錯誤，不把等待訊息補成成果。</p>${observedNotes}<p class="small">Source <code>${esc(data.source_ref)}</code> · <a href="natural-bridges-results.public.json" download>下載合成結果 JSON</a></p></section>
 <section class="panel controls"><label>搜尋<input id="search" type="search" placeholder="情境 ID 或問題"></label><label>LINE 帳號<select id="account"><option value="">兩個帳號</option><option value="primary">Primary</option><option value="secondary">Secondary</option></select></label><label>情境<select id="category"><option value="">全部</option>${[...new Set(data.cases.map(c=>c.category))].map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('')}</select></label><span id="count" role="status" aria-live="polite"></span></section>${cards}
 <footer>所有問題與對話均為合成測試資料。此頁是基準測試，不代表功能已部署到正式 LINE。發布時間 ${esc(data.generated_at)}。</footer></main><script>
 const controls=['search','account','category'].map(id=>document.getElementById(id));const cases=[...document.querySelectorAll('.case')];function filter(){const[q,a,c]=controls.map(e=>e.value.toLowerCase());let n=0;for(const row of cases){row.hidden=!!((q&&!row.dataset.search.toLowerCase().includes(q))||(a&&row.dataset.account!==a)||(c&&row.dataset.category!==c));if(!row.hidden)n++;}document.getElementById('count').textContent=n+' / '+cases.length+' 個配對回合';}controls.forEach(e=>e.addEventListener('input',filter));filter();
