@@ -1,0 +1,848 @@
+{
+  "schema_version": 1,
+  "cohort_status": "interrupted",
+  "included_in_final_comparison": false,
+  "interruption_reason": "A merge conflict between the source PR and newer upstream main was discovered after this run started. The runner stopped between episodes; completed results are retained, and a fresh final study will use the merged source commit.",
+  "source_pr": "https://github.com/jefflai108/streaming_taiwanese/pull/453",
+  "planned_episodes": 30,
+  "admitted_episodes": 2,
+  "completed_episodes": 2,
+  "plan": {
+    "version": 1,
+    "revision": "burst-turns-final-20260930",
+    "prepared_utc": "2026-09-30T08:42:31.923516+00:00",
+    "source_ref": "3ae1185e531c1821608d518dbc2357f2717f721f",
+    "cases_sha256": "d397d15b451a2cd404ba9fbce287c749b365a5398500eb6c86a0e8e8245cb98b",
+    "environment": {
+      "python": "3.11.15",
+      "packages": {
+        "opencc-python-reimplemented": "0.1.7",
+        "Pillow": "12.3.0",
+        "pypdf": "6.18.1",
+        "requests": "2.34.2",
+        "cryptography": "50.0.0"
+      }
+    },
+    "policies": [
+      "baseline",
+      "a",
+      "b",
+      "c",
+      "composite"
+    ],
+    "policy_settings": {
+      "a": {
+        "mode": "fixed",
+        "stabilization_s": 1.25,
+        "quiet_s": 1.25,
+        "max_collect_s": 4.0,
+        "max_refreshes": 3
+      },
+      "b": {
+        "mode": "revision",
+        "stabilization_s": 1.25,
+        "quiet_s": 1.25,
+        "max_collect_s": 4.0,
+        "max_refreshes": 3
+      },
+      "c": {
+        "mode": "semantic",
+        "stabilization_s": 1.25,
+        "quiet_s": 1.25,
+        "max_collect_s": 4.0,
+        "max_refreshes": 3
+      },
+      "composite": {
+        "mode": "composite",
+        "stabilization_s": 1.25,
+        "quiet_s": 1.25,
+        "max_collect_s": 4.0,
+        "max_refreshes": 3
+      }
+    },
+    "provider": "gemini",
+    "model": "gemini-3.8-flash",
+    "thinking_level": "low",
+    "timeout_s": 40,
+    "samples_per_case_policy": 1,
+    "audio_enabled": false,
+    "timing": "serial episodes, rotating/reversed arm order; timed ingress concurrent with native worker",
+    "timing_environment": "Shared development host; other services may be active. Our benchmark episodes run serially with our tests/builds stopped; these are not serving SLO measurements.",
+    "quality": "unjudged; inspect complete delivered transcript",
+    "prompt_comparison": "baseline strips only added burst section; four experimental arms share new prompt with semantic metadata toggles",
+    "scope": "synthetic isolated native direct text; captured LINE; no delegated execution"
+  },
+  "cases": [
+    {
+      "id": "B001",
+      "name": "Four bubbles develop one request",
+      "kind": "rapid_continuation",
+      "events": [
+        {
+          "offset_s": 0,
+          "text": "幫我想一句生日卡片的話"
+        },
+        {
+          "offset_s": 0.4,
+          "text": "是寫給一起長大的朋友"
+        },
+        {
+          "offset_s": 1.1,
+          "text": "她最近剛換工作，有點緊張"
+        },
+        {
+          "offset_s": 2,
+          "text": "想溫暖一點，不要太肉麻，也不要超過三十字"
+        }
+      ],
+      "review_goal": "All delivered main and follow-up text should form one coherent response to the final birthday-card request. Inspect repeated acknowledgements and content that ignores late constraints.",
+      "results": [
+        {
+          "case_id": "B001",
+          "policy": "baseline",
+          "status": "ok",
+          "errors": [],
+          "inputs": [
+            {
+              "index": 0,
+              "planned_ms": 0,
+              "arrived_ms": 0.143,
+              "admission_done_ms": 19.007,
+              "text": "幫我想一句生日卡片的話",
+              "claimed": 1,
+              "ignored": 0,
+              "final_status": "completed"
+            },
+            {
+              "index": 1,
+              "planned_ms": 400.0,
+              "arrived_ms": 403.182,
+              "admission_done_ms": 473.743,
+              "text": "是寫給一起長大的朋友",
+              "claimed": 1,
+              "ignored": 0,
+              "final_status": "completed"
+            },
+            {
+              "index": 2,
+              "planned_ms": 1100.0,
+              "arrived_ms": 1110.092,
+              "admission_done_ms": 1119.854,
+              "text": "她最近剛換工作，有點緊張",
+              "claimed": 1,
+              "ignored": 0,
+              "final_status": "completed"
+            },
+            {
+              "index": 3,
+              "planned_ms": 2000,
+              "arrived_ms": 2010.103,
+              "admission_done_ms": 2021.127,
+              "text": "想溫暖一點，不要太肉麻，也不要超過三十字",
+              "claimed": 1,
+              "ignored": 0,
+              "final_status": "completed"
+            }
+          ],
+          "model_calls": [
+            {
+              "started_ms": 237.292,
+              "input_text": "幫我想一句生日卡片的話",
+              "action": "direct",
+              "reply": "「願新的一歲，日子過得舒心，喜歡的事情都能慢慢實現。生日快樂！」",
+              "follow_up": "如果你想寫給特定對象，像是熟朋友、長輩或另一半，跟我說一聲，我能幫你換個更對味的語氣。",
+              "degraded": false,
+              "code": "ok",
+              "finished_ms": 2911.558
+            },
+            {
+              "started_ms": 3619.555,
+              "input_text": "是寫給一起長大的朋友",
+              "action": "direct",
+              "reply": "「謝謝你陪我從小鬧到大，見過彼此最蠢的樣子還沒絕交。生日快樂，今年也一起吃好吃的！」",
+              "follow_up": "如果你們平常互虧比較多，我也能換成更賤一點的版本。",
+              "degraded": false,
+              "code": "ok",
+              "finished_ms": 7992.428
+            },
+            {
+              "started_ms": 8626.862,
+              "input_text": "她最近剛換工作，有點緊張",
+              "action": "direct",
+              "reply": "「生日快樂！換新工作難免緊張，但別忘了從小到大你闖過多少關，我相信你完全沒問題的。撐不住隨時找我廢話或吃頓好的，我一直都在！」",
+              "follow_up": "如果你想更輕鬆一點，也可以把後面改成「下班隨時約，這頓我先請」，看你想走走心還是先餵飽她。",
+              "degraded": false,
+              "code": "ok",
+              "finished_ms": 11111.558
+            },
+            {
+              "started_ms": 11755.107,
+              "input_text": "想溫暖一點，不要太肉麻，也不要超過三十字",
+              "action": "direct",
+              "reply": "「新工作慢慢來，你一直都很棒。生日快樂，隨時找我吃頓好的！」",
+              "follow_up": "",
+              "degraded": false,
+              "code": "ok",
+              "finished_ms": 13741.554
+            }
+          ],
+          "messages": [
+            {
+              "channel": "reply",
+              "elapsed_ms": 3123.177,
+              "texts": [
+                "「願新的一歲，日子過得舒心，喜歡的事情都能慢慢實現。生日快樂！」",
+                "如果你想寫給特定對象，像是熟朋友、長輩或另一半，跟我說一聲，我能幫你換個更對味的語氣。"
+              ],
+              "messages": [
+                {
+                  "type": "text",
+                  "text": "「願新的一歲，日子過得舒心，喜歡的事情都能慢慢實現。生日快樂！」"
+                },
+                {
+                  "type": "text",
+                  "text": "如果你想寫給特定對象，像是熟朋友、長輩或另一半，跟我說一聲，我能幫你換個更對味的語氣。",
+                  "quickReply": {
+                    "items": [
+                      {
+                        "type": "action",
+                        "action": {
+                          "type": "postback",
+                          "label": "🎤 語音留言",
+                          "data": "machi:voice:v1",
+                          "inputOption": "openVoice"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "duplicate": false
+            },
+            {
+              "channel": "reply",
+              "elapsed_ms": 8180.64,
+              "texts": [
+                "「謝謝你陪我從小鬧到大，見過彼此最蠢的樣子還沒絕交。生日快樂，今年也一起吃好吃的！」",
+                "如果你們平常互虧比較多，我也能換成更賤一點的版本。"
+              ],
+              "messages": [
+                {
+                  "type": "text",
+                  "text": "「謝謝你陪我從小鬧到大，見過彼此最蠢的樣子還沒絕交。生日快樂，今年也一起吃好吃的！」"
+                },
+                {
+                  "type": "text",
+                  "text": "如果你們平常互虧比較多，我也能換成更賤一點的版本。",
+                  "quickReply": {
+                    "items": [
+                      {
+                        "type": "action",
+                        "action": {
+                          "type": "postback",
+                          "label": "🎤 語音留言",
+                          "data": "machi:voice:v1",
+                          "inputOption": "openVoice"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "duplicate": false
+            },
+            {
+              "channel": "reply",
+              "elapsed_ms": 11313.134,
+              "texts": [
+                "「生日快樂！換新工作難免緊張，但別忘了從小到大你闖過多少關，我相信你完全沒問題的。撐不住隨時找我廢話或吃頓好的，我一直都在！」",
+                "如果你想更輕鬆一點，也可以把後面改成「下班隨時約，這頓我先請」，看你想走走心還是先餵飽她。"
+              ],
+              "messages": [
+                {
+                  "type": "text",
+                  "text": "「生日快樂！換新工作難免緊張，但別忘了從小到大你闖過多少關，我相信你完全沒問題的。撐不住隨時找我廢話或吃頓好的，我一直都在！」"
+                },
+                {
+                  "type": "text",
+                  "text": "如果你想更輕鬆一點，也可以把後面改成「下班隨時約，這頓我先請」，看你想走走心還是先餵飽她。",
+                  "quickReply": {
+                    "items": [
+                      {
+                        "type": "action",
+                        "action": {
+                          "type": "postback",
+                          "label": "🎤 語音留言",
+                          "data": "machi:voice:v1",
+                          "inputOption": "openVoice"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "duplicate": false
+            },
+            {
+              "channel": "reply",
+              "elapsed_ms": 13924.734,
+              "texts": [
+                "「新工作慢慢來，你一直都很棒。生日快樂，隨時找我吃頓好的！」"
+              ],
+              "messages": [
+                {
+                  "type": "text",
+                  "text": "「新工作慢慢來，你一直都很棒。生日快樂，隨時找我吃頓好的！」",
+                  "quickReply": {
+                    "items": [
+                      {
+                        "type": "action",
+                        "action": {
+                          "type": "postback",
+                          "label": "🎤 語音留言",
+                          "data": "machi:voice:v1",
+                          "inputOption": "openVoice"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "duplicate": false
+            }
+          ],
+          "delivered_texts": [
+            "「願新的一歲，日子過得舒心，喜歡的事情都能慢慢實現。生日快樂！」",
+            "如果你想寫給特定對象，像是熟朋友、長輩或另一半，跟我說一聲，我能幫你換個更對味的語氣。",
+            "「謝謝你陪我從小鬧到大，見過彼此最蠢的樣子還沒絕交。生日快樂，今年也一起吃好吃的！」",
+            "如果你們平常互虧比較多，我也能換成更賤一點的版本。",
+            "「生日快樂！換新工作難免緊張，但別忘了從小到大你闖過多少關，我相信你完全沒問題的。撐不住隨時找我廢話或吃頓好的，我一直都在！」",
+            "如果你想更輕鬆一點，也可以把後面改成「下班隨時約，這頓我先請」，看你想走走心還是先餵飽她。",
+            "「新工作慢慢來，你一直都很棒。生日快樂，隨時找我吃頓好的！」"
+          ],
+          "metrics": {
+            "first_foreground_start_ms": 237.292,
+            "first_model_start_ms": 468.526,
+            "first_send_ms": 3123.177,
+            "last_send_ms": 13924.734,
+            "last_input_to_last_send_ms": 11914.631000000001,
+            "model_calls": 4,
+            "transport_batches": 4,
+            "text_bubbles": 7,
+            "episode_wall_ms": 14141.008
+          },
+          "limitations": [
+            "captured LINE transport; no real sends or phone latency",
+            "audio synthesis disabled; no TTS manager/client constructed",
+            "synthetic direct-text cases; no delegated effects",
+            "all main reply and follow-up bubbles counted together",
+            "timing and transcript observations; no semantic quality judge"
+          ],
+          "provider_attempts": [
+            {
+              "prepared_ms": 412.912,
+              "request_sent_ms": 468.526,
+              "headers_returned_ms": 2873.643
+            },
+            {
+              "prepared_ms": 3759.235,
+              "request_sent_ms": 3812.54,
+              "headers_returned_ms": 7945.36
+            },
+            {
+              "prepared_ms": 8783.907,
+              "request_sent_ms": 8840.62,
+              "headers_returned_ms": 11070.901
+            },
+            {
+              "prepared_ms": 11902.273,
+              "request_sent_ms": 11958.253,
+              "headers_returned_ms": 13697.713
+            }
+          ],
+          "audio_enabled": false,
+          "host_deliveries": [
+            {
+              "started_ms": 2963.575,
+              "failure_code": null,
+              "attempted": true,
+              "error": null,
+              "finished_ms": 3179.745
+            },
+            {
+              "started_ms": 8034.359,
+              "failure_code": null,
+              "attempted": true,
+              "error": null,
+              "finished_ms": 8226.098
+            },
+            {
+              "started_ms": 11154.243,
+              "failure_code": null,
+              "attempted": true,
+              "error": null,
+              "finished_ms": 11374.208
+            },
+            {
+              "started_ms": 13785.853,
+              "failure_code": null,
+              "attempted": true,
+              "error": null,
+              "finished_ms": 13966.388
+            }
+          ],
+          "observations_complete": true,
+          "provider_calls": {
+            "foreground": {
+              "http_attempts": 4,
+              "attempts": [
+                {
+                  "attempt": 1,
+                  "provider": "gemini",
+                  "model_requested": "gemini-3.8-flash",
+                  "settings": {
+                    "reasoning": "low",
+                    "max_output_tokens": 4096,
+                    "thinking_level": "low",
+                    "include_thoughts": false
+                  },
+                  "request_sha256": "5a6f84c931d467cb827a3cab869b0d37a8b18583ed9d8164b6f453e4a8331983",
+                  "request_sent": true,
+                  "http_status": 200,
+                  "elapsed_s": 2.498229,
+                  "error_code": null,
+                  "usage": {
+                    "promptTokenCount": 21132,
+                    "candidatesTokenCount": 229,
+                    "totalTokenCount": 21361
+                  },
+                  "usage_known": true
+                },
+                {
+                  "attempt": 2,
+                  "provider": "gemini",
+                  "model_requested": "gemini-3.8-flash",
+                  "settings": {
+                    "reasoning": "low",
+                    "max_output_tokens": 4096,
+                    "thinking_level": "low",
+                    "include_thoughts": false
+                  },
+                  "request_sha256": "4af6a4b090ddec4d46650bf9d38ba98a19c69688eea5bfe492acb49f68675403",
+                  "request_sent": true,
+                  "http_status": 200,
+                  "elapsed_s": 4.232877,
+                  "error_code": null,
+                  "usage": {
+                    "promptTokenCount": 21216,
+                    "candidatesTokenCount": 201,
+                    "totalTokenCount": 21417,
+                    "cachedContentTokenCount": 17415
+                  },
+                  "usage_known": true
+                },
+                {
+                  "attempt": 3,
+                  "provider": "gemini",
+                  "model_requested": "gemini-3.8-flash",
+                  "settings": {
+                    "reasoning": "low",
+                    "max_output_tokens": 4096,
+                    "thinking_level": "low",
+                    "include_thoughts": false
+                  },
+                  "request_sha256": "62ccbe9c393554d16e29d363c32eace36f4810dd673c67eb89704726ac29c3db",
+                  "request_sent": true,
+                  "http_status": 200,
+                  "elapsed_s": 2.327322,
+                  "error_code": null,
+                  "usage": {
+                    "promptTokenCount": 21294,
+                    "candidatesTokenCount": 253,
+                    "totalTokenCount": 21547,
+                    "cachedContentTokenCount": 17425
+                  },
+                  "usage_known": true
+                },
+                {
+                  "attempt": 4,
+                  "provider": "gemini",
+                  "model_requested": "gemini-3.8-flash",
+                  "settings": {
+                    "reasoning": "low",
+                    "max_output_tokens": 4096,
+                    "thinking_level": "low",
+                    "include_thoughts": false
+                  },
+                  "request_sha256": "edc1857c9760b0f69082a128532e4db1152eaa8db17545dc82e578a7c127cc3a",
+                  "request_sent": true,
+                  "http_status": 200,
+                  "elapsed_s": 1.838989,
+                  "error_code": null,
+                  "usage": {
+                    "promptTokenCount": 21411,
+                    "candidatesTokenCount": 147,
+                    "totalTokenCount": 21558,
+                    "cachedContentTokenCount": 17439
+                  },
+                  "usage_known": true
+                }
+              ]
+            },
+            "auxiliary": {
+              "http_attempts": 0,
+              "attempts": []
+            }
+          }
+        },
+        {
+          "case_id": "B001",
+          "policy": "a",
+          "status": "ok",
+          "errors": [],
+          "inputs": [
+            {
+              "index": 0,
+              "planned_ms": 0,
+              "arrived_ms": 0.14,
+              "admission_done_ms": 21.609,
+              "text": "幫我想一句生日卡片的話",
+              "claimed": 1,
+              "ignored": 0,
+              "final_status": "completed"
+            },
+            {
+              "index": 1,
+              "planned_ms": 400.0,
+              "arrived_ms": 410.29,
+              "admission_done_ms": 422.725,
+              "text": "是寫給一起長大的朋友",
+              "claimed": 1,
+              "ignored": 0,
+              "final_status": "completed"
+            },
+            {
+              "index": 2,
+              "planned_ms": 1100.0,
+              "arrived_ms": 1110.089,
+              "admission_done_ms": 1120.217,
+              "text": "她最近剛換工作，有點緊張",
+              "claimed": 1,
+              "ignored": 0,
+              "final_status": "completed"
+            },
+            {
+              "index": 3,
+              "planned_ms": 2000,
+              "arrived_ms": 2009.938,
+              "admission_done_ms": 2020.108,
+              "text": "想溫暖一點，不要太肉麻，也不要超過三十字",
+              "claimed": 1,
+              "ignored": 0,
+              "final_status": "completed"
+            }
+          ],
+          "model_calls": [
+            {
+              "started_ms": 325.022,
+              "input_text": "幫我想一句生日卡片的話",
+              "action": "direct",
+              "reply": "「新的一歲，願你日子輕鬆、吃好睡飽，想做的事都有底氣，生日快樂！」",
+              "follow_up": "如果是要寫給特別熟的朋友，也可以換成更鬧一點的寫法，看你想走溫馨還是互嗆路線？",
+              "degraded": false,
+              "code": "ok",
+              "finished_ms": 2919.169
+            },
+            {
+              "started_ms": 3751.931,
+              "input_text": "幫我想一句生日卡片的話\n是寫給一起長大的朋友\n她最近剛換工作，有點緊張\n想溫暖一點，不要太肉麻，也不要超過三十字",
+              "action": "direct",
+              "reply": "生日快樂！換新環境慢慢來，無論走到哪裡，都有我挺你。",
+              "follow_up": "這句剛好二十六個字，既有打氣也不會太有壓力。",
+              "degraded": false,
+              "code": "ok",
+              "finished_ms": 5894.625
+            }
+          ],
+          "messages": [
+            {
+              "channel": "reply",
+              "elapsed_ms": 6231.276,
+              "texts": [
+                "生日快樂！換新環境慢慢來，無論走到哪裡，都有我挺你。",
+                "這句剛好二十六個字，既有打氣也不會太有壓力。"
+              ],
+              "messages": [
+                {
+                  "type": "text",
+                  "text": "生日快樂！換新環境慢慢來，無論走到哪裡，都有我挺你。"
+                },
+                {
+                  "type": "text",
+                  "text": "這句剛好二十六個字，既有打氣也不會太有壓力。",
+                  "quickReply": {
+                    "items": [
+                      {
+                        "type": "action",
+                        "action": {
+                          "type": "postback",
+                          "label": "🎤 語音留言",
+                          "data": "machi:voice:v1",
+                          "inputOption": "openVoice"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "duplicate": false
+            }
+          ],
+          "delivered_texts": [
+            "生日快樂！換新環境慢慢來，無論走到哪裡，都有我挺你。",
+            "這句剛好二十六個字，既有打氣也不會太有壓力。"
+          ],
+          "metrics": {
+            "first_foreground_start_ms": 325.022,
+            "first_model_start_ms": 520.973,
+            "first_send_ms": 6231.276,
+            "last_send_ms": 6231.276,
+            "last_input_to_last_send_ms": 4221.338,
+            "model_calls": 2,
+            "transport_batches": 1,
+            "text_bubbles": 2,
+            "episode_wall_ms": 6445.054
+          },
+          "limitations": [
+            "captured LINE transport; no real sends or phone latency",
+            "audio synthesis disabled; no TTS manager/client constructed",
+            "synthetic direct-text cases; no delegated effects",
+            "all main reply and follow-up bubbles counted together",
+            "timing and transcript observations; no semantic quality judge"
+          ],
+          "provider_attempts": [
+            {
+              "prepared_ms": 467.485,
+              "request_sent_ms": 520.973,
+              "headers_returned_ms": 2875.701
+            },
+            {
+              "prepared_ms": 3889.027,
+              "request_sent_ms": 3942.219,
+              "headers_returned_ms": 5852.23
+            }
+          ],
+          "audio_enabled": false,
+          "host_deliveries": [
+            {
+              "started_ms": 6035.787,
+              "failure_code": null,
+              "attempted": true,
+              "error": null,
+              "finished_ms": 6276.453
+            }
+          ],
+          "observations_complete": true,
+          "provider_calls": {
+            "foreground": {
+              "http_attempts": 2,
+              "attempts": [
+                {
+                  "attempt": 1,
+                  "provider": "gemini",
+                  "model_requested": "gemini-3.8-flash",
+                  "settings": {
+                    "reasoning": "low",
+                    "max_output_tokens": 4096,
+                    "thinking_level": "low",
+                    "include_thoughts": false
+                  },
+                  "request_sha256": "54cfacd8ab159a8d7618d7fa731d01354ad01f6be94a59f0ce9805626ac98b68",
+                  "request_sent": true,
+                  "http_status": 200,
+                  "elapsed_s": 2.451279,
+                  "error_code": null,
+                  "usage": {
+                    "promptTokenCount": 21548,
+                    "candidatesTokenCount": 218,
+                    "totalTokenCount": 21766
+                  },
+                  "usage_known": true
+                },
+                {
+                  "attempt": 2,
+                  "provider": "gemini",
+                  "model_requested": "gemini-3.8-flash",
+                  "settings": {
+                    "reasoning": "low",
+                    "max_output_tokens": 4096,
+                    "thinking_level": "low",
+                    "include_thoughts": false
+                  },
+                  "request_sha256": "edce4d18d8b5322f76966704d2aac155eacb07bf31ada896393e0256500e6982",
+                  "request_sent": true,
+                  "http_status": 200,
+                  "elapsed_s": 2.005298,
+                  "error_code": null,
+                  "usage": {
+                    "promptTokenCount": 21584,
+                    "candidatesTokenCount": 190,
+                    "totalTokenCount": 21774,
+                    "cachedContentTokenCount": 17460
+                  },
+                  "usage_known": true
+                }
+              ]
+            },
+            "auxiliary": {
+              "http_attempts": 0,
+              "attempts": []
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "unstarted": [
+    {
+      "case_id": "B001",
+      "policy": "b",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B001",
+      "policy": "c",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B001",
+      "policy": "composite",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B002",
+      "policy": "baseline",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B002",
+      "policy": "a",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B002",
+      "policy": "b",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B002",
+      "policy": "c",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B002",
+      "policy": "composite",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B003",
+      "policy": "baseline",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B003",
+      "policy": "a",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B003",
+      "policy": "b",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B003",
+      "policy": "c",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B003",
+      "policy": "composite",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B004",
+      "policy": "baseline",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B004",
+      "policy": "a",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B004",
+      "policy": "b",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B004",
+      "policy": "c",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B004",
+      "policy": "composite",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B005",
+      "policy": "baseline",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B005",
+      "policy": "a",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B005",
+      "policy": "b",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B005",
+      "policy": "c",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B005",
+      "policy": "composite",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B006",
+      "policy": "baseline",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B006",
+      "policy": "a",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B006",
+      "policy": "b",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B006",
+      "policy": "c",
+      "status": "not_started"
+    },
+    {
+      "case_id": "B006",
+      "policy": "composite",
+      "status": "not_started"
+    }
+  ]
+}
