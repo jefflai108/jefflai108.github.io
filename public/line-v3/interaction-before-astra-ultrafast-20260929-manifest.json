@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "archive_page": "interaction-before-astra-ultrafast-20260929.html",
+  "canonical": "https://jefflai108.github.io/line-v3/interaction-before-astra-ultrafast-20260929.html",
+  "source_ref": "40e341388d795c39f693ca124c7aa9ba6558ad35",
+  "run_id": "interaction-six-arm-minimal-20260928",
+  "cases": 69,
+  "variants": [
+    "v1",
+    "v2",
+    "v2_followup",
+    "v3_hermes_gpt6_sol",
+    "v3_hermes_gemini",
+    "v3_gemini_minimal"
+  ],
+  "original_page_sha256": "519b044a1bdc0bba34fd4152b876f34cf001f049985daf10fc471f5e82fbd2c5",
+  "mapping": {
+    "index.html": "interaction-before-astra-ultrafast-20260929.html",
+    "interaction-results.public.json": "interaction-before-astra-ultrafast-20260929-results.public.json",
+    "interaction-latency.svg": "interaction-before-astra-ultrafast-20260929-latency.svg",
+    "interaction-matched-latency.svg": "interaction-before-astra-ultrafast-20260929-matched-latency.svg",
+    "interaction-stickers-latency.svg": "interaction-before-astra-ultrafast-20260929-stickers-latency.svg",
+    "interaction-stickers-matched-latency.svg": "interaction-before-astra-ultrafast-20260929-stickers-matched-latency.svg",
+    "interaction-group-replies-latency.svg": "interaction-before-astra-ultrafast-20260929-group-replies-latency.svg",
+    "interaction-group-replies-matched-latency.svg": "interaction-before-astra-ultrafast-20260929-group-replies-matched-latency.svg",
+    "interaction-group-observation-latency.svg": "interaction-before-astra-ultrafast-20260929-group-observation-latency.svg",
+    "interaction-group-observation-matched-latency.svg": "interaction-before-astra-ultrafast-20260929-group-observation-matched-latency.svg",
+    "comparison-manifest.json": "interaction-before-astra-ultrafast-20260929-comparison-manifest.json",
+    "latency-downloads-manifest.json": "interaction-before-astra-ultrafast-20260929-latency-downloads-manifest.json"
+  },
+  "source_files": {
+    "index.html": "519b044a1bdc0bba34fd4152b876f34cf001f049985daf10fc471f5e82fbd2c5",
+    "interaction-results.public.json": "298a505199bbfa991b8670f60b38717d2224b2c1024e6608ea682f07562ec660",
+    "interaction-latency.svg": "215050fb4ffe2264a6b6e2be7fe7512947b3705eb2323bc13ae08a8bcdc7b888",
+    "interaction-matched-latency.svg": "dc6702a39c86fc3488f66672083f54f94f8d39bbdf53a9a2474d03434982aa99",
+    "interaction-stickers-latency.svg": "6c2828ad230a95ae2f68cd87e7a2b6c97dc17049c5e201953ead4912242b935c",
+    "interaction-stickers-matched-latency.svg": "9b24a2ac55491414102b6eebfc0a4c06c1102a449182bd7345812c97e51800a0",
+    "interaction-group-replies-latency.svg": "b5e0b0e5bedfb3c5adc817457f6fd67806fe7b0f8befcff20be717266bd2cbe4",
+    "interaction-group-replies-matched-latency.svg": "f4d6f47061e651111155eb55758b30e3c3e7f8bee02d4ccf08ca0fea5fb64730",
+    "interaction-group-observation-latency.svg": "c322c0c2d84c98bbeecbff92393acc0c1a442c3700edd643951f84d474cd4f53",
+    "interaction-group-observation-matched-latency.svg": "65817aabdc3ef4cee72331a784246f6d23f903a97bfc52d3184255ff07436599",
+    "comparison-manifest.json": "daaaa7e6c24625dcec43684acd997aa26d41c1d78560d5b286e208da79e70c3a",
+    "latency-downloads-manifest.json": "7f2b7ea296ce229ca232cef0e5e2efa10e6dfc9a86689f0214bc39fd3a42cb06"
+  },
+  "archived_files": {
+    "interaction-before-astra-ultrafast-20260929.html": {
+      "sha256": "1e0456953c3195575aeffd180af3498083131a34a9dc5729d4ed9c727ae14ab6",
+      "bytes": 7245527
+    },
+    "interaction-before-astra-ultrafast-20260929-results.public.json": {
+      "sha256": "298a505199bbfa991b8670f60b38717d2224b2c1024e6608ea682f07562ec660",
+      "bytes": 6921444
+    },
+    "interaction-before-astra-ultrafast-20260929-latency.svg": {
+      "sha256": "215050fb4ffe2264a6b6e2be7fe7512947b3705eb2323bc13ae08a8bcdc7b888",
+      "bytes": 60170
+    },
+    "interaction-before-astra-ultrafast-20260929-matched-latency.svg": {
+      "sha256": "dc6702a39c86fc3488f66672083f54f94f8d39bbdf53a9a2474d03434982aa99",
+      "bytes": 59028
+    },
+    "interaction-before-astra-ultrafast-20260929-stickers-latency.svg": {
+      "sha256": "6c2828ad230a95ae2f68cd87e7a2b6c97dc17049c5e201953ead4912242b935c",
+      "bytes": 9869
+    },
+    "interaction-before-astra-ultrafast-20260929-stickers-matched-latency.svg": {
+      "sha256": "9b24a2ac55491414102b6eebfc0a4c06c1102a449182bd7345812c97e51800a0",
+      "bytes": 9857
+    },
+    "interaction-before-astra-ultrafast-20260929-group-replies-latency.svg": {
+      "sha256": "b5e0b0e5bedfb3c5adc817457f6fd67806fe7b0f8befcff20be717266bd2cbe4",
+      "bytes": 8641
+    },
+    "interaction-before-astra-ultrafast-20260929-group-replies-matched-latency.svg": {
+      "sha256": "f4d6f47061e651111155eb55758b30e3c3e7f8bee02d4ccf08ca0fea5fb64730",
+      "bytes": 8628
+    },
+    "interaction-before-astra-ultrafast-20260929-group-observation-latency.svg": {
+      "sha256": "c322c0c2d84c98bbeecbff92393acc0c1a442c3700edd643951f84d474cd4f53",
+      "bytes": 12377
+    },
+    "interaction-before-astra-ultrafast-20260929-group-observation-matched-latency.svg": {
+      "sha256": "65817aabdc3ef4cee72331a784246f6d23f903a97bfc52d3184255ff07436599",
+      "bytes": 3425
+    },
+    "interaction-before-astra-ultrafast-20260929-comparison-manifest.json": {
+      "sha256": "daaaa7e6c24625dcec43684acd997aa26d41c1d78560d5b286e208da79e70c3a",
+      "bytes": 2174
+    },
+    "interaction-before-astra-ultrafast-20260929-latency-downloads-manifest.json": {
+      "sha256": "7f2b7ea296ce229ca232cef0e5e2efa10e6dfc9a86689f0214bc39fd3a42cb06",
+      "bytes": 49120
+    }
+  },
+  "preexisting_page_bindings": {
+    "interaction": {
+      "page": "index.html",
+      "declared_page_sha256": "f7ef94c2f8d5cb1a30af9354535b4d1d6c43b5351e3f3f8e40a12b2adb4e9a92",
+      "observed_page_sha256": "519b044a1bdc0bba34fd4152b876f34cf001f049985daf10fc471f5e82fbd2c5",
+      "page_binding_matches": false,
+      "downloads_declared_page_after_sha256": "f7ef94c2f8d5cb1a30af9354535b4d1d6c43b5351e3f3f8e40a12b2adb4e9a92",
+      "public_results_sha256": "298a505199bbfa991b8670f60b38717d2224b2c1024e6608ea682f07562ec660",
+      "source_ref": "40e341388d795c39f693ca124c7aa9ba6558ad35"
+    },
+    "delegation": {
+      "page": "delegation.html",
+      "declared_page_sha256": "d84f37914c3a7c432a10bd42fa77468e11ad69d76a2fe6ad1084c2db039c3822",
+      "observed_page_sha256": "f26d377547ee5143ea9da854f5eff7a7658c937868bc8aafef5488d24bbd3627",
+      "page_binding_matches": false,
+      "downloads_declared_page_after_sha256": "d84f37914c3a7c432a10bd42fa77468e11ad69d76a2fe6ad1084c2db039c3822",
+      "public_results_sha256": "3052f47299c6f68fd45b5106a612f0ef8659746e282fc0ce4249e7c0d2c07cfb",
+      "source_ref": "85d96a57db67d2b32911dfdd8847f43d284efa04"
+    },
+    "taiwan": {
+      "page": "taiwan.html",
+      "declared_page_sha256": "5c4c0404c3f1821805857f9a47995c25c26eba9af966bf35d50703a1ba0e5606",
+      "observed_page_sha256": "dabdd24fcc355332cd163237439b77464f674c91c6cc482dbb33dd7328ba5032",
+      "page_binding_matches": false,
+      "downloads_declared_page_after_sha256": "5c4c0404c3f1821805857f9a47995c25c26eba9af966bf35d50703a1ba0e5606",
+      "public_results_sha256": "dd3617d10f109dba78e512196b95e316669113b311929f1e0daf3c18ca2f250c",
+      "source_ref": "85d96a57db67d2b32911dfdd8847f43d284efa04"
+    },
+    "recovery": {
+      "page": "recovery.html",
+      "declared_page_sha256": "6e1b99b23c21c9c937eae0ecef67d6d3c278b2886e6fd08e205336ac9b1c4480",
+      "observed_page_sha256": "5eefe7ef2569f297fa1c5a185af0f26aa831c16601fe39b28b8176edf2542021",
+      "page_binding_matches": false,
+      "downloads_declared_page_after_sha256": "6e1b99b23c21c9c937eae0ecef67d6d3c278b2886e6fd08e205336ac9b1c4480",
+      "public_results_sha256": "98e3a493f9e9ddfdfe97a986bdba051267618355625af87e83724babf65e5ba3",
+      "source_ref": "7d2c7110f56249e18c6134db981e446057b7ba29"
+    }
+  },
+  "binding_note": "The observed HTML includes the TTS follow-up navigation tab. Its page hash differs from the preexisting comparison/download manifest binding for all four study pages. These original declared bindings and exact manifest bytes are archived without claiming that the older bindings described the current HTML. Result JSON bindings still match. Only archive HTML link/canonical attributes are retargeted; JSON, SVG and source manifest copies retain exact bytes."
+}
