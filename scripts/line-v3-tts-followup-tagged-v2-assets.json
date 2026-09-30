@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "releaseTag": "line-v3-tts-followup-tagged-v2-2026-09-29",
+  "archiveName": "line-v3-tts-followup-tagged-v2-2026-09-29.zip",
+  "archiveBytes": 2071372,
+  "archiveSha256": "2ddecab25b288858c7b7c48a779cc6c5ccca326775af8cf687afa463d20e557f",
+  "files": [
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E001.mp3",
+      "bytes": 81129,
+      "sha256": "6e7a9864d573182eb7643a8792379caf8a7c1be84f5b85e840cb073b9c857cc8"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E002.mp3",
+      "bytes": 84054,
+      "sha256": "fa25686c53a2a25a7b1be8500c7f9623e8d909c79e890cea8cbf7d7f1a8cb1b1"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E003.mp3",
+      "bytes": 96593,
+      "sha256": "b01c2911fa594b64d48b2306b655f72fe704baff294cd6241f8a12e52abfef91"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E004.mp3",
+      "bytes": 128776,
+      "sha256": "36571854f4e4de64323cbd7918e1a1f57cdbe8090eff3c0ad8935f3f68b2ba1e"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E005.mp3",
+      "bytes": 89070,
+      "sha256": "61a647b73442c47a5f78ece8ef35f977f621148b049e56dadddd7cb631b448be"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E006.mp3",
+      "bytes": 85308,
+      "sha256": "0ea49c68cb969948300867dc3ca95524fa1dbcb09bcf58cdd4aa780c5820b76b"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E007.mp3",
+      "bytes": 67336,
+      "sha256": "b9fa56423168f0de94ba67685dbe98ab9e496e7f85a96062a789d812c892e2fc"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E008.mp3",
+      "bytes": 108296,
+      "sha256": "d528ddea8439dea618e6231ea8ee13aff1c170886628cbcb53162a2cd69d7932"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E009.mp3",
+      "bytes": 96593,
+      "sha256": "66734002d17ed002b20778a5bfef11c9d5abd52349de51944c784107e1a86167"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E017.mp3",
+      "bytes": 94085,
+      "sha256": "926f57540133f225c829339e0ffca0370d3bc2762342f03eede8e6e393625789"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E018.mp3",
+      "bytes": 94085,
+      "sha256": "902717938fe3fcfb61b2c3658b9364ff6b305d79d22307932b235c1d29737d4c"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E021.mp3",
+      "bytes": 132538,
+      "sha256": "cd55863602fb59a7ad171393b16d962cbcb54c342583d8b54bfdd03378158d44"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E041.mp3",
+      "bytes": 109550,
+      "sha256": "610735f445c463a394cbf2da38eae2c97a8fd4c8576cc61a80920594de3cfc94"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E042.mp3",
+      "bytes": 82382,
+      "sha256": "efdff501f46df76ea03678546fae26f623740935d382cb846b78a40d713c5f18"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E043.mp3",
+      "bytes": 89070,
+      "sha256": "9933d754b8233a3044f2a28b0deb9104e632718296473e377f49f5df250cd95e"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E044.mp3",
+      "bytes": 85308,
+      "sha256": "df017a80daf87b4e1189ebbe0381286bd9819d4ccc4ab38c217b66bec26c42cd"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E045.mp3",
+      "bytes": 73605,
+      "sha256": "9e42b7dc4ff1d62770d72a7b591e1524b6dfc9df834634d9685c78a3d37c34fc"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E046.mp3",
+      "bytes": 133791,
+      "sha256": "2dec57e0c50699325523a9747dc4baa72489fe6c766ff1e81a156102ac36c323"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E048.mp3",
+      "bytes": 109550,
+      "sha256": "a1f99136bc39cde5cb3e76729e791ff2031ebbae395c06755c49931e634ead56"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/E049.mp3",
+      "bytes": 109550,
+      "sha256": "00c5034ac8924cfd710a0b2f2495286d89545123541df1b1c335b871d63d5bc4"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/S003.mp3",
+      "bytes": 73605,
+      "sha256": "f56547561d1d46130eeb8e0f14ddf405d837f81e162ae021b995fd16e9b21473"
+    },
+    {
+      "path": "line-v3/audio/tts-followup-tagged-v2-2026-09-29/S005.mp3",
+      "bytes": 63574,
+      "sha256": "cbfcd8de6e899a7eb967dd70eec071770fe5815508ff49ca31801fba315668e2"
+    }
+  ]
+}

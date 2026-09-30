@@ -22,7 +22,7 @@ def install(archive, destination, manifest):
         pure = PurePosixPath(path)
         allowed = re.fullmatch(r'tts/audio/(v[34])-benchmark-(?:(?:en(?:-us)?|zh-(?:emotion|vocal))-)?[0-9]{4}-[0-9]{2}-[0-9]{2}/(eleven_v3(?:_conversational)?|eleven_v4(?:_turbo)?)/[a-z0-9-]+/(?:p|en)[0-9]{2}\.mp3', path)
         pilot = re.fullmatch(r'tts/audio/microphone-pilot-[0-9]{4}-[0-9]{2}-[0-9]{2}/eleven_(?:v3|v4(?:_turbo)?)/[a-z0-9-]+/p01\.mp3', path)
-        line_followup = re.fullmatch(r'line-v3/audio/tts-followup-(?:tagged-)?[0-9]{4}-[0-9]{2}-[0-9]{2}/[ESG][0-9]{3}\.mp3', path)
+        line_followup = re.fullmatch(r'line-v3/audio/tts-followup-(?:tagged-(?:v2-)?)?[0-9]{4}-[0-9]{2}-[0-9]{2}/[ESG][0-9]{3}\.mp3', path)
         valid_namespace = (allowed and allowed[2].startswith('eleven_' + allowed[1])) or pilot or line_followup
         if pure.is_absolute() or '..' in pure.parts or '\\' in path or not valid_namespace:
             raise ValueError('Unsafe or unexpected audio path: ' + path)
