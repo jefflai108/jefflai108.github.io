@@ -71,8 +71,13 @@ const allObserved=(caseId,index,check)=>{
     &&receipts.every(r=>r.turns?.some(t=>t.turn_index===index&&check(t)));
 };
 data.observed_limitations=[];
-if(allObserved('NB006',1,t=>t.interaction?.some(x=>x.error_code==='task_control_not_requested')))
-  data.observed_limitations.push('NB006 的修改回合全部回到澄清，未觀測到成功修訂；原任務的後續結果另標為另一個任務／版本的結果。');
+if(allObserved('NB006',1,t=>t.interaction?.some(x=>x.error_code==='task_control_not_requested')
+  &&t.messages?.some(m=>m.semantic_role==='direct_answer'&&m.texts?.length)
+  &&t.foreground_ledger?.response_phase?.outcome!=='revised')){
+  const priorResults=allObserved('NB006',1,t=>t.messages?.some(m=>m.semantic_role==='other_task_or_revision'&&m.texts?.length));
+  data.observed_limitations.push('NB006 的修改回合皆出現 task_control_not_requested，並交付直接回覆；未觀測到 revised 狀態。'
+    +(priorResults?'各回合另有交付，標為另一個任務／版本的結果，不計為本次修訂完成。':''));
+}
 if(allObserved('NB007',1,t=>t.interaction?.some(x=>x.status==='failed'&&x.degraded)))
   data.observed_limitations.push('NB007 的狀態詢問全部出現降級回覆，未成功走過預期的狀態查詢路由。');
 if(allObserved('NB008',1,t=>t.foreground_ledger?.response_phase?.outcome==='accepted'

@@ -153,3 +153,23 @@ test('Python publication validation also receives captured bridge and final copy
     assert.notEqual(actual.status,0);assert.match(actual.stderr,/visible_text_requires_review/);assert.equal(actual.public,null);
   }
 });
+test('NB006 failed control does not imply an old-result capture that was never observed',()=>{
+  for(const coverage of ['none','all','one_arm']){
+    const actual=render({amendStudy:data=>{
+      data.cases[0]={id:'NB006',category:'revision',rubric:[],turns:[{text:'先查台中公園。'},{text:'改成高雄公園。'}]};
+      for(const row of data.receipts){
+        row.case_id='NB006';row.status='measured';
+        row.turns=[{turn_index:1,user_text:'改成高雄公園。',status:'final_captured',drain_requested:true,
+          metrics:{routing_calls:1,frontend_latency_ms:100},foreground_ledger:{response_phase:null},
+          interaction:[{status:'failed',action:'unknown',degraded:true,error_code:'task_control_not_requested'}],
+          messages:[{semantic_role:'direct_answer',texts:['需要先確認要修改哪個工作。'],elapsed_ms:150,kind:'reply'}]}];
+        if(coverage==='all'||coverage==='one_arm'&&row.arm==='baseline')
+          row.turns[0].messages.push({semantic_role:'other_task_or_revision',texts:['原查詢的結果。'],elapsed_ms:500,kind:'push'});
+      }
+    }});
+    assert.equal(actual.status,0,actual.stderr);
+    assert.equal(actual.public.observed_limitations.length,1);
+    assert.match(actual.public.observed_limitations[0],/task_control_not_requested，並交付直接回覆；未觀測到 revised 狀態/);
+    assert.equal(actual.public.observed_limitations[0].includes('各回合另有交付'),coverage==='all');
+  }
+});
