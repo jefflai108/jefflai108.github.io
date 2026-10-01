@@ -72,6 +72,26 @@ library; its offline archive validation tests run with:
 python3 -m unittest discover -s scripts -p 'test_image_comparison_assets.py'
 ```
 
+## LINE benchmark navigation
+
+The eight active pages under `/line-v3/` share a top navigation bar, including
+its position, width, spacing, active styling, and mobile horizontal scrolling.
+The bar stays at the top when scrolling; moving to another page retains its
+horizontal scroll position in the browser session.
+
+`npm run build` runs `scripts/normalize-line-navigation.mjs` after Astro builds.
+It moves the primary tabs above the report header and includes the shared
+`public/line-v3/navigation.css` and `navigation.js`, with content-based versions.
+This runs on every publication, including after a report is regenerated. The
+authored report HTML, benchmark data, and archived pages remain unchanged.
+Active tabs point to the latest published study in each category. Historical
+study selectors are omitted from the published interface, including the pre-R9
+and earlier-study links. Archived reports remain available at their existing
+URLs, and current-study methods, baselines, and source dates remain intact.
+New benchmark publications should continue to update the active category URL;
+building the website does not rerun or relabel measurements.
+Preview `dist` after building to inspect the published navigation.
+
 ## LINE image and sticker understanding
 
 `/line-v3/images-stickers.html` presents three authored native Gemini probes from
