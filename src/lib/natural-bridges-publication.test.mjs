@@ -10,13 +10,14 @@ import {spawnSync} from 'node:child_process';
 const renderer=fileURLToPath(new URL('../../scripts/render-natural-bridges.mjs',import.meta.url));
 const sha=value=>crypto.createHash('sha256').update(value).digest('hex');
 const hostToolBudget='Both arms share a benchmark-only cap of 12 admitted host tool calls per task attempt; production has no such benchmark cap.';
+const navigationPages=['index','delegation','taiwan','recovery','tts-followup','images-stickers','burst-turns'];
 function render({text='合成問題',mismatch=false,extraQuality=false,amendStudy=()=>{},amendQuality=()=>{},
   corruptGuard=false,guardReject=[],reason=null}={}){
   const root=fs.mkdtempSync(path.join(os.tmpdir(),'bridge-publication-'));
   try{
     const publicDir=path.join(root,'public/line-v3');fs.mkdirSync(publicDir,{recursive:true});
-    for(const page of ['index','delegation','taiwan','recovery','tts-followup','burst-turns'])
-      fs.writeFileSync(path.join(publicDir,page+'.html'),'<nav class="tabs"></nav>');
+    for(const page of navigationPages)
+      fs.writeFileSync(path.join(publicDir,page+'.html'),'<nav class="tabs"><a href="images-stickers.html">Images &amp; Stickers</a></nav>');
     const source='a'.repeat(40);
     const data={metadata:{source_ref:source,accounts:['primary'],repeats:1,models:{foreground:'fixture',executor:'fixture'},host_tool_budget:hostToolBudget},
       cases:[{id:'NB001',category:'fixture',rubric:[],turns:[{text}]}],receipts:['baseline','natural'].map(arm=>
@@ -67,6 +68,7 @@ def sanitize_results(value, *, sensitive_values=()):
     const file=path.join(publicDir,'natural-bridges.html');
     const publicFile=path.join(publicDir,'natural-bridges-results.public.json');
     return{status:child.status,stderr:child.stderr,exists:fs.existsSync(file),html:fs.existsSync(file)?fs.readFileSync(file,'utf8'):'',
+      navigation:Object.fromEntries(navigationPages.map(page=>[page,fs.readFileSync(path.join(publicDir,page+'.html'),'utf8')])),
       public:fs.existsSync(publicFile)?JSON.parse(fs.readFileSync(publicFile,'utf8')):null};
   }finally{fs.rmSync(root,{recursive:true,force:true});}
 }
@@ -77,6 +79,15 @@ test('both-arm failures remain visible and planned text is escaped',()=>{
   assert.equal((actual.html.match(/這一側沒有可用的回合紀錄/g)??[]).length,2);
   assert.match(actual.html,/&lt;script&gt;alert/);
   assert.doesNotMatch(actual.html,/<script>alert/);
+});
+test('natural bridge rendering preserves the image tab and links both directions',()=>{
+  const actual=render();
+  assert.equal(actual.status,0,actual.stderr);
+  assert.match(actual.html,/<a href="images-stickers.html">Images &amp; Stickers<\/a>/);
+  for(const html of Object.values(actual.navigation)){
+    assert.equal((html.match(/href="images-stickers.html"/g)??[]).length,1);
+    assert.equal((html.match(/href="natural-bridges.html"/g)??[]).length,1);
+  }
 });
 test('a quality file from another study cannot be published',()=>{
   const actual=render({mismatch:true});assert.notEqual(actual.status,0);assert.equal(actual.exists,false);

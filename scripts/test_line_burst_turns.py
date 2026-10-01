@@ -59,14 +59,15 @@ class BurstReportTests(unittest.TestCase):
             public = root / "public"
             public.mkdir()
             prior = '<html><nav class="tabs"><a href="index.html">Interaction tasks</a></nav><main>frozen report bytes</main></html>'
-            for name, _ in renderer.TABS[:-1]:
+            sibling_tabs = [tab for tab in renderer.TABS if tab[0] != 'burst-turns.html']
+            for name, _ in sibling_tabs:
                 (public / name).write_text(prior)
             archive = public / "archived.html"
             archive.write_text(prior)
             source = root / "results.json"
             source.write_text(json.dumps(results(), ensure_ascii=False))
             renderer.install(source, public)
-            for name, _ in renderer.TABS[:-1]:
+            for name, _ in sibling_tabs:
                 page = (public / name).read_text()
                 self.assertEqual(page.replace('<a href="burst-turns.html">Burst turns</a>', ''), prior)
             self.assertEqual(archive.read_text(), prior)
