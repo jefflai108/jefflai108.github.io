@@ -11,7 +11,7 @@ PUBLIC = ROOT / "public/line-v3"
 TABS = (("index.html", "Interaction tasks"), ("delegation.html", "Delegation tasks"),
         ("taiwan.html", "台灣用語"), ("recovery.html", "困難任務與失敗恢復"),
         ("tts-followup.html", "TTS follow-up"), ("images-stickers.html", "Images & Stickers"),
-        ("burst-turns.html", "Burst turns"))
+        ("burst-turns.html", "Burst turns"), ("natural-bridges.html", "Natural bridges"))
 
 
 def esc(value):

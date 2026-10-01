@@ -23,7 +23,7 @@ MANUAL_NOTES = {
 TABS = (("index.html", "Interaction tasks"), ("delegation.html", "Delegation tasks"),
         ("taiwan.html", "台灣用語"), ("recovery.html", "困難任務與失敗恢復"),
         ("tts-followup.html", "TTS follow-up"), ("images-stickers.html", "Images &amp; Stickers"),
-        ("burst-turns.html", "Burst turns"))
+        ("burst-turns.html", "Burst turns"), ("natural-bridges.html", "Natural bridges"))
 LABELS = {"baseline": "原有逐則處理", "a": "A · 固定穩定窗", "b": "B · 版本更新",
           "c": "C · 語意承接", "composite": "A + B + C"}
 COLORS = {"baseline": "#66766c", "a": "#2965a2", "b": "#bf641c", "c": "#9461b5", "composite": "#227a65"}
@@ -195,7 +195,9 @@ def install(results, public):
     public.mkdir(parents=True, exist_ok=True)
     (public / 'burst-turns-results.public.json').write_bytes(raw)
     (public / 'burst-turns.html').write_text(content)
-    for name, _title in TABS[:-1]:
+    for name, _title in TABS:
+        if name == 'burst-turns.html':
+            continue
         target = public / name
         original = target.read_text()
         match = re.search(r'<nav class="tabs"[^>]*>.*?</nav>', original, re.S)
