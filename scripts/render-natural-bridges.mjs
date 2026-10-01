@@ -65,18 +65,27 @@ const data = {schema_version:1,source_ref:study.metadata.source_ref,models:study
     turns:c.turns.map(t=>({text:t.text,drain_requested:t.drain??true}))})),
   receipts:study.receipts.map(r=>({case_id:r.case_id,account:r.account,arm:r.arm,repeat:r.repeat,status:r.status,
     checks:r.checks,error_type:r.error_type,turns:(r.turns??[]).map(publicTurn)})),quality};
-const allObserved=(caseId,index,check)=>{
-  const receipts=study.receipts.filter(r=>r.case_id===caseId);
-  return receipts.length===study.metadata.accounts.length*2*study.metadata.repeats
-    &&receipts.every(r=>r.turns?.some(t=>t.turn_index===index&&check(t)));
+const coverageTurns=(caseId,index)=>({
+  planned_turns:study.cases.some(c=>c.id===caseId&&c.turns.length>index)
+    ?study.metadata.accounts.length*2*study.metadata.repeats:0,
+  turns:study.receipts.filter(r=>r.case_id===caseId).flatMap(r=>(r.turns??[]).filter(t=>t.turn_index===index)),
+});
+const delivered=(turn,role)=>turn.messages?.some(m=>m.semantic_role===role&&m.texts?.length)??false;
+const confirmedOutcome=(turn,outcome)=>{
+  const phase=turn.foreground_ledger?.response_phase;
+  return phase?.outcome===outcome&&['bridge','terminal_notice'].includes(phase.role)&&delivered(turn,phase.role);
 };
+data.observed_coverage={};
 data.observed_limitations=[];
-if(allObserved('NB006',1,t=>t.interaction?.some(x=>x.error_code==='task_control_not_requested')
-  &&t.messages?.some(m=>m.semantic_role==='direct_answer'&&m.texts?.length)
-  &&t.foreground_ledger?.response_phase?.outcome!=='revised')){
-  const priorResults=allObserved('NB006',1,t=>t.messages?.some(m=>m.semantic_role==='other_task_or_revision'&&m.texts?.length));
-  data.observed_limitations.push('NB006 的修改回合皆出現 task_control_not_requested，並交付直接回覆；未觀測到 revised 狀態。'
-    +(priorResults?'各回合另有交付，標為另一個任務／版本的結果，不計為本次修訂完成。':''));
+const revision=coverageTurns('NB006',1);
+if(revision.planned_turns){
+  const count={planned_turns:revision.planned_turns,recorded_turns:revision.turns.length,
+    revised:revision.turns.filter(t=>confirmedOutcome(t,'revised')).length,
+    failed_control_direct:revision.turns.filter(t=>t.interaction?.some(x=>x.error_code==='task_control_not_requested')
+      &&delivered(t,'direct_answer')).length,
+    other_task_or_revision:revision.turns.filter(t=>delivered(t,'other_task_or_revision')).length};
+  data.observed_coverage.NB006=count;
+  data.observed_limitations.push(`NB006 的修改要求已記錄 ${count.recorded_turns} / ${count.planned_turns} 個計畫回合；${count.revised} 回合有宿主確認並交付的 revised 承接，${count.failed_control_direct} 回合出現 task_control_not_requested 並交付直接回覆。${count.other_task_or_revision} 回合另有另一個任務／版本的交付，不計為本次修訂完成；各項可重疊，缺失或未確認的回合不推定成功。`);
 }
 const statusPlanned=study.cases.some(c=>c.id==='NB007'&&c.turns.length>1)
   ?study.metadata.accounts.length*2*study.metadata.repeats:0;
@@ -89,12 +98,25 @@ const statusConfirmed=statusTurns.filter(t=>t.interaction?.some(x=>x.action==='s
   &&t.messages?.some(m=>m.semantic_role==='terminal_notice'&&m.texts?.length)).length;
 if(statusPlanned&&(statusDegraded||statusConfirmed<statusPlanned))
   data.observed_limitations.push(`NB007 的狀態詢問已記錄 ${statusTurns.length} / ${statusPlanned} 個計畫回合；${statusDegraded} 回合交付降級回覆，${statusConfirmed} 回合有成功的 status 路由及宿主確認的狀態通知。缺失或未確認的回合不推定成功。`);
-if(allObserved('NB008',1,t=>t.foreground_ledger?.response_phase?.outcome==='accepted'
-  &&t.interaction?.some(x=>x.action==='delegate')))
-  data.observed_limitations.push('NB008 的第二回合均以新委派 accepted 承接，沒有觀測到 resubmitted 分支。');
-if(allObserved('NB009',0,t=>t.interaction?.some(x=>x.action==='direct')
-  &&Array.isArray(t.capability_events)&&t.capability_events.length===0))
-  data.observed_limitations.push('NB009 的危機查詢均直接回覆，沒有工具呼叫，不計為危機情境的背景查詢覆蓋。');
+const resubmission=coverageTurns('NB008',1);
+if(resubmission.planned_turns){
+  const count={planned_turns:resubmission.planned_turns,recorded_turns:resubmission.turns.length,
+    resubmitted:resubmission.turns.filter(t=>confirmedOutcome(t,'resubmitted')).length,
+    accepted_new_delegation:resubmission.turns.filter(t=>confirmedOutcome(t,'accepted')
+      &&t.interaction?.some(x=>x.action==='delegate'&&x.status==='ok')).length};
+  data.observed_coverage.NB008=count;
+  data.observed_limitations.push(`NB008 的再次查詢已記錄 ${count.recorded_turns} / ${count.planned_turns} 個計畫回合；${count.resubmitted} 回合有宿主確認並交付的 resubmitted 承接，${count.accepted_new_delegation} 回合以新委派 accepted 承接。新委派不計為重新提交分支；缺失或未確認的回合不推定成功。`);
+}
+const crisis=coverageTurns('NB009',0);
+if(crisis.planned_turns){
+  const count={planned_turns:crisis.planned_turns,recorded_turns:crisis.turns.length,
+    direct_without_tools:crisis.turns.filter(t=>t.interaction?.some(x=>x.action==='direct'&&x.status==='ok')
+      &&delivered(t,'direct_answer')&&Array.isArray(t.capability_events)&&t.capability_events.length===0).length,
+    lookup_tool_turns:crisis.turns.filter(t=>t.capability_events?.some(x=>['public_search','read_link'].includes(x.capability))).length,
+    missing_tool_evidence:crisis.turns.filter(t=>!Array.isArray(t.capability_events)).length};
+  data.observed_coverage.NB009=count;
+  data.observed_limitations.push(`NB009 的危機查詢已記錄 ${count.recorded_turns} / ${count.planned_turns} 個計畫回合；${count.direct_without_tools} 回合直接交付且確認沒有工具呼叫，${count.lookup_tool_turns} 回合記錄到 public_search／read_link 呼叫（含拒絕與失敗，不等於查證成功），${count.missing_tool_evidence} 回合缺少工具觀測資料。直接回覆或缺失資料不計為背景查詢覆蓋。`);
+}
 const observedNotes=data.observed_limitations.length?`<div class="note"><p>題目分類記錄測試意圖，不代表成功走過同名分支。本次實際觀測：</p><ul>${data.observed_limitations.map(note=>`<li>${esc(note)}</li>`).join('')}</ul></div>`:'';
 const arms=['baseline','natural'];
 const toolBudgetText=data.host_tool_budget==='Both arms share a benchmark-only cap of 12 admitted host tool calls per task attempt; production has no such benchmark cap.'
@@ -154,9 +176,12 @@ const cards=[...paired.values()].map(row=>`<article class="case" data-account="$
 const successful=quality.results.filter(q=>q.status==='ok');
 const wins=Object.fromEntries(['baseline','natural','tie','not_applicable'].map(a=>[a,successful.filter(q=>q.bridge_winner===a).length]));
 const errors=data.receipts.filter(r=>r.status!=='measured');
+const archiveLink=fs.existsSync(path.resolve('public/line-v3/natural-bridges-final-v3.html'))
+  &&fs.existsSync(path.resolve('public/line-v3/natural-bridges-final-v3-results.public.json'))
+  ?'<p class="small">本頁呈現目前發布的比較。<a href="natural-bridges-final-v3.html">查看 final-v3 歷史題組</a>；各批資料保留自己的來源與量測結果。</p>':'';
 const html=`<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>HeyMachi · Natural bridges</title><link rel="canonical" href="https://jefflai108.github.io/line-v3/natural-bridges.html"><style>
 *{box-sizing:border-box}body{margin:0;background:#f3f3ee;color:#193a31;font:15px/1.65 system-ui,-apple-system,'PingFang TC',sans-serif}header,main,.navwrap{max-width:1450px;margin:auto;padding:24px 28px}h1{font-size:clamp(32px,5vw,52px);line-height:1.15;margin:15px 0}h2{font-size:22px;line-height:1.4}h3{font-size:18px}h4{font-size:13px;margin:0 0 7px}a{color:#23695d}a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #269890;outline-offset:3px}.eyebrow,.small,small{font-size:12px;color:#526c61}.panel,.case{border:1px solid #d6e0d7;border-radius:15px;background:white;padding:24px;margin-bottom:22px}.arms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.arm{min-width:0;border-top:4px solid #56796a;background:#f6f8f4;padding:18px;border-radius:7px}.arm:last-child{border-color:#378e80}.bubble{background:white;border:1px solid #dce5de;border-radius:9px;padding:14px;margin:14px 0}.bubble p{white-space:pre-wrap;overflow-wrap:anywhere;margin:0}.bridge{background:#eaf5f0}.badge{display:inline-block;font-size:12px;background:#dcece4;border-radius:8px;padding:4px 8px}.note{padding:12px;background:#f8f0db;border-radius:8px}.tabs{display:flex;gap:5px;flex-wrap:wrap;background:#e3e9e2;padding:6px;border-radius:10px}.tabs a{padding:8px 12px;text-decoration:none;border-radius:7px;font-size:13px}.tabs [aria-current]{background:white;font-weight:700}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:10px;border-bottom:1px solid #e1e8e1;white-space:nowrap}td small{display:block}.flow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.flow span{padding:10px 14px;border:1px solid #b9d4c7;border-radius:8px;background:#f0f7f1}.controls{display:flex;gap:14px;flex-wrap:wrap;align-items:end}label{font-size:13px;display:flex;flex-direction:column;gap:6px}input,select{font:inherit;padding:9px;border:1px solid #b8cbbc;border-radius:7px;background:white;max-width:100%}details{font-size:13px;margin:16px 0}summary{cursor:pointer}dl{display:grid;grid-template-columns:1fr auto;gap:5px}dd{margin:0}.case[hidden]{display:none}.skip{position:absolute;left:-10000px}.skip:focus{left:16px;top:5px;background:white;padding:10px}footer{padding:22px 0;font-size:12px;overflow-wrap:anywhere}@media(max-width:760px){header,main,.navwrap{padding:16px}.arms{grid-template-columns:1fr}.panel,.case{padding:16px}.tabs a{padding:7px}.flow{font-size:13px}}
-</style></head><body><a class="skip" href="#content">跳到比較結果</a><header><p class="eyebrow">HeyMachi · LINE v3 · matched development benchmark</p><h1>Natural bridges</h1><p>同一個 Hermes + Gemini 執行後端，對照固定承接與自然承接。承接訊息與真正的最終成果分開呈現、分開計時。</p></header><div class="navwrap"><nav class="tabs" aria-label="比較分頁"><a href="index.html">Interaction tasks</a><a href="delegation.html">Delegation tasks</a><a href="taiwan.html">台灣用語</a><a href="recovery.html">困難任務與失敗恢復</a><a href="tts-followup.html">TTS follow-up</a><a href="images-stickers.html">Images &amp; Stickers</a><a href="burst-turns.html">Burst turns</a><a href="natural-bridges.html" aria-current="page">Natural bridges</a></nav></div><main id="content">
+</style></head><body><a class="skip" href="#content">跳到比較結果</a><header><p class="eyebrow">HeyMachi · LINE v3 · matched development benchmark</p><h1>Natural bridges</h1><p>同一個 Hermes + Gemini 執行後端，對照固定承接與自然承接。承接訊息與真正的最終成果分開呈現、分開計時。</p>${archiveLink}</header><div class="navwrap"><nav class="tabs" aria-label="比較分頁"><a href="index.html">Interaction tasks</a><a href="delegation.html">Delegation tasks</a><a href="taiwan.html">台灣用語</a><a href="recovery.html">困難任務與失敗恢復</a><a href="tts-followup.html">TTS follow-up</a><a href="images-stickers.html">Images &amp; Stickers</a><a href="burst-turns.html">Burst turns</a><a href="natural-bridges.html" aria-current="page">Natural bridges</a></nav></div><main id="content">
 <section class="panel"><h2>Bridge ≠ Final answer</h2><div class="flow"><span>使用者要求</span>→<span>同次推論：路由＋承接文字</span>→<span>宿主確認狀態</span>→<span>Bridge</span>→<span>背景執行</span>→<span>Final Push</span></div><p>兩個 LINE 帳號共用同一份 v3 實作。Bridge 有宿主指定的任務與版本綁定；Reply／Push 傳送完成只結束前景交付，不能完成背景工作。修改被保留、拒絕或取消時，狀態通知不會冒充成果，也不會承諾不存在的後續答案。</p><p class="small">自然承接與路由同次生成，沒有額外的 bridge LLM 呼叫。這些委派訊息不使用 follow-up TTS。</p></section>
 <section class="panel"><h2>Latency</h2><p>交付與背景執行起點，從合成 LINE 事件進入原生處理流程開始計時；前景模型列則是該回合路由呼叫的耗時合計。包含真實模型與工具等待；<strong>不包含實際 LINE API、手機網路或通知延遲</strong>。背景工作在前景回合後由測試程式依序推進，不是生產並行排程測量。</p>
 <div class="scroll"><table><thead><tr><th rowspan="2">階段</th><th colspan="3">固定承接</th><th colspan="3">自然承接</th></tr><tr><th>n / 計畫回合</th><th>p50</th><th>p95</th><th>n / 計畫回合</th><th>p50</th><th>p95</th></tr></thead><tbody>${latencyRows}</tbody></table></div>

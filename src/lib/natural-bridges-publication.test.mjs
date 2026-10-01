@@ -12,12 +12,15 @@ const sha=value=>crypto.createHash('sha256').update(value).digest('hex');
 const hostToolBudget='Both arms share a benchmark-only cap of 12 admitted host tool calls per task attempt; production has no such benchmark cap.';
 const navigationPages=['index','delegation','taiwan','recovery','tts-followup','images-stickers','burst-turns'];
 function render({text='合成問題',mismatch=false,extraQuality=false,amendStudy=()=>{},amendQuality=()=>{},
-  corruptGuard=false,guardReject=[],reason=null}={}){
+  corruptGuard=false,guardReject=[],reason=null,archive=false}={}){
   const root=fs.mkdtempSync(path.join(os.tmpdir(),'bridge-publication-'));
   try{
     const publicDir=path.join(root,'public/line-v3');fs.mkdirSync(publicDir,{recursive:true});
     for(const page of navigationPages)
       fs.writeFileSync(path.join(publicDir,page+'.html'),'<nav class="tabs"><a href="images-stickers.html">Images &amp; Stickers</a></nav>');
+    const archivedFiles=['natural-bridges-final-v3.html','natural-bridges-final-v3-results.public.json'];
+    if(archive)for(const name of archivedFiles)
+      fs.copyFileSync(new URL('../../public/line-v3/'+name,import.meta.url),path.join(publicDir,name));
     const source='a'.repeat(40);
     const data={metadata:{source_ref:source,accounts:['primary'],repeats:1,models:{foreground:'fixture',executor:'fixture'},host_tool_budget:hostToolBudget},
       cases:[{id:'NB001',category:'fixture',rubric:[],turns:[{text}]}],receipts:['baseline','natural'].map(arm=>
@@ -69,6 +72,7 @@ def sanitize_results(value, *, sensitive_values=()):
     const publicFile=path.join(publicDir,'natural-bridges-results.public.json');
     return{status:child.status,stderr:child.stderr,exists:fs.existsSync(file),html:fs.existsSync(file)?fs.readFileSync(file,'utf8'):'',
       navigation:Object.fromEntries(navigationPages.map(page=>[page,fs.readFileSync(path.join(publicDir,page+'.html'),'utf8')])),
+      archive:archive?Object.fromEntries(archivedFiles.map(name=>[name,sha(fs.readFileSync(path.join(publicDir,name)))])):null,
       public:fs.existsSync(publicFile)?JSON.parse(fs.readFileSync(publicFile,'utf8')):null};
   }finally{fs.rmSync(root,{recursive:true,force:true});}
 }
@@ -88,6 +92,13 @@ test('natural bridge rendering preserves the image tab and links both directions
     assert.equal((html.match(/href="images-stickers.html"/g)??[]).length,1);
     assert.equal((html.match(/href="natural-bridges.html"/g)??[]).length,1);
   }
+});
+test('rendering another study links the preserved cohort without rewriting its artifacts',()=>{
+  const actual=render({archive:true});
+  assert.equal(actual.status,0,actual.stderr);
+  assert.match(actual.html,/href="natural-bridges-final-v3.html">查看 final-v3 歷史題組/);
+  for(const [name,hash] of Object.entries(actual.archive))
+    assert.equal(hash,sha(fs.readFileSync(new URL('../../public/line-v3/'+name,import.meta.url))));
 });
 test('a quality file from another study cannot be published',()=>{
   const actual=render({mismatch:true});assert.notEqual(actual.status,0);assert.equal(actual.exists,false);
@@ -180,8 +191,71 @@ test('NB006 failed control does not imply an old-result capture that was never o
     }});
     assert.equal(actual.status,0,actual.stderr);
     assert.equal(actual.public.observed_limitations.length,1);
-    assert.match(actual.public.observed_limitations[0],/task_control_not_requested，並交付直接回覆；未觀測到 revised 狀態/);
-    assert.equal(actual.public.observed_limitations[0].includes('各回合另有交付'),coverage==='all');
+    const oldResults=coverage==='all'?2:coverage==='one_arm'?1:0;
+    assert.deepEqual(actual.public.observed_coverage.NB006,
+      {planned_turns:2,recorded_turns:2,revised:0,failed_control_direct:2,other_task_or_revision:oldResults});
+    assert.match(actual.public.observed_limitations[0],/0 回合有宿主確認並交付的 revised 承接，2 回合出現 task_control_not_requested/);
+    assert.ok(actual.html.includes(`${oldResults} 回合另有另一個任務／版本的交付`));
+  }
+});
+function branchStudy(data,caseId,kinds){
+  const index=caseId==='NB009'?0:1;
+  data.metadata.accounts=['primary','secondary'];
+  data.cases[0]={id:caseId,category:'coverage',rubric:[],turns:Array.from({length:index+1},()=>({text:'合成要求。'}))};
+  data.receipts=data.metadata.accounts.flatMap(account=>['baseline','natural'].map(arm=>
+    ({case_id:caseId,account,arm,repeat:1,status:'measured',turns:[]})));
+  data.receipts.forEach((row,ordinal)=>{
+    const kind=kinds[ordinal];
+    if(kind==='missing'){row.status='error';return;}
+    const outcome=kind.replace('_uncaptured','');
+    const hosted=['revised','resubmitted','accepted'].includes(outcome);
+    const direct=kind.startsWith('direct')||kind==='control_error';
+    const turn={turn_index:index,user_text:'合成要求。',status:'foreground_captured',drain_requested:true,
+      metrics:{routing_calls:1,frontend_latency_ms:100},foreground_ledger:{response_phase:hosted
+        ?{role:'bridge',outcome,awaiting_result:true}:null},
+      interaction:[kind==='control_error'?{action:'unknown',status:'failed',error_code:'task_control_not_requested'}
+        :{action:direct?'direct':outcome==='accepted'?'delegate':'revise',status:'ok'}],
+      messages:kind.endsWith('_uncaptured')?[]:[{semantic_role:hosted?'bridge':direct?'direct_answer':'unconfirmed_foreground',
+        texts:['捕捉的合成文字。'],elapsed_ms:150,kind:'reply'}]};
+    if(kind==='direct_empty_tools')turn.capability_events=[];
+    if(kind==='search_denied')turn.capability_events=[{capability:'public_search',status:'denied'}];
+    if(kind==='read_link')turn.capability_events=[{capability:'read_link',status:'ok'}];
+    if(kind==='other_tool')turn.capability_events=[{capability:'reminder_create',status:'ok'}];
+    row.turns=[turn];
+  });
+}
+test('NB006 reports mixed revision outcomes and requires a captured host phase',()=>{
+  const actual=render({amendStudy:data=>branchStudy(data,'NB006',['revised','control_error','revised_uncaptured','missing'])});
+  assert.equal(actual.status,0,actual.stderr);
+  assert.deepEqual(actual.public.observed_coverage.NB006,
+    {planned_turns:4,recorded_turns:3,revised:1,failed_control_direct:1,other_task_or_revision:0});
+  assert.match(actual.html,/NB006 的修改要求已記錄 3 \/ 4 個計畫回合；1 回合有宿主確認並交付的 revised 承接/);
+});
+test('NB008 separates observed resubmission from new acceptance and missing captures',()=>{
+  for(const [kinds,recorded,resubmitted,accepted] of [
+    [['resubmitted','accepted','accepted','accepted'],4,1,3],
+    [['resubmitted_uncaptured','accepted','accepted_uncaptured','missing'],3,0,1],
+    [['missing','missing','missing','missing'],0,0,0],
+  ]){
+    const actual=render({amendStudy:data=>branchStudy(data,'NB008',kinds)});
+    assert.equal(actual.status,0,actual.stderr);
+    assert.deepEqual(actual.public.observed_coverage.NB008,
+      {planned_turns:4,recorded_turns:recorded,resubmitted,accepted_new_delegation:accepted});
+    assert.ok(actual.html.includes(`NB008 的再次查詢已記錄 ${recorded} / 4 個計畫回合；${resubmitted} 回合有宿主確認並交付的 resubmitted 承接，${accepted} 回合以新委派 accepted 承接。`));
+  }
+});
+test('NB009 distinguishes lookup calls, confirmed absence, and missing tool evidence',()=>{
+  for(const [kinds,recorded,direct,lookup,unknown] of [
+    [['direct_empty_tools','search_denied','direct_unknown_tools','missing'],3,1,1,1],
+    [['read_link','other_tool','direct_unknown_tools','direct_empty_tools'],4,1,1,1],
+    [['missing','missing','missing','missing'],0,0,0,0],
+  ]){
+    const actual=render({amendStudy:data=>branchStudy(data,'NB009',kinds)});
+    assert.equal(actual.status,0,actual.stderr);
+    assert.deepEqual(actual.public.observed_coverage.NB009,
+      {planned_turns:4,recorded_turns:recorded,direct_without_tools:direct,lookup_tool_turns:lookup,missing_tool_evidence:unknown});
+    assert.ok(actual.html.includes(`NB009 的危機查詢已記錄 ${recorded} / 4 個計畫回合；${direct} 回合直接交付且確認沒有工具呼叫，${lookup} 回合記錄到 public_search／read_link 呼叫`));
+    assert.match(actual.html,/含拒絕與失敗，不等於查證成功/);
   }
 });
 test('NB007 counts mixed status outcomes and never credits missing or unconfirmed turns',()=>{
