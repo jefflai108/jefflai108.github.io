@@ -78,6 +78,9 @@ The eight active pages under `/line-v3/` share a top navigation bar, including
 its position, width, spacing, active styling, and mobile horizontal scrolling.
 The bar stays at the top when scrolling; moving to another page retains its
 horizontal scroll position in the browser session.
+Their report headers and main content also share a 1500px outer width, 30px
+desktop gutters (16px on mobile), body type, and title sizing. The shared
+`public/line-v3/report-layout.css` applies only to active benchmark pages.
 
 `npm run build` runs `scripts/normalize-line-navigation.mjs` after Astro builds.
 It moves the primary tabs above the report header and includes the shared
@@ -91,6 +94,20 @@ URLs, and current-study methods, baselines, and source dates remain intact.
 New benchmark publications should continue to update the active category URL;
 building the website does not rerun or relabel measurements.
 Preview `dist` after building to inspect the published navigation.
+
+## LINE latest publication
+
+`jefflai108/line-latest` is a **private** repository. Its generated website is
+served at `/line-latest/` by this site's Pages workflow. The workflow checks out
+that snapshot with the read-only `LINE_LATEST_READ_KEY` secret and copies only
+the website files into `dist/line-latest/`, excluding Git metadata and docs.
+The snapshot's files and history are never committed to this public repository.
+
+The additional schedule at UTC minutes 23 and 53 follows the private publisher
+at minutes 13 and 43. These refreshes skip personal profile data refreshes and
+do not create Git commits. Summarization remains in the private source workflow,
+with one daily LLM request; this site only installs the finished snapshot.
+The original weekly profile refresh and keep-alive commit remain in place.
 
 ## LINE image and sticker understanding
 

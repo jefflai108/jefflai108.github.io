@@ -5,9 +5,12 @@ on:
     branches: [master]
   # Rebuilds on its own so the GitHub contribution graph and the Google Scholar
   # figures stay current without anyone pushing. Both are re-fetched by the
-  # `prebuild` step on every run. 06:00 UTC each Monday.
+  # `prebuild` step on full builds. 06:00 UTC each Monday.
   schedule:
     - cron: '0 6 * * 1'
+    # Follow the private LINE snapshot publisher (minutes 13/43) without
+    # changing the Git history or running its once-daily LLM again.
+    - cron: '23,53 * * * *'
   # And an on-demand rebuild from the Actions tab.
   workflow_dispatch:
 
@@ -48,10 +51,39 @@ jobs:
         run: python3 -m unittest discover -s scripts -p test_line_burst_turns.py
 
       - name: Build
-        run: npm run build
+        run: |
+          if [ "$LINE_SNAPSHOT_REFRESH" = 'true' ]; then
+            npm run build --ignore-scripts
+          else
+            npm run build
+          fi
         env:
           # Used by scripts/fetch-contributions.mjs to refresh the activity graph.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LINE_SNAPSHOT_REFRESH: ${{ github.event_name == 'schedule' && github.event.schedule == '23,53 * * * *' }}
+
+      # Keep the snapshot and its Git history private. Only the website output
+      # goes into the Pages artifact; no LINE files are committed to this repo.
+      - name: Read the private LINE latest snapshot
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: jefflai108/line-latest
+          ref: main
+          path: line-latest-snapshot
+          ssh-key: ${{ secrets.LINE_LATEST_READ_KEY }}
+          persist-credentials: false
+
+      - name: Install LINE latest website
+        run: |
+          test -s line-latest-snapshot/index.html
+          test -s line-latest-snapshot/data/updates.json
+          test -s line-latest-snapshot/data/atlas.json
+          test -s line-latest-snapshot/data/pulls.json
+          rsync -a --safe-links --delete --exclude='.*' \
+            --include='/index.html' --include='/app.js' \
+            --include='/styles.css' --include='/favicon.svg' \
+            --include='/data/***' --include='/deep-dive/***' \
+            --exclude='*' line-latest-snapshot/ dist/line-latest/
 
       # Keep the complete TTS listening set outside Git and verify every MP3.
       - name: Install TTS benchmark audio
@@ -234,7 +266,7 @@ jobs:
       # with GITHUB_TOKEN do not start new workflow runs anyway, so this is a
       # belt-and-braces guard against a loop.
       - name: Persist refreshed data
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        if: (github.event_name == 'schedule' && github.event.schedule == '0 6 * * 1') || github.event_name == 'workflow_dispatch'
         run: |
           if git diff --quiet -- src/data/; then
             echo "No change to src/data/ — nothing to commit."
