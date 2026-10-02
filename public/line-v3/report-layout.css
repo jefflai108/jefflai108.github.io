@@ -1,0 +1,45 @@
+/* Shared report dimensions apply only to the eight active benchmark pages. */
+.benchmark-page {
+  --benchmark-width: 1500px;
+  --benchmark-gutter: 30px;
+  margin: 0;
+  padding: 0;
+  font: 14px/1.65 system-ui, -apple-system, "PingFang TC", sans-serif;
+  overflow-wrap: anywhere;
+}
+.benchmark-page > header,
+.benchmark-page > main {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--benchmark-width);
+  margin: 0 auto;
+  padding: 20px var(--benchmark-gutter);
+}
+.benchmark-page > header { padding-top: 30px; }
+.benchmark-page > header > p:first-child {
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.65;
+}
+.benchmark-page > header h1 {
+  margin: 12px 0;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -.02em;
+}
+.benchmark-page h2 {
+  margin: 18px 0 10px;
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.benchmark-page .benchmark-tabs {
+  max-width: var(--benchmark-width);
+  padding-inline: var(--benchmark-gutter);
+}
+@media (max-width: 760px) {
+  .benchmark-page { --benchmark-gutter: 16px; }
+  .benchmark-page > header,
+  .benchmark-page > main { padding-block: 16px; }
+}
