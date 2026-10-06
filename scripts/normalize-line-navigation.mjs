@@ -13,6 +13,7 @@ const tabs = [
   ['images-stickers.html', 'Images &amp; Stickers'],
   ['burst-turns.html', 'Burst turns'],
   ['natural-bridges.html', 'Natural bridges'],
+  ['line-stickers.html', 'LINE Stickers'],
 ];
 const version = name => crypto.createHash('sha256').update(fs.readFileSync(path.join(directory,name))).digest('hex').slice(0,12);
 const assets = `<link rel="stylesheet" href="navigation.css?v=${version('navigation.css')}"><link rel="stylesheet" href="report-layout.css?v=${version('report-layout.css')}"><script src="navigation.js?v=${version('navigation.js')}" defer></script>`;
