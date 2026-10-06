@@ -569,7 +569,7 @@ def render(data):
 <div class="steps"><div class="step"><b>1 · 提示：貼圖與接話分開判斷</b>社交或情緒節拍（打招呼、道謝、好消息、加油、陪對方抱怨、接梗、道別、對方傳貼圖）預設挑一張貼切的圖；中性資訊、需要澄清、敏感情境與說過不要貼圖仍填 null。</div>
 <div class="step"><b>2 · 解析：保留模型自己的選擇</b>接話留白不再丟掉模型選好的目錄貼圖；無效輸出、澄清與委派照舊不帶貼圖。</div>
 <div class="step"><b>3 · 宿主：沒有接話時接在主回答後</b>沿用既有的「接在後面」位置。使用者本身在談貼圖（拒收、抱怨、詢問、引用）時，仍只有明確要求才會加。冷卻（不連續、五輪最多兩張）、拒收、目錄與五則上限都沒有改。</div></div>
-<p class="small muted">原有：{commit_link(refs['existing'])}（目前正式環境的程式）· 主動貼圖版：{commit_link(refs['proactive'])}。兩個版本由同一個實驗框架執行，各自從自己的原始碼樹載入。仍然只有一次 Gemini 呼叫，沒有額外的選圖模型。</p></section>
+<p class="small muted">原有：{commit_link(refs['existing'])}（量測當時、2026-10-06 的正式環境程式）· 主動貼圖版：{commit_link(refs['proactive'])}。兩個版本由同一個實驗框架執行，各自從自己的原始碼樹載入。仍然只有一次 Gemini 呼叫，沒有額外的選圖模型。</p></section>
 <section class="panel"><h2>貼圖漏斗：選了、留下、送出</h2>{funnel_chart}
 <div class="scroll"><table class="num"><thead><tr><th>計數</th><th>{ARM_LABELS['existing']}</th><th>{ARM_LABELS['proactive']}</th></tr></thead><tbody>
 <tr><th scope="row">全部回合</th><td>{funnel['existing']['turns']}</td><td>{funnel['proactive']['turns']}</td></tr>
