@@ -51,6 +51,24 @@ def _verdict(value):
     return {key: value[key] for key in keys}
 
 
+def sensitive_closing(summary):
+    rows = {arm: summary[arm]["response"].get("sensitive_neutral") for arm in ARMS}
+    if not all(rows.values()):
+        return ""
+    return (f"另外，這些敏感對話裡作者標成「可有可無」的收尾回合（例如被朋友背叛後說「謝謝你聽我發洩」）："
+            f"原有 {rows['existing']['sticker_turns']}/{rows['existing']['turns']} · 主動 {rows['proactive']['sticker_turns']}/{rows['proactive']['turns']} 送出貼圖；"
+            f"改版規則其實希望這類收尾也只用文字，這是尚未完全做到的地方。")
+
+
+def fit_caption(summary):
+    blind = summary["proactive"]["judge"].get("fit_source") == "blind_context_only"
+    if blind:
+        agree = summary["proactive"]["judge"].get("blind_fit_consistency")
+        return ("另一次盲評只給評審這一輪之前的對話與使用者訊息，看不到麻吉怎麼回，再判斷此刻回貼圖適合／可有可無／應避免；"
+                f"兩次盲評的判斷一致率 {pct(agree)}。同一份資料若讓評審看到回覆，判斷會受到有沒有送貼圖影響，所以只作參考。")
+    return "評審先只看到使用者這一輪為止的對話，判斷此刻回貼圖是否合適（適合／可有可無／應避免），再看麻吉實際怎麼回。"
+
+
 def round_summary(results, label):
     """Headline numbers of an earlier development round (no turns)."""
     summary, comparison = results["summary"], results["comparison"]
@@ -96,6 +114,8 @@ def project(results, *, generated_at, previous=()):
             "funnel": {key: funnel[key] for key in ("eligible", "model_selected", "model_follow_up_kind",
                                                     "parsed_selected", "host_reserved", "host_trailing")},
             "judge": {key: _verdict(value) for key, value in sorted(row["judge"].items())},
+            **({"judge_fit": {key: {"sticker_fit": value["sticker_fit"], "fit_reason": value["fit_reason"]}
+                              for key, value in sorted(row["judge_fit"].items())}} if row.get("judge_fit") else {}),
             "foreground_elapsed_ms": row["foreground_elapsed_ms"]})
         episode = episodes.setdefault(row["episode_id"], {"id": row["episode_id"], "title": row["title"],
                                                            "category": row["category"], "turns": {}})
@@ -112,8 +132,8 @@ def project(results, *, generated_at, previous=()):
                    "foreground_thinking": metadata["models"]["foreground_thinking"],
                    "foreground_timeout_s": metadata["models"]["foreground_timeout_s"],
                    "judge": judge["model"], "judge_reasoning": judge["reasoning"]},
-        "judge": {key: judge[key] for key in ("passes", "rubric_sha256", "judge_sha256", "packets_sha256",
-                                              "attempts")},
+        "judge": {**{key: judge[key] for key in ("passes", "rubric_sha256", "judge_sha256", "packets_sha256",
+                                                 "attempts")}, "fit_only": judge.get("fit_only")},
         "design": {key: metadata[key] for key in ("repeats", "episode_count", "turn_count", "slot_count")},
         "slot_status": results["slot_status"], "summary": results["summary"],
         "comparison": results["comparison"],
@@ -316,13 +336,16 @@ def machi_cell(turn, arm):
         host = f'送出 <code>{esc(funnel["host_reserved"])}</code>' + ("（接在主回答後）" if funnel["host_trailing"] else "")
     if turn["action"] != "direct":
         host += f" · 路由 {esc(turn['action'])}"
+    blind = (turn.get("judge_fit") or {}).get("1")
+    moment = blind or verdict
+    fit_label = "評審（看不到回覆）" if blind else "評審"
     if verdict["sticker_sent"]:
         chip = f'<span class="chip score s{verdict["appropriateness"]}">適切度 {verdict["appropriateness"]}/5</span>'
         reason = verdict["appropriateness_reason"]
     else:
         chip = '<span class="chip none">未送貼圖</span>'
-        reason = verdict["fit_reason"]
-    fit = f'<span class="chip fit {verdict["sticker_fit"]}">評審：{FIT_LABELS[verdict["sticker_fit"]]}</span>'
+        reason = moment["fit_reason"]
+    fit = f'<span class="chip fit {moment["sticker_fit"]}">{fit_label}：{FIT_LABELS[moment["sticker_fit"]]}</span>'
     repeat = ""
     if second is not None:
         again = f'{second["appropriateness"]}/5' if second["appropriateness"] is not None else FIT_LABELS[second["sticker_fit"]]
@@ -500,7 +523,7 @@ def render(data):
  <div class="kpi"><p class="label">不該貼圖的時刻（作者標註「應避免」）</p>
   <div class="values"><span class="from">{avoid['existing']['sticker_turns']}/{avoid['existing']['turns']}</span><span class="arrow">→</span><span class="value">{avoid['proactive']['sticker_turns']}/{avoid['proactive']['turns']}</span></div>
   <p class="delta">評審判定「應避免」的回合送出貼圖：原有 {judged_avoid['existing']['sticker_turns']}/{judged_avoid['existing']['turns']} · 主動 {judged_avoid['proactive']['sticker_turns']}/{judged_avoid['proactive']['turns']}</p>
-  <p class="sub">哀傷、健康擔憂、衝突、危機與說過不要貼圖的對話。</p></div>
+  <p class="sub">哀傷、健康擔憂、衝突、危機與說過不要貼圖的對話。{sensitive_closing(summary)}</p></div>
 </div>"""
 
     funnel_categories = ["可以貼圖的回合（冷卻未擋）", "模型自己選了貼圖", "解析後保留", "實際送到 LINE"]
@@ -522,7 +545,7 @@ def render(data):
             fit_values[arm].append((item["rate"], item["sticker_turns"], item["turns"]))
     fit_chart = hbar_chart("by-judge-fit", "依 AI 評審判斷分組的貼圖回應率",
         [f"評審：{EXPECTATION_LABELS[label]}" for label in EXPECTATIONS], fit_values, maximum=1,
-        caption="評審先只看到使用者這一輪為止的對話，判斷此刻回貼圖是否合適（適合／可有可無／應避免），再看麻吉實際怎麼回。")
+        caption=fit_caption(summary))
     distribution = {arm: [] for arm in ARMS}
     for level in ("5", "4", "3", "2", "1"):
         for arm in ARMS:
@@ -563,7 +586,7 @@ def render(data):
 <p class="notice">合成對話、臨時資料庫與模擬 LINE 傳輸；Gemini 與評審呼叫都是真的，但沒有傳到任何真實 LINE 帳號。主動貼圖版目前是待審的程式修改，尚未部署到正式環境。</p></header>
 <main id="content">
 <section class="panel"><h2>結果</h2>{kpis}
-<p class="small muted">回應率以實際捕捉到的 LINE 訊息物件計算（不是模型意圖）；AI 評審對每一輪的「有沒有送貼圖」判讀與實際傳輸一致率：原有 {pct(judge_e['wire_agreement'])}、主動 {pct(judge_p['wire_agreement'])}。信賴區間以「同一段對話、同一次執行」為單位做配對重抽樣（{comparison.get('draws', 0)} 次）。</p></section>
+<p class="small muted">回應率以實際捕捉到的 LINE 訊息物件計算（不是模型意圖）；AI 評審對每一輪的「有沒有送貼圖」判讀與實際傳輸一致率：原有 {pct(judge_e['wire_agreement'])}、主動 {pct(judge_p['wire_agreement'])}。信賴區間以作者設計的「同一段對話」為單位（連同它的 {design['repeats']} 次重複一起），對兩個版本做配對重抽樣（{comparison.get('draws', 0)} 次）。</p></section>
 <section class="panel"><h2>原本為什麼比較少？改了什麼</h2>
 <p>原有版本的互動模型其實常常自己選了貼圖，但兩個地方把它丟掉：V3 角色規則寫著「接話留白（rest）時通常不選貼圖」，而宿主只會把貼圖放在主回答與接話之間——沒有接話就沒有位置。道謝、晚安、好啊、回貼圖這些最適合貼圖的時刻，正好最常沒有接話。</p>
 <div class="steps"><div class="step"><b>1 · 提示：貼圖與接話分開判斷</b>社交或情緒節拍（打招呼、道謝、好消息、加油、陪對方抱怨、接梗、道別、對方傳貼圖）預設挑一張貼切的圖；中性資訊、需要澄清、敏感情境與說過不要貼圖仍填 null。</div>
@@ -602,6 +625,7 @@ def render(data):
 <li>每個版本的每段對話都在獨立的工作程序執行，只載入該版本凍結的原始碼；兩個版本交錯排程，以免供應商在某段時間變慢只影響一邊。</li>
 <li>沒有背景執行器：若模型改為委派，該輪只記錄承接文字。範圍是私訊文字與貼圖輸入；沒有測群組、語音、TTS 與委派完成後的回覆。</li>
 <li>這是開發用題組，不是正式流量抽樣或保留測試集；模型輸出有隨機性，AI 評審也不等於人工判斷。</li>
+<li>程式審查後的兩項修正（只影響分析，不重跑模型）：「此刻適不適合貼圖」改由看不到麻吉回覆的另一次盲評判斷；信賴區間改為以整段對話（含所有重複）為單位重抽樣，區間因此較寬。</li>
 </ul>
 {rounds_block(data)}
 <div class="scroll"><table class="num"><thead><tr><th>前景 Gemini 呼叫（診斷用）</th><th>p50</th><th>p90</th><th>n</th></tr></thead><tbody>{latency_rows}</tbody></table></div>
