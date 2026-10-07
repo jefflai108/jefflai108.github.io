@@ -204,18 +204,18 @@ def bar_path(x, y, width, height, radius=4):
             f"v{height - 2 * radius:.2f}a{radius},{radius} 0 0 1 {-radius},{radius}h{-(width - radius):.2f}z")
 
 
-def hbar_chart(chart_id, title, categories, values, *, unit="percent", maximum=None, caption=""):
+def hbar_chart(chart_id, title, categories, values, *, unit="percent", maximum=None, caption="", width=760):
     """Grouped horizontal bars, one row per category, existing then proactive.
 
     ``values[arm][index]`` is ``(display_value, numerator, denominator)``.
     """
-    width, left, right, top = 760, 210, 92, 34
+    left, right, top = 210, 92, 34
     bar, gap, group = 14, 2, 22
     height = top + len(categories) * (2 * bar + gap + group) + 10
     plot = width - left - right
     peak = maximum or max([value[0] for arm in ARMS for value in values[arm] if value[0] is not None] + [1])
     ticks = [peak * step / 4 for step in range(5)]
-    parts = [f'<svg class="chart" id="{esc(chart_id)}" viewBox="0 0 {width} {height}" role="img" '
+    parts = [f'<div class="scroll"><svg class="chart" id="{esc(chart_id)}" viewBox="0 0 {width} {height}" role="img" '
              f'aria-labelledby="{esc(chart_id)}-title"><title id="{esc(chart_id)}-title">{esc(title)}</title>']
     for tick in ticks:
         x = left + plot * tick / peak
@@ -239,7 +239,7 @@ def hbar_chart(chart_id, title, categories, values, *, unit="percent", maximum=N
             parts.append(f'<path class="bar {arm}" d="{bar_path(left, y, length, bar)}" tabindex="0" '
                          f'data-tip="{esc(detail)}"><title>{esc(detail)}</title></path>')
             parts.append(f'<text class="val" x="{left + length + 6:.2f}" y="{y + 11}">{esc(shown)}</text>')
-    parts.append("</svg>")
+    parts.append("</svg></div>")
     legend = "".join(f'<span><i class="swatch {arm}"></i>{ARM_LABELS[arm]}</span>' for arm in ARMS)
     rows = "".join(
         f"<tr><th scope=\"row\">{esc(category)}</th>" + "".join(
@@ -405,23 +405,23 @@ CSS = """
 header,main,.navwrap{max-width:1450px;margin:auto;padding:24px 28px}h1{font-size:clamp(32px,5vw,52px);line-height:1.15;margin:15px 0}
 h2{font-size:22px;line-height:1.4;margin:0 0 12px}h3{font-size:17px;margin:20px 0 8px}h4{font-size:14px;margin:12px 0 8px}
 a{color:#23695d}a:focus-visible,summary:focus-visible,button:focus-visible,.bar:focus-visible{outline:3px solid #269890;outline-offset:3px}
-p{margin:9px 0}.eyebrow,.small,small{font-size:12px;color:#526c61}.muted{color:#5f7168}.lede{max-width:880px;font-size:17px}
-.panel{border:1px solid #d6e0d7;border-radius:15px;background:white;padding:24px;margin-bottom:22px}
+p{margin:9px 0}.eyebrow,.small,small{font-size:12px;color:#526c61}.muted{color:#5f7168}.lede{font-size:17px}
+.panel{border:1px solid #d6e0d7;border-radius:15px;background:white;padding:22px;margin-bottom:22px}
 .notice{padding:14px 18px;background:#e8efeb;border:1px solid #cdded3;border-radius:12px}.warning{background:#fff3dc;border-color:#ead3a4}
 .badges{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.badge,.chip{display:inline-block;font-size:12px;background:#e5ece7;border-radius:20px;padding:3px 10px;color:#193a31}
 .tabs{display:flex;gap:5px;flex-wrap:wrap;background:#e3e9e2;padding:6px;border-radius:10px}.tabs a{padding:8px 12px;text-decoration:none;border-radius:7px;font-size:13px}.tabs [aria-current]{background:white;font-weight:700}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}.kpi{border:1px solid #dce5de;border-radius:12px;padding:18px;background:#f8faf7}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:16px}.kpi{border:1px solid #dce5de;border-radius:12px;padding:18px;background:#f8faf7}
 .kpi .label{font-size:13px;color:#526c61;margin:0 0 6px}.kpi .values{display:flex;gap:18px;align-items:flex-end;flex-wrap:wrap}
 .kpi .value{font-size:34px;font-weight:650;line-height:1.1}.kpi .from{font-size:22px;color:#5f7168;font-weight:500}.kpi .arrow{font-size:20px;color:#5f7168}
 .kpi .delta{font-size:14px;font-weight:600;color:#1d5a3a;margin-top:8px}.kpi .sub{font-size:12px;color:#526c61;margin-top:4px}
-.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.step{border:1px solid #dce5de;border-radius:10px;padding:15px;background:#f8faf7}.step b{display:block;margin-bottom:4px}
-.figure{margin:8px 0 18px}.chart{width:100%;height:auto;display:block;max-width:820px}.chart text{font:12px system-ui,-apple-system,'PingFang TC',sans-serif;fill:#3d564b}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:12px}.step{border:1px solid #dce5de;border-radius:10px;padding:15px;background:#f8faf7}.step b{display:block;margin-bottom:4px}
+.figure{margin:8px 0 18px}.chart{width:100%;height:auto;display:block}.chart text{font:12px system-ui,-apple-system,'PingFang TC',sans-serif;fill:#3d564b}
 .chart .cat{fill:#193a31;font-size:13px}.chart .tick{fill:#6c7d74;font-variant-numeric:tabular-nums}.chart .val{fill:#193a31;font-variant-numeric:tabular-nums}
 .chart .grid{stroke:#e1e8e1;stroke-width:1}.bar{cursor:default}.bar.existing{fill:#8f9a94}.bar.proactive{fill:#1f7a6c}.bar:hover,.bar:focus{opacity:.82}
 .legend{display:flex;gap:16px;font-size:13px;margin:4px 0 6px}.legend span{display:inline-flex;align-items:center;gap:6px}.swatch{width:12px;height:12px;border-radius:3px;display:inline-block}
 .swatch.existing{background:#8f9a94}.swatch.proactive{background:#1f7a6c}.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:22px}
 .scroll{overflow-x:auto;max-width:100%}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:10px;border-bottom:1px solid #e1e8e1;vertical-align:top}
-thead th{color:#52695e;background:#f8faf7}td small{display:block}.tableview{font-size:13px;margin:6px 0 0}.tableview table{max-width:820px}
+thead th{color:#52695e;background:#f8faf7}td small{display:block}.tableview{font-size:13px;margin:6px 0 0}
 .num td,.num th{font-variant-numeric:tabular-nums}details{margin:10px 0}summary{cursor:pointer}
 .episode{border:1px solid #dce5de;border-radius:12px;background:white;padding:12px 16px}.episode summary{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .switch{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.switch button{font:inherit;font-size:13px;border:1px solid #c5d5ca;background:#f8faf7;border-radius:8px;padding:6px 10px;cursor:pointer;color:#193a31}
@@ -435,7 +435,7 @@ thead th{color:#52695e;background:#f8faf7}td small{display:block}.tableview{font
 .chip.score{background:#dceee6}.chip.score.s1,.chip.score.s2{background:#f6ddd5;color:#7a2e22}.chip.score.s3{background:#f4ecd6}.chip.none{background:#eef0ec}
 .tooltip{position:fixed;pointer-events:none;background:#193a31;color:white;font-size:12px;padding:6px 9px;border-radius:6px;max-width:320px;z-index:50}
 code{font-size:12px}.missing{color:#8a5a2b}footer{padding:22px 0;font-size:12px;color:#5f7168}.skip{position:absolute;left:-10000px}.skip:focus{left:16px;top:5px;background:white;padding:10px}
-@media(max-width:760px){header,main,.navwrap{padding:16px}.panel{padding:16px}.grid2{grid-template-columns:1fr}.kpi .value{font-size:28px}
+@media(max-width:760px){header,main,.navwrap{padding:16px}.panel{padding:16px}.grid2{grid-template-columns:1fr}.kpi .value{font-size:28px}#funnel,#scores{min-width:660px}
 .transcript,.transcript tbody,.transcript tr,.transcript th[scope=row],.transcript td{display:block;width:auto;min-width:0}
 .transcript thead{display:none}.transcript tr{border-bottom:2px solid #dbe5dc;padding-bottom:6px}.transcript td::before{content:attr(data-arm);display:block;font-weight:650;font-size:12px;color:#526c61;margin-top:4px}}
 """
@@ -509,7 +509,7 @@ def render(data):
         total = funnel[arm]["turns"]
         for key in ("eligible", "model_selected", "parsed_kept", "delivered"):
             funnel_values[arm].append((funnel[arm][key] / total if total else None, funnel[arm][key], total))
-    funnel_chart = hbar_chart("funnel", "貼圖漏斗：佔全部回合的比例", funnel_categories, funnel_values, maximum=1,
+    funnel_chart = hbar_chart("funnel", "貼圖漏斗：佔全部回合的比例", funnel_categories, funnel_values, maximum=1, width=1160,
         caption="每一列都以該版本全部回合為分母。原有版本在接話留白時丟掉模型自己選的貼圖；改版保留並接在主回答後。"
                 "改版送出更多貼圖後，下一輪較常被「不連續」冷卻擋下，所以第一列反而比較低。")
     expectation_chart = hbar_chart("by-expectation", "依作者標註分組的貼圖回應率",
@@ -531,7 +531,7 @@ def render(data):
             distribution[arm].append((count / judged["judged_stickers"] if judged["judged_stickers"] else None,
                                       count, judged["judged_stickers"]))
     score_chart = hbar_chart("scores", "貼圖適切度分數分布（佔該版本送出的貼圖）",
-        ["5 非常貼切", "4 貼切", "3 勉強", "2 不恰當", "1 非常不恰當"], distribution, maximum=1,
+        ["5 非常貼切", "4 貼切", "3 勉強", "2 不恰當", "1 非常不恰當"], distribution, maximum=1, width=1160,
         caption="只計算實際送出的貼圖，分母是各版本送出的貼圖數。評審看得到官方貼圖圖檔與目錄描述。")
 
     categories = sorted({c for arm in ARMS for c in summary[arm]["response"]["by_category"]},
