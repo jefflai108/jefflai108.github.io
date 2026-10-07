@@ -74,7 +74,7 @@ python3 -m unittest discover -s scripts -p 'test_image_comparison_assets.py'
 
 ## LINE benchmark navigation
 
-The eight active pages under `/line-v3/` share a top navigation bar, including
+The nine active pages under `/line-v3/` share a top navigation bar, including
 its position, width, spacing, active styling, and mobile horizontal scrolling.
 The bar stays at the top when scrolling; moving to another page retains its
 horizontal scroll position in the browser session.
@@ -128,6 +128,34 @@ The separate Queue isolation section uses `queue-isolation-results.public.json`:
 both providers and LINE are simulated. It verifies six later replies are accepted
 while an earlier foreground request and delegation remain held, on both accounts.
 These observations are not merged into the three native-model latency samples.
+
+## LINE Stickers
+
+`/line-v3/line-stickers.html` compares the existing V3 interaction code (the live
+release) with the proactive native-sticker change on two axes, both scored by a
+blinded AI judge: the **sticker response rate** (turns whose delivered LINE
+batch contains a native sticker, counted from captured LINE objects) and
+**sticker appropriateness** (1–5 per delivered sticker, judged with the official
+artwork). The study runs authored synthetic private chats through signed
+ingress, the real Gemini foreground and a captured LINE transport; no message
+is sent to a real account. The harness lives in the private `streaming_taiwanese`
+repository under `serve/line_agent_v3/evals/stickers/`.
+
+`public/line-v3/line-stickers-results.public.json` holds the published data:
+synthetic chats, delivered objects, the host sticker funnel and every judge
+verdict. It contains no prompts, credentials, logs, HTTP data or local paths;
+the renderer refuses to write if any string looks like one. Regenerate both
+files from a completed private study (earlier development rounds are listed,
+oldest first, and shown as summaries only):
+
+```bash
+python3 scripts/render-line-stickers.py /path/to/private/study --previous /path/to/round-1
+python3 scripts/render-line-stickers.py --render   # page only, from the committed JSON
+python3 -m unittest discover -s scripts -p 'test_line_stickers.py'
+```
+
+Sticker images load at view time from LINE's official preview CDN
+(`stickershop.line-scdn.net`); none are committed or redistributed here.
 
 ## Mandarin and English TTS voice comparison
 
