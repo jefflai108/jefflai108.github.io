@@ -43,11 +43,30 @@
   .benchmark-page > header,
   .benchmark-page > main { padding-block: 16px; }
 }
-/* One page tint and text colour on every active tab. Reports rendered at
-   different times set their own (Burst turns left the body transparent over a
-   lighter root tint), so switching tabs shifted the page colour. */
+/* One page format on every active tab. Reports rendered at different times
+   carried their own page tint, text colour, intro measure and card shape;
+   these shared values win so switching tabs never shifts the page. */
 html:has(> body.benchmark-page) { background: #f3f3ee; }
 .benchmark-page {
   background: #f3f3ee;
   color: #18362d;
+}
+.benchmark-page > header :is(.lead, .lede) {
+  max-width: none;
+  font-size: inherit;
+  line-height: inherit;
+}
+.benchmark-page > header .notice:not(.warning) {
+  padding: 14px 18px;
+  background: #e8efeb;
+  border: 1px solid #cdded3;
+  border-radius: 12px;
+}
+.benchmark-page :is(.panel, .case) {
+  border-color: #d8e1da;
+  border-radius: 16px;
+  padding: 22px;
+}
+@media (max-width: 760px) {
+  .benchmark-page :is(.panel, .case) { padding: 16px; }
 }

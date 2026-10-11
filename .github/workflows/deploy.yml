@@ -53,6 +53,9 @@ jobs:
       - name: Verify LINE group replies report renderer
         run: python3 -m unittest discover -s scripts -p test_line_group_replies.py
 
+      - name: Verify LINE mixed-media burst report renderer
+        run: python3 -m unittest discover -s scripts -p test_line_mixed_media_bursts.py
+
       - name: Build
         run: |
           if [ "$LINE_SNAPSHOT_REFRESH" = 'true' ]; then

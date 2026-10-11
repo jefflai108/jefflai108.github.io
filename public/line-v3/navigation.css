@@ -13,7 +13,7 @@ html { scrollbar-gutter: stable; }
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: stretch;
-  gap: 4px;
+  gap: 3px;
   max-width: 1500px;
   width: 100%;
   margin: 0 auto;
@@ -30,7 +30,8 @@ html { scrollbar-gutter: stable; }
   display: flex;
   flex: 0 0 auto;
   align-items: center;
-  padding: 8px 13px;
+  /* Eleven tabs fit one row from 1440 px; narrower screens scroll the row. */
+  padding: 8px 9px;
   font: 500 14px/23px system-ui, -apple-system, "PingFang TC", sans-serif;
   white-space: nowrap;
   text-decoration: none;
