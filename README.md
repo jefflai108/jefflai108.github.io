@@ -131,8 +131,9 @@ These observations are not merged into the three native-model latency samples.
 
 ## LINE Stickers
 
-`/line-v3/line-stickers.html` compares the existing V3 interaction code (the live
-release) with the proactive native-sticker change on two axes, both scored by a
+`/line-v3/line-stickers.html` compares the existing V3 interaction code (the
+release that was live before the change) with the proactive native-sticker
+change, deployed to production on 2026-10-07 UTC, on two axes, both scored by a
 blinded AI judge: the **sticker response rate** (turns whose delivered LINE
 batch contains a native sticker, counted from captured LINE objects) and
 **sticker appropriateness** (1–5 per delivered sticker, judged with the official

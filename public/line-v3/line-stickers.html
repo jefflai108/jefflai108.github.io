@@ -5,7 +5,7 @@ h2{font-size:22px;line-height:1.4;margin:0 0 12px}h3{font-size:17px;margin:20px 
 a{color:#23695d}a:focus-visible,summary:focus-visible,button:focus-visible,.bar:focus-visible{outline:3px solid #269890;outline-offset:3px}
 p{margin:9px 0}.eyebrow,.small,small{font-size:12px;color:#526c61}.muted{color:#5f7168}.lede{font-size:17px}
 .panel{border:1px solid #d6e0d7;border-radius:15px;background:white;padding:22px;margin-bottom:22px}
-.notice{padding:14px 18px;background:#e8efeb;border:1px solid #cdded3;border-radius:12px}.warning{background:#fff3dc;border-color:#ead3a4}
+.nowrap{white-space:nowrap}.notice{padding:14px 18px;background:#e8efeb;border:1px solid #cdded3;border-radius:12px}.warning{background:#fff3dc;border-color:#ead3a4}
 .badges{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.badge,.chip{display:inline-block;font-size:12px;background:#e5ece7;border-radius:20px;padding:3px 10px;color:#193a31}
 .tabs{display:flex;gap:5px;flex-wrap:wrap;background:#e3e9e2;padding:6px;border-radius:10px}.tabs a{padding:8px 12px;text-decoration:none;border-radius:7px;font-size:13px}.tabs [aria-current]{background:white;font-weight:700}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:16px}.kpi{border:1px solid #dce5de;border-radius:12px;padding:18px;background:#f8faf7}
@@ -38,9 +38,9 @@ code{font-size:12px}.missing{color:#8a5a2b}footer{padding:22px 0;font-size:12px;
 .transcript thead{display:none}.transcript tr{border-bottom:2px solid #dbe5dc;padding-bottom:6px}.transcript td::before{content:attr(data-arm);display:block;font-weight:650;font-size:12px;color:#526c61;margin-top:4px}}
 </style></head><body class="nojs"><a class="skip" href="#content">跳到比較結果</a><div class="navwrap"><nav class="tabs" aria-label="比較分頁"><a href="index.html">Interaction tasks</a><a href="delegation.html">Delegation tasks</a><a href="taiwan.html">台灣用語</a><a href="recovery.html">困難任務與失敗恢復</a><a href="tts-followup.html">TTS follow-up</a><a href="images-stickers.html">Images &amp; Stickers</a><a href="burst-turns.html">Burst turns</a><a href="natural-bridges.html">Natural bridges</a><a href="line-stickers.html" aria-current="page">LINE Stickers</a></nav></div>
 <header><p class="eyebrow">HeyMachi / LINE v3 · 2026-10-06 · 互動模式原生貼圖 · 真實 Gemini 呼叫 + 盲評 AI 評審</p><h1>LINE Stickers</h1>
-<p class="lede">麻吉在互動模式中，用同一次 Gemini 呼叫自己判斷要不要回 LINE 原生貼圖、從 456 張官方貼圖裡挑哪一張。這一頁比較正式環境的原有版本與主動貼圖版：① 貼圖回應率、② 貼圖適切度，兩個評估軸都由盲評 AI 評審逐輪判讀。</p>
+<p class="lede">麻吉在互動模式中，用同一次 Gemini 呼叫自己判斷要不要回 LINE 原生貼圖、從 456 張官方貼圖裡挑哪一張。這一頁比較部署前的原有版本與主動貼圖版：① 貼圖回應率、② 貼圖適切度，兩個評估軸都由盲評 AI 評審逐輪判讀。</p>
 <div class="badges"><span class="badge">回應率 44.0%（原有 22.6%）</span><span class="badge">+21.4 個百分點</span><span class="badge">適切度 4.73 / 5（原有 4.86）</span><span class="badge">評審對照題 24/24 符合預期</span><span class="badge">160/160 段對話完成量測</span></div>
-<p class="notice">合成對話、臨時資料庫與模擬 LINE 傳輸；Gemini 與評審呼叫都是真的，但沒有傳到任何真實 LINE 帳號。主動貼圖版目前是待審的程式修改，尚未部署到正式環境。</p></header>
+<p class="notice">合成對話、臨時資料庫與模擬 LINE 傳輸；Gemini 與評審呼叫都是真的，但沒有傳到任何真實 LINE 帳號。主動貼圖版已在<span class="nowrap"> 2026-10-07（UTC）</span>部署到正式環境；這裡的數字仍是基準測試的結果，不是正式環境的流量。部署的版本另外加了審查後的三項保護：危機回覆一律不附貼圖；中英夾雜的「sticker」與貼圖上打的字也算在談貼圖。它們不會改變這裡任何一個數字：危機那段對話兩個版本都沒送貼圖，另外兩種情況測試裡沒有。</p></header>
 <main id="content">
 <section class="panel"><h2>結果</h2>
 <div class="kpis">

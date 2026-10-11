@@ -430,7 +430,7 @@ h2{font-size:22px;line-height:1.4;margin:0 0 12px}h3{font-size:17px;margin:20px 
 a{color:#23695d}a:focus-visible,summary:focus-visible,button:focus-visible,.bar:focus-visible{outline:3px solid #269890;outline-offset:3px}
 p{margin:9px 0}.eyebrow,.small,small{font-size:12px;color:#526c61}.muted{color:#5f7168}.lede{font-size:17px}
 .panel{border:1px solid #d6e0d7;border-radius:15px;background:white;padding:22px;margin-bottom:22px}
-.notice{padding:14px 18px;background:#e8efeb;border:1px solid #cdded3;border-radius:12px}.warning{background:#fff3dc;border-color:#ead3a4}
+.nowrap{white-space:nowrap}.notice{padding:14px 18px;background:#e8efeb;border:1px solid #cdded3;border-radius:12px}.warning{background:#fff3dc;border-color:#ead3a4}
 .badges{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.badge,.chip{display:inline-block;font-size:12px;background:#e5ece7;border-radius:20px;padding:3px 10px;color:#193a31}
 .tabs{display:flex;gap:5px;flex-wrap:wrap;background:#e3e9e2;padding:6px;border-radius:10px}.tabs a{padding:8px 12px;text-decoration:none;border-radius:7px;font-size:13px}.tabs [aria-current]{background:white;font-weight:700}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:16px}.kpi{border:1px solid #dce5de;border-radius:12px;padding:18px;background:#f8faf7}
@@ -581,9 +581,9 @@ def render(data):
 
     body = f"""<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>HeyMachi · LINE Stickers</title><meta name="description" content="LINE v3 互動模式原生貼圖：原有版本與主動貼圖版的貼圖回應率與 AI 評審適切度比較。"><link rel="canonical" href="https://jefflai108.github.io/line-v3/line-stickers.html"><style>{CSS}</style></head><body class="nojs"><a class="skip" href="#content">跳到比較結果</a>{tab_nav(PAGE_NAME)}
 <header><p class="eyebrow">HeyMachi / LINE v3 · 2026-10-06 · 互動模式原生貼圖 · 真實 Gemini 呼叫 + 盲評 AI 評審</p><h1>LINE Stickers</h1>
-<p class="lede">麻吉在互動模式中，用同一次 Gemini 呼叫自己判斷要不要回 LINE 原生貼圖、從 456 張官方貼圖裡挑哪一張。這一頁比較正式環境的原有版本與主動貼圖版：① 貼圖回應率、② 貼圖適切度，兩個評估軸都由盲評 AI 評審逐輪判讀。</p>
+<p class="lede">麻吉在互動模式中，用同一次 Gemini 呼叫自己判斷要不要回 LINE 原生貼圖、從 456 張官方貼圖裡挑哪一張。這一頁比較部署前的原有版本與主動貼圖版：① 貼圖回應率、② 貼圖適切度，兩個評估軸都由盲評 AI 評審逐輪判讀。</p>
 <div class="badges"><span class="badge">回應率 {pct(rate_p)}（原有 {pct(rate_e)}）</span><span class="badge">{pp(comparison['rate_difference'])}</span><span class="badge">適切度 {score(appr_p['mean'])} / 5（原有 {score(appr_e['mean'])}）</span><span class="badge">評審對照題 {controls_ok}/{controls_total} 符合預期</span><span class="badge">{measured}/{slots} 段對話完成量測</span></div>
-<p class="notice">合成對話、臨時資料庫與模擬 LINE 傳輸；Gemini 與評審呼叫都是真的，但沒有傳到任何真實 LINE 帳號。主動貼圖版目前是待審的程式修改，尚未部署到正式環境。</p></header>
+<p class="notice">合成對話、臨時資料庫與模擬 LINE 傳輸；Gemini 與評審呼叫都是真的，但沒有傳到任何真實 LINE 帳號。主動貼圖版已在<span class="nowrap"> 2026-10-07（UTC）</span>部署到正式環境；這裡的數字仍是基準測試的結果，不是正式環境的流量。部署的版本另外加了審查後的三項保護：危機回覆一律不附貼圖；中英夾雜的「sticker」與貼圖上打的字也算在談貼圖。它們不會改變這裡任何一個數字：危機那段對話兩個版本都沒送貼圖，另外兩種情況測試裡沒有。</p></header>
 <main id="content">
 <section class="panel"><h2>結果</h2>{kpis}
 <p class="small muted">回應率以實際捕捉到的 LINE 訊息物件計算（不是模型意圖）；AI 評審對每一輪的「有沒有送貼圖」判讀與實際傳輸一致率：原有 {pct(judge_e['wire_agreement'])}、主動 {pct(judge_p['wire_agreement'])}。信賴區間以作者設計的「同一段對話」為單位（連同它的 {design['repeats']} 次重複一起），對兩個版本做配對重抽樣（{comparison.get('draws', 0)} 次）。</p></section>
