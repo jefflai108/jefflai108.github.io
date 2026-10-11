@@ -62,8 +62,8 @@ class MixedMediaReportTests(unittest.TestCase):
 
     def test_measured_results_show_answers_probes_evidence_and_escape_input(self):
         page = renderer.render(measured())
-        for value in ("好！6:15 湯老大見～", "這是火鍋店截圖！", "✓ 回答指出截圖中的店", "✗ 只回答一次",
-                      "模型實際看得到什麼", "0/1", "1/1", 'class="timeline"', "9.00 s"):
+        for value in ("好！6:15 湯老大見～", "這是火鍋店截圖！", "✓ 1/1 回答指出截圖中的店", "✗ 0/1 只回答一次",
+                      "模型實際看得到什麼", "樣本 #1 · 通過", "樣本 #1 · 未通過", "原有處理 #1", 'class="timeline"', "9.00 s"):
             self.assertIn(value, page)
         self.assertIn("這家是哪一家？&lt;b&gt;", page)
         self.assertIn("Screenshot &lt;then&gt; text", page)

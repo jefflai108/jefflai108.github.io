@@ -27,10 +27,13 @@ TABS = (("index.html", "Interaction tasks"), ("delegation.html", "Delegation tas
         ("line-stickers.html", "LINE Stickers"), (PAGE, "Mixed-media bursts"))
 LABELS = {"baseline": "原有處理", "mixed": "混合媒體分段"}
 DETAIL = {"baseline": "圖片與文字各自成為獨立回合；V3 讓後到的文字不必等前一則圖片讀完。",
-          "mixed": "圖片、貼圖與文字可併入同一個分段回合；回答前先等同一聊天室較早的圖片觀察寫入。"}
+          "mixed": "私訊裡的一張圖片／PDF 可和前後的文字併成同一個分段回合，一次回答（貼圖仍各自回覆）；"
+                   "每個回答開始前，先等同一聊天室較早的圖片、PDF 或語音證據寫入（群組也是）。"}
 COLORS = {"baseline": "#66766c", "mixed": "#1f7a6c"}
 CHECKS = {"fixtures_named": "回答指出截圖中的店", "time_kept": "保留 6:15 的時間",
-          "single_answer": "只回答一次", "nearer_named": "最後回答選對較近的店"}
+          "single_answer": "只回答一次", "nearer_named": "最後回答選對較近的店",
+          "caption_grounded": "回答文字的那次呼叫看得到截圖", "caption_answer_named": "回答文字的那次呼叫說出店名"}
+OVERVIEW_CHECKS = ("caption_grounded", "caption_answer_named", "fixtures_named", "time_kept", "single_answer")
 KIND_LABEL = {"text": "文字", "image": "截圖", "sticker": "貼圖"}
 
 
@@ -83,7 +86,9 @@ def timeline(case, arms):
     end = max([value for value in values if number(value)] + [1000]) * 1.05
     width, left, right = 920, 120, 20
     scale = (width - left - right) / end
-    height = 50 + len(arms) * 52
+    lanes = [(arm, row) for arm in arms for row in sorted(
+        (row for row in case["results"] if row.get("arm") == arm), key=lambda row: row.get("sample", 1))]
+    height = 50 + max(1, len(lanes)) * 40
     parts = [f'<svg class="timeline" viewBox="0 0 {width} {height}" role="img" '
              'aria-label="各版本的輸入、圖片觀察、模型呼叫與回答時間軸">',
              '<title>虛線：輸入抵達；淺色帶：群組圖片觀察；深色帶：前景模型呼叫；圓點：捕捉到的回答。</title>']
@@ -97,10 +102,9 @@ def timeline(case, arms):
         label = KIND_LABEL[event["kind"]] + ("：" + event["text"] if event.get("text") else "")
         parts.append(f'<path d="M{x:.1f},22V{height - 18}" stroke="#8195ac" stroke-dasharray="3 4">'
                      f'<title>+{event["offset_s"]:g}s {esc(label)}</title></path>')
-    rows = {row["arm"]: row for row in case["results"]}
-    for index, arm in enumerate(arms):
-        y, row, color = 42 + index * 52, rows.get(arm, {}), COLORS[arm]
-        parts.append(f'<text x="4" y="{y + 4}">{esc(LABELS[arm])}</text>')
+    for index, (arm, row) in enumerate(lanes):
+        y, color = 42 + index * 40, COLORS[arm]
+        parts.append(f'<text x="4" y="{y + 4}">{esc(LABELS[arm])} #{row.get("sample", 1)}</text>')
         for call in row.get("reader_calls", []):
             x = left + call["started_ms"] * scale
             span = max(2, (call.get("finished_ms", call["started_ms"]) - call["started_ms"]) * scale)
@@ -119,14 +123,19 @@ def timeline(case, arms):
     return "".join(parts) + "</svg>"
 
 
-def probe_list(row):
-    score = row.get("score") or {}
-    checks = score.get("checks") or {}
-    if not checks:
+def probe_list(rows):
+    """Each check's pass count over this arm's samples (unknown is never a pass)."""
+    names = list(dict.fromkeys(name for row in rows for name in ((row.get("score") or {}).get("checks") or {})))
+    if not names:
         return '<p class="muted">此題沒有自動檢查項目。</p>'
-    items = "".join(f'<li class="{"pass" if value else "fail"}">{"✓" if value else "✗"} {esc(CHECKS.get(name, name))}</li>'
-                    for name, value in checks.items())
-    return f'<ul class="probes">{items}</ul>'
+    items = []
+    for name in names:
+        values = [((row.get("score") or {}).get("checks") or {}).get(name) for row in rows]
+        passed, total = sum(value is True for value in values), len(values)
+        mark = "✓" if passed == total else "✗" if passed == 0 else "◐"
+        css = "pass" if passed == total else "fail" if passed == 0 else "mixed"
+        items.append(f'<li class="{css}">{mark} {passed}/{total} {esc(CHECKS.get(name, name))}</li>')
+    return f'<ul class="probes">{"".join(items)}</ul>'
 
 
 def evidence_table(row):
@@ -144,11 +153,7 @@ def evidence_table(row):
             f'<tbody>{body}</tbody></table></div></details>')
 
 
-def arm_column(row):
-    arm = row["arm"]
-    if row.get("status") == "pending":
-        return (f'<section class="arm" style="--color:{COLORS[arm]}"><h3>{esc(LABELS[arm])}</h3>'
-                '<p class="muted">尚未量測。</p></section>')
+def sample_body(row):
     metrics = row.get("metrics", {})
     sends = []
     for message in row.get("messages", []):
@@ -162,12 +167,27 @@ def arm_column(row):
     for outcome in row.get("host_deliveries", []):
         errors += [str(outcome[key]) for key in ("failure_code", "error") if outcome.get(key)]
     error = f'<p class="error">{esc(", ".join(dict.fromkeys(errors)))}</p>' if errors else ""
-    return (f'<section class="arm" style="--color:{COLORS[arm]}"><h3>{esc(LABELS[arm])}</h3>'
-            f'<p class="status">{esc(row.get("status", "unknown"))} · {metrics.get("answer_batches", "—")} 次回答 · '
-            f'{metrics.get("model_calls", "—")} 次前景呼叫</p>' + probe_list(row) +
+    return (f'<p class="status">{esc(row.get("status", "unknown"))} · {metrics.get("answer_batches", "—")} 次回答 · '
+            f'{metrics.get("model_calls", "—")} 次前景呼叫</p>'
             f'<dl><dt>最後輸入 → 最後回答</dt><dd>{seconds(metrics.get("last_input_to_last_answer_ms"))}</dd>'
             f'<dt>首次 / 最後回答</dt><dd>{seconds(metrics.get("first_answer_ms"))} / {seconds(metrics.get("last_answer_ms"))}</dd></dl>'
-            + error + "".join(sends) + evidence_table(row) + "</section>")
+            + error + "".join(sends) + evidence_table(row))
+
+
+def arm_column(arm, rows):
+    """All samples of one arm: aggregated probes, then every sample's transcript."""
+    if not rows or all(row.get("status") == "pending" for row in rows):
+        return (f'<section class="arm" style="--color:{COLORS[arm]}"><h3>{esc(LABELS[arm])}</h3>'
+                '<p class="muted">尚未量測。</p></section>')
+    rows = sorted(rows, key=lambda row: row.get("sample", 1))
+    passed = sum((row.get("score") or {}).get("passed") is True for row in rows)
+    scored = sum((row.get("score") or {}).get("passed") is not None for row in rows)
+    samples = "".join(
+        f'<details{" open" if index == 0 else ""}><summary>樣本 #{row.get("sample", 1)}'
+        f'{" · 通過" if (row.get("score") or {}).get("passed") is True else " · 未通過" if (row.get("score") or {}).get("passed") is False else ""}'
+        f'</summary>{sample_body(row)}</details>' for index, row in enumerate(rows))
+    return (f'<section class="arm" style="--color:{COLORS[arm]}"><h3>{esc(LABELS[arm])}</h3>'
+            f'<p class="status">全部檢查通過：{passed}/{scored} 個樣本</p>' + probe_list(rows) + samples + "</section>")
 
 
 def overview(data, arms):
@@ -176,17 +196,18 @@ def overview(data, arms):
     for arm in arms:
         value = aggregate.get(arm)
         if not value:
-            rows.append(f'<tr><th>{esc(LABELS[arm])}</th><td colspan="7" class="muted">尚未量測</td></tr>')
+            rows.append(f'<tr><th>{esc(LABELS[arm])}</th><td colspan="9" class="muted">尚未量測</td></tr>')
             continue
         checks = value.get("checks", {})
         cells = "".join(f'<td>{checks[name]["passed"]}/{checks[name]["evaluated"]}</td>' if name in checks else "<td>—</td>"
-                        for name in ("fixtures_named", "time_kept", "single_answer"))
+                        for name in OVERVIEW_CHECKS)
         rows.append(f'<tr><th>{esc(LABELS[arm])}</th><td>{value["cases_passed"]}/{value["cases_scored"]}</td>{cells}'
                     f'<td>{value["answer_batches"]}</td>'
                     f'<td>{seconds(value.get("median_last_input_to_last_answer_ms"))}</td>'
                     f'<td>{value["errors"]}</td></tr>')
     return ('<div class="scroll"><table class="num wide"><thead><tr><th>版本</th><th>全部檢查通過</th>'
-            '<th>指出截圖的店</th><th>保留 6:15</th><th>只回答一次</th><th>回答總數</th>'
+            '<th>文字那輪看得到截圖</th><th>文字那輪說出店名</th><th>回答指出截圖的店</th><th>保留 6:15</th>'
+            '<th>只回答一次</th><th>回答總數</th>'
             '<th>最後輸入 → 最後回答（中位數）</th><th>錯誤</th></tr></thead><tbody>' + "".join(rows)
             + '</tbody></table></div>')
 
@@ -217,8 +238,8 @@ def render(data):
         search = esc(" ".join([case["id"], case["name"], case["kind"]]
                               + [event.get("text", "") for event in case["events"]]))
         scope = "群組" if case.get("conversation_scope") == "group" else "私訊"
-        results = {row["arm"]: row for row in case.get("results", [])}
-        columns = "".join(arm_column(results.get(arm, {"arm": arm, "status": "pending"})) for arm in arms)
+        columns = "".join(arm_column(arm, [row for row in case.get("results", []) if row.get("arm") == arm])
+                          for arm in arms)
         cards.append(f'<article class="case" data-scope="{esc(case.get("conversation_scope", ""))}" data-search="{search}">'
                      f'<h2>{esc(case["id"])} · {esc(case["name"])}</h2><p class="chips"><span class="chip">{scope}</span>'
                      f'<span class="chip">{esc(case["kind"])}</span></p><ol class="inputs">{events}</ol>'
@@ -245,7 +266,7 @@ h2{font-size:23px;line-height:1.4;margin:0 0 10px}h3{font-size:16px;margin:0 0 6
 .who{font-size:12px;background:#eef1ec;border-radius:6px;padding:1px 7px}.thumb img{width:36px;height:64px;object-fit:cover;border-radius:5px;border:1px solid #d8e1da;display:block}
 .review{background:#eaf0e6;border-left:3px solid #648665;padding:12px 14px}.timeline{width:100%;min-width:640px;font-size:12px;margin:8px 0 18px}.timeline text{fill:#3d564b}
 .arms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.arm{border-top:4px solid var(--color);min-width:0;padding-top:10px}.status{font-size:12px}
-.probes{list-style:none;padding:0;margin:6px 0 10px;font-size:13px}.probes .pass{color:#1d5a3a}.probes .fail{color:#a1372d}
+.probes{list-style:none;padding:0;margin:6px 0 10px;font-size:13px}.probes .pass{color:#1d5a3a}.probes .fail{color:#a1372d}.probes .mixed{color:#8a5a00}
 dl{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:12px;margin:0 0 12px}dt{color:#687a6d}dd{margin:0;font-variant-numeric:tabular-nums}
 .bubble{white-space:pre-wrap;overflow-wrap:anywhere;background:#f7f9f7;border:1px solid #dce5de;border-radius:12px;padding:10px 12px;margin:6px 0}.stamp{font-size:11px;margin:10px 0 2px}
 details{font-size:12px;margin-top:10px}summary{cursor:pointer;color:#23695d}.error{color:#a1372d}
@@ -256,12 +277,12 @@ details{font-size:12px;margin-top:10px}summary{cursor:pointer;color:#23695d}.err
 </style></head><body><a class="skip" href="#main">跳到量測內容</a><div class="navwrap"><nav class="tabs" aria-label="比較分頁">''' + nav + '''</nav></div>
 <header><p class="eyebrow">HeyMachi / LINE v3 · 混合媒體分段 · 真實 Gemini 呼叫 + 本機捕捉 LINE 傳輸</p><h1>Mixed-media bursts</h1>
 <p>使用者先傳一張餐廳截圖，幾秒後打「晚上吃這家 6:15pm」。原有處理把圖片和文字當成兩個獨立請求：文字回合在圖片還沒讀完時就開始作答，「這家」找不到對象；群組裡的截圖只是背景觀察，被標註的文字可能在觀察寫入前就回答了。這裡比較原有處理與修正版在私訊與群組、圖片在前或在後時的表現。</p>
-<p class="notice">每題都是全新的隔離資料庫，經過簽章 webhook 與四個並行 worker（和正式環境一樣，V3 的新訊息不必等前一則處理完）。前景是 Gemini 3.8 Flash low，80 秒上限；群組圖片走正式的背景觀察器。兩張截圖是虛構店家，沒有真實地點、品牌或人物。不傳送真實 LINE 訊息、不執行委派工作、不合成語音。每題每版一次；自動檢查只看回答是否提到截圖裡的店名、6:15 與回答次數，不是品質評分，請逐題閱讀回答。</p>
-''' + banner + '''<p class="small">量測版本：''' + esc(plan.get("revision", "")) + ''' · ''' + str(len(cases)) + ''' 題 × ''' + str(len(arms)) + ''' 版。''' + esc(baseline_note) + '''</p>
+<p class="notice">每題都是全新的隔離資料庫，經過簽章 webhook 與四個並行 worker（和正式環境一樣，V3 的新訊息不必等前一則處理完）。前景是 Gemini 3.8 Flash low，80 秒上限；群組圖片走正式的背景觀察器。兩張截圖是虛構店家，沒有真實地點、品牌或人物。不傳送真實 LINE 訊息、不執行委派工作、不合成語音。每題每版 ''' + str(plan.get("samples_per_case_arm", 1)) + ''' 個樣本，兩版輪流先跑；自動檢查只看「回答文字的那次呼叫」是否看得到截圖並說出店名，以及 6:15 與回答次數，不是品質評分，請逐題閱讀回答。</p>
+''' + banner + '''<p class="small">量測版本：''' + esc(plan.get("revision", "")) + ''' · ''' + str(len(cases)) + ''' 題 × ''' + str(len(arms)) + ''' 版 × ''' + str(plan.get("samples_per_case_arm", 1)) + ''' 樣本。''' + esc(baseline_note) + '''</p>
 <p class="small">來源：''' + source_link + ''' · <a href="''' + RESULTS + '''" download>下載完整公開結果 JSON</a> · 量測程式：<code>serve/line_agent_v2/evals/line_architecture/mixed_burst_benchmark.py</code></p></header>
 <main id="main"><section class="panel"><h2>兩種處理方式</h2><div class="steps">''' + methods + '''</div></section>
 <section class="panel"><h2>測試用截圖</h2><p class="muted">以程式繪製的虛構餐廳列表（距離 1.2 公里與 3.5 公里），檔案雜湊固定在題目檔中。</p><div class="fixtures">''' + fixtures + '''</div></section>
-<section class="panel"><h2>量測概覽</h2><p class="muted">分數只計入有自動檢查的題目。時間是共用開發主機上的單次觀測，不是正式服務 SLO；缺少的時間不填零。</p>''' + overview(data, arms) + '''</section>
+<section class="panel"><h2>量測概覽</h2><p class="muted">分數只計入有自動檢查的題目，跨所有樣本計數。時間是共用開發主機上的觀測（所有樣本的中位數），不是正式服務 SLO；缺少的時間不填零。</p>''' + overview(data, arms) + '''</section>
 <div class="controls"><label>找情境<input id="search" type="search" placeholder="題號、訊息或標題"></label><label>聊天室<select id="scope"><option value="all">全部</option><option value="direct">私訊</option><option value="group">群組</option></select></label><p id="count" aria-live="polite"></p></div>''' + "".join(cards) + '''<footer>本頁只讀取凍結的公開結果 JSON；所有回答與錯誤原樣保留，沒有挑選重跑結果。其他分頁保留各自的凍結量測。</footer></main><script>
 const search=document.getElementById('search'),scope=document.getElementById('scope'),cards=[...document.querySelectorAll('.case')];
 function filter(){let n=0;for(const card of cards){const visible=(scope.value==='all'||card.dataset.scope===scope.value)&&card.dataset.search.toLowerCase().includes(search.value.trim().toLowerCase());card.hidden=!visible;if(visible)n++;}document.getElementById('count').textContent=`${n} / ${cards.length} 題`;}
