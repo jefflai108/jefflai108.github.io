@@ -1,0 +1,444 @@
+{
+  "schema_version": 1,
+  "placeholder": true,
+  "plan": {
+    "revision": "pending",
+    "arms": [
+      "baseline",
+      "mixed"
+    ],
+    "source_ref": "",
+    "baseline_mode": ""
+  },
+  "fixtures": {
+    "hotpot_a": {
+      "token": "湯老大",
+      "name": "湯老大麻辣鴛鴦鍋",
+      "branch": "信義店",
+      "distance": "距離你 1.2 公里",
+      "sha256": "47241a4fe5d0c938a13a490f20ee2772ce621cb0a6c5a674ffa2d8c730a743ea",
+      "file": "fixtures/mixed_burst_hotpot_a.jpg"
+    },
+    "hotpot_b": {
+      "token": "雪見",
+      "name": "雪見壽喜燒",
+      "branch": "中山店",
+      "distance": "距離你 3.5 公里",
+      "sha256": "6f425ba404c317732af2298af7d63a5110ad8c19a4b26351c1aeb3fbc360c17b",
+      "file": "fixtures/mixed_burst_hotpot_b.jpg"
+    }
+  },
+  "group_members": [
+    {
+      "key": "jie",
+      "name": "阿傑"
+    },
+    {
+      "key": "qing",
+      "name": "小晴"
+    },
+    {
+      "key": "liang",
+      "name": "阿亮"
+    }
+  ],
+  "aggregate": {},
+  "cases": [
+    {
+      "id": "M1",
+      "name": "Screenshot, then 「晚上吃這家」 2 s later",
+      "kind": "direct_image_then_text",
+      "conversation_scope": "direct",
+      "events": [
+        {
+          "offset_s": 0,
+          "kind": "image",
+          "fixture": "hotpot_a"
+        },
+        {
+          "offset_s": 2,
+          "kind": "text",
+          "text": "晚上吃這家 6:15pm"
+        }
+      ],
+      "expect": {
+        "fixtures_named": [
+          "hotpot_a"
+        ],
+        "time": true,
+        "single_answer": true
+      },
+      "review_goal": "One answer that treats 這家 as the restaurant in the screenshot and keeps 6:15pm.",
+      "results": [
+        {
+          "arm": "baseline",
+          "status": "pending"
+        },
+        {
+          "arm": "mixed",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "name": "Text, then the screenshot 1.5 s later",
+      "kind": "direct_text_then_image",
+      "conversation_scope": "direct",
+      "events": [
+        {
+          "offset_s": 0,
+          "kind": "text",
+          "text": "晚上吃這家好不好？6:15pm"
+        },
+        {
+          "offset_s": 1.5,
+          "kind": "image",
+          "fixture": "hotpot_a"
+        }
+      ],
+      "expect": {
+        "fixtures_named": [
+          "hotpot_a"
+        ],
+        "time": true,
+        "single_answer": true
+      },
+      "review_goal": "The question arrives before the picture it points at; one answer should cover both.",
+      "results": [
+        {
+          "arm": "baseline",
+          "status": "pending"
+        },
+        {
+          "arm": "mixed",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "name": "Screenshot, then a slower follow-up 6 s later",
+      "kind": "direct_image_then_slow_text",
+      "conversation_scope": "direct",
+      "events": [
+        {
+          "offset_s": 0,
+          "kind": "image",
+          "fixture": "hotpot_a"
+        },
+        {
+          "offset_s": 6,
+          "kind": "text",
+          "text": "晚上吃這家 6:15pm"
+        }
+      ],
+      "expect": {
+        "fixtures_named": [
+          "hotpot_a"
+        ],
+        "time": true,
+        "single_answer": true
+      },
+      "review_goal": "Typing a follow-up takes a few seconds; the text must still be read with the screenshot's content.",
+      "results": [
+        {
+          "arm": "baseline",
+          "status": "pending"
+        },
+        {
+          "arm": "mixed",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "name": "Two screenshots, then 「哪家比較近？」",
+      "kind": "direct_two_images_then_question",
+      "conversation_scope": "direct",
+      "events": [
+        {
+          "offset_s": 0,
+          "kind": "image",
+          "fixture": "hotpot_a"
+        },
+        {
+          "offset_s": 2,
+          "kind": "image",
+          "fixture": "hotpot_b"
+        },
+        {
+          "offset_s": 5,
+          "kind": "text",
+          "text": "哪家比較近？"
+        }
+      ],
+      "expect": {
+        "fixtures_named": [
+          "hotpot_a",
+          "hotpot_b"
+        ],
+        "nearer": "hotpot_a"
+      },
+      "review_goal": "The comparison needs both screenshots (1.2 km versus 3.5 km).",
+      "results": [
+        {
+          "arm": "baseline",
+          "status": "pending"
+        },
+        {
+          "arm": "mixed",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "name": "Screenshot, text and a sticker",
+      "kind": "direct_image_text_sticker",
+      "conversation_scope": "direct",
+      "events": [
+        {
+          "offset_s": 0,
+          "kind": "image",
+          "fixture": "hotpot_a"
+        },
+        {
+          "offset_s": 2,
+          "kind": "text",
+          "text": "晚上吃這家 6:15pm"
+        },
+        {
+          "offset_s": 4,
+          "kind": "sticker"
+        }
+      ],
+      "expect": {
+        "fixtures_named": [
+          "hotpot_a"
+        ],
+        "time": true,
+        "single_answer": true
+      },
+      "review_goal": "A trailing sticker belongs to the same burst and should not trigger a second, context-free answer.",
+      "results": [
+        {
+          "arm": "baseline",
+          "status": "pending"
+        },
+        {
+          "arm": "mixed",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "name": "Group: screenshot, then @麻吉 「晚上吃這家」 3 s later",
+      "kind": "group_image_then_addressed_text",
+      "conversation_scope": "group",
+      "events": [
+        {
+          "offset_s": 0,
+          "kind": "image",
+          "fixture": "hotpot_a",
+          "actor": "jie"
+        },
+        {
+          "offset_s": 3,
+          "kind": "text",
+          "text": "晚上吃這家 6:15pm",
+          "addressed": true,
+          "actor": "jie"
+        }
+      ],
+      "expect": {
+        "fixtures_named": [
+          "hotpot_a"
+        ],
+        "time": true,
+        "single_answer": true
+      },
+      "review_goal": "The incident shape: the group image is quiet, and the tagged text must be answered with its content.",
+      "results": [
+        {
+          "arm": "baseline",
+          "status": "pending"
+        },
+        {
+          "arm": "mixed",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "M7",
+      "name": "Group: another member's screenshot, then @麻吉 「晚上吃這家」",
+      "kind": "group_other_member_image_then_addressed_text",
+      "conversation_scope": "group",
+      "events": [
+        {
+          "offset_s": 0,
+          "kind": "image",
+          "fixture": "hotpot_a",
+          "actor": "qing"
+        },
+        {
+          "offset_s": 3,
+          "kind": "text",
+          "text": "晚上吃這家 6:15pm",
+          "addressed": true,
+          "actor": "jie"
+        }
+      ],
+      "expect": {
+        "fixtures_named": [
+          "hotpot_a"
+        ],
+        "time": true,
+        "single_answer": true
+      },
+      "review_goal": "Group chronology is shared context; a friend's screenshot seconds earlier is what 這家 points at.",
+      "results": [
+        {
+          "arm": "baseline",
+          "status": "pending"
+        },
+        {
+          "arm": "mixed",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "M8",
+      "name": "Group: @麻吉 question, then the screenshot 1 s later",
+      "kind": "group_addressed_text_then_image",
+      "conversation_scope": "group",
+      "events": [
+        {
+          "offset_s": 0,
+          "kind": "text",
+          "text": "晚上吃這家好不好？6:15pm",
+          "addressed": true,
+          "actor": "jie"
+        },
+        {
+          "offset_s": 1,
+          "kind": "image",
+          "fixture": "hotpot_a",
+          "actor": "jie"
+        }
+      ],
+      "expect": {
+        "fixtures_named": [
+          "hotpot_a"
+        ],
+        "time": true,
+        "single_answer": true
+      },
+      "review_goal": "The tagged question precedes the quiet picture it refers to. Reported honestly even if the fix does not cover it.",
+      "results": [
+        {
+          "arm": "baseline",
+          "status": "pending"
+        },
+        {
+          "arm": "mixed",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "M9",
+      "name": "Control: lone screenshot",
+      "kind": "control_lone_image",
+      "conversation_scope": "direct",
+      "events": [
+        {
+          "offset_s": 0,
+          "kind": "image",
+          "fixture": "hotpot_a"
+        }
+      ],
+      "expect": {
+        "fixtures_named": [
+          "hotpot_a"
+        ],
+        "single_answer": true
+      },
+      "review_goal": "Vision itself works; latency of a lone image is the cost reference.",
+      "results": [
+        {
+          "arm": "baseline",
+          "status": "pending"
+        },
+        {
+          "arm": "mixed",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "M10",
+      "name": "Control: lone text",
+      "kind": "control_lone_text",
+      "conversation_scope": "direct",
+      "events": [
+        {
+          "offset_s": 0,
+          "kind": "text",
+          "text": "晚上想吃火鍋，有推薦的嗎？"
+        }
+      ],
+      "expect": {
+        "single_answer": true
+      },
+      "review_goal": "A lone text must not wait for media that never comes.",
+      "results": [
+        {
+          "arm": "baseline",
+          "status": "pending"
+        },
+        {
+          "arm": "mixed",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "M11",
+      "name": "Control: text-only burst",
+      "kind": "control_text_burst",
+      "conversation_scope": "direct",
+      "events": [
+        {
+          "offset_s": 0,
+          "kind": "text",
+          "text": "晚上想吃火鍋"
+        },
+        {
+          "offset_s": 1,
+          "kind": "text",
+          "text": "六點十五分可以嗎？"
+        }
+      ],
+      "expect": {
+        "time": true,
+        "single_answer": true
+      },
+      "review_goal": "The existing text burst must keep answering once.",
+      "results": [
+        {
+          "arm": "baseline",
+          "status": "pending"
+        },
+        {
+          "arm": "mixed",
+          "status": "pending"
+        }
+      ]
+    }
+  ]
+}
