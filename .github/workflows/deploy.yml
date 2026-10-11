@@ -50,6 +50,9 @@ jobs:
       - name: Verify LINE burst report renderer
         run: python3 -m unittest discover -s scripts -p test_line_burst_turns.py
 
+      - name: Verify LINE group replies report renderer
+        run: python3 -m unittest discover -s scripts -p test_line_group_replies.py
+
       - name: Build
         run: |
           if [ "$LINE_SNAPSHOT_REFRESH" = 'true' ]; then

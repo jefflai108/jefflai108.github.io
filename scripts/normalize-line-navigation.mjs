@@ -14,6 +14,7 @@ const tabs = [
   ['burst-turns.html', 'Burst turns'],
   ['natural-bridges.html', 'Natural bridges'],
   ['line-stickers.html', 'LINE Stickers'],
+  ['group-replies.html', 'Group replies'],
 ];
 const version = name => crypto.createHash('sha256').update(fs.readFileSync(path.join(directory,name))).digest('hex').slice(0,12);
 const assets = `<link rel="stylesheet" href="navigation.css?v=${version('navigation.css')}"><link rel="stylesheet" href="report-layout.css?v=${version('report-layout.css')}"><script src="navigation.js?v=${version('navigation.js')}" defer></script>`;
