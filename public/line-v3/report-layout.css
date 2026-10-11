@@ -1,4 +1,4 @@
-/* Shared report dimensions apply only to the eight active benchmark pages. */
+/* Shared report dimensions apply only to the active benchmark pages. */
 .benchmark-page {
   --benchmark-width: 1500px;
   --benchmark-gutter: 30px;
@@ -42,4 +42,12 @@
   .benchmark-page { --benchmark-gutter: 16px; }
   .benchmark-page > header,
   .benchmark-page > main { padding-block: 16px; }
+}
+/* One page tint and text colour on every active tab. Reports rendered at
+   different times set their own (Burst turns left the body transparent over a
+   lighter root tint), so switching tabs shifted the page colour. */
+html:has(> body.benchmark-page) { background: #f3f3ee; }
+.benchmark-page {
+  background: #f3f3ee;
+  color: #18362d;
 }

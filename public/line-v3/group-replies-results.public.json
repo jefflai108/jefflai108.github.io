@@ -1,0 +1,1107 @@
+{
+  "schema": "line-v3.group-replies.v1",
+  "generated_at": "2026-10-11T12:32:51+00:00",
+  "samples": 3,
+  "arms_refs": {
+    "candidate": {
+      "ref": "420ee777",
+      "commit": "420ee777dd3a9c06f6ceb3647b9e44f6d0faad42",
+      "subject": "Exclude the static UI (and its symlink) from the benchmark source archives"
+    },
+    "baseline": {
+      "ref": "2d02bb5f",
+      "commit": "2d02bb5fc5c270c2aaa50f4a1aa8613273c47199",
+      "subject": "Merge pull request #569 from jefflai108/feat/play-pr-estimate-20261011"
+    }
+  },
+  "harness_sha256": "bea49726e357f1d5ebfd57a120456361608743dc03f0bbf3720486e5c5023053",
+  "environment": {
+    "python": "3.11.15",
+    "platform": "macOS-26.6.2",
+    "load_average_at_end": [
+      92.4,
+      107.2,
+      138.4
+    ]
+  },
+  "method": "Hermetic: real signed LINE webhooks, SQLite store, V3 runtime and LINE serializer; scripted model HTTP and LINE transports that acknowledge each bubble with a message ID. No provider, LINE or network call.",
+  "cases": [
+    {
+      "id": "A1",
+      "category": "addressed",
+      "expected": "answer",
+      "title": "@麻吉 tag",
+      "note": ""
+    },
+    {
+      "id": "A2",
+      "category": "addressed",
+      "expected": "answer",
+      "title": "@All mention",
+      "note": ""
+    },
+    {
+      "id": "A3",
+      "category": "addressed",
+      "expected": "answer",
+      "title": "Tagged reply to Machi's answer",
+      "note": ""
+    },
+    {
+      "id": "A4",
+      "category": "addressed",
+      "expected": "answer",
+      "title": "Voice note (untagged)",
+      "note": ""
+    },
+    {
+      "id": "R1",
+      "category": "reply",
+      "expected": "answer",
+      "title": "Reply to Machi's answer",
+      "note": ""
+    },
+    {
+      "id": "R2",
+      "category": "reply",
+      "expected": "answer",
+      "title": "Reply to Machi's reply (a chain)",
+      "note": ""
+    },
+    {
+      "id": "R3",
+      "category": "reply",
+      "expected": "answer",
+      "title": "Reply to Machi's follow-up question",
+      "note": ""
+    },
+    {
+      "id": "R4",
+      "category": "reply",
+      "expected": "answer",
+      "title": "Reply to Machi's own sticker",
+      "note": ""
+    },
+    {
+      "id": "R5",
+      "category": "reply",
+      "expected": "answer",
+      "title": "Sticker sent as a reply to Machi",
+      "note": "The sticker's hint text asks for a reminder; a sticker never grants an effect."
+    },
+    {
+      "id": "R6",
+      "category": "reply",
+      "expected": "answer",
+      "title": "Reply to the group join intro",
+      "note": ""
+    },
+    {
+      "id": "R7",
+      "category": "reply",
+      "expected": "answer",
+      "title": "Reply after an unrelated message was unsent",
+      "note": "Unsending any earlier group message revokes later answers' quotable text, never Machi's ownership."
+    },
+    {
+      "id": "R8",
+      "category": "reply",
+      "expected": "answer",
+      "title": "Reply after another member left the group",
+      "note": ""
+    },
+    {
+      "id": "R9",
+      "category": "reply",
+      "expected": "answer",
+      "title": "Reply to Machi's answer to a voice note",
+      "note": ""
+    },
+    {
+      "id": "R10",
+      "category": "reply",
+      "expected": "answer",
+      "title": "Reply to a delayed text-first follow-up",
+      "note": "About half of eligible V3 follow-ups are pushed later by the TTS outbox."
+    },
+    {
+      "id": "R11",
+      "category": "reply",
+      "expected": "answer",
+      "title": "Reply to a delivered reminder notice",
+      "note": ""
+    },
+    {
+      "id": "R12",
+      "category": "reply",
+      "expected": "answer",
+      "title": "Reply to Machi's city question with a city",
+      "note": "Also checks that the answer records the member's timezone."
+    },
+    {
+      "id": "Q1",
+      "category": "quiet",
+      "expected": "quiet",
+      "title": "Untagged chatter",
+      "note": ""
+    },
+    {
+      "id": "Q2",
+      "category": "quiet",
+      "expected": "quiet",
+      "title": "Reply to another member's message",
+      "note": ""
+    },
+    {
+      "id": "Q3",
+      "category": "quiet",
+      "expected": "quiet",
+      "title": "Reply to Machi that tags another member",
+      "note": ""
+    },
+    {
+      "id": "Q4",
+      "category": "quiet",
+      "expected": "quiet",
+      "title": "Reply to an unknown message",
+      "note": ""
+    },
+    {
+      "id": "Q5",
+      "category": "quiet",
+      "expected": "quiet",
+      "title": "Untagged sticker that replies to nothing",
+      "note": ""
+    },
+    {
+      "id": "Q6",
+      "category": "quiet",
+      "expected": "quiet",
+      "title": "Reply to a pre-leave Machi bubble after a re-invite",
+      "note": "The bot leaving the group ends what Machi said there."
+    },
+    {
+      "id": "Q7",
+      "category": "quiet",
+      "expected": "quiet",
+      "title": "Reply to Machi's transcript of a member's voice note",
+      "note": "The transcript is the speaker's words; replying to it answers that member."
+    }
+  ],
+  "arms": {
+    "baseline": {
+      "per_case": {
+        "A1": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            1
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            17.439,
+            10.029,
+            18.461
+          ]
+        },
+        "A2": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            1
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            9.646,
+            9.6,
+            11.102
+          ]
+        },
+        "A3": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            1
+          ],
+          "quoted_context": [
+            true,
+            true,
+            true
+          ],
+          "extras": {},
+          "ingest_ms": [
+            16.894,
+            7.721,
+            7.029
+          ]
+        },
+        "A4": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            3
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": []
+        },
+        "R1": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 0,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            15.279,
+            8.686,
+            7.061
+          ]
+        },
+        "R2": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 0,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            7.582,
+            6.938,
+            7.232
+          ]
+        },
+        "R3": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 0,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {
+            "follow_up_sent": [
+              true,
+              true,
+              true
+            ]
+          },
+          "ingest_ms": [
+            10.904,
+            17.505,
+            9.683
+          ]
+        },
+        "R4": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 0,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {
+            "sticker_sent": [
+              true,
+              true,
+              true
+            ]
+          },
+          "ingest_ms": [
+            10.177,
+            9.524,
+            7.617
+          ]
+        },
+        "R5": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 0,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {
+            "effect_tasks": [
+              0,
+              0,
+              0
+            ]
+          },
+          "ingest_ms": [
+            12.585,
+            6.873,
+            6.571
+          ]
+        },
+        "R6": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 0,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            10.304,
+            9.96,
+            7.821
+          ]
+        },
+        "R7": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 0,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            9.087,
+            6.92,
+            13.607
+          ]
+        },
+        "R8": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 0,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            9.006,
+            7.631,
+            7.97
+          ]
+        },
+        "R9": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 0,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            29.477,
+            31.44,
+            54.461
+          ]
+        },
+        "R10": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 0,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {
+            "follow_up_pushed": [
+              true,
+              true,
+              true
+            ]
+          },
+          "ingest_ms": [
+            44.425,
+            36.307,
+            55.243
+          ]
+        },
+        "R11": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 0,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            9.191,
+            20.207,
+            21.053
+          ]
+        },
+        "R12": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 0,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {
+            "timezone_recorded": [
+              false,
+              false,
+              false
+            ]
+          },
+          "ingest_ms": [
+            12.368,
+            7.769,
+            58.281
+          ]
+        },
+        "Q1": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            8.318,
+            8.414,
+            11.035
+          ]
+        },
+        "Q2": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            12.514,
+            9.08,
+            10.983
+          ]
+        },
+        "Q3": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            8.652,
+            7.707,
+            13.015
+          ]
+        },
+        "Q4": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            8.205,
+            10.577,
+            8.965
+          ]
+        },
+        "Q5": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            15.975,
+            8.018,
+            16.449
+          ]
+        },
+        "Q6": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            10.33,
+            6.558,
+            10.191
+          ]
+        },
+        "Q7": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            30.293,
+            29.659,
+            55.635
+          ]
+        }
+      },
+      "answered": {
+        "addressed": {
+          "cases": 4,
+          "runs": 12,
+          "hits": 12
+        },
+        "reply": {
+          "cases": 12,
+          "runs": 36,
+          "hits": 0
+        },
+        "quiet": {
+          "cases": 7,
+          "runs": 21,
+          "hits": 0
+        }
+      },
+      "correct": {
+        "addressed": {
+          "cases": 4,
+          "runs": 12,
+          "hits": 12
+        },
+        "reply": {
+          "cases": 12,
+          "runs": 36,
+          "hits": 0
+        },
+        "quiet": {
+          "cases": 7,
+          "runs": 21,
+          "hits": 21
+        }
+      },
+      "correct_total": {
+        "runs": 69,
+        "hits": 33
+      },
+      "ingest_ms": {
+        "n": 66,
+        "median": 10.103,
+        "p90": 30.293,
+        "max": 58.281
+      },
+      "pytest_returncodes": [
+        0,
+        0,
+        0
+      ]
+    },
+    "candidate": {
+      "per_case": {
+        "A1": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            1
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            13.592,
+            10.893,
+            9.519
+          ]
+        },
+        "A2": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            1
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            8.342,
+            9.385,
+            8.991
+          ]
+        },
+        "A3": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            1
+          ],
+          "quoted_context": [
+            true,
+            true,
+            true
+          ],
+          "extras": {},
+          "ingest_ms": [
+            10.857,
+            7.153,
+            13.18
+          ]
+        },
+        "A4": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            3
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": []
+        },
+        "R1": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            4
+          ],
+          "quoted_context": [
+            true,
+            true,
+            true
+          ],
+          "extras": {},
+          "ingest_ms": [
+            7.876,
+            13.826,
+            14.245
+          ]
+        },
+        "R2": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            4
+          ],
+          "quoted_context": [
+            true,
+            true,
+            true
+          ],
+          "extras": {},
+          "ingest_ms": [
+            7.008,
+            7.237,
+            7.714
+          ]
+        },
+        "R3": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            4
+          ],
+          "quoted_context": [
+            true,
+            true,
+            true
+          ],
+          "extras": {
+            "follow_up_sent": [
+              true,
+              true,
+              true
+            ]
+          },
+          "ingest_ms": [
+            8.343,
+            7.095,
+            10.128
+          ]
+        },
+        "R4": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            4
+          ],
+          "quoted_context": [],
+          "extras": {
+            "sticker_sent": [
+              true,
+              true,
+              true
+            ]
+          },
+          "ingest_ms": [
+            10.917,
+            7.842,
+            8.524
+          ]
+        },
+        "R5": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            4
+          ],
+          "quoted_context": [],
+          "extras": {
+            "effect_tasks": [
+              0,
+              0,
+              0
+            ]
+          },
+          "ingest_ms": [
+            11.525,
+            7.836,
+            16.023
+          ]
+        },
+        "R6": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            4
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            16.553,
+            8.646,
+            30.789
+          ]
+        },
+        "R7": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            4
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            11.693,
+            8.852,
+            13.316
+          ]
+        },
+        "R8": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            4
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            8.127,
+            8.079,
+            10.793
+          ]
+        },
+        "R9": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            4
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            34.076,
+            33.05,
+            77.817
+          ]
+        },
+        "R10": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            4
+          ],
+          "quoted_context": [],
+          "extras": {
+            "follow_up_pushed": [
+              true,
+              true,
+              true
+            ]
+          },
+          "ingest_ms": [
+            29.023,
+            48.677,
+            35.217
+          ]
+        },
+        "R11": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            4
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            8.997,
+            9.604,
+            11.289
+          ]
+        },
+        "R12": {
+          "runs": 3,
+          "answered": 3,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            4
+          ],
+          "quoted_context": [],
+          "extras": {
+            "timezone_recorded": [
+              true,
+              true,
+              true
+            ]
+          },
+          "ingest_ms": [
+            8.996,
+            8.287,
+            9.476
+          ]
+        },
+        "Q1": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            10.57,
+            8.757,
+            11.181
+          ]
+        },
+        "Q2": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            9.965,
+            7.234,
+            7.118
+          ]
+        },
+        "Q3": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            10.406,
+            13.776,
+            6.784
+          ]
+        },
+        "Q4": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            7.682,
+            10.266,
+            7.343
+          ]
+        },
+        "Q5": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            15.513,
+            10.118,
+            11.177
+          ]
+        },
+        "Q6": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            10.34,
+            8.566,
+            9.284
+          ]
+        },
+        "Q7": {
+          "runs": 3,
+          "answered": 0,
+          "correct": 3,
+          "consistent": true,
+          "sealed_policy": [
+            2
+          ],
+          "quoted_context": [],
+          "extras": {},
+          "ingest_ms": [
+            33.539,
+            30.773,
+            109.365
+          ]
+        }
+      },
+      "answered": {
+        "addressed": {
+          "cases": 4,
+          "runs": 12,
+          "hits": 12
+        },
+        "reply": {
+          "cases": 12,
+          "runs": 36,
+          "hits": 36
+        },
+        "quiet": {
+          "cases": 7,
+          "runs": 21,
+          "hits": 0
+        }
+      },
+      "correct": {
+        "addressed": {
+          "cases": 4,
+          "runs": 12,
+          "hits": 12
+        },
+        "reply": {
+          "cases": 12,
+          "runs": 36,
+          "hits": 36
+        },
+        "quiet": {
+          "cases": 7,
+          "runs": 21,
+          "hits": 21
+        }
+      },
+      "correct_total": {
+        "runs": 69,
+        "hits": 69
+      },
+      "ingest_ms": {
+        "n": 66,
+        "median": 10.123000000000001,
+        "p90": 30.789,
+        "max": 109.365
+      },
+      "pytest_returncodes": [
+        0,
+        0,
+        0
+      ]
+    }
+  }
+}
