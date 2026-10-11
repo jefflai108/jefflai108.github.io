@@ -14,6 +14,7 @@ const tabs = [
   ['burst-turns.html', 'Burst turns'],
   ['natural-bridges.html', 'Natural bridges'],
   ['line-stickers.html', 'LINE Stickers'],
+  ['group-replies.html', 'Group replies'],
   ['mixed-media-bursts.html', 'Mixed-media bursts'],
 ];
 const version = name => crypto.createHash('sha256').update(fs.readFileSync(path.join(directory,name))).digest('hex').slice(0,12);

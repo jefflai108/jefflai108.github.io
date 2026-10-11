@@ -24,16 +24,22 @@ TABS = (("index.html", "Interaction tasks"), ("delegation.html", "Delegation tas
         ("taiwan.html", "台灣用語"), ("recovery.html", "困難任務與失敗恢復"),
         ("tts-followup.html", "TTS follow-up"), ("images-stickers.html", "Images &amp; Stickers"),
         ("burst-turns.html", "Burst turns"), ("natural-bridges.html", "Natural bridges"),
-        ("line-stickers.html", "LINE Stickers"), (PAGE, "Mixed-media bursts"))
+        ("line-stickers.html", "LINE Stickers"), ("group-replies.html", "Group replies"),
+        (PAGE, "Mixed-media bursts"))
 LABELS = {"baseline": "原有處理", "mixed": "混合媒體分段"}
 DETAIL = {"baseline": "圖片與文字各自成為獨立回合；V3 讓後到的文字不必等前一則圖片讀完。",
-          "mixed": "私訊裡的一張圖片／PDF 可和前後的文字併成同一個分段回合，一次回答（貼圖仍各自回覆）；"
-                   "每個回答開始前，先等同一聊天室較早的圖片、PDF 或語音證據寫入（群組也是）。"}
+          "mixed": "私訊裡的一張圖片／PDF 可和前後幾秒內的文字併成同一個分段回合，一次回答（貼圖與第二張圖仍各自回覆）；"
+                   "提到「這家」「這張」等指向附件的文字，會多等 6 秒讓隨後的圖片併入。"
+                   "文字回答開始前，若同一聊天室較早的圖片或 PDF 還在讀取，這則文字會在佇列中等它寫入"
+                   "（最多 20 秒，群組也是）；圖片、PDF 與語音本身不等待。"}
 COLORS = {"baseline": "#66766c", "mixed": "#1f7a6c"}
-CHECKS = {"fixtures_named": "回答指出截圖中的店", "time_kept": "保留 6:15 的時間",
+CHECKS = {"fixtures_cited": "回答引用截圖裡的資訊", "time_kept": "保留 6:15 的時間",
           "single_answer": "只回答一次", "nearer_named": "最後回答選對較近的店",
-          "caption_grounded": "回答文字的那次呼叫看得到截圖", "caption_answer_named": "回答文字的那次呼叫說出店名"}
-OVERVIEW_CHECKS = ("caption_grounded", "caption_answer_named", "fixtures_named", "time_kept", "single_answer")
+          "caption_grounded": "回答文字的那次呼叫看得到截圖",
+          "caption_answer_cites": "回答文字的那次呼叫引用截圖資訊",
+          "fixtures_named": "回答說出店名（僅供參考，不計入通過）",
+          "caption_answer_named": "回答文字的那次呼叫說出店名（僅供參考，不計入通過）"}
+OVERVIEW_CHECKS = ("caption_grounded", "caption_answer_cites", "fixtures_cited", "time_kept", "single_answer")
 KIND_LABEL = {"text": "文字", "image": "截圖", "sticker": "貼圖"}
 
 
@@ -138,6 +144,14 @@ def probe_list(rows):
     return f'<ul class="probes">{"".join(items)}</ul>'
 
 
+def call_outcome(call):
+    if call.get("stale_cancelled"):
+        return "已中止：新訊息加入，改由更新後的呼叫回答"
+    if call.get("error"):
+        return "錯誤：" + str(call["error"])
+    return {"direct": "直接回答", "delegate": "交給背景工作"}.get(call.get("action"), call.get("action") or "—")
+
+
 def evidence_table(row):
     calls = row.get("model_calls", [])
     if not calls:
@@ -147,9 +161,10 @@ def evidence_table(row):
         f'<td>{"是" if call.get("image_attached") else "否"}</td>'
         f'<td>{call.get("recent_image_observations", 0) + call.get("recent_group_image_observations", 0)}</td>'
         f'<td>{esc("、".join(call.get("fixture_tokens_in_context", [])) or "—")}</td>'
+        f'<td>{esc(call_outcome(call))}</td>'
         f'<td>{seconds(call.get("started_ms"))}</td></tr>' for index, call in enumerate(calls))
     return ('<details><summary>模型實際看得到什麼</summary><div class="scroll"><table class="wide"><thead><tr><th>次</th><th>類型</th>'
-            '<th>本輪文字</th><th>附圖</th><th>上下文中的圖片觀察</th><th>上下文出現的店名</th><th>開始</th></tr></thead>'
+            '<th>本輪文字</th><th>附圖</th><th>上下文中的圖片觀察</th><th>上下文出現的店名</th><th>結果</th><th>開始</th></tr></thead>'
             f'<tbody>{body}</tbody></table></div></details>')
 
 
@@ -167,8 +182,10 @@ def sample_body(row):
     for outcome in row.get("host_deliveries", []):
         errors += [str(outcome[key]) for key in ("failure_code", "error") if outcome.get(key)]
     error = f'<p class="error">{esc(", ".join(dict.fromkeys(errors)))}</p>' if errors else ""
+    aborted = metrics.get("stale_cancelled_calls") or 0
     return (f'<p class="status">{esc(row.get("status", "unknown"))} · {metrics.get("answer_batches", "—")} 次回答 · '
-            f'{metrics.get("model_calls", "—")} 次前景呼叫</p>'
+            f'{metrics.get("model_calls", "—")} 次前景呼叫'
+            + (f'（其中 {aborted} 次因新訊息加入而中止）' if aborted else "") + '</p>'
             f'<dl><dt>最後輸入 → 最後回答</dt><dd>{seconds(metrics.get("last_input_to_last_answer_ms"))}</dd>'
             f'<dt>首次 / 最後回答</dt><dd>{seconds(metrics.get("first_answer_ms"))} / {seconds(metrics.get("last_answer_ms"))}</dd></dl>'
             + error + "".join(sends) + evidence_table(row))
@@ -206,7 +223,7 @@ def overview(data, arms):
                     f'<td>{seconds(value.get("median_last_input_to_last_answer_ms"))}</td>'
                     f'<td>{value["errors"]}</td></tr>')
     return ('<div class="scroll"><table class="num wide"><thead><tr><th>版本</th><th>全部檢查通過</th>'
-            '<th>文字那輪看得到截圖</th><th>文字那輪說出店名</th><th>回答指出截圖的店</th><th>保留 6:15</th>'
+            '<th>文字那輪看得到截圖</th><th>文字那輪引用截圖資訊</th><th>回答引用截圖資訊</th><th>保留 6:15</th>'
             '<th>只回答一次</th><th>回答總數</th>'
             '<th>最後輸入 → 最後回答（中位數）</th><th>錯誤</th></tr></thead><tbody>' + "".join(rows)
             + '</tbody></table></div>')
@@ -225,6 +242,8 @@ def render(data):
     source = plan.get("source_ref") or ""
     source_link = (f'<a href="{REPOSITORY}/commit/{esc(source)}"><code>{esc(source[:12])}</code></a>'
                    if len(source) == 40 else esc(source or "尚未凍結"))
+    cases_link = (f'<a href="{REPOSITORY}/blob/{esc(source)}/serve/line_agent_v2/evals/line_architecture/'
+                  'mixed_burst_cases.json">題目檔</a>' if len(source) == 40 else "題目檔")
     banner = ('<p class="notice warning"><strong>預留資料：</strong>這是頁面結構的預留版本，還沒有任何量測結果。'
               '正式量測完成後，本頁會以同一份公開 JSON 重新產生。</p>') if placeholder else ""
     fixtures = "".join(
@@ -277,12 +296,12 @@ details{font-size:12px;margin-top:10px}summary{cursor:pointer;color:#23695d}.err
 </style></head><body><a class="skip" href="#main">跳到量測內容</a><div class="navwrap"><nav class="tabs" aria-label="比較分頁">''' + nav + '''</nav></div>
 <header><p class="eyebrow">HeyMachi / LINE v3 · 混合媒體分段 · 真實 Gemini 呼叫 + 本機捕捉 LINE 傳輸</p><h1>Mixed-media bursts</h1>
 <p>使用者先傳一張餐廳截圖，幾秒後打「晚上吃這家 6:15pm」。原有處理把圖片和文字當成兩個獨立請求：文字回合在圖片還沒讀完時就開始作答，「這家」找不到對象；群組裡的截圖只是背景觀察，被標註的文字可能在觀察寫入前就回答了。這裡比較原有處理與修正版在私訊與群組、圖片在前或在後時的表現。</p>
-<p class="notice">每題都是全新的隔離資料庫，經過簽章 webhook 與四個並行 worker（和正式環境一樣，V3 的新訊息不必等前一則處理完）。前景是 Gemini 3.8 Flash low，80 秒上限；群組圖片走正式的背景觀察器。兩張截圖是虛構店家，沒有真實地點、品牌或人物。不傳送真實 LINE 訊息、不執行委派工作、不合成語音。每題每版 ''' + str(plan.get("samples_per_case_arm", 1)) + ''' 個樣本，兩版輪流先跑；自動檢查只看「回答文字的那次呼叫」是否看得到截圖並說出店名，以及 6:15 與回答次數，不是品質評分，請逐題閱讀回答。</p>
+<p class="notice">每題都是全新的隔離資料庫，經過簽章 webhook 與四個並行 worker（和正式環境一樣，V3 的新訊息不必等前一則處理完）。前景是 Gemini 3.8 Flash low，80 秒上限；群組圖片走正式的背景觀察器。兩張截圖是虛構店家，沒有真實地點、品牌或人物。不傳送真實 LINE 訊息、不執行委派工作、不合成語音。每題每版 ''' + str(plan.get("samples_per_case_arm", 1)) + ''' 個樣本，兩版輪流先跑；自動檢查只看「回答文字的那次呼叫」是否看得到截圖、是否引用截圖裡的資訊，以及 6:15 與回答次數，不是品質評分，請逐題閱讀回答。</p>
 ''' + banner + '''<p class="small">量測版本：''' + esc(plan.get("revision", "")) + ''' · ''' + str(len(cases)) + ''' 題 × ''' + str(len(arms)) + ''' 版 × ''' + str(plan.get("samples_per_case_arm", 1)) + ''' 樣本。''' + esc(baseline_note) + '''</p>
 <p class="small">來源：''' + source_link + ''' · <a href="''' + RESULTS + '''" download>下載完整公開結果 JSON</a> · 量測程式：<code>serve/line_agent_v2/evals/line_architecture/mixed_burst_benchmark.py</code></p></header>
 <main id="main"><section class="panel"><h2>兩種處理方式</h2><div class="steps">''' + methods + '''</div></section>
 <section class="panel"><h2>測試用截圖</h2><p class="muted">以程式繪製的虛構餐廳列表（距離 1.2 公里與 3.5 公里），檔案雜湊固定在題目檔中。</p><div class="fixtures">''' + fixtures + '''</div></section>
-<section class="panel"><h2>量測概覽</h2><p class="muted">分數只計入有自動檢查的題目，跨所有樣本計數。時間是共用開發主機上的觀測（所有樣本的中位數），不是正式服務 SLO；缺少的時間不填零。</p>''' + overview(data, arms) + '''</section>
+<section class="panel"><h2>量測概覽</h2><p class="muted">分數只計入有自動檢查的題目，跨所有樣本計數。「引用截圖資訊」接受''' + cases_link + '''預先登記、只出現在截圖裡的細節（店名、評分、營業時間、電話、距離等）；只看店名的兩項檢查列在各題，僅供參考、不計入通過，因為「這家評分 4.6、開到半夜兩點」這類回答已經讀了截圖卻不一定重複店名。修正版會中止被新訊息淘汰的圖片呼叫並改用更新後的呼叫，這類中止另行標示，不算錯誤。時間是共用開發主機上的觀測（所有樣本的中位數），不是正式服務 SLO；缺少的時間不填零。</p>''' + overview(data, arms) + '''</section>
 <div class="controls"><label>找情境<input id="search" type="search" placeholder="題號、訊息或標題"></label><label>聊天室<select id="scope"><option value="all">全部</option><option value="direct">私訊</option><option value="group">群組</option></select></label><p id="count" aria-live="polite"></p></div>''' + "".join(cards) + '''<footer>本頁只讀取凍結的公開結果 JSON；所有回答與錯誤原樣保留，沒有挑選重跑結果。其他分頁保留各自的凍結量測。</footer></main><script>
 const search=document.getElementById('search'),scope=document.getElementById('scope'),cards=[...document.querySelectorAll('.case')];
 function filter(){let n=0;for(const card of cards){const visible=(scope.value==='all'||card.dataset.scope===scope.value)&&card.dataset.search.toLowerCase().includes(search.value.trim().toLowerCase());card.hidden=!visible;if(visible)n++;}document.getElementById('count').textContent=`${n} / ${cards.length} 題`;}

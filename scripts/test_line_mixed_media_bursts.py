@@ -23,13 +23,18 @@ def measured():
     row = lambda arm, answers, passed: {"arm": arm, "status": "ok", "errors": [],
         "metrics": {"answer_batches": len(answers), "model_calls": len(answers), "first_answer_ms": 7000,
                     "last_answer_ms": 7000 + 4000 * (len(answers) - 1), "last_input_to_last_answer_ms": 9000},
-        "model_calls": [{"message_type": "text", "current_text": "晚上吃這家 6:15pm", "image_attached": arm == "mixed",
+        "model_calls": ([{"message_type": "image", "current_text": "（傳送了一張圖片）", "image_attached": True,
+                          "recent_image_observations": 0, "recent_group_image_observations": 0,
+                          "fixture_tokens_in_context": [], "started_ms": 200, "finished_ms": 2300,
+                          "error": "InteractionError", "stale_cancelled": True}] if arm == "mixed" else [])
+                       + [{"message_type": "text", "current_text": "晚上吃這家 6:15pm", "image_attached": arm == "mixed",
                          "recent_image_observations": 0, "recent_group_image_observations": 0,
                          "fixture_tokens_in_context": ["湯老大"] if arm == "mixed" else [],
-                         "started_ms": 2500, "finished_ms": 6500}],
+                         "action": "direct", "started_ms": 2500, "finished_ms": 6500}],
         "reader_calls": [], "messages": [{"channel": "reply", "elapsed_ms": 7000 + 4000 * index, "texts": [text]}
                                          for index, text in enumerate(answers)],
-        "score": {"checks": {"fixtures_named": passed, "time_kept": passed, "single_answer": len(answers) == 1},
+        "score": {"checks": {"fixtures_named": passed, "fixtures_cited": passed, "time_kept": passed,
+                             "single_answer": len(answers) == 1},
                   "passed": passed and len(answers) == 1}}
     case["results"] = [row("baseline", ["這是火鍋店截圖！", "這家是哪一家？<b>"], False),
                        row("mixed", ["好！6:15 湯老大見～"], True)]
@@ -62,7 +67,9 @@ class MixedMediaReportTests(unittest.TestCase):
 
     def test_measured_results_show_answers_probes_evidence_and_escape_input(self):
         page = renderer.render(measured())
-        for value in ("好！6:15 湯老大見～", "這是火鍋店截圖！", "✓ 1/1 回答指出截圖中的店", "✗ 0/1 只回答一次",
+        for value in ("好！6:15 湯老大見～", "這是火鍋店截圖！", "✓ 1/1 回答引用截圖裡的資訊",
+                      "✓ 1/1 回答說出店名（僅供參考，不計入通過）", "✗ 0/1 只回答一次",
+                      "已中止：新訊息加入，改由更新後的呼叫回答", "直接回答",
                       "模型實際看得到什麼", "樣本 #1 · 通過", "樣本 #1 · 未通過", "原有處理 #1", 'class="timeline"', "9.00 s"):
             self.assertIn(value, page)
         self.assertIn("這家是哪一家？&lt;b&gt;", page)
