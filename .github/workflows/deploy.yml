@@ -86,7 +86,7 @@ jobs:
           test -s line-latest-snapshot/data/atlas.json
           test -s line-latest-snapshot/data/pulls.json
           rsync -a --safe-links --delete --exclude='.*' \
-            --include='/index.html' --include='/app.js' \
+            --include='/index.html' --include='/app.js' --include='/retention.js' \
             --include='/styles.css' --include='/favicon.svg' \
             --include='/data/***' --include='/deep-dive/***' \
             --exclude='*' line-latest-snapshot/ dist/line-latest/
