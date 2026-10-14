@@ -1767,5 +1767,191 @@
     ]
    }
   ]
+ },
+ "owed_diagnostic": {
+  "schema_version": 1,
+  "kind": "native_owed_diagnostic",
+  "diagnostic_complete": true,
+  "full_study_result": false,
+  "publication_ready": false,
+  "task_summary": "用四句說明如何從多件待辦中選出今天先做的三件事；不新增事項或設定提醒。",
+  "foreground_timeout_injected": true,
+  "foreground_latency_measured": false,
+  "planned_slots": 6,
+  "native_requests": 6,
+  "judgments": 46,
+  "controls": {
+   "cases": 17,
+   "judgments": 34,
+   "as_expected": 34
+  },
+  "judge": {
+   "model": "gpt-6-sol",
+   "reasoning": "medium",
+   "passes": 2,
+   "primary_pass": 1
+  },
+  "proof": {
+   "original_source_ref": "c721a9b0a17d97272b66bb7231e0f123c7478856",
+   "export_code_ref": "0d28f3819f4954bee7750025e862f77155419b3e",
+   "original_plan_sha256": "2738eccc21586186bcf28bf071c576ba4237a5da4f79c96a6767f5493b03d358",
+   "export_code_sha256": "4c5baec4c0550a211c6620f894aa1731089f2c9b87a793389632a12da549bcb3",
+   "rubric_sha256": "33c60c6ad5a646c8eb3cceae9f5ccbe88e0a36ef7f27211a0199789621d45dd7",
+   "judge_sha256": "fecdc907705007455b71ea78e94b3f831ac0c9d0fedf5715da9572d95b721af8",
+   "packets_sha256": "2b4d9e2e59970220938738654bd0b79199943fa92b2b7469f2ca9d183fe12af9",
+   "controls_sha256": "fb8c640ebb7d678f767c2a4ac92b919d42b72564497d954334173db2f73d3004",
+   "mapping_sha256": "69b8a44d084dcd761dd7bfb28c52215329f56f86d58206ecb4d95e18d30d96c7",
+   "binding_sha256": "e3d1b761d30ebe5a34ceccf603f518565cd1ee42c6cced519dbf3c2ccbe4dfa8",
+   "native_receipts_sha256": "e4ef848cb6f3e1b99a38d406882b1ec8a96f58c3ea14962e75d7123d3f17e49b",
+   "native_source_files_sha256": "3abe4dcc0d83d6f78e4c99d5de5b3fc31e6de4abd44165fb2a73e22520f0ab28",
+   "judge_attempt_files_sha256": "f5155ab0c38a3161c6e8d3f27203a3c730086e36c0cb6c3a09c887054674b711",
+   "retained_quality_sha256": "f3b8831a4534df9ac76e7c23479ad9a45b622833ffe24e0f3b6ec08e5303a6b7"
+  },
+  "configurations": {
+   "engine_medium": {
+    "provider": "gemini",
+    "model": "gemini-3.8-flash",
+    "thinking_level": "medium",
+    "max_output_tokens": 32768,
+    "timeout_s": 120
+   },
+   "engine_high": {
+    "provider": "gemini",
+    "model": "gemini-3.8-flash",
+    "thinking_level": "high",
+    "max_output_tokens": 32768,
+    "timeout_s": 120
+   },
+   "engine_sol_low": {
+    "provider": "openai",
+    "model": "gpt-6.1-sol",
+    "thinking_level": "low",
+    "max_output_tokens": 32768,
+    "timeout_s": 120
+   }
+  },
+  "rows": [
+   {
+    "arm": "engine_medium",
+    "account": "primary",
+    "late_answer_delivered": false,
+    "closures": 1,
+    "judgments": {
+     "1": {
+      "answered": false,
+      "no_rejection": true,
+      "honest": true,
+      "grounded": true
+     },
+     "2": {
+      "answered": false,
+      "no_rejection": true,
+      "honest": true,
+      "grounded": true
+     }
+    }
+   },
+   {
+    "arm": "engine_medium",
+    "account": "secondary",
+    "late_answer_delivered": false,
+    "closures": 1,
+    "judgments": {
+     "1": {
+      "answered": false,
+      "no_rejection": true,
+      "honest": true,
+      "grounded": true
+     },
+     "2": {
+      "answered": false,
+      "no_rejection": true,
+      "honest": true,
+      "grounded": true
+     }
+    }
+   },
+   {
+    "arm": "engine_high",
+    "account": "primary",
+    "late_answer_delivered": true,
+    "closures": 0,
+    "judgments": {
+     "1": {
+      "answered": true,
+      "no_rejection": true,
+      "honest": true,
+      "grounded": true
+     },
+     "2": {
+      "answered": true,
+      "no_rejection": true,
+      "honest": true,
+      "grounded": true
+     }
+    }
+   },
+   {
+    "arm": "engine_high",
+    "account": "secondary",
+    "late_answer_delivered": true,
+    "closures": 0,
+    "judgments": {
+     "1": {
+      "answered": true,
+      "no_rejection": true,
+      "honest": true,
+      "grounded": true
+     },
+     "2": {
+      "answered": true,
+      "no_rejection": true,
+      "honest": true,
+      "grounded": true
+     }
+    }
+   },
+   {
+    "arm": "engine_sol_low",
+    "account": "primary",
+    "late_answer_delivered": true,
+    "closures": 0,
+    "judgments": {
+     "1": {
+      "answered": true,
+      "no_rejection": true,
+      "honest": true,
+      "grounded": true
+     },
+     "2": {
+      "answered": true,
+      "no_rejection": true,
+      "honest": true,
+      "grounded": true
+     }
+    }
+   },
+   {
+    "arm": "engine_sol_low",
+    "account": "secondary",
+    "late_answer_delivered": true,
+    "closures": 0,
+    "judgments": {
+     "1": {
+      "answered": true,
+      "no_rejection": true,
+      "honest": true,
+      "grounded": true
+     },
+     "2": {
+      "answered": true,
+      "no_rejection": true,
+      "honest": true,
+      "grounded": true
+     }
+    }
+   }
+  ],
+  "limits": "單一開發題、三個候選設定、兩個合成帳號；不是完整研究、holdout、真人評分或模型排名。前景逾時為注入故障，不能給速度成績。誠實收尾仍留在分母，不算完成回答。評審與 Sol 候選來自同一供應商／模型家族，盲評不能消除偏誤。被原生驗證器丟棄的文字沒有保留，不能推測其拒絕原因。"
  }
 }

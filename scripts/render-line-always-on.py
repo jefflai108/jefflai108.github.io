@@ -23,6 +23,7 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / "public/line-v3"
 JSON_NAME = "line-always-on-results.public.json"
+OWED_DIAGNOSTIC_NAME = "line-always-on-owed-diagnostic.public.json"
 PAGE_NAME = "line-always-on.html"
 SOURCE_REPO = "https://github.com/jefflai108/streaming_taiwanese"
 ARMS = ("existing", "engine")
@@ -56,7 +57,7 @@ _UNSAFE = re.compile(r"/Users/|/private/|/home/|/var/folders|/srv/|AIza[0-9A-Za-
 
 PUBLIC_KEYS = ("schema_version", "arms", "refs", "models", "metadata", "summary", "comparison", "comparisons", "gates",
                "complete", "replay_complete", "judging_complete", "publication_ready", "incomplete_episodes",
-               "episodes", "runs", "judge_controls", "foreground_controls", "foreground_judge", "slot_status")
+               "episodes", "runs", "judge_controls", "foreground_controls", "foreground_judge", "slot_status", "owed_diagnostic")
 PRIVATE_KEYS = frozenset(("api_key", "authorization", "credentials", "encrypted_job", "user_id", "chat_id",
                           "message_hash", "event_hash", "lease_token", "reply_token", "mapping.private.json",
                           "http", "environment", "prompt", "system_prompt", "logs", "log", "path"))
@@ -786,7 +787,7 @@ def authored_cases(data):
     return f'<div data-explorer>{filters(episodes)}{"".join(blocks)}</div>'
 
 
-def render_method(cases, *, has_results=False):
+def render_method(cases, *, has_results=False, diagnostic=None):
     from collections import Counter
     episodes = cases['episodes']
     control_counts = cases.get('control_counts', {'CONTROLS': 10, 'FOREGROUND_CONTROLS': 17})
@@ -798,7 +799,7 @@ def render_method(cases, *, has_results=False):
     strata_rows = ''.join(f'<tr><th>{SCOPE_LABELS[scope]}</th><td>{POLARITY_LABELS[polarity]}</td><td>{strata[(scope, polarity)]}</td></tr>'
                           for scope in SCOPE_LABELS for polarity in POLARITY_LABELS if strata[(scope, polarity)])
     body = f'''
-<section class="panel"><p class="notice warning"><b>{readiness}</b>結果頁只會收錄完成兩階段評審、通過控制題的完整研究。</p>
+<section class="panel"><p class="notice warning"><b>{readiness}</b>完整研究成績只會收錄完成兩階段評審、通過控制題的重播；小型診斷另外標示。</p>
 <h2>四個目標，分開量測</h2><div class="scroll"><table class="goals"><thead><tr><th>目標</th><th>可檢查的行為</th><th>量測單位</th></tr></thead><tbody>
 <tr><th>夠快</th><td>對使用者說的話及時開始回答；背景工作讓前景先走。</td><td>前景耗時與收到訊息到首次回覆的 p50 / p90；快回覆題的逐輪門檻。</td></tr>
 <tr><th>不漏接</th><td>回答私訊與被點名的群組輪次；失敗後補答，重問已答或撤回的訊息不重傳。</td><td>已回答／需回答輪次；補答、失敗通知與首次回覆時間各自列出。失敗通知不算答案。</td></tr>
@@ -838,6 +839,7 @@ def render_method(cases, *, has_results=False):
 <section class="panel"><h2>方法版本與證據</h2><p>開發來源版本 <code>{cases['source_ref']}</code>。公開題組投影 SHA-256 <code>{cases['projection_sha256']}</code>；原始合成題組 SHA-256 <code>{cases['cases_sha256']}</code>。</p>
 <p><a href="{CASES_NAME}" download>下載公開合成題組</a> · <a href="{esc(cases.get('protocol_file', CASES_NAME))}" download>下載不可覆寫的方法快照</a> · <a href="{PAGE_NAME}">查看完整研究與每次迭代</a></p>
 <p class="small">方法快照 SHA-256 <code>{esc(cases.get('protocol_sha256','等待快照'))}</code>；包括題組與 harness、評審規格、指標計算程式摘要。這是開發方法的快照，實測仍須另外凍結已提交來源與各組設定。</p></section>'''
+    body += owed_diagnostic_panel(diagnostic)
     return page_shell(METHOD_NAME, "Always-on 方法", "麻吉要一直在背景接住事情，在值得關心的時候主動開口。這裡把「快、接得住、給下一步、主動得合適」轉成可重播、可逐段檢查的實驗。", body)
 
 
@@ -1012,13 +1014,76 @@ def calibration_panel(data):
             f'<p><a href="{CALIBRATION_NAME}" download>下載控制題、逐次判斷理由與來源摘要</a>。控制題符合預期不代表真實使用者偏好，也不是引擎勝負結論。</p></section>')
 
 
+def owed_diagnostic_module():
+    import importlib.util
+    location = Path(__file__).with_name('owed_diagnostic.py')
+    spec = importlib.util.spec_from_file_location('always_on_owed_diagnostic', location)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def owed_diagnostic_panel(data):
+    if not data:
+        return ''
+    if data.get('kind') != 'native_owed_diagnostic' or data.get('diagnostic_complete') is not True \
+            or data.get('full_study_result') is not False or data.get('publication_ready') is not False \
+            or data.get('foreground_timeout_injected') is not True or data.get('foreground_latency_measured') is not False \
+            or data.get('planned_slots') != 6 or data.get('native_requests') != 6 or data.get('judgments') != 46 \
+            or data.get('controls') != {'cases':17,'judgments':34,'as_expected':34}:
+        raise ValueError('invalid_owed_diagnostic_scope')
+    check_public(data)
+    module = owed_diagnostic_module()
+    if len(data.get('rows', [])) != 6 or {(row['arm'],row['account']) for row in data['rows']} \
+            != {(arm,account) for arm in module.ARMS for account in module.ACCOUNTS}:
+        raise ValueError('invalid_owed_diagnostic_denominator')
+    rows=[]
+    for arm in module.ARMS:
+        values=[row for row in data['rows'] if row['arm']==arm]
+        cells=[f'{sum(row["late_answer_delivered"] is True for row in values)}/2',
+               str(sum(row['closures'] for row in values))]
+        for field in module.FIELDS:
+            cells.append(f'{sum(row["judgments"]["1"][field] is True for row in values)}/2')
+        rows.append(f'<tr><th>{esc(ARM_LABELS[arm])}</th>'+''.join(f'<td>{esc(cell)}</td>' for cell in cells)+'</tr>')
+    flags={'answered':'完成回答','no_rejection':'沒有直接拒絕','honest':'誠實','grounded':'有依據'}
+    closures=sum(row['closures'] for row in data['rows'])
+    detail=[]
+    for row in data['rows']:
+        account='主要帳號' if row['account']=='primary' else '第二帳號'
+        values='；'.join(f'{flags[field]}：{ "通過" if row["judgments"]["1"][field] else "未通過" }'
+                        for field in module.FIELDS)
+        same=all(row['judgments']['1'][field]==row['judgments']['2'][field] for field in module.FIELDS)
+        detail.append(f'<li>{esc(ARM_LABELS[row["arm"]])} · {account}：{values}。第二次判讀'
+                      +('一致。' if same else '有分歧，請查看 JSON。')+'</li>')
+    proof=data['proof']
+    return ('<section class="panel"><h2>單一題目的欠答恢復診斷</h2>'
+            '<p class="notice"><b>獨立的小型診斷，與 824 個執行槽的完整研究分開。</b>沒有模型排名或完整研究成績。</p>'
+            f'<p>任務概要：{esc(data["task_summary"])} 每個設定在兩個合成帳號各跑一次，共 6 次。'
+            '前景 HTTP 逾時是人工注入故障；背景使用真實原生模型、驗證器、來源與送出檢查，LINE 傳輸為本地捕捉。'
+            '前景等待時間不能當成速度成績。三組背景皆為 32,768 token 上限、120 秒期限。</p>'
+            '<div class="scroll"><table><thead><tr><th>設定</th><th>補答實際送達</th><th>失敗收尾</th>'
+            '<th>完成回答（AI）</th><th>沒有直接拒絕（AI）</th><th>誠實（AI）</th><th>有依據（AI）</th></tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody></table></div>'
+            f'<p>{closures} 次未補答的誠實收尾仍留在分母，不能算完成回答。有依據／誠實通過也不等於答完問題。'
+            '被原生驗證器丟棄的模型文字沒有保留，不能推測其拒絕原因。</p>'
+            '<p>原有前景規格由 GPT-6-Sol Medium 判讀兩次：6 段實際對話 × 2 次，加上 17 題已知控制 × 2 次，'
+            '共 46 次真實評審呼叫；控制題 34/34 符合預期。表格固定讀第一次，第二次只檢查一致性。</p>'
+            f'<details><summary>兩個帳號與兩次判讀</summary><ul>{"".join(detail)}</ul></details>'
+            f'<p class="small">{esc(data["limits"])}</p>'
+            f'<p>原生來源 {commit_link(proof["original_source_ref"])} · 評審匯出程式 {commit_link(proof["export_code_ref"])}。'
+            f'<a href="{OWED_DIAGNOSTIC_NAME}" download>下載已驗證的診斷計數、判讀與來源摘要</a>。</p>'
+            f'<p class="small">來源／收據／控制題／評審輸入與 46 次呼叫皆由凍結 CLI 重新驗證；保留品質檔 SHA-256 '
+            f'<code>{esc(proof["retained_quality_sha256"])}</code>。公開檔不包含權限識別碼、原始提示、模型思考或金鑰。</p></section>')
+
+
 def render(data, iterations=()):
     if data.get('status') == 'pending':
         cards = ''.join(f'<div class="kpi"><p class="label">{label}</p><p class="pending-value">等待完整量測</p><p class="sub">{detail}</p></div>' for label, detail in (
             ('速度', '首次回覆與前景等待時間分開報告'), ('不漏接', '一般回答、欠答恢復與失敗通知分開'),
             ('可用的下一步', 'AI 前景盲評；誠實處理能力界線'), ('主動得合適', '命中、安靜負例與逐則合適率')))
-        body = f'<section class="panel"><p class="notice warning"><b>尚未有可發布的完整 Always-on 研究。</b>目前沒有實測分數、改善幅度或勝負結論。</p><h2>這裡會呈現哪些結果</h2><div class="kpis">{cards}</div><p>只有完整重播、兩階段各兩次判讀、通過所有控制題，才會顯示成績。教學時間軸和合成測試 fixture 不會當成結果。</p></section>'
+        body = f'<section class="panel"><p class="notice warning"><b>尚未有可發布的完整 Always-on 研究。</b>完整題組的分數、改善幅度與勝負結論仍待完成。</p><h2>這裡會呈現哪些結果</h2><div class="kpis">{cards}</div><p>只有完整重播、兩階段各兩次判讀、通過所有控制題，才會顯示完整成績。教學時間軸和合成測試 fixture 不會當成結果。</p></section>'
         body += calibration_panel(data.get('judge_calibration'))
+        body += owed_diagnostic_panel(data.get('owed_diagnostic'))
         body += f'<section class="panel"><h2>逐段檢查，等資料完成</h2><p>本輪比較原有版本、Gemini Medium、Gemini High 與 GPT-6.1-Sol Low。每段情境會顯示各組完整時間軸、每次重複、主機檢查與 AI 判斷理由。現在可以先看<a href="{METHOD_NAME}">公開開發題組與評審門檻</a>。</p></section><section class="panel"><h2>研究迭代</h2>{iteration_table(iterations)}</section>'
         return page_shell(PAGE_NAME, 'Always-on 結果', '這一頁保留完整研究的成績、案例與版本證據。每次迭代獨立呈現，讓主動訊息的時機、內容與打擾成本可以逐則檢查。', body, status='等待完整研究')
     validate_study(data)
@@ -1044,6 +1109,7 @@ def render(data, iterations=()):
     body += model_configuration_panel(data)
     body += background_model_panel(data)
     body += absolute_component_table(data)
+    body += owed_diagnostic_panel(data.get('owed_diagnostic'))
     body += f'<section class="panel"><h2>分項判讀與控制題</h2><div class="grid2"><div class="scroll"><table><thead><tr><th>自主訊息 AI 分項（1–5）</th>{headers}</tr></thead><tbody>{quality_rows}</tbody></table></div><div class="scroll"><table><thead><tr><th>前景 AI 判讀</th>{headers}</tr></thead><tbody>{foreground_rows}</tbody></table></div></div><table><tbody>{control_rows}</tbody></table><p>這些是 AI 判讀；原始逐則分數與理由如下。控制題檢查評審是否理解規格，不證明實際使用者都喜歡這些訊息。</p></section>'
     body += f'<section class="panel"><h2>逐段時間軸</h2><p>自主關心、使用者要求與欠答分開標記；每組保留每次重複和失敗案例。</p><div data-explorer>{filters(data["episodes"])}{explorer(data)}</div></section>'
     body += f'<section class="panel"><h2>背景決策與阻擋原因</h2><div class="scroll"><table><tbody>{gate_rows}</tbody></table></div></section><section class="panel"><h2>研究迭代與可重建證據</h2>{iteration_table(iterations)}<p>{refs_description(data["refs"])}。</p><p>來源結果 SHA-256 <code>{data["source_artifact_sha256"]}</code>。完整模型設定、harness／rubric／packet 摘要與兩次判讀一致性見公開 JSON。</p><p><a href="{JSON_NAME}" download>下載本次公開結果</a> · <a href="{ITERATIONS_NAME}" download>下載研究索引</a></p></section>'
@@ -1133,6 +1199,7 @@ def main():
     parser.add_argument('--render',action='store_true')
     parser.add_argument('--pending',action='store_true')
     parser.add_argument('--calibration-study',type=Path)
+    parser.add_argument('--owed-diagnostic-study',type=Path)
     parser.add_argument('--cases',type=Path)
     parser.add_argument('--source-ref')
     parser.add_argument('--iteration')
@@ -1189,7 +1256,21 @@ def main():
             raise ValueError('immutable_calibration_changed')
         calibration_archive.write_text(calibration_text)
         (PUBLIC/CALIBRATION_NAME).write_text(calibration_text)
-    method, report=render_method(cases,has_results=data.get('publication_ready') is True),render(data,index['iterations'])
+    if args.owed_diagnostic_study:
+        diagnostic=owed_diagnostic_module().verified_projection(args.owed_diagnostic_study)
+        check_public(diagnostic)
+        diagnostic_text=json.dumps(diagnostic,ensure_ascii=False,indent=1)+'\n'
+        diagnostic_digest=hashlib.sha256(diagnostic_text.encode()).hexdigest()
+        diagnostic_archive=PUBLIC/('line-always-on-owed-diagnostic-'+diagnostic_digest[:12]+'.public.json')
+        if diagnostic_archive.exists() and diagnostic_archive.read_text()!=diagnostic_text:
+            raise ValueError('immutable_owed_diagnostic_changed')
+        diagnostic_archive.write_text(diagnostic_text)
+        (PUBLIC/OWED_DIAGNOSTIC_NAME).write_text(diagnostic_text)
+        data['owed_diagnostic']=diagnostic
+    elif (PUBLIC/OWED_DIAGNOSTIC_NAME).exists():
+        data['owed_diagnostic']=json.loads((PUBLIC/OWED_DIAGNOSTIC_NAME).read_text())
+    method, report=render_method(cases,has_results=data.get('publication_ready') is True,
+                                diagnostic=data.get('owed_diagnostic')),render(data,index['iterations'])
     check_public(data);check_public(index);check_public(cases)
     if protocol is not None:
         frozen=PUBLIC/protocol_file
