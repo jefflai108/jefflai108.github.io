@@ -25,6 +25,7 @@ PUBLIC = ROOT / "public/line-v3"
 JSON_NAME = "line-always-on-results.public.json"
 OWED_DIAGNOSTIC_NAME = "line-always-on-owed-diagnostic.public.json"
 PLANNED_STUDY_NAME = "line-always-on-planned-study.public.json"
+INTERRUPTION_NAME = "line-always-on-interruption.public.json"
 PAGE_NAME = "line-always-on.html"
 SOURCE_REPO = "https://github.com/jefflai108/streaming_taiwanese"
 ARMS = ("existing", "engine")
@@ -58,7 +59,7 @@ _UNSAFE = re.compile(r"/Users/|/private/|/home/|/var/folders|/srv/|AIza[0-9A-Za-
 
 PUBLIC_KEYS = ("schema_version", "arms", "refs", "models", "metadata", "summary", "comparison", "comparisons", "gates",
                "complete", "replay_complete", "judging_complete", "publication_ready", "incomplete_episodes",
-               "episodes", "runs", "judge_controls", "foreground_controls", "foreground_judge", "slot_status", "owed_diagnostic", "planned_study")
+               "episodes", "runs", "judge_controls", "foreground_controls", "foreground_judge", "slot_status", "owed_diagnostic", "planned_study", "study_interruption")
 PRIVATE_KEYS = frozenset(("api_key", "authorization", "credentials", "encrypted_job", "user_id", "chat_id",
                           "message_hash", "event_hash", "lease_token", "reply_token", "mapping.private.json",
                           "http", "environment", "prompt", "system_prompt", "logs", "log", "path"))
@@ -789,7 +790,7 @@ def authored_cases(data):
     return f'<div data-explorer>{filters(episodes)}{"".join(blocks)}</div>'
 
 
-def render_method(cases, *, has_results=False, diagnostic=None, planned_study=None):
+def render_method(cases, *, has_results=False, diagnostic=None, planned_study=None, interruption=None):
     from collections import Counter
     episodes = cases['episodes']
     control_counts = cases.get('control_counts', {'CONTROLS': 10, 'FOREGROUND_CONTROLS': 17})
@@ -800,7 +801,7 @@ def render_method(cases, *, has_results=False, diagnostic=None, planned_study=No
                  else "完整研究尚未完成。這一頁公開測試設計與合成題組；示意時間軸沒有量測分數。")
     strata_rows = ''.join(f'<tr><th>{SCOPE_LABELS[scope]}</th><td>{POLARITY_LABELS[polarity]}</td><td>{strata[(scope, polarity)]}</td></tr>'
                           for scope in SCOPE_LABELS for polarity in POLARITY_LABELS if strata[(scope, polarity)])
-    body = planned_study_panel(planned_study) + f'''
+    body = planned_study_panel(planned_study) + interruption_panel(interruption) + f'''
 <section class="panel"><p class="notice warning"><b>{readiness}</b>完整研究成績只會收錄完成兩階段評審、通過控制題的重播；小型診斷另外標示。</p>
 <h2>四個目標，分開量測</h2><div class="scroll"><table class="goals"><thead><tr><th>目標</th><th>可檢查的行為</th><th>量測單位</th></tr></thead><tbody>
 <tr><th>夠快</th><td>對使用者說的話及時開始回答；背景工作讓前景先走。</td><td>前景耗時與收到訊息到首次回覆的 p50 / p90；快回覆題的逐輪門檻。</td></tr>
@@ -1033,6 +1034,25 @@ def planned_study_module():
     return module
 
 
+def interruption_module():
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('always_on_interruption',Path(__file__).with_name('study_interruption.py'))
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    return module
+
+
+def interruption_panel(data):
+    if not data:return ''
+    interruption_module().validate_public(data);check_public(data)
+    return ('<section class="panel"><h2>第一次研究的中斷紀錄</h2>'
+        f'<p>{esc(data["notice"])}</p>'
+        f'<p>原候選來源 {commit_link(data["original_refs"]["engine"])}；'
+        f'<a href="{esc(data["original_planned_file"])}" download>保留原始不可覆寫計畫</a>。'
+        '這裡沒有即時完成數、部分分數或模型排名。</p>'
+        f'<p class="small">原計畫 SHA-256 <code>{esc(data["proof"]["original_plan_sha256"])}</code>；'
+        f'<a href="{INTERRUPTION_NAME}" download>下載不含私人路徑的事件綁定紀錄</a>。</p></section>')
+
+
 def planned_study_panel(data):
     if not data:
         return ''
@@ -1124,6 +1144,7 @@ def render(data, iterations=()):
         body = f'<section class="panel"><p class="notice warning"><b>尚未有可發布的完整 Always-on 研究。</b>完整題組的分數、改善幅度與勝負結論仍待完成。</p><h2>這裡會呈現哪些結果</h2><div class="kpis">{cards}</div><p>只有完整重播、兩階段各兩次判讀、通過所有控制題，才會顯示完整成績。教學時間軸和合成測試 fixture 不會當成結果。</p></section>'
         body += calibration_panel(data.get('judge_calibration'))
         body += planned_study_panel(data.get('planned_study'))
+        body += interruption_panel(data.get('study_interruption'))
         body += owed_diagnostic_panel(data.get('owed_diagnostic'))
         body += f'<section class="panel"><h2>逐段檢查，等資料完成</h2><p>本輪比較原有版本、Gemini Medium、Gemini High 與 GPT-6.1-Sol Low。每段情境會顯示各組完整時間軸、每次重複、主機檢查與 AI 判斷理由。現在可以先看<a href="{METHOD_NAME}">公開開發題組與評審門檻</a>。</p></section><section class="panel"><h2>研究迭代</h2>{iteration_table(iterations)}</section>'
         return page_shell(PAGE_NAME, 'Always-on 結果', '這一頁保留完整研究的成績、案例與版本證據。每次迭代獨立呈現，讓主動訊息的時機、內容與打擾成本可以逐則檢查。', body, status='等待完整研究')
@@ -1151,6 +1172,7 @@ def render(data, iterations=()):
     body += background_model_panel(data)
     body += absolute_component_table(data)
     body += owed_diagnostic_panel(data.get('owed_diagnostic'))
+    body += interruption_panel(data.get('study_interruption'))
     body += f'<section class="panel"><h2>分項判讀與控制題</h2><div class="grid2"><div class="scroll"><table><thead><tr><th>自主訊息 AI 分項（1–5）</th>{headers}</tr></thead><tbody>{quality_rows}</tbody></table></div><div class="scroll"><table><thead><tr><th>前景 AI 判讀</th>{headers}</tr></thead><tbody>{foreground_rows}</tbody></table></div></div><table><tbody>{control_rows}</tbody></table><p>這些是 AI 判讀；原始逐則分數與理由如下。控制題檢查評審是否理解規格，不證明實際使用者都喜歡這些訊息。</p></section>'
     body += f'<section class="panel"><h2>逐段時間軸</h2><p>自主關心、使用者要求與欠答分開標記；每組保留每次重複和失敗案例。</p><div data-explorer>{filters(data["episodes"])}{explorer(data)}</div></section>'
     body += f'<section class="panel"><h2>背景決策與阻擋原因</h2><div class="scroll"><table><tbody>{gate_rows}</tbody></table></div></section><section class="panel"><h2>研究迭代與可重建證據</h2>{iteration_table(iterations)}<p>{refs_description(data["refs"])}。</p><p>來源結果 SHA-256 <code>{data["source_artifact_sha256"]}</code>。完整模型設定、harness／rubric／packet 摘要與兩次判讀一致性見公開 JSON。</p><p><a href="{JSON_NAME}" download>下載本次公開結果</a> · <a href="{ITERATIONS_NAME}" download>下載研究索引</a></p></section>'
@@ -1242,6 +1264,9 @@ def main():
     parser.add_argument('--calibration-study',type=Path)
     parser.add_argument('--owed-diagnostic-study',type=Path)
     parser.add_argument('--planned-study',type=Path)
+    parser.add_argument('--interruption-records',type=Path)
+    parser.add_argument('--interruption-inventory',type=Path)
+    parser.add_argument('--original-planned-public',type=Path)
     parser.add_argument('--cases',type=Path)
     parser.add_argument('--source-ref')
     parser.add_argument('--iteration')
@@ -1299,6 +1324,16 @@ def main():
     if data.get('planned_study') and (data['planned_study']['refs']['engine'] != cases['source_ref']
             or data['planned_study']['proof']['protocol_sha256'] != cases['protocol_sha256']):
         raise ValueError('planned_method_binding_mismatch')
+    interruption_text=None
+    if args.interruption_records:
+        if not args.interruption_inventory or not args.original_planned_public:
+            parser.error('give both interruption inventory and original immutable public plan')
+        note=interruption_module().verified_projection(args.interruption_records,args.interruption_inventory,
+                                                       args.original_planned_public)
+        check_public(note);data['study_interruption']=note
+        interruption_text=json.dumps(note,ensure_ascii=False,indent=1)+'\n'
+    elif (PUBLIC/INTERRUPTION_NAME).exists():
+        data['study_interruption']=json.loads((PUBLIC/INTERRUPTION_NAME).read_text())
     if args.calibration_study:
         if data.get('status') != 'pending':
             raise ValueError('calibration_is_separate_from_study_results')
@@ -1324,7 +1359,8 @@ def main():
     elif (PUBLIC/OWED_DIAGNOSTIC_NAME).exists():
         data['owed_diagnostic']=json.loads((PUBLIC/OWED_DIAGNOSTIC_NAME).read_text())
     method, report=render_method(cases,has_results=data.get('publication_ready') is True,
-                                diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study')),render(data,index['iterations'])
+                                diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study'),
+                                interruption=data.get('study_interruption')),render(data,index['iterations'])
     check_public(data);check_public(index);check_public(cases)
     if planned_text is not None:
         digest=hashlib.sha256(planned_text.encode()).hexdigest()
@@ -1333,6 +1369,11 @@ def main():
             raise ValueError('immutable_planned_study_changed')
         archive.write_text(planned_text)
         (PUBLIC/PLANNED_STUDY_NAME).write_text(planned_text)
+    if interruption_text is not None:
+        digest=hashlib.sha256(interruption_text.encode()).hexdigest()
+        archive=PUBLIC/('line-always-on-interruption-'+digest[:12]+'.public.json')
+        if archive.exists() and archive.read_text()!=interruption_text:raise ValueError('immutable_interruption_changed')
+        archive.write_text(interruption_text);(PUBLIC/INTERRUPTION_NAME).write_text(interruption_text)
     if protocol is not None:
         frozen=PUBLIC/protocol_file
         if frozen.exists() and json.loads(frozen.read_text())!=protocol:
