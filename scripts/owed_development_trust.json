@@ -1,0 +1,57 @@
+{
+ "source_ref": "35b4b33f55ca5bd7d97b0331f6bccc6494374483",
+ "native_source_ref": "c67b7e9e552918040125537a9de4118dfb221387",
+ "configurations": {
+  "engine_medium": {
+   "provider": "gemini",
+   "model": "gemini-3.8-flash",
+   "thinking_level": "medium",
+   "max_output_tokens": 32768,
+   "timeout_s": 120
+  },
+  "engine_high": {
+   "provider": "gemini",
+   "model": "gemini-3.8-flash",
+   "thinking_level": "high",
+   "max_output_tokens": 32768,
+   "timeout_s": 120
+  },
+  "engine_sol_low": {
+   "provider": "openai",
+   "model": "gpt-6.1-sol",
+   "thinking_level": "low",
+   "max_output_tokens": 32768,
+   "timeout_s": 120
+  }
+ },
+ "settings": {
+  "tick_s": 30,
+  "workers": 1,
+  "worker_timeout_s": 600,
+  "background_max_output_tokens": 32768,
+  "background_timeout_s": 120,
+  "foreground_failure": "declared_per_turn_native_transport_fault",
+  "unrelated_background_setup": "empty_original_native_extractor_schema",
+  "delegated_executor": "unavailable; any provider request fails closed",
+  "tts": false,
+  "native_group_mode_prelude_s": 60,
+  "candidate_permutations": 6,
+  "secondary_order_offset": 3,
+  "adjacent_account_blocks": true,
+  "account_first": "alternate_by_authored_scenario",
+  "engine_enabled": true,
+  "group_plans_enabled": true,
+  "timezone": "Asia/Taipei"
+ },
+ "proof": {
+  "source_files_sha256": "a0358113d28391e5c7709ac5e098e6ed4a7aeced7174f589624275a31e470fa4",
+  "corpus_sha256": "0cd743e1a8bfa96ccd4a021409685b82f96ca180d42c3432a04ede7ef6d5a2c9",
+  "configuration_sha256": "7aabdaa06fdfeef0bb3d87972a520be2003942557cd1a6c19348d151b35aecec",
+  "settings_sha256": "6d80c03331fab3d1801c03fbbda8d5f4872fdb8635e85e966ab5ccf9ab90c103",
+  "schedule_sha256": "1d9f5f6d112141bbc4c66749f99ac46621a7355904ea37c3ef67a37482661cfc",
+  "code_sha256": "2cb7fe07a3e370e9d2517a79d45987c1c99144064e1b511a35dd2c26d295d034",
+  "judge_export_code_sha256": "81b7ee1ce258c824e7d84b44f878306d66f4aa13e0019ec5ad5432c9cd106133",
+  "judge_sha256": "f5b8823dcef67dfe9e63609cd9fdd3250986f74d9c4cc84ba84761176bd1bc61",
+  "rubric_sha256": "33c60c6ad5a646c8eb3cceae9f5ccbe88e0a36ef7f27211a0199789621d45dd7"
+ }
+}
