@@ -228,7 +228,7 @@ class RenderTest(unittest.TestCase):
         with self.assertRaises(ValueError):always_on.calibration_panel(dict(calibration,engine_performance_evidence=True))
         page=always_on.render({'status':'pending','judge_calibration':calibration})
         self.assertIn('沒有測量主動引擎的效能',page)
-        self.assertIn('沒有實測分數',page)
+        self.assertIn('完整題組的分數、改善幅度與勝負結論仍待完成',page)
 
     def test_published_protocol_digest_covers_its_immutable_cases(self):
         import hashlib
@@ -296,7 +296,8 @@ class RenderTest(unittest.TestCase):
         cases=json.loads((public/always_on.CASES_NAME).read_text())
         index=json.loads((public/always_on.ITERATIONS_NAME).read_text())
         self.assertEqual(always_on.render(data,index['iterations']),(public/always_on.PAGE_NAME).read_text())
-        self.assertEqual(always_on.render_method(cases,has_results=data.get('publication_ready') is True),(public/always_on.METHOD_NAME).read_text())
+        self.assertEqual(always_on.render_method(cases,has_results=data.get('publication_ready') is True,
+            diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study')),(public/always_on.METHOD_NAME).read_text())
 
 
 if __name__=='__main__':unittest.main()
