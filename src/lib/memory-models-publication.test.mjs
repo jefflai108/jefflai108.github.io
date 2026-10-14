@@ -14,7 +14,7 @@ test('complete requested model comparison binds quality to every planned generat
   assert.equal(d.records.length,512);
   assert.equal(d.judge.primaryEvaluations.length,128);
   assert.equal(d.judge.mirrorRecords.length,96);
-  assert.equal(d.records.filter(r=>r.difficulty==='hard').length,192);
+  assert.equal(d.records.filter(r=>r.difficulty==='hard').length,256);
 });
 test('incomplete, duplicated, altered, or unjudged evidence cannot be published',()=>{
   const edits=[d=>d.records.pop(),d=>d.records[0]=d.records[1],
