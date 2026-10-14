@@ -78,6 +78,8 @@ class OwedDiagnosticTests(unittest.TestCase):
         self.assertIn('第二帳號',page)
         self.assertNotIn('目前沒有實測分數',page)
         self.assertIn('report-layout.css',page)
+        self.assertIn('class="owed-diagnostic-table"',page)
+        self.assertIn('.owed-diagnostic-table{min-width:760px}',page)
         with self.assertRaises(ValueError):renderer.owed_diagnostic_panel(dict(result,full_study_result=True))
 
     def test_cli_gate_uses_isolated_frozen_summary_and_stops_on_reproduction_failure(self):

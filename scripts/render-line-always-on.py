@@ -651,6 +651,7 @@ p{margin:9px 0}.eyebrow,.small,small{font-size:12px;color:#526c61}.muted{color:#
 .bar.engine_medium{fill:#1f7a6c}.bar.engine_high{fill:#5866ac}.swatch.engine_medium{background:#1f7a6c}.swatch.engine_high{background:#5866ac}.arm-value{display:flex;gap:10px;align-items:baseline;justify-content:space-between;padding:5px 0}.arm-value span{font-size:12px}.arm-value strong{font-size:25px}
 .bar.engine_sol_low{fill:#ae7233}.swatch.engine_sol_low{background:#ae7233}
 .scroll{overflow-x:auto;max-width:100%}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:10px;border-bottom:1px solid #e1e8e1;vertical-align:top}
+.owed-diagnostic-table{min-width:760px}
 thead th{color:#52695e;background:#f8faf7}td small{display:block}.tableview{font-size:13px;margin:6px 0 0}
 .num td,.num th{font-variant-numeric:tabular-nums}details{margin:10px 0}summary{cursor:pointer}
 .episode{border:1px solid #dce5de;border-radius:12px;background:white;padding:12px 16px}.episode summary{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -1061,7 +1062,7 @@ def owed_diagnostic_panel(data):
             f'<p>任務概要：{esc(data["task_summary"])} 每個設定在兩個合成帳號各跑一次，共 6 次。'
             '前景 HTTP 逾時是人工注入故障；背景使用真實原生模型、驗證器、來源與送出檢查，LINE 傳輸為本地捕捉。'
             '前景等待時間不能當成速度成績。三組背景皆為 32,768 token 上限、120 秒期限。</p>'
-            '<div class="scroll"><table><thead><tr><th>設定</th><th>補答實際送達</th><th>失敗收尾</th>'
+            '<div class="scroll"><table class="owed-diagnostic-table"><thead><tr><th>設定</th><th>補答實際送達</th><th>失敗收尾</th>'
             '<th>完成回答（AI）</th><th>沒有直接拒絕（AI）</th><th>誠實（AI）</th><th>有依據（AI）</th></tr></thead>'
             f'<tbody>{"".join(rows)}</tbody></table></div>'
             f'<p>{closures} 次未補答的誠實收尾仍留在分母，不能算完成回答。有依據／誠實通過也不等於答完問題。'
