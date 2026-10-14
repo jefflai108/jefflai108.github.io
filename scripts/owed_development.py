@@ -193,7 +193,8 @@ def project(snapshot):
                 or any(row['setup_and_capture_ready'] is not True for row in positive+withheld) \
                 or any(row['withholding_passed'] is not True or row['request_uploaded']!=0 for row in withheld):
             raise ValueError('unqualified_development_native_capture')
-        judgments={field:0 for field in FIELDS};agreement={field:0 for field in FIELDS};codes={};diagnostics={}
+        judgments={field:0 for field in FIELDS};agreement={field:0 for field in FIELDS}
+        codes={};outcomes={};unknown_codes=0;diagnostics={}
         for row in rows:
             if set(row['judgments'])!={'1','2'}:raise ValueError('missing_development_judgment')
             for field in FIELDS:
@@ -202,11 +203,15 @@ def project(snapshot):
                 judgments[field]+=row['judgments']['1'][field]
                 agreement[field]+=row['judgments']['1'][field] is row['judgments']['2'][field]
         for row in positive:
+            if len(row['native_outcomes'])!=1:raise ValueError('invalid_native_outcome_denominator')
             for outcome in row['native_outcomes']:
-                code=outcome['native_code'] or outcome['outcome']
-                if type(code) is not str or not re.fullmatch('[a-z][a-z0-9_]{0,79}',code):
+                code=outcome['native_code'];status=outcome['outcome']
+                if type(status) is not str or not re.fullmatch('[a-z][a-z0-9_]{0,79}',status) \
+                        or code is not None and (type(code) is not str or not re.fullmatch('[a-z][a-z0-9_]{0,79}',code)):
                     raise ValueError('unsafe_development_native_code')
-                codes[code]=codes.get(code,0)+1
+                outcomes[status]=outcomes.get(status,0)+1
+                if code is None:unknown_codes+=1
+                else:codes[code]=codes.get(code,0)+1
             for diagnostic in row['diagnostics']['rows']:
                 reason='available' if diagnostic['available'] is True else diagnostic['unavailable_reason']
                 if type(reason) is not str or not re.fullmatch('[a-z][a-z0-9_]{0,79}',reason):
@@ -217,6 +222,7 @@ def project(snapshot):
             'late_answer_delivered':count(sum(row['late_answer_delivered'] is True for row in positive),16),
             'closures':count(sum(row['closures'] for row in positive),16),'withholding_passed':8,
             'judgments':judgments,'pass_agreement':agreement,'native_codes':codes,
+            'native_outcomes':outcomes,'unknown_native_code_attempts':unknown_codes,
             'diagnostic_availability':diagnostics,'native_usage':usage(snapshot['native_usage'][arm],16)}
     if quality['judge_usage']['attempts']!=130:raise ValueError('missing_development_judge_attempt')
     value.update(status='complete',native_capture_complete=True,quality_complete=True,
@@ -260,17 +266,20 @@ def validate_public(value):
         for arm,row in value['results']['arms'].items():
             if set(row)!={'positive_denominator','withholding_denominator','late_answer_delivered','closures',
                           'withholding_passed','judgments','pass_agreement','native_codes',
-                          'diagnostic_availability','native_usage'} \
+                          'native_outcomes','unknown_native_code_attempts','diagnostic_availability','native_usage'} \
                     or (row['positive_denominator'],row['withholding_denominator'],row['withholding_passed'])!=(16,8,8):
                 raise ValueError('invalid_public_development_results')
             for key in ('late_answer_delivered','closures'):count(row[key],16)
             for key in ('judgments','pass_agreement'):
                 if set(row[key])!=set(FIELDS):raise ValueError('invalid_public_development_components')
                 for n in row[key].values():count(n,16)
-            for key in ('native_codes','diagnostic_availability'):
+            for key in ('native_codes','native_outcomes','diagnostic_availability'):
                 for name,n in row[key].items():
                     if not re.fullmatch('[a-z][a-z0-9_]{0,79}',name):raise ValueError('unsafe_public_development_code')
                     count(n,16)
+            if sum(row['native_outcomes'].values())!=16 \
+                    or sum(row['native_codes'].values())+count(row['unknown_native_code_attempts'],16)!=16:
+                raise ValueError('invalid_public_native_code_denominator')
             if usage(row['native_usage'],16)!=row['native_usage']:raise ValueError('unsafe_public_development_usage')
         if usage(value['results']['judge_usage'],130)!=value['results']['judge_usage']:
             raise ValueError('unsafe_public_development_usage')

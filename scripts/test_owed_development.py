@@ -89,6 +89,16 @@ class Projection(unittest.TestCase):
                 value=complete_snapshot();mutate(value)
                 with self.assertRaises(ValueError):dev.project(value)
 
+    def test_provider_outcome_does_not_invent_missing_native_code(self):
+        snapshot=complete_snapshot()
+        snapshot['native'][0]['assessment']['native_outcomes']=[{'native_code':None,'outcome':'provider_timeout'}]
+        value=dev.project(snapshot);dev.validate_public(value)
+        row=value['results']['arms']['engine_medium']
+        self.assertEqual(row['native_codes'],{'provider_invalid_output':15})
+        self.assertEqual(row['native_outcomes'],{'provider_timeout':1,'provider_invalid_output':15})
+        self.assertEqual(row['unknown_native_code_attempts'],1)
+        self.assertEqual(row['positive_denominator'],16)
+
     def test_public_results_closed_schema(self):
         value=dev.project(complete_snapshot())
         for mutate in (lambda x:x['results']['arms']['engine_medium'].update(parsed_json='SECRET'),
