@@ -42,7 +42,122 @@ def fixture():
             'judge_controls':deepcopy(controls),'foreground_controls':deepcopy(controls),'slot_status':{arm+':measured':2 for arm in always_on.ARMS}}
 
 
+def variant_fixture():
+    data=fixture()
+    data.update(schema_version=3,arms=list(always_on.VARIANT_ARMS))
+    data['refs'].update({arm:data['refs']['engine'] for arm in always_on.VARIANT_ARMS[1:]})
+    mapping={arm:'existing' if arm=='existing' else 'engine' for arm in always_on.VARIANT_ARMS}
+    for field in ('summary','gates','foreground_judge'):
+        old=data[field]
+        data[field]={arm:deepcopy(old[source]) for arm,source in mapping.items()}
+    old=data['runs']
+    data['runs']=[dict(deepcopy(row),arm=arm) for arm,source in mapping.items()
+                  for row in old if row['arm']==source]
+    configs={'existing':{'always_on':None}}
+    for arm,provider,model,level in (('engine_medium','gemini','gemini-3.8-flash','medium'),
+            ('engine_high','gemini','gemini-3.8-flash','high'),('engine_sol_low','openai','gpt-6.1-sol','low')):
+        configs[arm]={'always_on':{'provider':provider,'model':model,'thinking_level':level,
+                                  'max_output_tokens':32768,'timeout_s':120}}
+    meta=data['metadata']
+    meta.update(arms=data['arms'],arm_configs=configs,configuration_sha256='d'*64,source_by_arm=mapping,slot_count=8)
+    capture={'capture_complete':True,'attempts':1,'request_sent_attempts':1,'failed_attempts':0,
+             'invalid_output_attempts':0,'outcomes':{'ok':1},'elapsed_ms':{'p50':1000,'p90':1000,'n':1},
+             'token_usage':{'total_tokens':{'known_tokens':100,'known_attempts':1,'unknown_attempts':0}},
+             'by_lane':{},'by_provider':{},'usage_complete':True}
+    meta['background_models']={arm:deepcopy(capture) for arm in data['arms']}
+    meta['background_parameters_verified']={arm:True for arm in data['arms']}
+    for field in ('host_notices','degraded_untagged'):
+        old=meta[field]
+        meta[field]={arm:deepcopy(old[source]) for arm,source in mapping.items()}
+    meta['judge']['packet_count']=6
+    meta['judge_foreground']['packet_count']=8
+    data['slot_status']={arm+':measured':2 for arm in always_on.VARIANT_ARMS}
+    pairs=[('existing',candidate) for candidate in always_on.VARIANT_ARMS[1:]]+[
+        ('engine_medium','engine_high'),('engine_medium','engine_sol_low'),('engine_high','engine_sol_low')]
+    comparison=data.pop('comparison')
+    data['comparisons']={candidate+'_vs_'+baseline:dict(deepcopy(comparison),baseline=baseline,candidate=candidate)
+                         for baseline,candidate in pairs}
+    return data
+
+
 class RenderTest(unittest.TestCase):
+    def test_four_arm_model_study_preserves_all_timelines_and_six_paired_comparisons(self):
+        data=always_on.project(variant_fixture(),generated_at='2026-10-14')
+        page=always_on.render(data)
+        self.assertEqual(len(data['runs']),8)
+        self.assertEqual(len(data['comparisons']),6)
+        for arm in always_on.VARIANT_ARMS:
+            self.assertIn('data-arm="'+always_on.ARM_LABELS[arm]+'"',page)
+        self.assertIn('--arm-count:4',page)
+        self.assertIn('GPT-6.1-Sol · Low − Gemini · High',page)
+        self.assertEqual(data['summary']['engine_sol_low']['judge']['appropriate']['total'],2)
+
+    def test_variant_names_cannot_substitute_for_complete_runs_or_actual_frozen_parameters(self):
+        mutations=[lambda d:d['arms'].pop(),lambda d:d['runs'].pop(),
+            lambda d:d['metadata']['arm_configs']['engine_high']['always_on'].update(thinking_level='medium'),
+            lambda d:d['metadata']['arm_configs']['engine_sol_low']['always_on'].update(model='gpt-6-sol'),
+            lambda d:d['metadata']['arm_configs']['engine_medium']['always_on'].update(max_output_tokens=4096),
+            lambda d:d['metadata']['background_parameters_verified'].update(engine_sol_low=False),
+            lambda d:d['metadata']['background_models']['engine_high'].update(capture_complete=False),
+            lambda d:d['refs'].update(engine_sol_low='c'*40),
+            lambda d:d['comparisons'].pop('engine_sol_low_vs_engine_high')]
+        for mutate in mutations:
+            with self.subTest(mutation=mutate):
+                data=variant_fixture();mutate(data)
+                with self.assertRaises(ValueError):always_on.project(data,generated_at='2026-10-14')
+
+    def test_unreported_usage_remains_unknown_when_a_complete_capture_contains_provider_failures(self):
+        data=variant_fixture()
+        capture=data['metadata']['background_models']['engine_high']
+        capture.update(failed_attempts=1,invalid_output_attempts=1,outcomes={'provider_invalid_output':1},usage_complete=False)
+        capture['token_usage']['total_tokens']={'known_tokens':None,'known_attempts':0,'unknown_attempts':1}
+        page=always_on.render(always_on.project(data,generated_at='2026-10-14'))
+        self.assertIn('未回報 · 已知 0 次 / 未知 1 次',page)
+        self.assertIn('未知不是零',page)
+
+    def test_absolute_components_keep_zero_exposure_denominators_and_host_failures_visible(self):
+        data=variant_fixture()
+        runs=[row for row in data['runs'] if row['arm']=='engine_high']
+        runs[0]['proactive'][0]['verdict']=verdict(grounded=False)
+        runs[1]['proactive'][0]['verdict']=verdict(private=False,warranted=False)
+        host=data['summary']['engine_high']
+        host['foreground'].update(nomiss={'hits':1,'total':2,'rate':.5},
+                                  fast={'hits':0,'total':2,'rate':0},
+                                  fast_turns={'hits':2,'total':5,'rate':.4})
+        host['redlines']={'total':5,'privacy':1,'quiet_hours':2,'duplicates':1,'over_count':1,'invented':1}
+        page=always_on.absolute_component_table(always_on.project(data,generated_at='2026-10-14'))
+        self.assertIn('0/0',page)
+        self.assertIn('50.0% · 1/2',page)
+        self.assertIn('0.0% · 0/2',page)
+        self.assertIn('40.0% · 2/5',page)
+        self.assertIn('主機／評審紅線總次數',page)
+        self.assertIn('<td>5</td>',page)
+        self.assertIn('無資料',page)
+
+    def test_paired_recall_interval_and_lane_exposure_show_consistent_units(self):
+        data=variant_fixture()
+        comparison=next(iter(data['comparisons'].values()))
+        comparison.update(recall_difference=.1,recall_difference_ci95=[-.2,.3])
+        self.assertIn('-20.0 個百分點 至 +30.0 個百分點',always_on.paired_comparisons(data))
+        data['metadata']['background_models']['engine_medium']['by_lane']={
+            'composer':{'request_sent_attempts':1,'attempts':2,'failed_attempts':1}}
+        self.assertIn('1/2 次已送出／嘗試',always_on.background_model_panel(data))
+
+    def test_evidence_is_scoped_to_each_reply_and_background_send_and_escaped(self):
+        data=fixture()
+        run=next(row for row in data['runs'] if row['proactive'])
+        evidence=[{'time':'2026-10-14 12:00','kind':'公開查詢結果','text':'可見來源 <script>限定本則</script>'}]
+        run['proactive'][0]['tool_evidence']=deepcopy(evidence)
+        page=always_on.timeline(data['episodes'][0],run)
+        self.assertEqual(page.count('本則回答可見的工具證據'),1)
+        self.assertIn('&lt;script&gt;限定本則&lt;/script&gt;',page)
+        self.assertNotIn('<script>限定本則',page)
+        reply={'at':'2026-10-14T12:00:00+08:00','text':'已查到','tool_evidence':deepcopy(evidence)}
+        run['replies']=[reply]
+        self.assertEqual(always_on.timeline(data['episodes'][0],run).count('本則回答可見的工具證據'),2)
+        reply['tool_evidence'][0]['source_session_id']='private-authority'
+        with self.assertRaises(ValueError):always_on.timeline(data['episodes'][0],run)
+
     def test_projects_actual_schema_and_escapes_case_text(self):
         projected=always_on.project(fixture(),generated_at='2026-10-14')
         self.assertIn('metadata',projected)
@@ -86,6 +201,17 @@ class RenderTest(unittest.TestCase):
             data=fixture();data['metadata'][key]=value
             with self.assertRaises(ValueError):always_on.project(data,generated_at='2026-10-14')
 
+    def test_a_complete_quiet_result_is_publishable_but_missing_judgments_are_not(self):
+        data=fixture()
+        for run in data['runs']:
+            run['proactive']=[]
+        data['metadata']['judge']['packet_count']=0
+        self.assertEqual(always_on.project(data,generated_at='2026-10-14')['summary']['engine']['judge']['appropriate'],
+                         {'hits':0,'total':0,'rate':None})
+        data=fixture()
+        data['metadata']['judge']['packet_count']=0
+        with self.assertRaises(ValueError):always_on.project(data,generated_at='2026-10-14')
+
     def test_pending_page_contains_no_fixture_performance(self):
         page=always_on.render({'status':'pending'})
         self.assertIn('尚未有可發布',page)
@@ -120,6 +246,43 @@ class RenderTest(unittest.TestCase):
         for text in ('教學示意','不是人類偏好證據','第 1 次','holdout','沒有量測出的麻吉回答','data-clock'):
             self.assertIn(text,page)
         self.assertNotIn('test-only',page)
+
+    def test_public_cases_keep_the_full_synthetic_foreground_and_privacy_oracle(self):
+        episode=fixture()['episodes'][0]
+        episode['expect'].update(foreground={'recap':{'decided':['加入後重述的日期'],'open':[]}},
+                                 forbidden_mentions=['加入前的四人房'])
+        cases=always_on.public_cases({'episodes':[episode]},'a'*40,'b'*64)
+        self.assertEqual(cases['episodes'][0]['expect'],episode['expect'])
+        self.assertIn('完整預先指定的檢查',always_on.render_method(cases))
+
+    def test_control_additions_change_the_frozen_count_and_method_copy(self):
+        source="CONTROLS=[{'id':'C01'}]\nFOREGROUND_CONTROLS=[{'id':'FC01'}]\nFOREGROUND_CONTROLS += [{'id':'FC02'}]\n"
+        counts=always_on.literal_control_counts(source)
+        self.assertEqual(counts,{'CONTROLS':1,'FOREGROUND_CONTROLS':2})
+        cases=always_on.public_cases({'episodes':fixture()['episodes']},'a'*40,'b'*64)
+        cases['control_counts']=counts
+        self.assertIn('1 題訊息控制、2 題前景控制，兩次共 6 次',always_on.render_method(cases))
+        with self.assertRaises(ValueError):
+            always_on.literal_control_counts(source+"FOREGROUND_CONTROLS += [{'id':'FC02'}]\n")
+
+    def test_protocol_source_must_match_an_actual_committed_revision(self):
+        import hashlib
+        import subprocess
+        import tempfile
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)
+            def git(*args):
+                return subprocess.run(['git','-C',str(root),*args],capture_output=True,text=True,check=True).stdout.strip()
+            git('init','-q')
+            (root/'cases.json').write_text('{"episodes":[]}\n')
+            git('add','cases.json')
+            git('-c','user.name=Benchmark test','-c','user.email=benchmark@example.invalid','commit','-qm','fixture')
+            protocol={'source_ref':git('rev-parse','HEAD'),'files_sha256':{
+                'cases.json':hashlib.sha256((root/'cases.json').read_bytes()).hexdigest()}}
+            always_on.verify_committed_protocol(protocol,root)
+            with self.assertRaises(ValueError):always_on.verify_committed_protocol(dict(protocol,source_ref='0'*40),root)
+            protocol['files_sha256']['cases.json']=hashlib.sha256(b'changed').hexdigest()
+            with self.assertRaises(ValueError):always_on.verify_committed_protocol(protocol,root)
 
     def test_new_tabs_share_the_layout_asset(self):
         for page in (always_on.render({'status':'pending'}),always_on.render_method(always_on.public_cases({'episodes':fixture()['episodes']},'a'*40,'b'*64))):

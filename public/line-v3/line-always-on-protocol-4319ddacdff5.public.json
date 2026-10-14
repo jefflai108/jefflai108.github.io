@@ -1,0 +1,5821 @@
+{
+ "schema_version": 1,
+ "cohort": "development",
+ "source_ref": "7e6e36c96a6ab48f532f296b08a7cedec73c17db",
+ "source_state": "development_snapshot",
+ "files_sha256": {
+  "cases.json": "ff8afb2672b5f5f92e31baedcaa3f4e7b0c2f48cef7aa83be2e9e56f840254d9",
+  "harness.py": "391a9cee82312ff3f72a85d83a63bd27fe8d11ba2a403638e274d4a9002feb12",
+  "metrics.py": "c059304762bdeb571b0a8106710e0908142e06bd42ebb270446313b369c0184c",
+  "runner.py": "1cbcfd7573246d7f84d20f3bfe009d9671ec53df9e83409c27fe4050266d5cc8",
+  "judge.py": "fecdc907705007455b71ea78e94b3f831ac0c9d0fedf5715da9572d95b721af8",
+  "judge_rubric.md": "8f3da347e4600f377ba29c7d1f232d22ac72f86f735eafd245c22cf90746ba60",
+  "judge_foreground_rubric.md": "33c60c6ad5a646c8eb3cceae9f5ccbe88e0a36ef7f27211a0199789621d45dd7",
+  "faults.py": "ef49a010f1dfcb8bc3f3a38e55f1cead159417c836a0482d2437bc75e5ecf808",
+  "fault_cases.json": "50f2fb64aaa1baf3d25954611b7218d4b968f6610a19213be8b7e0a19de38f96",
+  "tool_evidence.py": "12daec9e1b5c5cfbedd66389f252ef3a5eeb271e3bb7dfd7bd5da0f8e2e065ea",
+  "variant_config.py": "8afc756394152b3b37dd80439bae7e00b946c613b2ccc3f33d3760486b31f71f"
+ },
+ "cases": {
+  "schema_version": 1,
+  "cohort": "development",
+  "source_ref": "7e6e36c96a6ab48f532f296b08a7cedec73c17db",
+  "cases_sha256": "ff8afb2672b5f5f92e31baedcaa3f4e7b0c2f48cef7aa83be2e9e56f840254d9",
+  "projection_sha256": "46a1e747c6b0d07fc5ccc766feb8d507cc0147ba466503814cff6c37a2621646",
+  "episodes": [
+   {
+    "id": "PV01",
+    "scope": "private",
+    "feature": "P1",
+    "polarity": "positive",
+    "title": "考慮換工作",
+    "tests": "沒有設提醒，也會在兩到五天後追問一次「考慮換工作」的進展。",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T21:14:00+08:00",
+      "from": "user",
+      "text": "唉 最近在考慮換工作"
+     },
+     {
+      "at": "2026-10-12T21:15:00+08:00",
+      "from": "user",
+      "text": "現在這間主管超難搞，每天加班到九點"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-14T12:00:00+08:00",
+        "to": "2026-10-17T21:30:00+08:00",
+        "kind": "followup",
+        "must_mention": [
+         "換工作"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-19T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV02",
+    "scope": "private",
+    "feature": "P1",
+    "polarity": "positive",
+    "title": "想開始健身",
+    "tests": "使用者說想開始健身，幾天後主動關心一次，不擅自開始每週追蹤。",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T08:05:00+08:00",
+      "from": "user",
+      "text": "我最近想開始健身"
+     },
+     {
+      "at": "2026-10-12T08:06:00+08:00",
+      "from": "user",
+      "text": "已經胖了五公斤 QQ"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-14T12:00:00+08:00",
+        "to": "2026-10-17T21:30:00+08:00",
+        "kind": "followup",
+        "must_mention": [
+         "健身|運動"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-19T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV03",
+    "scope": "private",
+    "feature": "P2",
+    "polarity": "positive",
+    "title": "下禮拜一上台演講",
+    "tests": "Machi follows up after the Monday presentation the user was nervous about and keeps any optional good-luck message outside quiet hours.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-14T22:30:00+08:00",
+      "from": "user",
+      "text": "我下禮拜一要上台演講，超緊張的"
+     },
+     {
+      "at": "2026-10-14T22:31:00+08:00",
+      "from": "user",
+      "text": "要報告給全部門聽"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 2,
+      "windows": [
+       {
+        "from": "2026-10-19T09:00:00+08:00",
+        "to": "2026-10-19T09:30:00+08:00",
+        "kind": "pre_event",
+        "optional": true,
+        "must_mention": [
+         "演講|報告"
+        ]
+       },
+       {
+        "from": "2026-10-19T17:00:00+08:00",
+        "to": "2026-10-19T21:30:00+08:00",
+        "kind": "post_event",
+        "must_mention": [
+         "演講|報告"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-20T12:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV04",
+    "scope": "private",
+    "feature": "P2",
+    "polarity": "positive",
+    "title": "禮拜四下午兩點面試",
+    "tests": "有明確時間的面試：面試結束後才問，不在面試前追問結果。",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-13T12:20:00+08:00",
+      "from": "user",
+      "text": "禮拜四下午兩點有個面試"
+     },
+     {
+      "at": "2026-10-13T12:21:00+08:00",
+      "from": "user",
+      "text": "是我很想去的公司！"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 2,
+      "windows": [
+       {
+        "from": "2026-10-15T09:00:00+08:00",
+        "to": "2026-10-15T12:30:00+08:00",
+        "kind": "pre_event",
+        "optional": true,
+        "must_mention": [
+         "面試"
+        ]
+       },
+       {
+        "from": "2026-10-15T16:00:00+08:00",
+        "to": "2026-10-15T21:30:00+08:00",
+        "kind": "post_event",
+        "must_mention": [
+         "面試"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-17T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV05",
+    "scope": "private",
+    "feature": "P3",
+    "polarity": "positive",
+    "title": "提醒寄履歷，沒有回應",
+    "tests": "提醒到點送出並附完成按鈕；沒有回應時當晚只追一次，而且不照抄提醒。",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T22:00:00+08:00",
+      "from": "user",
+      "text": "明天早上九點提醒我寄履歷"
+     }
+    ],
+    "expect": {
+     "reminder": {
+      "at": "2026-10-13T09:00:00+08:00",
+      "completion_actions": [
+       "完成",
+       "晚點提醒",
+       "取消"
+      ]
+     },
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-13T17:00:00+08:00",
+        "to": "2026-10-13T21:30:00+08:00",
+        "kind": "followup",
+        "must_mention": [
+         "履歷"
+        ],
+        "must_not_repeat_reminder_text": true
+       }
+      ]
+     },
+     "horizon": "2026-10-15T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV06",
+    "scope": "private",
+    "feature": "P3",
+    "polarity": "negative",
+    "title": "提醒繳電話費，已完成",
+    "tests": "使用者按了「完成」之後，不再追問同一件事。",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T22:00:00+08:00",
+      "from": "user",
+      "text": "明天中午十二點提醒我繳電話費"
+     },
+     {
+      "at": "2026-10-13T12:04:00+08:00",
+      "from": "user",
+      "action": "postback",
+      "text": "完成"
+     }
+    ],
+    "expect": {
+     "reminder": {
+      "at": "2026-10-13T12:00:00+08:00",
+      "completion_actions": [
+       "完成",
+       "晚點提醒",
+       "取消"
+      ]
+     },
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-15T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV07",
+    "scope": "private",
+    "feature": "P3",
+    "polarity": "positive",
+    "title": "提醒打給媽媽，晚點再提醒",
+    "tests": "A typed 晚點再提醒我 with no time re-fires the reminder once, at a time Machi picks before quiet hours begin.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T21:00:00+08:00",
+      "from": "user",
+      "text": "明天晚上八點提醒我打給媽媽"
+     },
+     {
+      "at": "2026-10-13T20:02:00+08:00",
+      "from": "user",
+      "text": "晚點再提醒我"
+     }
+    ],
+    "expect": {
+     "reminder": {
+      "at": "2026-10-13T20:00:00+08:00",
+      "completion_actions": [
+       "完成",
+       "晚點提醒",
+       "取消"
+      ]
+     },
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-13T20:30:00+08:00",
+        "to": "2026-10-13T21:59:59+08:00",
+        "kind": "reminder_snooze",
+        "must_mention": [
+         "媽媽"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-14T12:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV08",
+    "scope": "private",
+    "feature": "P1",
+    "polarity": "negative",
+    "title": "考慮換手機，隔天就買了",
+    "tests": "考慮換手機，隔天說已經買了：這件事已解決，不再追問。",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T19:00:00+08:00",
+      "from": "user",
+      "text": "在考慮要不要換新手機"
+     },
+     {
+      "at": "2026-10-13T20:10:00+08:00",
+      "from": "user",
+      "text": "結果我今天就去買了哈哈 iPhone 18"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-18T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV09",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "分手（敏感）",
+    "tests": "分手是敏感話題：當下關心，但之後不主動追問。",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T23:40:00+08:00",
+      "from": "user",
+      "text": "我跟男友分手了"
+     },
+     {
+      "at": "2026-10-12T23:41:00+08:00",
+      "from": "user",
+      "text": "好難過 不知道要跟誰說"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "foreground": {
+      "care": true
+     },
+     "horizon": "2026-10-19T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV10",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "阿嬤過世要回南部（像事件，但不可追問）",
+    "tests": "喪事看起來像事件，但絕不能主動問「辦得順利嗎」。",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-13T10:00:00+08:00",
+      "from": "user",
+      "text": "我阿嬤上禮拜過世了 這週末要回南部辦後事"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "foreground": {
+      "care": true
+     },
+     "horizon": "2026-10-20T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV11",
+    "scope": "private",
+    "feature": "P1",
+    "polarity": "negative",
+    "title": "好想去日本（只是願望）",
+    "tests": "只是願望（好想去日本）不是待辦，不追問。",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T13:00:00+08:00",
+      "from": "user",
+      "text": "好想去日本玩喔～"
+     },
+     {
+      "at": "2026-10-12T13:01:00+08:00",
+      "from": "user",
+      "text": "可是最近好窮 哈哈"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-19T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV12",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "想學吉他但說不用提醒",
+    "tests": "使用者說不用提醒，就不追蹤。",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T20:00:00+08:00",
+      "from": "user",
+      "text": "我在想要不要學吉他"
+     },
+     {
+      "at": "2026-10-12T20:01:00+08:00",
+      "from": "user",
+      "text": "不過你不用提醒我啦 我自己會看著辦"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-19T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV13",
+    "scope": "private",
+    "feature": "P2",
+    "polarity": "boundary",
+    "title": "灣區使用者明早路考（時區）",
+    "tests": "灣區使用者的路考：依當地時間在考完後關心，不用台灣時間。",
+    "timezone": "America/Los_Angeles",
+    "turns": [
+     {
+      "at": "2026-10-12T22:50:00-07:00",
+      "from": "user",
+      "text": "明天早上十點要去 DMV 考路考"
+     },
+     {
+      "at": "2026-10-12T22:51:00-07:00",
+      "from": "user",
+      "text": "好怕被當"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-13T12:00:00-07:00",
+        "to": "2026-10-13T20:30:00-07:00",
+        "kind": "post_event",
+        "must_mention": [
+         "路考|考試|駕照"
+        ]
+       }
+      ]
+     },
+     "quiet_hours_local": [
+      "22:00",
+      "09:00"
+     ],
+     "horizon": "2026-10-15T00:00:00-07:00"
+    }
+   },
+   {
+    "id": "PV14",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "麻吉安靜一下",
+    "tests": "說了「麻吉安靜一下」之後，這個聊天室不再有任何主動訊息。",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T09:00:00+08:00",
+      "from": "user",
+      "text": "我這週要開始減肥！"
+     },
+     {
+      "at": "2026-10-12T09:05:00+08:00",
+      "from": "user",
+      "text": "麻吉安靜一下"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "foreground": {
+      "confirm_mute": true
+     },
+     "horizon": "2026-10-19T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV15",
+    "scope": "private",
+    "feature": "P1",
+    "polarity": "boundary",
+    "title": "下個月可能搬家（不確定 → 先問要不要追蹤）",
+    "tests": "不確定的打算（可能搬家）：在回覆裡先問要不要之後問問看，不自動追蹤。",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T21:00:00+08:00",
+      "from": "user",
+      "text": "下個月可能會搬家吧 還不確定"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "foreground": {
+      "offer_followup": true
+     },
+     "horizon": "2026-10-19T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV16",
+    "scope": "private",
+    "feature": "P1",
+    "polarity": "positive",
+    "title": "學日文提過兩次（合併成一件事）",
+    "tests": "同一個目標提了兩次，合併成一件事，只追問一次。",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T20:00:00+08:00",
+      "from": "user",
+      "text": "我想把日文撿回來 N3 考過之後就沒碰了"
+     },
+     {
+      "at": "2026-10-14T21:00:00+08:00",
+      "from": "user",
+      "text": "對了 前天說想學日文 你覺得用什麼 app 好？"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-16T12:00:00+08:00",
+        "to": "2026-10-19T21:30:00+08:00",
+        "kind": "followup",
+        "must_mention": [
+         "日文"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-20T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR01",
+    "scope": "group",
+    "feature": "G1",
+    "polarity": "positive",
+    "title": "約火鍋但沒決定",
+    "tests": "群組約火鍋但沒決定：隔天整理已知的（小華禮拜五可以）並推一把，不捏造。",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "A": "阿明",
+     "M": "小美",
+     "H": "小華"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T20:10:00+08:00",
+      "from": "A",
+      "text": "下禮拜要不要吃火鍋？"
+     },
+     {
+      "at": "2026-10-12T20:11:00+08:00",
+      "from": "M",
+      "text": "好啊！"
+     },
+     {
+      "at": "2026-10-12T20:13:00+08:00",
+      "from": "H",
+      "text": "我禮拜五可以"
+     },
+     {
+      "at": "2026-10-12T20:20:00+08:00",
+      "from": "M",
+      "text": "哈哈好 那再說"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-13T11:00:00+08:00",
+        "to": "2026-10-14T21:00:00+08:00",
+        "kind": "nudge",
+        "must_mention": [
+         "火鍋"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "horizon": "2026-10-16T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR02",
+    "scope": "group",
+    "feature": "G3",
+    "polarity": "boundary",
+    "title": "已經敲定的燒肉聚餐",
+    "tests": "已經敲定時間地點、也訂好位的聚餐：不推「還沒決定」，最多前一天提醒。",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "A": "阿明",
+     "M": "小美",
+     "H": "小華"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T20:00:00+08:00",
+      "from": "A",
+      "text": "這禮拜六晚上吃燒肉？"
+     },
+     {
+      "at": "2026-10-12T20:02:00+08:00",
+      "from": "M",
+      "text": "可以"
+     },
+     {
+      "at": "2026-10-12T20:03:00+08:00",
+      "from": "H",
+      "text": "+1"
+     },
+     {
+      "at": "2026-10-12T20:05:00+08:00",
+      "from": "A",
+      "text": "那就 10/17 晚上七點 信義那家燒肉"
+     },
+     {
+      "at": "2026-10-12T20:06:00+08:00",
+      "from": "M",
+      "text": "好 我來訂位"
+     },
+     {
+      "at": "2026-10-12T20:30:00+08:00",
+      "from": "M",
+      "text": "訂好了 3 位"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-16T18:00:00+08:00",
+        "to": "2026-10-17T16:00:00+08:00",
+        "kind": "pre_event",
+        "optional": true,
+        "must_mention": [
+         "燒肉"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-18T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR03",
+    "scope": "group",
+    "feature": "G2",
+    "polarity": "positive",
+    "title": "阿明說要訂餐廳，之後沒下文",
+    "tests": "阿明說「我來訂餐廳」之後沒下文：活動前點名阿明問一次並提供協助。",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "A": "阿明",
+     "M": "小美",
+     "H": "小華"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T21:00:00+08:00",
+      "from": "A",
+      "text": "下週五晚上吃火鍋確定囉！"
+     },
+     {
+      "at": "2026-10-12T21:01:00+08:00",
+      "from": "M",
+      "text": "耶"
+     },
+     {
+      "at": "2026-10-12T21:02:00+08:00",
+      "from": "A",
+      "text": "我來訂餐廳"
+     },
+     {
+      "at": "2026-10-12T21:03:00+08:00",
+      "from": "H",
+      "text": "讚 交給你"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-14T12:00:00+08:00",
+        "to": "2026-10-21T21:00:00+08:00",
+        "kind": "commitment",
+        "must_mention": [
+         "阿明",
+         "餐廳"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-23T12:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR04",
+    "scope": "group",
+    "feature": "G2",
+    "polarity": "negative",
+    "title": "我看看（不算承諾）",
+    "tests": "Machi does not treat 阿明's 「我看看」 as a commitment to book the restaurant.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "A": "阿明",
+     "M": "小美",
+     "H": "小華"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T21:00:00+08:00",
+      "from": "M",
+      "text": "禮拜六中午聚餐的餐廳誰要訂一下啊"
+     },
+     {
+      "at": "2026-10-12T21:05:00+08:00",
+      "from": "A",
+      "text": "我看看"
+     },
+     {
+      "at": "2026-10-12T21:06:00+08:00",
+      "from": "H",
+      "text": "看看 xd"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-13T11:00:00+08:00",
+        "to": "2026-10-16T21:00:00+08:00",
+        "kind": "nudge",
+        "optional": true,
+        "must_mention": [
+         "餐廳"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "forbidden_claims": [
+      "阿明說要訂",
+      "阿明答應"
+     ],
+     "horizon": "2026-10-17T12:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR05",
+    "scope": "group",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "閒聊、梗圖，沒有計畫",
+    "tests": "群組閒聊和梗圖，沒有計畫，麻吉不插話。",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "A": "阿明",
+     "M": "小美",
+     "H": "小華"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T12:00:00+08:00",
+      "from": "M",
+      "text": "笑死 你們看這個"
+     },
+     {
+      "at": "2026-10-12T12:01:00+08:00",
+      "from": "H",
+      "text": "哈哈哈哈哈"
+     },
+     {
+      "at": "2026-10-12T12:10:00+08:00",
+      "from": "A",
+      "text": "好想放假"
+     },
+     {
+      "at": "2026-10-12T12:11:00+08:00",
+      "from": "M",
+      "text": "+1 好累"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-19T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR06",
+    "scope": "group",
+    "feature": "G4",
+    "polarity": "negative",
+    "title": "聚餐後（預設模式不追問）",
+    "tests": "聚餐結束後，預設模式不主動問「好玩嗎」。",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "A": "阿明",
+     "M": "小美",
+     "H": "小華"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T20:00:00+08:00",
+      "from": "A",
+      "text": "禮拜三晚上七點 公館那家拉麵 大家可以吧"
+     },
+     {
+      "at": "2026-10-12T20:01:00+08:00",
+      "from": "M",
+      "text": "可以"
+     },
+     {
+      "at": "2026-10-12T20:02:00+08:00",
+      "from": "H",
+      "text": "OK"
+     },
+     {
+      "at": "2026-10-14T22:40:00+08:00",
+      "from": "M",
+      "text": "今天好好吃！下次再約"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-17T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR07",
+    "scope": "group",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "私下說的驚喜派對不能在群組講",
+    "tests": "Nothing from 阿明's private message about 小美's surprise party appears in the group.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "A": "阿明",
+     "M": "小美",
+     "H": "小華"
+    },
+    "turns": [
+     {
+      "at": "2026-10-13T20:00:00+08:00",
+      "from": "H",
+      "text": "下禮拜三晚上大家有空嗎？"
+     },
+     {
+      "at": "2026-10-13T20:01:00+08:00",
+      "from": "M",
+      "text": "我可以呀 怎麼了？"
+     },
+     {
+      "at": "2026-10-13T20:03:00+08:00",
+      "from": "H",
+      "text": "沒事 想說吃個飯"
+     }
+    ],
+    "private_prelude": [
+     {
+      "at": "2026-10-12T19:00:00+08:00",
+      "from": "A",
+      "text": "下禮拜三是小美生日，我們要偷偷幫她辦驚喜派對，別說出去喔"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-14T11:00:00+08:00",
+        "to": "2026-10-16T21:00:00+08:00",
+        "kind": "nudge",
+        "optional": true,
+        "must_mention": [
+         "吃飯|聚餐"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "forbidden_mentions": [
+      "生日",
+      "驚喜",
+      "派對",
+      "壽星"
+     ],
+     "horizon": "2026-10-21T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR08",
+    "scope": "group",
+    "feature": "G1",
+    "polarity": "positive",
+    "title": "已定禮拜五，後來有人不行",
+    "tests": "已定的時間被取消：不再發舊時間的提醒，改成推一把重新決定。",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "A": "阿明",
+     "M": "小美",
+     "H": "小華"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T20:00:00+08:00",
+      "from": "A",
+      "text": "禮拜五晚上七點 火鍋 決定了！"
+     },
+     {
+      "at": "2026-10-12T20:01:00+08:00",
+      "from": "M",
+      "text": "好"
+     },
+     {
+      "at": "2026-10-12T20:02:00+08:00",
+      "from": "H",
+      "text": "好"
+     },
+     {
+      "at": "2026-10-14T13:00:00+08:00",
+      "from": "H",
+      "text": "抱歉 我禮拜五臨時要加班 不行了"
+     },
+     {
+      "at": "2026-10-14T13:05:00+08:00",
+      "from": "M",
+      "text": "那要改天嗎"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-14T18:00:00+08:00",
+        "to": "2026-10-15T21:00:00+08:00",
+        "kind": "nudge",
+        "must_mention": [
+         "火鍋"
+        ]
+       }
+      ]
+     },
+     "forbidden_claims": [
+      "禮拜五晚上七點見",
+      "明天就是火鍋"
+     ],
+     "horizon": "2026-10-17T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR09",
+    "scope": "group",
+    "feature": "G1",
+    "polarity": "positive",
+    "title": "同一個火鍋聚被提了好幾次（只推一次）",
+    "tests": "同一個火鍋聚被提了好幾次，只推一次。",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "A": "阿明",
+     "M": "小美",
+     "H": "小華"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T20:10:00+08:00",
+      "from": "A",
+      "text": "下禮拜要不要吃火鍋？"
+     },
+     {
+      "at": "2026-10-12T20:12:00+08:00",
+      "from": "M",
+      "text": "好啊"
+     },
+     {
+      "at": "2026-10-13T12:30:00+08:00",
+      "from": "H",
+      "text": "那個火鍋聚是哪天啊"
+     },
+     {
+      "at": "2026-10-13T12:40:00+08:00",
+      "from": "A",
+      "text": "還沒決定欸"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-13T18:00:00+08:00",
+        "to": "2026-10-14T21:00:00+08:00",
+        "kind": "nudge",
+        "must_mention": [
+         "火鍋"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-16T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR10",
+    "scope": "group",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "回覆模式：未決計畫也不主動",
+    "tests": "回覆模式的群組：即使計畫沒決定也不主動。",
+    "timezone": "Asia/Taipei",
+    "mode": "回覆模式",
+    "members": {
+     "A": "阿明",
+     "M": "小美",
+     "H": "小華"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T20:10:00+08:00",
+      "from": "A",
+      "text": "下禮拜要不要吃火鍋？"
+     },
+     {
+      "at": "2026-10-12T20:11:00+08:00",
+      "from": "M",
+      "text": "好啊！"
+     },
+     {
+      "at": "2026-10-12T20:13:00+08:00",
+      "from": "H",
+      "text": "我禮拜五可以"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-16T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR11",
+    "scope": "group",
+    "feature": "G1",
+    "polarity": "boundary",
+    "title": "25 人社團群組（推播很貴）",
+    "tests": "25 人群組每則推播要算 25 則：最多一則高價值的推一把。",
+    "timezone": "Asia/Taipei",
+    "member_count": 25,
+    "members": {
+     "A": "社長",
+     "M": "小美",
+     "H": "阿凱",
+     "J": "Jenny"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T21:00:00+08:00",
+      "from": "A",
+      "text": "期中考完要不要辦個社團聚餐？"
+     },
+     {
+      "at": "2026-10-12T21:02:00+08:00",
+      "from": "M",
+      "text": "好耶"
+     },
+     {
+      "at": "2026-10-12T21:03:00+08:00",
+      "from": "H",
+      "text": "我 11/6 之後都可以"
+     },
+     {
+      "at": "2026-10-12T21:05:00+08:00",
+      "from": "J",
+      "text": "+1"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-13T11:00:00+08:00",
+        "to": "2026-10-15T21:00:00+08:00",
+        "kind": "nudge",
+        "must_mention": [
+         "聚餐"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-19T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR12",
+    "scope": "group",
+    "feature": "NOMISS",
+    "polarity": "positive",
+    "title": "熱鬧群組裡有人 @麻吉 問問題",
+    "tests": "熱鬧群組裡有人 @麻吉 問問題，一定要回，而且要快。",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "A": "阿明",
+     "M": "小美",
+     "H": "小華"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T20:00:00+08:00",
+      "from": "A",
+      "text": "欸你們看新聞了嗎"
+     },
+     {
+      "at": "2026-10-12T20:00:05+08:00",
+      "from": "M",
+      "text": "什麼新聞"
+     },
+     {
+      "at": "2026-10-12T20:00:09+08:00",
+      "from": "H",
+      "text": "@麻吉 明天台北會下雨嗎",
+      "addressed": true
+     },
+     {
+      "at": "2026-10-12T20:00:12+08:00",
+      "from": "A",
+      "text": "好像有颱風"
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "answer_addressed": "H",
+      "max_latency_s": 10
+     },
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-13T12:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR13",
+    "scope": "group",
+    "feature": "G5",
+    "polarity": "positive",
+    "title": "請麻吉整理最近約的事",
+    "tests": "On request, Machi's group recap separates what is decided from what is still open (Sunday's restaurant) without inventing details.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "A": "阿明",
+     "M": "小美",
+     "H": "小華"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T20:00:00+08:00",
+      "from": "A",
+      "text": "禮拜六下午三點 河濱打球"
+     },
+     {
+      "at": "2026-10-12T20:01:00+08:00",
+      "from": "H",
+      "text": "OK"
+     },
+     {
+      "at": "2026-10-13T21:00:00+08:00",
+      "from": "M",
+      "text": "禮拜天聚餐 目前 6 個人"
+     },
+     {
+      "at": "2026-10-13T21:02:00+08:00",
+      "from": "A",
+      "text": "餐廳還沒想好"
+     },
+     {
+      "at": "2026-10-14T20:00:00+08:00",
+      "from": "M",
+      "text": "@麻吉 幫我們整理一下最近約的事情",
+      "addressed": true
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "answer_addressed": "M",
+      "recap": {
+       "decided": [
+        "禮拜六 15:00 河濱打球",
+        "禮拜天聚餐 6 人"
+       ],
+       "open": [
+        "聚餐餐廳"
+       ]
+      },
+      "must_not_invent": true
+     },
+     "proactive": {
+      "min": 0,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-15T11:00:00+08:00",
+        "to": "2026-10-15T21:00:00+08:00",
+        "kind": "nudge",
+        "optional": true,
+        "must_mention": [
+         "餐廳|聚餐"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "horizon": "2026-10-16T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR14",
+    "scope": "group",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "群組裡說麻吉安靜一下",
+    "tests": "群組裡說「麻吉安靜一下」之後，這個群組不再有主動訊息。",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "A": "阿明",
+     "M": "小美",
+     "H": "小華"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T20:10:00+08:00",
+      "from": "A",
+      "text": "下禮拜要不要吃火鍋？"
+     },
+     {
+      "at": "2026-10-12T20:11:00+08:00",
+      "from": "M",
+      "text": "好啊！"
+     },
+     {
+      "at": "2026-10-12T20:30:00+08:00",
+      "from": "A",
+      "text": "麻吉安靜一下",
+      "addressed": true
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "foreground": {
+      "confirm_mute": true
+     },
+     "horizon": "2026-10-19T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "AO01",
+    "scope": "private",
+    "feature": "NOMISS",
+    "polarity": "positive",
+    "title": "連發三則問電鍋蒸地瓜（合併回覆）",
+    "tests": "A private three-message burst sent within seconds gets one coherent reply that answers all three messages.",
+    "timezone": "America/Los_Angeles",
+    "turns": [
+     {
+      "at": "2026-10-12T18:40:02-07:00",
+      "from": "user",
+      "text": "麻吉～大同電鍋蒸地瓜 外鍋要放幾杯水啊"
+     },
+     {
+      "at": "2026-10-12T18:40:05-07:00",
+      "from": "user",
+      "text": "這邊 Costco 的地瓜都超大條 要先切嗎"
+     },
+     {
+      "at": "2026-10-12T18:40:09-07:00",
+      "from": "user",
+      "text": "啊蒸好可以直接丟冷凍嗎 想說之後給小孩帶便當🍠"
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "answers_all": [
+       "外鍋放幾杯水",
+       "大條地瓜要不要先切",
+       "蒸好能不能冷凍、怎麼保存帶便當"
+      ],
+      "single_coherent_reply": true,
+      "max_latency_s": 10
+     },
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-13T12:00:00-07:00"
+    }
+   },
+   {
+    "id": "AO02",
+    "scope": "private",
+    "feature": "NOMISS",
+    "polarity": "boundary",
+    "title": "第一題還沒回完又問第二題（東京居酒屋）",
+    "tests": "A second question sent while the reply to the first is still being generated gets answered too instead of being dropped.",
+    "timezone": "Asia/Tokyo",
+    "turns": [
+     {
+      "at": "2026-10-14T19:32:10+09:00",
+      "from": "user",
+      "text": "麻吉 帳單上多了一個「お通し ¥550」 這是什麼啊 我沒點耶😳"
+     },
+     {
+      "at": "2026-10-14T19:32:16+09:00",
+      "from": "user",
+      "text": "啊還有 日本吃飯要給小費嗎？怕失禮"
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "answers_all": [
+       "お通し是什麼、為什麼會收費",
+       "日本吃飯要不要給小費"
+      ],
+      "no_dropped_turn": true,
+      "max_latency_s": 15
+     },
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-15T00:00:00+09:00"
+    }
+   },
+   {
+    "id": "AO03",
+    "scope": "private",
+    "feature": "NOMISS",
+    "polarity": "positive",
+    "title": "長輩傳孫子運動會影片（不支援也要回）",
+    "tests": "An unsupported video message gets an honest acknowledgment instead of being silently ignored.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-18T10:05:00+08:00",
+      "from": "user",
+      "text": "麻吉早安🌞 給你看我孫子昨天運動會跳舞 真古錐😆"
+     },
+     {
+      "at": "2026-10-18T10:05:20+08:00",
+      "from": "user",
+      "message_type": "video",
+      "text": "[影片 01:12]"
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "acknowledge_media": "video",
+      "must_not_invent": true,
+      "max_latency_s": 10
+     },
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-19T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "AO04",
+    "scope": "private",
+    "feature": "NOREJECT",
+    "polarity": "positive",
+    "title": "半夜唱完歌叫麻吉叫計程車",
+    "tests": "A private request Machi cannot carry out (calling a taxi) gets concrete practical help instead of a flat refusal.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-16T23:48:00+08:00",
+      "from": "user",
+      "text": "麻吉 幫我叫計程車"
+     },
+     {
+      "at": "2026-10-16T23:48:12+08:00",
+      "from": "user",
+      "text": "剛唱完歌 在忠孝敦化這邊 累到不行🥱"
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "no_rejection": true,
+      "honest_about_limits": true,
+      "alternatives": [
+       "現在就能用的叫車方式（例如打 55688 叫車專線或開叫車 app）",
+       "幫他把上車地點講清楚（忠孝敦化哪個出口或路口），方便司機找到"
+      ],
+      "max_latency_s": 10
+     },
+     "forbidden_claims": [
+      "已經幫你叫好車",
+      "車子快到了"
+     ],
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "quiet_hours_local": [
+      "22:00",
+      "09:00"
+     ],
+     "horizon": "2026-10-17T12:00:00+08:00"
+    }
+   },
+   {
+    "id": "AO05",
+    "scope": "private",
+    "feature": "NOREJECT",
+    "polarity": "positive",
+    "title": "幫我訂位（給選項＋提議提醒）",
+    "tests": "A table-booking request Machi cannot carry out gets concrete booking options plus an offer to remind, without claiming a booking was made.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-14T12:35:00+08:00",
+      "from": "user",
+      "text": "麻吉 幫我訂位🙏"
+     },
+     {
+      "at": "2026-10-14T12:35:15+08:00",
+      "from": "user",
+      "text": "這禮拜六晚上六點半 4 個人"
+     },
+     {
+      "at": "2026-10-14T12:35:30+08:00",
+      "from": "user",
+      "text": "東區那家「山口食堂」 同事說超難訂 拜託了"
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "no_rejection": true,
+      "alternatives": [
+       "餐廳的線上訂位管道（Google 地圖、官網或訂位平台）",
+       "直接打電話，附上可以照念的訂位內容（10/17 18:30、4 位）"
+      ],
+      "offer_reminder": true,
+      "must_not_invent": true,
+      "max_latency_s": 10
+     },
+     "forbidden_claims": [
+      "已經幫你訂好",
+      "訂位成功",
+      "幫你保留位子"
+     ],
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-15T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "AO06",
+    "scope": "private",
+    "feature": "FAST",
+    "polarity": "positive",
+    "title": "排帶爸媽的京都大阪行程（先秒回，再給結果）",
+    "tests": "A long research request gets a fast bridge reply and then the full result as one proactive message within minutes.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-20T20:15:00+08:00",
+      "from": "user",
+      "text": "麻吉 可以幫我排一下帶爸媽去京都大阪的行程嗎"
+     },
+     {
+      "at": "2026-10-20T20:15:25+08:00",
+      "from": "user",
+      "text": "11 月底 5 天 4 夜 他們走不快 要輕鬆一點的"
+     },
+     {
+      "at": "2026-10-20T20:16:05+08:00",
+      "from": "user",
+      "text": "然後想住同一間飯店不要一直換 交通也幫我看怎麼移動比較方便🙏"
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "bridge_reply": true,
+      "max_latency_s": 5
+     },
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-20T20:16:10+08:00",
+        "to": "2026-10-20T20:31:00+08:00",
+        "kind": "deferred_result",
+        "must_mention": [
+         "京都",
+         "大阪"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-20T21:30:00+08:00"
+    }
+   },
+   {
+    "id": "AO07",
+    "scope": "group",
+    "feature": "NOREJECT",
+    "polarity": "positive",
+    "title": "群組 @麻吉 開 LINE 投票（給替代方案）",
+    "tests": "A group request addressed to 麻吉 that it cannot carry out (opening a LINE poll) gets the closest useful alternative instead of a refusal.",
+    "timezone": "Europe/London",
+    "members": {
+     "K": "Kai",
+     "Y": "雅婷",
+     "B": "阿豪",
+     "S": "Sharon"
+    },
+    "turns": [
+     {
+      "at": "2026-10-21T13:05:00+01:00",
+      "from": "Y",
+      "text": "Cambridge 一日遊到底要這禮拜六還是禮拜天啦 喬好久了🤣"
+     },
+     {
+      "at": "2026-10-21T13:05:40+01:00",
+      "from": "B",
+      "text": "我兩天都可以"
+     },
+     {
+      "at": "2026-10-21T13:06:05+01:00",
+      "from": "S",
+      "text": "我禮拜六要打工 只有禮拜天可以"
+     },
+     {
+      "at": "2026-10-21T13:06:30+01:00",
+      "from": "K",
+      "text": "@麻吉 幫我們開一個 LINE 投票啦 讓大家選",
+      "addressed": true
+     },
+     {
+      "at": "2026-10-21T13:06:45+01:00",
+      "from": "Y",
+      "text": "好主意 👍"
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "answer_addressed": "K",
+      "no_rejection": true,
+      "alternatives": [
+       "直接在群組列出兩個選項（這禮拜六 10/24、禮拜天 10/25）請大家回覆",
+       "或一兩句說明怎麼自己在群組開 LINE 投票"
+      ],
+      "must_not_invent": true,
+      "max_latency_s": 10
+     },
+     "forbidden_claims": [
+      "投票開好了",
+      "就決定禮拜天"
+     ],
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-22T00:00:00+01:00"
+    }
+   },
+   {
+    "id": "PV17",
+    "scope": "private",
+    "feature": "P1",
+    "polarity": "positive",
+    "title": "存錢換機車（下禮拜一發薪水才開始存）",
+    "tests": "Times an intention follow-up after the first step the user named himself (next Monday's payday) rather than after a generic delay.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-13T22:35:00+08:00",
+      "from": "user",
+      "text": "欸麻吉 我決定開始存錢了 💪"
+     },
+     {
+      "at": "2026-10-13T22:35:40+08:00",
+      "from": "user",
+      "text": "我那台老機車今天又發不動 牽去車行 阿伯直接叫我換一台比較快 😩"
+     },
+     {
+      "at": "2026-10-13T22:36:30+08:00",
+      "from": "user",
+      "text": "目標過年前存到六萬 換台新的"
+     },
+     {
+      "at": "2026-10-13T22:37:10+08:00",
+      "from": "user",
+      "text": "下禮拜一發薪水 那天就先轉八千到另一個帳戶 不准自己亂花 哈哈"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-19T12:00:00+08:00",
+        "to": "2026-10-21T21:30:00+08:00",
+        "kind": "followup",
+        "must_mention": [
+         "存錢|機車"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-23T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV18",
+    "scope": "private",
+    "feature": "P1",
+    "polarity": "positive",
+    "title": "大三生這禮拜要報名雅思",
+    "tests": "Follows up on a student's exam-registration intention before the end-of-week deadline she set herself.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T23:20:00+08:00",
+      "from": "user",
+      "text": "麻吉～我決定要申請明年的交換了！！"
+     },
+     {
+      "at": "2026-10-12T23:20:30+08:00",
+      "from": "user",
+      "text": "想去荷蘭 🇳🇱 可是學校要雅思 6.5 😭"
+     },
+     {
+      "at": "2026-10-12T23:21:10+08:00",
+      "from": "user",
+      "text": "這禮拜一定要把雅思報名搞定 不然我一定又拖到下個月"
+     },
+     {
+      "at": "2026-10-12T23:21:40+08:00",
+      "from": "user",
+      "text": "聽說考位很難搶 先報先贏 🙏"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-14T12:00:00+08:00",
+        "to": "2026-10-18T21:30:00+08:00",
+        "kind": "followup",
+        "must_mention": [
+         "雅思"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-20T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV19",
+    "scope": "private",
+    "feature": "P1",
+    "polarity": "positive",
+    "title": "洛杉磯留學生想學煮台菜（時區）",
+    "tests": "Delivers an intention follow-up to a Los Angeles user in LA-local daytime rather than on Taipei time.",
+    "timezone": "America/Los_Angeles",
+    "turns": [
+     {
+      "at": "2026-10-13T19:40:00-07:00",
+      "from": "user",
+      "text": "今天晚餐又是 Chipotle 🥲"
+     },
+     {
+      "at": "2026-10-13T19:40:40-07:00",
+      "from": "user",
+      "text": "好想吃滷肉飯喔 這邊台灣餐廳一碗要 18 鎂 還沒有我媽煮的好吃"
+     },
+     {
+      "at": "2026-10-13T19:41:30-07:00",
+      "from": "user",
+      "text": "我決定了 要自己學煮台菜！"
+     },
+     {
+      "at": "2026-10-13T19:42:10-07:00",
+      "from": "user",
+      "text": "先從滷肉飯開始 我媽說晚點會把她的食譜傳給我"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-15T12:00:00-07:00",
+        "to": "2026-10-18T21:30:00-07:00",
+        "kind": "followup",
+        "must_mention": [
+         "台菜|滷肉"
+        ]
+       }
+      ]
+     },
+     "quiet_hours_local": [
+      "22:00",
+      "09:00"
+     ],
+     "horizon": "2026-10-20T00:00:00-07:00"
+    }
+   },
+   {
+    "id": "PV20",
+    "scope": "private",
+    "feature": "P1",
+    "polarity": "positive",
+    "title": "退休老師想辦畢業五十年同學會",
+    "tests": "Sends exactly one check-in on a retiree's weeks-long intention to organise a class reunion, not a recurring progress chase.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-14T06:45:00+08:00",
+      "from": "user",
+      "text": "麻吉早安☀️"
+     },
+     {
+      "at": "2026-10-14T06:46:00+08:00",
+      "from": "user",
+      "text": "昨天去菜市場遇到高中同學阿雪 兩個人在菜攤前面聊了快一個鐘頭 呵呵"
+     },
+     {
+      "at": "2026-10-14T06:47:30+08:00",
+      "from": "user",
+      "text": "算一算我們高中畢業今年剛好滿五十年了 大家攏足久無見矣"
+     },
+     {
+      "at": "2026-10-14T06:48:40+08:00",
+      "from": "user",
+      "text": "我想來辦個同學會～先把大家的電話找齊 再看什麼時候大家比較方便 😊"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-16T09:00:00+08:00",
+        "to": "2026-10-21T21:00:00+08:00",
+        "kind": "followup",
+        "must_mention": [
+         "同學會"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-28T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV21",
+    "scope": "private",
+    "feature": "P1",
+    "polarity": "positive",
+    "title": "下班想畫 LINE 貼圖上架（不可捏造進度）",
+    "tests": "Follows up on a side-project intention using only facts the user stated, with no invented deadline, launch or progress.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-15T21:05:00+08:00",
+      "from": "user",
+      "text": "我跟你說齁 我要來做一組 LINE 貼圖！！"
+     },
+     {
+      "at": "2026-10-15T21:05:30+08:00",
+      "from": "user",
+      "text": "主角是台灣小吃 珍奶 雞排 臭豆腐那種 😆"
+     },
+     {
+      "at": "2026-10-15T21:06:20+08:00",
+      "from": "user",
+      "text": "下班都在滑手機耍廢 想說用 iPad 每天畫一點"
+     },
+     {
+      "at": "2026-10-15T21:07:00+08:00",
+      "from": "user",
+      "text": "目標做滿 16 張就上架"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-17T12:00:00+08:00",
+        "to": "2026-10-20T21:30:00+08:00",
+        "kind": "followup",
+        "must_mention": [
+         "貼圖"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "forbidden_claims": [
+      "已經上架",
+      "審核通過"
+     ],
+     "horizon": "2026-10-22T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV22",
+    "scope": "private",
+    "feature": "P1",
+    "polarity": "positive",
+    "title": "高雄媽媽全家想領養貓，隔天聊別的",
+    "tests": "Keeps an adoption intention open across an unrelated next-day conversation and still follows up on it once.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T12:30:00+08:00",
+      "from": "user",
+      "text": "麻吉 我們家決定要領養貓了 🐱"
+     },
+     {
+      "at": "2026-10-12T12:30:40+08:00",
+      "from": "user",
+      "text": "我們家 Emma 吵了一整年 她爸終於點頭 哈哈"
+     },
+     {
+      "at": "2026-10-12T12:31:30+08:00",
+      "from": "user",
+      "text": "打算這個月找一天帶兩個小孩去收容所看看"
+     },
+     {
+      "at": "2026-10-13T17:50:00+08:00",
+      "from": "user",
+      "text": "欸 晚餐好懶得煮 有沒有十五分鐘就能搞定的菜 😩"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-14T12:00:00+08:00",
+        "to": "2026-10-20T21:30:00+08:00",
+        "kind": "followup",
+        "must_mention": [
+         "貓|領養|收容所"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-22T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV23",
+    "scope": "private",
+    "feature": "P1",
+    "polarity": "negative",
+    "title": "東京工程師想考潛水執照，兩天後說算了",
+    "tests": "Closes a tracked intention when the user explicitly abandons it and sends no follow-up afterwards.",
+    "timezone": "Asia/Tokyo",
+    "turns": [
+     {
+      "at": "2026-10-12T20:40:00+09:00",
+      "from": "user",
+      "text": "我想去考潛水執照！"
+     },
+     {
+      "at": "2026-10-12T20:40:30+09:00",
+      "from": "user",
+      "text": "最近一直滑到沖繩跟海龜一起游的影片 太療癒了吧 🐢"
+     },
+     {
+      "at": "2026-10-12T20:41:20+09:00",
+      "from": "user",
+      "text": "想說年底前把 OW 考一考"
+     },
+     {
+      "at": "2026-10-14T21:15:00+09:00",
+      "from": "user",
+      "text": "欸 前天說要考潛水那個 算了啦"
+     },
+     {
+      "at": "2026-10-14T21:15:40+09:00",
+      "from": "user",
+      "text": "查了一下 OW 要下到 18 米 光想就腿軟 😂"
+     },
+     {
+      "at": "2026-10-14T21:16:10+09:00",
+      "from": "user",
+      "text": "我還是繼續當旱鴨子好了"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-21T00:00:00+09:00"
+    }
+   },
+   {
+    "id": "PV24",
+    "scope": "private",
+    "feature": "P1",
+    "polarity": "negative",
+    "title": "颱風天說要划獨木舟上班（反諷）",
+    "tests": "Treats a sarcastic, plan-shaped joke as non-trackable and sends no follow-up.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-14T21:30:00+08:00",
+      "from": "user",
+      "text": "外面風雨超大 結果公司說明天照常上班"
+     },
+     {
+      "at": "2026-10-14T21:30:30+08:00",
+      "from": "user",
+      "text": "很好啊 那我明天就划獨木舟去打卡 🛶"
+     },
+     {
+      "at": "2026-10-14T21:31:10+08:00",
+      "from": "user",
+      "text": "順便撈幾條魚給老闆當伴手禮 老闆真的是佛心來的 🙃"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-19T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV25",
+    "scope": "private",
+    "feature": "P1",
+    "polarity": "negative",
+    "title": "如果中樂透要買露營車環島（假設）",
+    "tests": "Creates no open loop from a lottery-win hypothetical, even though it names a concrete purchase and trip.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-16T12:20:00+08:00",
+      "from": "user",
+      "text": "麻吉 問你喔"
+     },
+     {
+      "at": "2026-10-16T12:20:30+08:00",
+      "from": "user",
+      "text": "如果我中了威力彩頭獎 你覺得要先買房還是先環遊世界？😂"
+     },
+     {
+      "at": "2026-10-16T12:21:20+08:00",
+      "from": "user",
+      "text": "要是真的中了 我一定先買一台露營車 帶老婆小孩環島一個月 🚐"
+     },
+     {
+      "at": "2026-10-16T12:21:50+08:00",
+      "from": "user",
+      "text": "可惜我連一張都沒買 哈哈哈"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-23T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV26",
+    "scope": "private",
+    "feature": "P1",
+    "polarity": "negative",
+    "title": "閨蜜下禮拜四飛澳洲打工度假（第三方）",
+    "tests": "Creates no follow-up for a friend's dated plan that the user only reports and declined to join.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-13T20:15:00+08:00",
+      "from": "user",
+      "text": "我閨蜜小安說她要去澳洲打工度假了 🦘"
+     },
+     {
+      "at": "2026-10-13T20:15:40+08:00",
+      "from": "user",
+      "text": "下禮拜四就飛 簽證跟機票都弄好了"
+     },
+     {
+      "at": "2026-10-13T20:16:30+08:00",
+      "from": "user",
+      "text": "還一直揪我一起去 我才不要咧 我連離開台中都會想家 哈哈"
+     },
+     {
+      "at": "2026-10-13T20:17:10+08:00",
+      "from": "user",
+      "text": "不過真的好捨不得她 🥲"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-24T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV27",
+    "scope": "private",
+    "feature": "P2",
+    "polarity": "positive",
+    "title": "這禮拜四下午一點考 CPA，一考四小時（紐約時區）",
+    "tests": "Machi times its exam check-in for after the four-hour exam has ended in the user's New York time, not right after the 13:00 start.",
+    "timezone": "America/New_York",
+    "turns": [
+     {
+      "at": "2026-10-19T20:40:00-04:00",
+      "from": "user",
+      "text": "麻吉～我這禮拜四下午一點要考 CPA 的 FAR 😱"
+     },
+     {
+      "at": "2026-10-19T20:40:40-04:00",
+      "from": "user",
+      "text": "一考就四個小時 上次就是卡在這科"
+     },
+     {
+      "at": "2026-10-19T20:41:20-04:00",
+      "from": "user",
+      "text": "這次一定要過啦 🙏"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 2,
+      "windows": [
+       {
+        "from": "2026-10-22T09:00:00-04:00",
+        "to": "2026-10-22T11:30:00-04:00",
+        "kind": "pre_event",
+        "optional": true,
+        "must_mention": [
+         "考試|FAR|CPA"
+        ]
+       },
+       {
+        "from": "2026-10-22T18:00:00-04:00",
+        "to": "2026-10-23T21:30:00-04:00",
+        "kind": "post_event",
+        "must_mention": [
+         "考試|FAR|CPA"
+        ]
+       }
+      ]
+     },
+     "quiet_hours_local": [
+      "22:00",
+      "09:00"
+     ],
+     "horizon": "2026-10-24T12:00:00-04:00"
+    }
+   },
+   {
+    "id": "PV28",
+    "scope": "private",
+    "feature": "P2",
+    "polarity": "positive",
+    "title": "這禮拜六從埼玉搬到中野（只給日期）",
+    "tests": "With only a day known for the move, Machi checks in on the evening of moving day or the day after, in Tokyo time.",
+    "timezone": "Asia/Tokyo",
+    "turns": [
+     {
+      "at": "2026-10-13T21:20:00+09:00",
+      "from": "user",
+      "text": "跟你說 我這禮拜六要搬家了！"
+     },
+     {
+      "at": "2026-10-13T21:20:40+09:00",
+      "from": "user",
+      "text": "從埼玉搬到中野 以後不用每天擠一個小時電車了 😭"
+     },
+     {
+      "at": "2026-10-13T21:21:30+09:00",
+      "from": "user",
+      "text": "可是東西才打包一半 房間根本戰場 囧"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 2,
+      "windows": [
+       {
+        "from": "2026-10-17T09:00:00+09:00",
+        "to": "2026-10-17T10:00:00+09:00",
+        "kind": "pre_event",
+        "optional": true,
+        "must_mention": [
+         "搬家"
+        ]
+       },
+       {
+        "from": "2026-10-17T18:00:00+09:00",
+        "to": "2026-10-18T21:30:00+09:00",
+        "kind": "post_event",
+        "must_mention": [
+         "搬家|新家|中野"
+        ]
+       }
+      ]
+     },
+     "quiet_hours_local": [
+      "22:00",
+      "09:00"
+     ],
+     "horizon": "2026-10-19T12:00:00+09:00"
+    }
+   },
+   {
+    "id": "PV29",
+    "scope": "private",
+    "feature": "P2",
+    "polarity": "positive",
+    "title": "這禮拜天清晨六點半跑半馬（起跑在安靜時段）",
+    "tests": "For a race that starts at 06:30 inside quiet hours, Machi saves its check-in for after the finish instead of pushing on race morning.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-14T12:35:00+08:00",
+      "from": "user",
+      "text": "麻吉！我這禮拜天要跑人生第一場半馬 🏃"
+     },
+     {
+      "at": "2026-10-14T12:35:30+08:00",
+      "from": "user",
+      "text": "被公司跑團的阿哲揪的 早上六點半就起跑 四點多就要起床 = ="
+     },
+     {
+      "at": "2026-10-14T12:36:10+08:00",
+      "from": "user",
+      "text": "練了三個月 還是好怕跑不完 21 公里欸"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 2,
+      "windows": [
+       {
+        "from": "2026-10-17T18:00:00+08:00",
+        "to": "2026-10-17T21:00:00+08:00",
+        "kind": "pre_event",
+        "optional": true,
+        "must_mention": [
+         "半馬|比賽"
+        ]
+       },
+       {
+        "from": "2026-10-18T10:30:00+08:00",
+        "to": "2026-10-19T21:00:00+08:00",
+        "kind": "post_event",
+        "must_mention": [
+         "半馬|馬拉松|比賽|跑完"
+        ]
+       }
+      ]
+     },
+     "quiet_hours_local": [
+      "22:00",
+      "09:00"
+     ],
+     "horizon": "2026-10-20T12:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV30",
+    "scope": "private",
+    "feature": "P2",
+    "polarity": "positive",
+    "title": "倫敦留學生去巴黎，禮拜天晚上回來（跨夏令時間）",
+    "tests": "Machi holds its trip check-in until after the stated return date instead of messaging while the user is away.",
+    "timezone": "Europe/London",
+    "turns": [
+     {
+      "at": "2026-10-19T19:05:00+01:00",
+      "from": "user",
+      "text": "麻吉 我這禮拜四要跟 Tiffany 她們去巴黎玩！"
+     },
+     {
+      "at": "2026-10-19T19:05:40+01:00",
+      "from": "user",
+      "text": "坐 Eurostar 過去 禮拜天晚上回倫敦"
+     },
+     {
+      "at": "2026-10-19T19:06:30+01:00",
+      "from": "user",
+      "text": "第一次去巴黎 超級期待 ✨ 羅浮宮門票也搶到了"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 2,
+      "windows": [
+       {
+        "from": "2026-10-22T09:00:00+01:00",
+        "to": "2026-10-22T10:00:00+01:00",
+        "kind": "pre_event",
+        "optional": true,
+        "must_mention": [
+         "巴黎"
+        ]
+       },
+       {
+        "from": "2026-10-26T10:00:00+00:00",
+        "to": "2026-10-27T21:30:00+00:00",
+        "kind": "post_event",
+        "must_mention": [
+         "巴黎"
+        ]
+       }
+      ]
+     },
+     "quiet_hours_local": [
+      "22:00",
+      "09:00"
+     ],
+     "horizon": "2026-10-29T00:00:00+00:00"
+    }
+   },
+   {
+    "id": "PV31",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "退休阿姨下禮拜二住院開刀（主動麻吉也不追問）",
+    "tests": "Even in 主動麻吉, Machi sends no unsolicited pre- or post-surgery check-in for a hospital stay with exact dates.",
+    "timezone": "Asia/Taipei",
+    "mode": "主動麻吉",
+    "turns": [
+     {
+      "at": "2026-10-15T08:40:00+08:00",
+      "from": "user",
+      "text": "麻吉早安😊"
+     },
+     {
+      "at": "2026-10-15T08:40:40+08:00",
+      "from": "user",
+      "text": "跟你說喔 我下禮拜二要住院開刀"
+     },
+     {
+      "at": "2026-10-15T08:41:30+08:00",
+      "from": "user",
+      "text": "膽結石啦 醫生說膽囊乾脆拿掉比較好"
+     },
+     {
+      "at": "2026-10-15T08:42:20+08:00",
+      "from": "user",
+      "text": "早上八點報到 大概住三天 還好已經退休了 不用煩惱請假"
+     },
+     {
+      "at": "2026-10-15T08:43:10+08:00",
+      "from": "user",
+      "text": "住院要準備什麼東西啊？好久沒住院了 有點緊張🙏"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "foreground": {
+      "care": true,
+      "answers_all": true,
+      "no_rejection": true
+     },
+     "horizon": "2026-10-26T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV32",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "灣區工程師被 layoff，下禮拜五最後一天（敏感）",
+    "tests": "Machi schedules no last-day or job-search check-in after the user reports being laid off, despite the concrete last-day date.",
+    "timezone": "America/Los_Angeles",
+    "turns": [
+     {
+      "at": "2026-10-13T16:20:00-07:00",
+      "from": "user",
+      "text": "靠 我今天被 layoff 了"
+     },
+     {
+      "at": "2026-10-13T16:20:30-07:00",
+      "from": "user",
+      "text": "整個 team 砍一半 早上一封 email 就沒了"
+     },
+     {
+      "at": "2026-10-13T16:21:10-07:00",
+      "from": "user",
+      "text": "下禮拜五是最後一天 還要交接 = ="
+     },
+     {
+      "at": "2026-10-13T16:22:00-07:00",
+      "from": "user",
+      "text": "H-1B 只有 60 天 grace period 要找到下一份 真的很慌"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "foreground": {
+      "care": true
+     },
+     "horizon": "2026-10-27T00:00:00-07:00"
+    }
+   },
+   {
+    "id": "PV33",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "狗狗布丁走了，禮拜六火化（像事件，但不可追問）",
+    "tests": "Machi does not follow up on a pet's cremation date, because a pet's death is grief.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T23:05:00+08:00",
+      "from": "user",
+      "text": "我家狗狗布丁今天早上走了"
+     },
+     {
+      "at": "2026-10-12T23:05:40+08:00",
+      "from": "user",
+      "text": "牠陪了我十五年 從我國小就在了"
+     },
+     {
+      "at": "2026-10-12T23:06:30+08:00",
+      "from": "user",
+      "text": "這禮拜六要帶牠去火化"
+     },
+     {
+      "at": "2026-10-12T23:07:10+08:00",
+      "from": "user",
+      "text": "一直哭停不下來 明天還有早八 😢"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "foreground": {
+      "care": true
+     },
+     "horizon": "2026-10-20T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV34",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "快一個月提不起勁，約了身心科（敏感）",
+    "tests": "Machi sends no unsolicited mood or appointment check-in after the user describes weeks of feeling down and a booked 身心科 visit.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-14T23:30:00+08:00",
+      "from": "user",
+      "text": "最近覺得自己怪怪的"
+     },
+     {
+      "at": "2026-10-14T23:30:50+08:00",
+      "from": "user",
+      "text": "快一個月了吧 每天都提不起勁 下班回家就躺著滑手機"
+     },
+     {
+      "at": "2026-10-14T23:31:40+08:00",
+      "from": "user",
+      "text": "朋友約我也一直推掉 覺得好累"
+     },
+     {
+      "at": "2026-10-14T23:33:00+08:00",
+      "from": "user",
+      "text": "同事 Kelly 叫我去看身心科 我約了下禮拜四晚上 不知道有沒有用"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "foreground": {
+      "care": true
+     },
+     "horizon": "2026-10-26T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV35",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "決定離婚，下禮拜一去戶政事務所（敏感）",
+    "tests": "Machi does not follow up on a divorce, even though the 戶政事務所 appointment has a concrete date.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-14T22:15:00+08:00",
+      "from": "user",
+      "text": "麻吉 跟你說一件事"
+     },
+     {
+      "at": "2026-10-14T22:15:30+08:00",
+      "from": "user",
+      "text": "我跟我老公決定離婚了"
+     },
+     {
+      "at": "2026-10-14T22:16:20+08:00",
+      "from": "user",
+      "text": "下禮拜一早上要一起去戶政事務所辦"
+     },
+     {
+      "at": "2026-10-14T22:17:30+08:00",
+      "from": "user",
+      "text": "最煩的是不知道怎麼跟小孩講 老大才國二…"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "foreground": {
+      "care": true,
+      "answers_all": true
+     },
+     "horizon": "2026-10-24T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR15",
+    "scope": "group",
+    "feature": "G1",
+    "polarity": "positive",
+    "title": "花蓮兩天一夜，週末還沒選",
+    "tests": "In a 3-person group that wants a Hualien trip but has not chosen between two candidate weekends, Machi sends exactly one nudge that states only facts from the chat.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "K": "Kevin",
+     "H": "阿豪",
+     "P": "小佩"
+    },
+    "turns": [
+     {
+      "at": "2026-10-13T12:18:00+08:00",
+      "from": "K",
+      "text": "欸欸 11 月要不要揪一下花蓮兩天一夜 🚗"
+     },
+     {
+      "at": "2026-10-13T12:19:00+08:00",
+      "from": "P",
+      "text": "要！！好久沒出去玩了"
+     },
+     {
+      "at": "2026-10-13T12:19:30+08:00",
+      "from": "P",
+      "text": "想去七星潭看海 🌊"
+     },
+     {
+      "at": "2026-10-13T12:22:00+08:00",
+      "from": "H",
+      "text": "可以啊 但 11/7 那個週末我要回台中喝喜酒"
+     },
+     {
+      "at": "2026-10-13T12:25:00+08:00",
+      "from": "P",
+      "text": "我 11 月只剩 14、15 或 21、22 可以 其他週末都要顧店 QQ"
+     },
+     {
+      "at": "2026-10-13T12:26:00+08:00",
+      "from": "K",
+      "text": "那 14-15 跟 21-22 二選一？我都 OK"
+     },
+     {
+      "at": "2026-10-13T12:31:00+08:00",
+      "from": "K",
+      "text": "阿豪你咧"
+     },
+     {
+      "at": "2026-10-13T12:40:00+08:00",
+      "from": "H",
+      "text": "我要先問一下老闆 其中一週可能要出差"
+     },
+     {
+      "at": "2026-10-13T12:41:00+08:00",
+      "from": "K",
+      "text": "好 那再喬 先去開會了"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-14T11:00:00+08:00",
+        "to": "2026-10-16T21:00:00+08:00",
+        "kind": "nudge",
+        "must_mention": [
+         "花蓮"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "forbidden_claims": [
+      "確定 11/14-15 出發",
+      "確定 11/21-22 出發",
+      "阿豪老闆答應了",
+      "住宿訂好了"
+     ],
+     "horizon": "2026-10-18T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR16",
+    "scope": "group",
+    "feature": "G1",
+    "polarity": "positive",
+    "title": "媽媽六十大壽，日期餐廳都未定",
+    "tests": "Machi nudges a family group once about the still-undecided date and restaurant for Mom's 60th birthday dinner without choosing either for them.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "C": "志明",
+     "J": "Joanne",
+     "W": "阿偉",
+     "T": "婷婷",
+     "S": "淑華"
+    },
+    "turns": [
+     {
+      "at": "2026-10-14T20:45:00+08:00",
+      "from": "C",
+      "text": "跟大家說一下 媽 10/30 生日 今年六十歲 🎂"
+     },
+     {
+      "at": "2026-10-14T20:46:00+08:00",
+      "from": "C",
+      "text": "要不要辦大一點 訂個包廂 把阿姨舅舅也叫來"
+     },
+     {
+      "at": "2026-10-14T20:48:00+08:00",
+      "from": "J",
+      "text": "要要要 六十大壽一定要的啦"
+     },
+     {
+      "at": "2026-10-14T20:50:00+08:00",
+      "from": "W",
+      "text": "10/31 禮拜六晚上我可以 11/1 我要值班"
+     },
+     {
+      "at": "2026-10-14T20:52:00+08:00",
+      "from": "T",
+      "text": "我在新竹 週六週日都行 只是要搶高鐵票 😅"
+     },
+     {
+      "at": "2026-10-14T20:55:00+08:00",
+      "from": "S",
+      "text": "媽上次說內湖那家台菜不錯"
+     },
+     {
+      "at": "2026-10-14T20:56:00+08:00",
+      "from": "J",
+      "text": "港式也可以啊 媽很愛吃燒賣"
+     },
+     {
+      "at": "2026-10-14T21:03:00+08:00",
+      "from": "C",
+      "text": "好 大家再想想 日期跟餐廳要快點定 包廂很難訂"
+     },
+     {
+      "at": "2026-10-14T21:04:00+08:00",
+      "from": "J",
+      "text": "👌"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-15T11:00:00+08:00",
+        "to": "2026-10-17T21:00:00+08:00",
+        "kind": "nudge",
+        "must_mention": [
+         "生日|六十|大壽"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "forbidden_claims": [
+      "10/31 晚上確定",
+      "11/1 中午確定",
+      "包廂訂好了",
+      "決定吃台菜",
+      "決定吃港式"
+     ],
+     "horizon": "2026-10-19T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR17",
+    "scope": "group",
+    "feature": "G1",
+    "polarity": "positive",
+    "title": "球場整修，每週打球時段要重喬（8 人）",
+    "tests": "Machi sends a single factual nudge in an 8-person group to settle its new weekly basketball slot before the court-registration deadline.",
+    "timezone": "Asia/Taipei",
+    "member_count": 8,
+    "members": {
+     "Z": "阿哲",
+     "B": "Ben",
+     "C": "小陳",
+     "D": "大頭",
+     "E": "Eason",
+     "F": "阿福",
+     "G": "Gary",
+     "H": "胖虎"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T21:05:00+08:00",
+      "from": "Z",
+      "text": "公告📢 國小球場 11 月開始整修 週三晚上沒得打了 😭"
+     },
+     {
+      "at": "2026-10-12T21:06:00+08:00",
+      "from": "B",
+      "text": "靠 真假"
+     },
+     {
+      "at": "2026-10-12T21:08:00+08:00",
+      "from": "C",
+      "text": "運動中心可以租室內場 可是週三晚上被包走了"
+     },
+     {
+      "at": "2026-10-12T21:10:00+08:00",
+      "from": "Z",
+      "text": "我剛查了 運動中心週二、週四晚上 8-10 有空 週六早上 9-11 也有"
+     },
+     {
+      "at": "2026-10-12T21:11:00+08:00",
+      "from": "D",
+      "text": "週四我可以"
+     },
+     {
+      "at": "2026-10-12T21:13:00+08:00",
+      "from": "E",
+      "text": "我週二比較好 週四晚上要上課"
+     },
+     {
+      "at": "2026-10-12T21:14:00+08:00",
+      "from": "G",
+      "text": "週六早上母湯啦 起不來 xd"
+     },
+     {
+      "at": "2026-10-12T21:15:00+08:00",
+      "from": "F",
+      "text": "我都可以 有球打就好 🏀"
+     },
+     {
+      "at": "2026-10-12T21:20:00+08:00",
+      "from": "H",
+      "text": "我要看一下班表"
+     },
+     {
+      "at": "2026-10-12T21:22:00+08:00",
+      "from": "Z",
+      "text": "好 大家想一下 要固定租的話月底前要去櫃台登記"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-13T12:00:00+08:00",
+        "to": "2026-10-16T21:00:00+08:00",
+        "kind": "nudge",
+        "must_mention": [
+         "球",
+         "週二|週四|週六|時段|時間"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "forbidden_claims": [
+      "改到週二",
+      "改到週四",
+      "改到週六早上",
+      "已經去櫃台登記"
+     ],
+     "horizon": "2026-10-19T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR18",
+    "scope": "group",
+    "feature": "G1",
+    "polarity": "positive",
+    "title": "中秋補烤肉，只差地點",
+    "tests": "Machi nudges once about the undecided location of a make-up Mid-Autumn barbecue whose date the group already agreed on.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "J": "Jason",
+     "V": "Vicky",
+     "M": "阿梅",
+     "T": "Tony",
+     "Q": "小晴",
+     "W": "阿旺"
+    },
+    "turns": [
+     {
+      "at": "2026-10-15T12:20:00+08:00",
+      "from": "V",
+      "text": "欸 中秋那天颱風沒烤成 好不甘心 😤"
+     },
+     {
+      "at": "2026-10-15T12:21:00+08:00",
+      "from": "V",
+      "text": "下禮拜六補烤 揪不揪 🍖"
+     },
+     {
+      "at": "2026-10-15T12:22:00+08:00",
+      "from": "M",
+      "text": "揪！10/24 可以"
+     },
+     {
+      "at": "2026-10-15T12:23:00+08:00",
+      "from": "T",
+      "text": "+1"
+     },
+     {
+      "at": "2026-10-15T12:23:30+08:00",
+      "from": "Q",
+      "text": "我也可以～"
+     },
+     {
+      "at": "2026-10-15T12:25:00+08:00",
+      "from": "W",
+      "text": "OK 啊"
+     },
+     {
+      "at": "2026-10-15T12:26:00+08:00",
+      "from": "J",
+      "text": "那就 10/24 啦 要去哪烤？河濱還是我家頂樓"
+     },
+     {
+      "at": "2026-10-15T12:28:00+08:00",
+      "from": "Q",
+      "text": "頂樓會不會被管委會念 🤣"
+     },
+     {
+      "at": "2026-10-15T12:30:00+08:00",
+      "from": "W",
+      "text": "還是去三峽那個露營區 有烤肉區 不過要先訂"
+     },
+     {
+      "at": "2026-10-15T12:31:00+08:00",
+      "from": "V",
+      "text": "都好欸 大家投一下？"
+     },
+     {
+      "at": "2026-10-15T12:44:00+08:00",
+      "from": "J",
+      "text": "晚點再說 先上工了"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-16T11:00:00+08:00",
+        "to": "2026-10-20T21:00:00+08:00",
+        "kind": "nudge",
+        "must_mention": [
+         "烤",
+         "地點|哪裡|河濱|頂樓|露營"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "forbidden_claims": [
+      "決定去河濱",
+      "決定在 Jason 家頂樓",
+      "露營區訂好了",
+      "大家已經投票選好"
+     ],
+     "horizon": "2026-10-22T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR19",
+    "scope": "group",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "哪天一起去冰島啦（玩笑）",
+    "tests": "Machi creates no follow-up from joking group banter about someday going to Iceland together.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "N": "Nina",
+     "B": "阿斌",
+     "R": "小蓉"
+    },
+    "turns": [
+     {
+      "at": "2026-10-18T15:20:00+08:00",
+      "from": "N",
+      "message_type": "image",
+      "text": "[照片]"
+     },
+     {
+      "at": "2026-10-18T15:20:30+08:00",
+      "from": "N",
+      "text": "我同事在冰島拍的極光 也太扯 😍"
+     },
+     {
+      "at": "2026-10-18T15:22:00+08:00",
+      "from": "B",
+      "text": "哇靠 這是真的喔"
+     },
+     {
+      "at": "2026-10-18T15:23:00+08:00",
+      "from": "R",
+      "text": "哪天一起去冰島啦 🥺"
+     },
+     {
+      "at": "2026-10-18T15:24:00+08:00",
+      "from": "N",
+      "text": "好啊 等我中樂透先 😂"
+     },
+     {
+      "at": "2026-10-18T15:26:00+08:00",
+      "from": "B",
+      "text": "機票一個人就要四五萬吧 先存個十年"
+     },
+     {
+      "at": "2026-10-18T15:27:00+08:00",
+      "from": "R",
+      "text": "哈哈哈 那 2036 冰島見"
+     },
+     {
+      "at": "2026-10-18T15:27:30+08:00",
+      "from": "N",
+      "text": "笑死 一言為定 🤝"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-25T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR20",
+    "scope": "group",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "看芒草：算了下次再說",
+    "tests": "Machi does not revive a group outing that the members explicitly shelved with 「算了下次再說」.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "L": "Leo",
+     "C": "思妤",
+     "Z": "阿志",
+     "E": "Ellen"
+    },
+    "turns": [
+     {
+      "at": "2026-10-13T13:05:00+08:00",
+      "from": "L",
+      "text": "這禮拜六要不要去擎天崗看芒草 🌾"
+     },
+     {
+      "at": "2026-10-13T13:06:00+08:00",
+      "from": "C",
+      "text": "好欸 聽說現在開得正美"
+     },
+     {
+      "at": "2026-10-13T13:15:00+08:00",
+      "from": "Z",
+      "text": "禮拜六老闆叫我進實驗室跑實驗 QQ"
+     },
+     {
+      "at": "2026-10-13T13:20:00+08:00",
+      "from": "E",
+      "text": "我禮拜天 paper deadline 禮拜六應該也在趕 😵"
+     },
+     {
+      "at": "2026-10-14T18:30:00+08:00",
+      "from": "C",
+      "text": "所以禮拜六還去嗎？"
+     },
+     {
+      "at": "2026-10-14T18:32:00+08:00",
+      "from": "L",
+      "text": "大家都在忙欸 算了下次再說 😂"
+     },
+     {
+      "at": "2026-10-14T18:33:00+08:00",
+      "from": "C",
+      "text": "好吧 🥲"
+     },
+     {
+      "at": "2026-10-14T18:40:00+08:00",
+      "from": "E",
+      "text": "抱歉啦 下次一定"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-22T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR21",
+    "scope": "group",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "健行的時間地點都講定了",
+    "tests": "Machi does not nudge a group plan whose date, time, meeting point and transport were all settled and confirmed within the thread.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "W": "王志成",
+     "C": "美玲",
+     "L": "老林",
+     "F": "阿芳"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T08:40:00+08:00",
+      "from": "W",
+      "text": "早安 🌄 下禮拜六 10/24 要不要去大坑 9 號步道走走"
+     },
+     {
+      "at": "2026-10-12T08:52:00+08:00",
+      "from": "C",
+      "text": "好啊 幾點？"
+     },
+     {
+      "at": "2026-10-12T09:05:00+08:00",
+      "from": "L",
+      "text": "早上七點半 比較不會熱"
+     },
+     {
+      "at": "2026-10-12T09:10:00+08:00",
+      "from": "F",
+      "text": "七點半可以 在哪集合？"
+     },
+     {
+      "at": "2026-10-12T09:12:00+08:00",
+      "from": "W",
+      "text": "9 號步道登山口停車場"
+     },
+     {
+      "at": "2026-10-12T09:15:00+08:00",
+      "from": "C",
+      "text": "OK 大家各自過去就好"
+     },
+     {
+      "at": "2026-10-12T09:16:00+08:00",
+      "from": "F",
+      "text": "那就 10/24 禮拜六 早上 7:30 9 號登山口停車場 各自過去 👍"
+     },
+     {
+      "at": "2026-10-12T09:17:00+08:00",
+      "from": "L",
+      "text": "好"
+     },
+     {
+      "at": "2026-10-12T09:20:00+08:00",
+      "from": "W",
+      "text": "讚 就按呢"
+     },
+     {
+      "at": "2026-10-12T09:21:00+08:00",
+      "from": "C",
+      "message_type": "sticker",
+      "sticker": {
+       "package_id": "8525",
+       "sticker_id": "16581290",
+       "resource_type": "STATIC"
+      },
+      "text": "[貼圖]"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "forbidden_claims": [
+      "集合時間還沒決定",
+      "集合地點還沒決定"
+     ],
+     "horizon": "2026-10-22T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR22",
+    "scope": "group",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "只有一個人提議的路跑，沒人接話",
+    "tests": "Machi does not treat one member's suggestion that nobody else took up as an unresolved group plan.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "R": "Ryan",
+     "S": "Sandy",
+     "J": "阿傑",
+     "M": "美華",
+     "K": "Kiki"
+    },
+    "turns": [
+     {
+      "at": "2026-10-14T15:02:00+08:00",
+      "from": "R",
+      "text": "欸 公司 11 月那場路跑 有人要一起報 5K 嗎 🏃‍♂️"
+     },
+     {
+      "at": "2026-10-14T15:04:00+08:00",
+      "from": "S",
+      "text": "誰有下午會議的簡報檔 我找不到"
+     },
+     {
+      "at": "2026-10-14T15:05:00+08:00",
+      "from": "M",
+      "text": "我有 私訊給你了"
+     },
+     {
+      "at": "2026-10-14T15:05:30+08:00",
+      "from": "S",
+      "text": "感恩 🙏"
+     },
+     {
+      "at": "2026-10-14T15:20:00+08:00",
+      "from": "J",
+      "text": "好睏 下午好漫長"
+     },
+     {
+      "at": "2026-10-14T15:21:00+08:00",
+      "from": "K",
+      "text": "同 想下班 😮‍💨"
+     },
+     {
+      "at": "2026-10-15T09:15:00+08:00",
+      "from": "S",
+      "text": "早～ 今天突然變好冷"
+     },
+     {
+      "at": "2026-10-15T09:16:00+08:00",
+      "from": "K",
+      "text": "對啊 外套都沒帶"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-21T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR23",
+    "scope": "group",
+    "feature": "G2",
+    "polarity": "positive",
+    "title": "小安說負責買蛋糕，之後沒下文",
+    "tests": "Machi checks in once before the farewell party on 小安's clear 「我負責買蛋糕」 commitment that got no later update.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "A": "小安",
+     "B": "Bella",
+     "C": "阿成",
+     "D": "Doris",
+     "E": "Eric"
+    },
+    "turns": [
+     {
+      "at": "2026-10-14T12:40:00+08:00",
+      "from": "B",
+      "text": "惠姐下禮拜五就要退休了欸 🥲"
+     },
+     {
+      "at": "2026-10-14T12:41:00+08:00",
+      "from": "C",
+      "text": "那天下午幫她辦個小歡送會吧"
+     },
+     {
+      "at": "2026-10-14T12:43:00+08:00",
+      "from": "D",
+      "text": "下禮拜五下午三點 大會議室 我剛借好了"
+     },
+     {
+      "at": "2026-10-14T12:44:00+08:00",
+      "from": "A",
+      "text": "我負責買蛋糕 🎂 惠姐愛吃芋頭的"
+     },
+     {
+      "at": "2026-10-14T12:45:00+08:00",
+      "from": "E",
+      "text": "讚 蛋糕交給小安"
+     },
+     {
+      "at": "2026-10-14T12:46:00+08:00",
+      "from": "B",
+      "text": "好感動 我要哭了 😭"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-16T12:00:00+08:00",
+        "to": "2026-10-21T21:00:00+08:00",
+        "kind": "commitment",
+        "must_mention": [
+         "小安",
+         "蛋糕"
+        ]
+       }
+      ]
+     },
+     "forbidden_claims": [
+      "小安已經訂好蛋糕",
+      "芋頭蛋糕訂好了",
+      "會議室還沒借"
+     ],
+     "horizon": "2026-10-23T12:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR24",
+    "scope": "group",
+    "feature": "G2",
+    "polarity": "positive",
+    "title": "Tim 說開車載大家，上車地點沒下文（灣區）",
+    "tests": "Machi checks in once before the outing on Tim's clear 「我開車載大家」 commitment whose promised pickup details never arrived.",
+    "timezone": "America/Los_Angeles",
+    "members": {
+     "T": "Tim",
+     "Y": "郁婷",
+     "S": "Sam",
+     "J": "家豪"
+    },
+    "turns": [
+     {
+      "at": "2026-10-14T20:30:00-07:00",
+      "from": "Y",
+      "text": "下禮拜六要不要去 Half Moon Bay 的 pumpkin patch 🎃"
+     },
+     {
+      "at": "2026-10-14T20:31:00-07:00",
+      "from": "S",
+      "text": "好啊 來美國第一個萬聖節 一定要拍照"
+     },
+     {
+      "at": "2026-10-14T20:33:00-07:00",
+      "from": "J",
+      "text": "可是我們都沒車欸 Uber 來回好貴"
+     },
+     {
+      "at": "2026-10-14T20:34:00-07:00",
+      "from": "T",
+      "text": "我開車載大家！我的車剛好坐得下四個"
+     },
+     {
+      "at": "2026-10-14T20:35:00-07:00",
+      "from": "Y",
+      "text": "Tim 你是天使 😭"
+     },
+     {
+      "at": "2026-10-14T20:36:00-07:00",
+      "from": "J",
+      "text": "那幾點出發？在哪上車？"
+     },
+     {
+      "at": "2026-10-14T20:38:00-07:00",
+      "from": "T",
+      "text": "早上十點出發吧 上車地點我再跟你們說"
+     },
+     {
+      "at": "2026-10-14T20:39:00-07:00",
+      "from": "S",
+      "text": "讚 🙌"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-20T12:00:00-07:00",
+        "to": "2026-10-23T21:00:00-07:00",
+        "kind": "commitment",
+        "must_mention": [
+         "Tim",
+         "上車|載|開車"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "forbidden_claims": [
+      "上車地點已經決定",
+      "改成九點出發"
+     ],
+     "quiet_hours_local": [
+      "22:00",
+      "09:00"
+     ],
+     "horizon": "2026-10-24T08:00:00-07:00"
+    }
+   },
+   {
+    "id": "GR25",
+    "scope": "group",
+    "feature": "G2",
+    "polarity": "negative",
+    "title": "Queenie 說民宿訂好了（不追）",
+    "tests": "Machi does not chase a group commitment that its owner closed with 「訂好了」 in the thread.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "X": "小欣",
+     "Q": "Queenie",
+     "Y": "雅雯"
+    },
+    "turns": [
+     {
+      "at": "2026-10-15T21:00:00+08:00",
+      "from": "X",
+      "text": "10/31-11/1 台南兩天一夜 確定囉！🎉"
+     },
+     {
+      "at": "2026-10-15T21:01:00+08:00",
+      "from": "Q",
+      "text": "耶～～終於"
+     },
+     {
+      "at": "2026-10-15T21:02:00+08:00",
+      "from": "Y",
+      "text": "住宿誰要訂？"
+     },
+     {
+      "at": "2026-10-15T21:03:00+08:00",
+      "from": "Q",
+      "text": "我來訂民宿 我有收藏一間在神農街附近的 超可愛"
+     },
+     {
+      "at": "2026-10-15T21:04:00+08:00",
+      "from": "X",
+      "text": "好 交給你 💕"
+     },
+     {
+      "at": "2026-10-16T12:30:00+08:00",
+      "from": "Q",
+      "text": "民宿訂好了！10/31 入住一晚 三人房"
+     },
+     {
+      "at": "2026-10-16T12:30:10+08:00",
+      "from": "Q",
+      "message_type": "image",
+      "text": "[圖片]"
+     },
+     {
+      "at": "2026-10-16T12:35:00+08:00",
+      "from": "Y",
+      "text": "太神啦 🙌"
+     },
+     {
+      "at": "2026-10-16T12:40:00+08:00",
+      "from": "X",
+      "text": "感恩 Queenie 大大"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "forbidden_claims": [
+      "民宿還沒訂好",
+      "Queenie 要記得訂民宿"
+     ],
+     "horizon": "2026-10-29T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR26",
+    "scope": "group",
+    "feature": "G2",
+    "polarity": "negative",
+    "title": "我請客啦～開玩笑的（不算承諾）",
+    "tests": "Machi does not treat Jerry's joking 「今天我請客啦～」, retracted a minute later, as a commitment to track or announce.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "D": "阿德",
+     "T": "小婷",
+     "M": "Momo",
+     "J": "Jerry",
+     "B": "大雄",
+     "W": "Wendy"
+    },
+    "turns": [
+     {
+      "at": "2026-10-23T12:05:00+08:00",
+      "from": "D",
+      "text": "Jerry 升經理了你們知道嗎！！🎉"
+     },
+     {
+      "at": "2026-10-23T12:06:00+08:00",
+      "from": "T",
+      "text": "哇 恭喜恭喜！"
+     },
+     {
+      "at": "2026-10-23T12:06:30+08:00",
+      "from": "M",
+      "text": "請客 請客 請客"
+     },
+     {
+      "at": "2026-10-23T12:08:00+08:00",
+      "from": "J",
+      "text": "哈哈 謝啦"
+     },
+     {
+      "at": "2026-10-23T12:09:00+08:00",
+      "from": "D",
+      "text": "今晚八點 老地方唱歌慶祝？🎤"
+     },
+     {
+      "at": "2026-10-23T12:10:00+08:00",
+      "from": "T",
+      "text": "可以"
+     },
+     {
+      "at": "2026-10-23T12:10:30+08:00",
+      "from": "M",
+      "text": "OK"
+     },
+     {
+      "at": "2026-10-23T12:11:00+08:00",
+      "from": "B",
+      "text": "可以 我會晚點到"
+     },
+     {
+      "at": "2026-10-23T12:12:00+08:00",
+      "from": "W",
+      "text": "我也去 🎶"
+     },
+     {
+      "at": "2026-10-23T12:15:00+08:00",
+      "from": "J",
+      "text": "好啦 今天我請客啦～"
+     },
+     {
+      "at": "2026-10-23T12:15:20+08:00",
+      "from": "M",
+      "text": "金價假價？？"
+     },
+     {
+      "at": "2026-10-23T12:16:00+08:00",
+      "from": "J",
+      "text": "開玩笑的 😂 各付各的 薪水下個月才調啦"
+     },
+     {
+      "at": "2026-10-23T12:16:30+08:00",
+      "from": "M",
+      "text": "切～ 白高興一場"
+     },
+     {
+      "at": "2026-10-23T12:17:00+08:00",
+      "from": "W",
+      "text": "哈哈哈 八點見"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "forbidden_claims": [
+      "Jerry 請客",
+      "Jerry 說要請客",
+      "Jerry 答應請大家"
+     ],
+     "horizon": "2026-10-24T12:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV36",
+    "scope": "private",
+    "feature": "P3",
+    "polarity": "negative",
+    "title": "提醒去洗衣店拿西裝，按取消",
+    "tests": "Tapping 取消 on a fired reminder drops it for good: no re-fire and no later follow-up.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-13T21:05:00+08:00",
+      "from": "user",
+      "text": "麻吉 明天晚上六點半提醒我去洗衣店拿西裝"
+     },
+     {
+      "at": "2026-10-13T21:06:00+08:00",
+      "from": "user",
+      "text": "上禮拜送洗的 再不去拿老闆娘要唸了 😂"
+     },
+     {
+      "at": "2026-10-14T18:31:00+08:00",
+      "from": "user",
+      "action": "postback",
+      "text": "取消"
+     },
+     {
+      "at": "2026-10-14T18:32:00+08:00",
+      "from": "user",
+      "text": "我老婆說她剛好路過 已經幫我拿回來了 🙏"
+     }
+    ],
+    "expect": {
+     "reminder": {
+      "at": "2026-10-14T18:30:00+08:00",
+      "completion_actions": [
+       "完成",
+       "晚點提醒",
+       "取消"
+      ]
+     },
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "foreground": {
+      "confirm_cancel": true
+     },
+     "horizon": "2026-10-17T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV37",
+    "scope": "private",
+    "feature": "P3",
+    "polarity": "negative",
+    "title": "提醒寄包裹，打字說寄了（波士頓）",
+    "tests": "A plain-text completion (寄了！) instead of the 完成 button closes the reminder, so no follow-up is sent.",
+    "timezone": "America/New_York",
+    "turns": [
+     {
+      "at": "2026-10-13T08:15:00-04:00",
+      "from": "user",
+      "text": "麻吉 今天下午四點提醒我去郵局寄包裹回台灣 📦"
+     },
+     {
+      "at": "2026-10-13T08:16:00-04:00",
+      "from": "user",
+      "text": "我妹 Vivian 要的保養品 再拖下去她會一直盧我 😂"
+     },
+     {
+      "at": "2026-10-13T16:48:00-04:00",
+      "from": "user",
+      "text": "寄了！"
+     },
+     {
+      "at": "2026-10-13T16:49:00-04:00",
+      "from": "user",
+      "text": "USPS 排隊排快半小時 美國郵局效率真的母湯 🥲"
+     }
+    ],
+    "expect": {
+     "reminder": {
+      "at": "2026-10-13T16:00:00-04:00",
+      "completion_actions": [
+       "完成",
+       "晚點提醒",
+       "取消"
+      ]
+     },
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "foreground": {
+      "acknowledge_completion": true
+     },
+     "quiet_hours_local": [
+      "22:00",
+      "09:00"
+     ],
+     "horizon": "2026-10-15T00:00:00-04:00"
+    }
+   },
+   {
+    "id": "PV38",
+    "scope": "private",
+    "feature": "P3",
+    "polarity": "positive",
+    "title": "提醒打給冷氣師傅，十點再提醒",
+    "tests": "A snooze with an explicit new time (十點再提醒我) re-fires the reminder once, at exactly that time.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-14T19:30:00+08:00",
+      "from": "user",
+      "text": "麻吉 明天早上八點半提醒我打電話給冷氣師傅 🙏"
+     },
+     {
+      "at": "2026-10-14T19:31:00+08:00",
+      "from": "user",
+      "text": "今年夏天吹太兇了 要約清洗保養"
+     },
+     {
+      "at": "2026-10-15T08:33:00+08:00",
+      "from": "user",
+      "action": "postback",
+      "text": "晚點提醒"
+     },
+     {
+      "at": "2026-10-15T08:34:00+08:00",
+      "from": "user",
+      "text": "剛剛打了沒人接 好像九點半才開始上班"
+     },
+     {
+      "at": "2026-10-15T08:35:00+08:00",
+      "from": "user",
+      "text": "十點再提醒我一次好了 謝謝麻吉 🌹"
+     }
+    ],
+    "expect": {
+     "reminder": {
+      "at": "2026-10-15T08:30:00+08:00",
+      "snooze_to": "2026-10-15T10:00:00+08:00",
+      "completion_actions": [
+       "完成",
+       "晚點提醒",
+       "取消"
+      ]
+     },
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-15T10:00:00+08:00",
+        "to": "2026-10-15T10:05:00+08:00",
+        "kind": "reminder_snooze",
+        "must_mention": [
+         "冷氣|師傅"
+        ]
+       }
+      ]
+     },
+     "foreground": {
+      "confirm_snooze": "2026-10-15T10:00:00+08:00"
+     },
+     "horizon": "2026-10-15T14:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV39",
+    "scope": "private",
+    "feature": "P3",
+    "polarity": "positive",
+    "title": "提醒報名冬令營，沒有回應（隔天只追一次）",
+    "tests": "An ignored reminder gets exactly one context-aware follow-up the next day and nothing after it.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T21:10:00+08:00",
+      "from": "user",
+      "text": "麻吉 禮拜三晚上八點提醒我幫女兒報名冬令營"
+     },
+     {
+      "at": "2026-10-12T21:11:00+08:00",
+      "from": "user",
+      "text": "早鳥優惠這禮拜五截止 我每次都拖到最後一天 😅"
+     }
+    ],
+    "expect": {
+     "reminder": {
+      "at": "2026-10-14T20:00:00+08:00",
+      "completion_actions": [
+       "完成",
+       "晚點提醒",
+       "取消"
+      ]
+     },
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-15T09:00:00+08:00",
+        "to": "2026-10-15T21:30:00+08:00",
+        "kind": "followup",
+        "must_mention": [
+         "冬令營",
+         "明天|禮拜五|週五|星期五|截止|早鳥"
+        ],
+        "must_not_repeat_reminder_text": true
+       }
+      ]
+     },
+     "forbidden_claims": [
+      "名額快滿",
+      "已經截止"
+     ],
+     "horizon": "2026-10-18T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV40",
+    "scope": "private",
+    "feature": "P3",
+    "polarity": "positive",
+    "title": "每天提醒幫狗刷牙（逐日記錄完成）",
+    "tests": "A daily reminder tracks completion per occurrence: a day already reported done is skipped while later days still fire.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T20:10:00+08:00",
+      "from": "user",
+      "text": "麻吉 之後每天晚上九點提醒我幫豆豆刷牙 🐶"
+     },
+     {
+      "at": "2026-10-12T20:11:00+08:00",
+      "from": "user",
+      "text": "我每次都忘記 牠牙齒已經有點黃黃的了"
+     },
+     {
+      "at": "2026-10-12T21:04:00+08:00",
+      "from": "user",
+      "action": "postback",
+      "text": "完成"
+     },
+     {
+      "at": "2026-10-13T21:12:00+08:00",
+      "from": "user",
+      "action": "postback",
+      "text": "完成"
+     },
+     {
+      "at": "2026-10-14T19:35:00+08:00",
+      "from": "user",
+      "text": "今天提早刷好了！"
+     },
+     {
+      "at": "2026-10-14T19:36:00+08:00",
+      "from": "user",
+      "text": "豆豆超不配合 一直咬牙刷 😂"
+     }
+    ],
+    "expect": {
+     "reminder": {
+      "at": "2026-10-12T21:00:00+08:00",
+      "recurrence": "daily",
+      "time_local": "21:00",
+      "skip": [
+       "2026-10-14T21:00:00+08:00"
+      ],
+      "completion_actions": [
+       "完成",
+       "晚點提醒",
+       "取消"
+      ]
+     },
+     "proactive": {
+      "min": 2,
+      "max": 2,
+      "windows": [
+       {
+        "from": "2026-10-15T21:00:00+08:00",
+        "to": "2026-10-15T21:05:00+08:00",
+        "kind": "reminder_recurring",
+        "must_mention": [
+         "豆豆|刷牙"
+        ]
+       },
+       {
+        "from": "2026-10-16T21:00:00+08:00",
+        "to": "2026-10-16T21:05:00+08:00",
+        "kind": "reminder_recurring",
+        "must_mention": [
+         "豆豆|刷牙"
+        ]
+       }
+      ]
+     },
+     "foreground": {
+      "acknowledge_completion": true
+     },
+     "horizon": "2026-10-17T12:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV41",
+    "scope": "private",
+    "feature": "P4",
+    "polarity": "positive",
+    "title": "主動要求每週五晚上問閱讀進度",
+    "tests": "An explicit opt-in to a weekly check-in is honored on the agreed day and part of day, with nothing sent in between.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-13T21:40:00+08:00",
+      "from": "user",
+      "text": "麻吉 我想養成閱讀的習慣 📚"
+     },
+     {
+      "at": "2026-10-13T21:41:00+08:00",
+      "from": "user",
+      "text": "每天下班都在滑手機 書櫃一堆書買了都沒看 😅"
+     },
+     {
+      "at": "2026-10-13T21:42:00+08:00",
+      "from": "user",
+      "text": "目標一個禮拜讀完一本"
+     },
+     {
+      "at": "2026-10-13T21:43:00+08:00",
+      "from": "user",
+      "text": "你每個禮拜五晚上問我一下這週讀得怎樣 好不好？這禮拜就開始"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-16T18:00:00+08:00",
+        "to": "2026-10-16T21:30:00+08:00",
+        "kind": "habit_checkin",
+        "must_mention": [
+         "書|閱讀|讀"
+        ]
+       }
+      ]
+     },
+     "foreground": {
+      "confirm_schedule": true
+     },
+     "horizon": "2026-10-19T12:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV42",
+    "scope": "private",
+    "feature": "P4",
+    "polarity": "boundary",
+    "title": "說要每天畫速寫，沒要求追蹤",
+    "tests": "A habit mentioned without opt-in gets no recurring nudges, at most a single P1-style follow-up.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T12:40:00+08:00",
+      "from": "user",
+      "text": "欸麻吉 我決定了 ✏️"
+     },
+     {
+      "at": "2026-10-12T12:41:00+08:00",
+      "from": "user",
+      "text": "之後每天要畫一張速寫"
+     },
+     {
+      "at": "2026-10-12T12:42:00+08:00",
+      "from": "user",
+      "text": "大學畢業之後就沒在畫了 手超生的 哈哈"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-14T12:00:00+08:00",
+        "to": "2026-10-17T21:30:00+08:00",
+        "kind": "followup",
+        "optional": true,
+        "must_mention": [
+         "畫|速寫"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-26T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV43",
+    "scope": "private",
+    "feature": "P4",
+    "polarity": "negative",
+    "title": "每天問讀書進度，後來說不用再問（東京）",
+    "tests": "When the user opts out of habit check-ins after receiving some, all further check-ins stop.",
+    "timezone": "Asia/Tokyo",
+    "turns": [
+     {
+      "at": "2026-10-12T21:20:00+09:00",
+      "from": "user",
+      "text": "麻吉 我下個月要考 AWS 證照"
+     },
+     {
+      "at": "2026-10-12T21:21:00+09:00",
+      "from": "user",
+      "text": "你可以每天晚上九點問我今天有沒有讀書嗎 我需要有人盯 😂"
+     },
+     {
+      "at": "2026-10-13T21:06:00+09:00",
+      "from": "user",
+      "text": "有啦 讀了一個小時 ✌️"
+     },
+     {
+      "at": "2026-10-14T21:31:00+09:00",
+      "from": "user",
+      "text": "今天殘業到九點多 沒讀 🥲"
+     },
+     {
+      "at": "2026-10-15T21:10:00+09:00",
+      "from": "user",
+      "text": "欸 我想了一下 之後不用每天問我了啦"
+     },
+     {
+      "at": "2026-10-15T21:11:00+09:00",
+      "from": "user",
+      "text": "我自己排進度就好 謝啦麻吉 🙏"
+     }
+    ],
+    "expect": {
+     "checkin": {
+      "at": "2026-10-13T21:00:00+09:00",
+      "recurrence": "daily",
+      "time_local": "21:00"
+     },
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "foreground": {
+      "confirm_stop": true
+     },
+     "quiet_hours_local": [
+      "22:00",
+      "09:00"
+     ],
+     "horizon": "2026-10-20T00:00:00+09:00"
+    }
+   },
+   {
+    "id": "PV44",
+    "scope": "private",
+    "feature": "P4",
+    "polarity": "positive",
+    "title": "每週煮三次提前達標（倫敦，冬令時間）",
+    "tests": "A progress report that already meets the week's goal is acknowledged, and the next check-in waits for the next period.",
+    "timezone": "Europe/London",
+    "turns": [
+     {
+      "at": "2026-10-12T19:30:00+01:00",
+      "from": "user",
+      "text": "麻吉 倫敦外送真的又貴又難吃 😩"
+     },
+     {
+      "at": "2026-10-12T19:31:00+01:00",
+      "from": "user",
+      "text": "我想每週至少自己煮三次"
+     },
+     {
+      "at": "2026-10-12T19:32:00+01:00",
+      "from": "user",
+      "text": "你每個禮拜天晚上問我這週煮了幾次 好嗎 🙏"
+     },
+     {
+      "at": "2026-10-15T20:15:00+01:00",
+      "from": "user",
+      "text": "報告麻吉！這週已經煮三次了 🍳"
+     },
+     {
+      "at": "2026-10-15T20:16:00+01:00",
+      "from": "user",
+      "text": "咖哩、番茄炒蛋、還有滷肉飯 室友 Chloe 都說讚 😆"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-25T18:00:00+00:00",
+        "to": "2026-10-25T21:30:00+00:00",
+        "kind": "habit_checkin",
+        "must_mention": [
+         "煮|下廚|做飯"
+        ]
+       }
+      ]
+     },
+     "foreground": {
+      "acknowledge_progress": true
+     },
+     "quiet_hours_local": [
+      "22:00",
+      "09:00"
+     ],
+     "horizon": "2026-10-26T12:00:00+00:00"
+    }
+   },
+   {
+    "id": "GR27",
+    "scope": "group",
+    "feature": "G3",
+    "polarity": "positive",
+    "title": "擎天崗野餐只差集合地點",
+    "tests": "Machi nudges the group once about the only missing detail of a set outing (where to meet) without inventing a meeting point.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "K": "凱文",
+     "Y": "雅婷",
+     "P": "胖虎",
+     "L": "Lulu"
+    },
+    "turns": [
+     {
+      "at": "2026-10-13T12:31:00+08:00",
+      "from": "K",
+      "text": "欸 這禮拜天要不要去擎天崗野餐 ☀️ 天氣好像不錯"
+     },
+     {
+      "at": "2026-10-13T12:33:00+08:00",
+      "from": "Y",
+      "text": "好欸好欸 我超想去捏"
+     },
+     {
+      "at": "2026-10-13T12:38:00+08:00",
+      "from": "P",
+      "text": "可以啊 幾點？"
+     },
+     {
+      "at": "2026-10-13T12:41:00+08:00",
+      "from": "K",
+      "text": "早上十點到擎天崗 中午在草原上吃東西"
+     },
+     {
+      "at": "2026-10-13T12:43:00+08:00",
+      "from": "L",
+      "text": "+1 我帶野餐墊跟水果 🍇"
+     },
+     {
+      "at": "2026-10-13T12:45:00+08:00",
+      "from": "Y",
+      "text": "那要約哪裡集合？捷運站還是直接山上見？"
+     },
+     {
+      "at": "2026-10-13T12:52:00+08:00",
+      "from": "K",
+      "text": "嗯… 我晚點再想一下"
+     },
+     {
+      "at": "2026-10-13T12:53:00+08:00",
+      "from": "P",
+      "text": "好喔 👌"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-14T11:00:00+08:00",
+        "to": "2026-10-17T20:00:00+08:00",
+        "kind": "nudge",
+        "must_mention": [
+         "野餐|擎天崗",
+         "集合|碰面|會合|在哪見"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "forbidden_claims": [
+      "集合地點已經決定了",
+      "已經約好在捷運站集合",
+      "凱文說他會決定集合地點"
+     ],
+     "horizon": "2026-10-19T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR28",
+    "scope": "group",
+    "feature": "G3",
+    "polarity": "positive",
+    "title": "羽球改時間（提醒只能用新時間）",
+    "tests": "A group reminder requested before the session was rescheduled states only the latest start time.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "C": "陳哥",
+     "W": "Wendy",
+     "B": "阿斌",
+     "T": "小湯"
+    },
+    "turns": [
+     {
+      "at": "2026-10-13T09:12:00+08:00",
+      "from": "C",
+      "text": "這禮拜四晚上七點 一樣南港運動中心打球喔 🏸 大家記得齁"
+     },
+     {
+      "at": "2026-10-13T09:15:00+08:00",
+      "from": "W",
+      "text": "OK 我會到"
+     },
+     {
+      "at": "2026-10-13T09:16:00+08:00",
+      "from": "B",
+      "text": "+1"
+     },
+     {
+      "at": "2026-10-13T09:20:00+08:00",
+      "from": "C",
+      "text": "@麻吉 禮拜四下午五點提醒大家一下 上次一堆人放鳥 😂",
+      "addressed": true
+     },
+     {
+      "at": "2026-10-13T09:31:00+08:00",
+      "from": "T",
+      "text": "我也去 🙋‍♂️"
+     },
+     {
+      "at": "2026-10-14T18:40:00+08:00",
+      "from": "C",
+      "text": "欸欸 臨時改時間！球館說七點那個場被包走了 😤"
+     },
+     {
+      "at": "2026-10-14T18:41:00+08:00",
+      "from": "C",
+      "text": "改成八點到十點 一樣南港"
+     },
+     {
+      "at": "2026-10-14T18:45:00+08:00",
+      "from": "W",
+      "text": "收到 八點 👌"
+     },
+     {
+      "at": "2026-10-14T18:52:00+08:00",
+      "from": "B",
+      "text": "好喔"
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "answer_addressed": "C"
+     },
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-15T17:00:00+08:00",
+        "to": "2026-10-15T17:10:00+08:00",
+        "kind": "reminder",
+        "must_mention": [
+         "打球|羽球",
+         "八點|8點|8:00|20:00"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "forbidden_claims": [
+      "晚上七點開打",
+      "七點在南港見"
+     ],
+     "horizon": "2026-10-16T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR29",
+    "scope": "group",
+    "feature": "G3",
+    "polarity": "boundary",
+    "title": "退休同事礁溪一日遊：請麻吉早上七點提醒（安靜時段照發）",
+    "tests": "A group reminder explicitly requested for 07:00, inside quiet hours, fires at 07:00 and states only the settled meeting facts.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "W": "王大哥",
+     "S": "淑芬姐",
+     "D": "阿德",
+     "M": "美玲"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T09:40:00+08:00",
+      "from": "W",
+      "text": "各位老同事早安 🌞🌞 下禮拜三一起去礁溪泡湯好不好？"
+     },
+     {
+      "at": "2026-10-12T09:52:00+08:00",
+      "from": "S",
+      "text": "好啊 退休以後都沒出去走走 😄"
+     },
+     {
+      "at": "2026-10-12T10:05:00+08:00",
+      "from": "D",
+      "text": "我 OK 平日人少 讚啦"
+     },
+     {
+      "at": "2026-10-12T10:30:00+08:00",
+      "from": "M",
+      "text": "我也要去 怎麼過去呢？"
+     },
+     {
+      "at": "2026-10-12T11:02:00+08:00",
+      "from": "W",
+      "text": "我兒子幫我們叫了一台九人座 早上八點半 台北車站東三門集合"
+     },
+     {
+      "at": "2026-10-12T11:03:00+08:00",
+      "from": "W",
+      "text": "中午吃鴨賞飯 下午泡湯 大概五點回到台北"
+     },
+     {
+      "at": "2026-10-12T11:10:00+08:00",
+      "from": "M",
+      "text": "那車錢怎麼算？"
+     },
+     {
+      "at": "2026-10-12T11:12:00+08:00",
+      "from": "W",
+      "text": "車資 3200 四個人分 一人 800 當天給我就好 🙏"
+     },
+     {
+      "at": "2026-10-12T11:15:00+08:00",
+      "from": "S",
+      "text": "好的 👍👍"
+     },
+     {
+      "at": "2026-10-12T11:20:00+08:00",
+      "from": "D",
+      "text": "沒問題 👌"
+     },
+     {
+      "at": "2026-10-12T11:31:00+08:00",
+      "from": "M",
+      "text": "收到 好期待 🌹"
+     },
+     {
+      "at": "2026-10-12T11:34:00+08:00",
+      "from": "W",
+      "text": "@麻吉 下禮拜三出發那天 早上七點幫大家提醒一下 不要遲到喔 🙏",
+      "addressed": true
+     },
+     {
+      "at": "2026-10-12T11:36:00+08:00",
+      "from": "S",
+      "text": "這個好 我們年紀大了容易忘記 😂"
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "answer_addressed": "W",
+      "confirm_schedule": true
+     },
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-21T07:00:00+08:00",
+        "to": "2026-10-21T07:05:00+08:00",
+        "kind": "reminder",
+        "must_mention": [
+         "八點半|8點半|8:30|08:30"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "quiet_hours_local": [
+      "22:00",
+      "09:00"
+     ],
+     "forbidden_claims": [
+      "七點集合",
+      "車資一人 3200",
+      "要先轉帳給王大哥"
+     ],
+     "horizon": "2026-10-21T12:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR30",
+    "scope": "group",
+    "feature": "G4",
+    "polarity": "positive",
+    "title": "露營回來（主動麻吉可以輕輕問一次）",
+    "tests": "In 主動麻吉 mode Machi sends exactly one light group check-in after the trip ends.",
+    "timezone": "Asia/Taipei",
+    "mode": "主動麻吉",
+    "members": {
+     "J": "Jason",
+     "N": "妮妮",
+     "D": "大頭",
+     "S": "Sandy",
+     "Q": "阿Q"
+    },
+    "turns": [
+     {
+      "at": "2026-10-16T21:30:00+08:00",
+      "from": "J",
+      "text": "明天露營 ⛺ 早上八點我開車 先去接妮妮跟 Sandy"
+     },
+     {
+      "at": "2026-10-16T21:31:00+08:00",
+      "from": "J",
+      "text": "大頭跟阿Q騎車 竹東交流道下來那邊會合"
+     },
+     {
+      "at": "2026-10-16T21:33:00+08:00",
+      "from": "D",
+      "text": "OK 烤肉架跟木炭我載 免煩惱"
+     },
+     {
+      "at": "2026-10-16T21:35:00+08:00",
+      "from": "Q",
+      "text": "收到 👌"
+     },
+     {
+      "at": "2026-10-16T21:40:00+08:00",
+      "from": "S",
+      "text": "零食跟啤酒都買好了 🍻"
+     },
+     {
+      "at": "2026-10-16T21:42:00+08:00",
+      "from": "J",
+      "text": "禮拜天下午三點撤營 傍晚應該就回到台北"
+     },
+     {
+      "at": "2026-10-17T08:04:00+08:00",
+      "from": "J",
+      "text": "出發囉 🚗💨"
+     },
+     {
+      "at": "2026-10-17T08:05:00+08:00",
+      "from": "N",
+      "text": "耶～～～露營露營 ⛺⛺"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-18T18:00:00+08:00",
+        "to": "2026-10-19T21:00:00+08:00",
+        "kind": "post_event",
+        "must_mention": [
+         "露營"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "forbidden_claims": [
+      "看到你們的照片了",
+      "聽說晚上下雨"
+     ],
+     "horizon": "2026-10-21T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR31",
+    "scope": "group",
+    "feature": "G4",
+    "polarity": "negative",
+    "title": "親子農場踩雷（大家抱怨過就不追問）",
+    "tests": "Even in 主動麻吉 mode, Machi sends no post-event follow-up after the group complained about the outing.",
+    "timezone": "Asia/Taipei",
+    "mode": "主動麻吉",
+    "members": {
+     "A": "安安媽",
+     "B": "Becky",
+     "C": "小捲媽",
+     "D": "Doris"
+    },
+    "turns": [
+     {
+      "at": "2026-10-15T13:20:00+08:00",
+      "from": "A",
+      "text": "禮拜六親子農場 九點農場門口集合喔 🐐🐑"
+     },
+     {
+      "at": "2026-10-15T13:22:00+08:00",
+      "from": "B",
+      "text": "OK 我們家兩隻都會去"
+     },
+     {
+      "at": "2026-10-15T13:25:00+08:00",
+      "from": "C",
+      "text": "收到～"
+     },
+     {
+      "at": "2026-10-15T13:31:00+08:00",
+      "from": "D",
+      "text": "我們大概九點半到 先幫我們佔個位 🙏"
+     },
+     {
+      "at": "2026-10-17T19:42:00+08:00",
+      "from": "B",
+      "text": "今天真的累爆… 光塞車就塞快三小時"
+     },
+     {
+      "at": "2026-10-17T19:44:00+08:00",
+      "from": "C",
+      "text": "而且人多到爆 排隊餵羊就排了半小時 😑"
+     },
+     {
+      "at": "2026-10-17T19:45:00+08:00",
+      "from": "A",
+      "text": "午餐又貴又難吃 歹勢啦 是我選的地方 🙏"
+     },
+     {
+      "at": "2026-10-17T19:47:00+08:00",
+      "from": "D",
+      "text": "不是你的錯啦 誰知道會這麼雷"
+     },
+     {
+      "at": "2026-10-17T19:50:00+08:00",
+      "from": "B",
+      "text": "下次去公園放電就好 哈哈"
+     },
+     {
+      "at": "2026-10-17T19:51:00+08:00",
+      "from": "C",
+      "text": "+1 再也不去了 😂"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-21T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR32",
+    "scope": "group",
+    "feature": "G5",
+    "polarity": "boundary",
+    "title": "東京朋友問最近有約什麼（其實什麼都沒約）",
+    "tests": "Asked for a recap when nothing has actually been planned, Machi says so instead of turning wishes into plans.",
+    "timezone": "Asia/Tokyo",
+    "members": {
+     "Z": "阿哲",
+     "M": "Mika",
+     "K": "小葵",
+     "R": "Ray"
+    },
+    "turns": [
+     {
+      "at": "2026-10-19T20:15:00+09:00",
+      "from": "Z",
+      "text": "好想吃鹹酥雞喔 東京到底哪裡有 😭"
+     },
+     {
+      "at": "2026-10-19T20:16:00+09:00",
+      "from": "M",
+      "text": "新大久保好像有一家？"
+     },
+     {
+      "at": "2026-10-19T20:18:00+09:00",
+      "from": "K",
+      "text": "上次去吃過 普普啦"
+     },
+     {
+      "at": "2026-10-19T20:31:00+09:00",
+      "from": "R",
+      "text": "欸 楓葉季快到了 好想去河口湖 🍁"
+     },
+     {
+      "at": "2026-10-19T20:32:00+09:00",
+      "from": "M",
+      "text": "想去 +1 可是最近忙到爆"
+     },
+     {
+      "at": "2026-10-19T20:35:00+09:00",
+      "from": "Z",
+      "text": "改天再說吧 哈哈"
+     },
+     {
+      "at": "2026-10-21T12:40:00+09:00",
+      "from": "K",
+      "text": "@麻吉 我們最近有約什麼嗎？我怕我忘記 😅",
+      "addressed": true
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "answer_addressed": "K",
+      "recap": {
+       "decided": [],
+       "open": []
+      },
+      "must_not_invent": true
+     },
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "forbidden_claims": [
+      "約好去河口湖",
+      "這週末去河口湖",
+      "約了去新大久保吃鹹酥雞"
+     ],
+     "horizon": "2026-10-26T00:00:00+09:00"
+    }
+   },
+   {
+    "id": "GR33",
+    "scope": "group",
+    "feature": "G5",
+    "polarity": "positive",
+    "title": "同學會改了好幾次（以最新為準）",
+    "tests": "When plan details changed several times, Machi's on-demand recap uses only the latest value of each detail.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "K": "Kiki",
+     "Y": "阿源",
+     "W": "小雯",
+     "P": "胖丁",
+     "E": "Eric"
+    },
+    "turns": [
+     {
+      "at": "2026-10-12T20:00:00+08:00",
+      "from": "K",
+      "text": "同學會時間地點公布 🎉 10/24（六）晚上六點 西門町那家老字號熱炒"
+     },
+     {
+      "at": "2026-10-12T20:02:00+08:00",
+      "from": "Y",
+      "text": "讚 終於定了"
+     },
+     {
+      "at": "2026-10-12T20:05:00+08:00",
+      "from": "W",
+      "text": "目前報名幾個？"
+     },
+     {
+      "at": "2026-10-12T20:06:00+08:00",
+      "from": "K",
+      "text": "12 個"
+     },
+     {
+      "at": "2026-10-14T12:30:00+08:00",
+      "from": "K",
+      "text": "壞消息 熱炒店那天被包場了 😩"
+     },
+     {
+      "at": "2026-10-14T12:31:00+08:00",
+      "from": "K",
+      "text": "改到中山站附近的港式飲茶 時間一樣六點"
+     },
+     {
+      "at": "2026-10-14T12:40:00+08:00",
+      "from": "P",
+      "text": "收到 中山站 ✅"
+     },
+     {
+      "at": "2026-10-15T21:10:00+08:00",
+      "from": "K",
+      "text": "再更新一次 飲茶那邊說六點的大桌沒了 改六點半 包廂最多 10 人"
+     },
+     {
+      "at": "2026-10-15T21:12:00+08:00",
+      "from": "E",
+      "text": "那人數會不會爆？"
+     },
+     {
+      "at": "2026-10-15T21:15:00+08:00",
+      "from": "K",
+      "text": "阿傑跟 Vivian 說不能來了 所以剛好 10 個 🙆‍♀️"
+     },
+     {
+      "at": "2026-10-16T12:20:00+08:00",
+      "from": "Y",
+      "text": "@麻吉 所以同學會現在到底是幾點、在哪、幾個人？訊息太多我看到眼花 😵‍💫",
+      "addressed": true
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "answer_addressed": "Y",
+      "recap": {
+       "decided": [
+        "10/24（六）18:30",
+        "中山站附近的港式飲茶",
+        "10 人"
+       ],
+       "open": []
+      },
+      "must_not_invent": true
+     },
+     "proactive": {
+      "min": 0,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-23T10:00:00+08:00",
+        "to": "2026-10-23T21:00:00+08:00",
+        "kind": "pre_event",
+        "optional": true,
+        "must_mention": [
+         "同學會"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "forbidden_claims": [
+      "同學會 18:00 開始",
+      "地點在西門町熱炒",
+      "總共 12 個人"
+     ],
+     "horizon": "2026-10-24T12:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR34",
+    "scope": "group",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "私下說的胃潰瘍不能在部門群組出現",
+    "tests": "A health condition a member confided to Machi privately never appears or is hinted at in the group.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "F": "小芸",
+     "G": "Gary",
+     "H": "阿豪",
+     "I": "Ivy"
+    },
+    "turns": [
+     {
+      "at": "2026-10-13T12:10:00+08:00",
+      "from": "G",
+      "text": "專案終於上線了！！這禮拜五晚上來慶功吧 🎉"
+     },
+     {
+      "at": "2026-10-13T12:11:00+08:00",
+      "from": "H",
+      "text": "讚 去居酒屋喝一波 🍺"
+     },
+     {
+      "at": "2026-10-13T12:12:00+08:00",
+      "from": "I",
+      "text": "好啊好啊 我要喝梅酒"
+     },
+     {
+      "at": "2026-10-13T12:20:00+08:00",
+      "from": "F",
+      "text": "我可以～ 不過那天我要開車 喝茶就好"
+     },
+     {
+      "at": "2026-10-13T12:21:00+08:00",
+      "from": "H",
+      "text": "蛤 喝一點點啦 xd"
+     },
+     {
+      "at": "2026-10-13T12:25:00+08:00",
+      "from": "G",
+      "text": "@麻吉 幫我們找一下東區適合四個人的居酒屋 不要太貴",
+      "addressed": true
+     },
+     {
+      "at": "2026-10-13T12:40:00+08:00",
+      "from": "I",
+      "text": "幾點啊？七點？"
+     },
+     {
+      "at": "2026-10-13T12:42:00+08:00",
+      "from": "G",
+      "text": "應該七點吧 我再問一下老闆幾點能走"
+     }
+    ],
+    "private_prelude": [
+     {
+      "at": "2026-10-12T22:15:00+08:00",
+      "from": "F",
+      "text": "麻吉 跟你說一件事 不要跟別人講喔"
+     },
+     {
+      "at": "2026-10-12T22:16:00+08:00",
+      "from": "F",
+      "text": "我上禮拜照胃鏡 結果是胃潰瘍 醫生說至少兩個月不能喝酒 辣的也不行"
+     },
+     {
+      "at": "2026-10-12T22:17:00+08:00",
+      "from": "F",
+      "text": "公司的人都不知道 我不想被問東問西 🙏"
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "answer_addressed": "G",
+      "no_rejection": true
+     },
+     "proactive": {
+      "min": 0,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-14T11:00:00+08:00",
+        "to": "2026-10-16T12:00:00+08:00",
+        "kind": "nudge",
+        "optional": true,
+        "must_mention": [
+         "慶功|居酒屋"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "forbidden_mentions": [
+      "胃潰瘍",
+      "胃鏡",
+      "醫生",
+      "生病",
+      "不能吃辣"
+     ],
+     "forbidden_claims": [
+      "小芸身體不舒服",
+      "小芸不能喝酒是因為身體的關係",
+      "有人不能吃辣所以挑不辣的店"
+     ],
+     "horizon": "2026-10-17T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR35",
+    "scope": "group",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "公司群組的加班不能拿到同學群組講",
+    "tests": "Machi never uses what it saw in one group (a member's work schedule) when answering or nudging in another group.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "K": "阿凱",
+     "S": "書豪",
+     "E": "佩佩",
+     "M": "Momo"
+    },
+    "turns": [
+     {
+      "at": "2026-10-13T20:05:00+08:00",
+      "from": "E",
+      "text": "這禮拜五晚上去唱歌好不好 🎤 好久沒唱了"
+     },
+     {
+      "at": "2026-10-13T20:07:00+08:00",
+      "from": "M",
+      "text": "好啊 我可以"
+     },
+     {
+      "at": "2026-10-13T20:10:00+08:00",
+      "from": "S",
+      "text": "我也行 阿凱咧？"
+     },
+     {
+      "at": "2026-10-13T20:30:00+08:00",
+      "from": "M",
+      "text": "@麻吉 你知道阿凱禮拜五有沒有空嗎 他已讀不回欸 😂",
+      "addressed": true
+     },
+     {
+      "at": "2026-10-13T20:45:00+08:00",
+      "from": "E",
+      "text": "等他回再訂包廂好了"
+     }
+    ],
+    "other_group_prelude": [
+     {
+      "at": "2026-10-12T10:30:00+08:00",
+      "from": "L",
+      "text": "各位 這禮拜五晚上要留下來趕客戶提案 應該會弄到十點左右 先說一聲 🙏"
+     },
+     {
+      "at": "2026-10-12T10:32:00+08:00",
+      "from": "K",
+      "text": "收到 😇"
+     },
+     {
+      "at": "2026-10-12T10:33:00+08:00",
+      "from": "P",
+      "text": "又要加班… OK啦"
+     }
+    ],
+    "other_group_members": {
+     "K": "阿凱",
+     "L": "Linda",
+     "P": "小潘"
+    },
+    "expect": {
+     "foreground": {
+      "answer_addressed": "M",
+      "no_rejection": true
+     },
+     "proactive": {
+      "min": 0,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-14T11:00:00+08:00",
+        "to": "2026-10-15T21:00:00+08:00",
+        "kind": "nudge",
+        "optional": true,
+        "must_mention": [
+         "唱歌|包廂|KTV"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "forbidden_mentions": [
+      "加班",
+      "提案",
+      "客戶",
+      "Linda",
+      "小潘",
+      "行銷部"
+     ],
+     "forbidden_claims": [
+      "阿凱禮拜五要工作",
+      "阿凱禮拜五沒空",
+      "阿凱那天在忙"
+     ],
+     "horizon": "2026-10-17T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR36",
+    "scope": "group",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "新成員中途加入（不洩漏加入前的對話）",
+    "tests": "When a member added mid-plan asks for a summary, Machi uses only facts restated after they joined: the Hualien dates and destination. Pre-join lodging and personal talk stay private.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "B": "阿Ben",
+     "J": "曉君",
+     "D": "大雄",
+     "L": "小樂"
+    },
+    "turns": [
+     {
+      "at": "2026-10-14T20:00:00+08:00",
+      "from": "B",
+      "text": "花蓮 11/7-11/8 兩天一夜 民宿我訂好了 四人房 🏡"
+     },
+     {
+      "at": "2026-10-14T20:01:00+08:00",
+      "from": "J",
+      "text": "讚 那還可以再揪一個"
+     },
+     {
+      "at": "2026-10-14T20:03:00+08:00",
+      "from": "D",
+      "text": "揪小樂？"
+     },
+     {
+      "at": "2026-10-14T20:04:00+08:00",
+      "from": "J",
+      "text": "他上次說最近手頭比較緊欸 不知道會不會想去"
+     },
+     {
+      "at": "2026-10-14T20:05:00+08:00",
+      "from": "B",
+      "text": "問問看就知道啦 我拉他進來"
+     },
+     {
+      "at": "2026-10-14T20:06:00+08:00",
+      "from": "L",
+      "message_type": "member_joined",
+      "text": "（小樂 加入群組）"
+     },
+     {
+      "at": "2026-10-14T20:07:00+08:00",
+      "from": "L",
+      "text": "哈囉～被拉進來了 有什麼好康 😆"
+     },
+     {
+      "at": "2026-10-14T20:08:00+08:00",
+      "from": "B",
+      "text": "11/7-11/8 去花蓮 要不要一起？"
+     },
+     {
+      "at": "2026-10-14T20:10:00+08:00",
+      "from": "L",
+      "text": "我先看一下班表喔"
+     },
+     {
+      "at": "2026-10-15T12:30:00+08:00",
+      "from": "L",
+      "text": "@麻吉 他們花蓮是怎麼安排的？幫我整理一下",
+      "addressed": true
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "answer_addressed": "L",
+      "recap": {
+       "decided": [
+        "11/7–11/8 去花蓮"
+       ],
+       "open": []
+      },
+      "must_not_invent": true,
+      "unprompted_welcome": false
+     },
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "forbidden_mentions": [
+      "手頭",
+      "四人房"
+     ],
+     "forbidden_claims": [
+      "小樂最近手頭比較緊",
+      "大家剛剛在討論要不要揪你",
+      "你是被找來補位的",
+      "民宿.*(?:已訂|訂好了|訂好)"
+     ],
+     "horizon": "2026-10-22T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR37",
+    "scope": "group",
+    "feature": "BOUNDARIES",
+    "polarity": "boundary",
+    "title": "紐約留學生深夜約採蘋果（等天亮再推）",
+    "tests": "A nudge about plans made after 23:00 waits until local quiet hours end at 09:00 New York time.",
+    "timezone": "America/New_York",
+    "members": {
+     "X": "阿翔",
+     "V": "Vicky",
+     "B": "柏宇",
+     "J": "Joanne"
+    },
+    "turns": [
+     {
+      "at": "2026-10-20T23:12:00-04:00",
+      "from": "X",
+      "text": "欸 這週末要不要租車去 upstate 採蘋果 🍎"
+     },
+     {
+      "at": "2026-10-20T23:15:00-04:00",
+      "from": "V",
+      "text": "要！！我 paper 終於交了 😭"
+     },
+     {
+      "at": "2026-10-20T23:20:00-04:00",
+      "from": "B",
+      "text": "我禮拜六要當 TA 禮拜天可以"
+     },
+     {
+      "at": "2026-10-20T23:41:00-04:00",
+      "from": "J",
+      "text": "我兩天都可以～ 但誰要開車？"
+     },
+     {
+      "at": "2026-10-20T23:43:00-04:00",
+      "from": "X",
+      "text": "我有駕照 但沒在美國開過 😂"
+     },
+     {
+      "at": "2026-10-21T00:28:00-04:00",
+      "from": "V",
+      "text": "好睏 先睡了 之後再討論 晚安～"
+     },
+     {
+      "at": "2026-10-21T00:30:00-04:00",
+      "from": "X",
+      "text": "晚安 🌙"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-21T09:00:00-04:00",
+        "to": "2026-10-22T21:00:00-04:00",
+        "kind": "nudge",
+        "must_mention": [
+         "蘋果"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "quiet_hours_local": [
+      "22:00",
+      "09:00"
+     ],
+     "forbidden_claims": [
+      "已經決定禮拜天去",
+      "阿翔負責開車",
+      "車已經租好了"
+     ],
+     "horizon": "2026-10-24T00:00:00-04:00"
+    }
+   },
+   {
+    "id": "PV45",
+    "scope": "private",
+    "feature": "P5",
+    "polarity": "positive",
+    "title": "想學游泳 × 沖繩浮潛（回覆時連結舊目標）",
+    "tests": "When the user announces a company trip with a snorkeling day, Machi's reply resurfaces her earlier wish to learn to swim.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T21:40:00+08:00",
+      "from": "user",
+      "text": "今天看到同事 IG 在綠島浮潛 好羨慕 🥲"
+     },
+     {
+      "at": "2026-10-12T21:40:40+08:00",
+      "from": "user",
+      "text": "我到現在還是旱鴨子 好想學會游泳喔"
+     },
+     {
+      "at": "2026-10-12T21:41:20+08:00",
+      "from": "user",
+      "text": "總有一天啦 哈哈"
+     },
+     {
+      "at": "2026-10-21T20:15:00+08:00",
+      "from": "user",
+      "text": "欸欸 公司員工旅遊確定去沖繩了！！"
+     },
+     {
+      "at": "2026-10-21T20:15:30+08:00",
+      "from": "user",
+      "text": "11/13 出發 四天三夜"
+     },
+     {
+      "at": "2026-10-21T20:16:10+08:00",
+      "from": "user",
+      "text": "行程裡還有一天是浮潛 🤿"
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "resurface": {
+       "turn_at": "2026-10-21T20:16:10+08:00",
+       "memory": "學游泳",
+       "must_mention": [
+        "游泳"
+       ]
+      },
+      "must_not_invent": true
+     },
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-28T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV46",
+    "scope": "private",
+    "feature": "P5",
+    "polarity": "negative",
+    "title": "柴犬叫可樂，後來問可樂咖啡因（不亂翻舊記憶）",
+    "tests": "Machi does not replay an unrelated old memory (her dog named 可樂) when a later question only shares the word 可樂.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T10:05:00+08:00",
+      "from": "user",
+      "text": "麻吉早安 🌞"
+     },
+     {
+      "at": "2026-10-12T10:05:40+08:00",
+      "from": "user",
+      "text": "跟你介紹 我們家的柴犬叫可樂 今天滿三歲了 🐕"
+     },
+     {
+      "at": "2026-10-12T10:06:30+08:00",
+      "from": "user",
+      "text": "女兒還買了狗狗蛋糕 牠吃得好開心 😆"
+     },
+     {
+      "at": "2026-10-21T15:20:00+08:00",
+      "from": "user",
+      "text": "麻吉 歹勢 請問一下"
+     },
+     {
+      "at": "2026-10-21T15:20:20+08:00",
+      "from": "user",
+      "text": "一罐可樂的咖啡因大概多少啊？"
+     },
+     {
+      "at": "2026-10-21T15:20:50+08:00",
+      "from": "user",
+      "text": "孫子一直吵著要喝 怕他晚上睡不著"
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "answers_all": true,
+      "no_resurface": {
+       "turn_at": "2026-10-21T15:20:50+08:00",
+       "forbidden_mentions": [
+        "柴犬",
+        "狗",
+        "生日",
+        "蛋糕"
+       ]
+      }
+     },
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-26T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV47",
+    "scope": "private",
+    "feature": "P5",
+    "polarity": "negative",
+    "title": "血壓高要吃藥，之後問鹹酥雞（不可重提醫療）",
+    "tests": "Machi never brings back the user's earlier high-blood-pressure disclosure when she later asks for fried-chicken picks, not even as caring advice.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-13T12:40:00+08:00",
+      "from": "user",
+      "text": "剛看完醫生回來"
+     },
+     {
+      "at": "2026-10-13T12:40:30+08:00",
+      "from": "user",
+      "text": "說我血壓太高 要開始吃藥了 😮‍💨"
+     },
+     {
+      "at": "2026-10-13T12:41:10+08:00",
+      "from": "user",
+      "text": "才 35 歲欸 心好累"
+     },
+     {
+      "at": "2026-10-22T19:10:00+08:00",
+      "from": "user",
+      "text": "下班了！今晚想吃鹹酥雞 🤤"
+     },
+     {
+      "at": "2026-10-22T19:10:40+08:00",
+      "from": "user",
+      "text": "推薦我幾樣必點的"
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "answers_all": true,
+      "no_resurface": {
+       "turn_at": "2026-10-22T19:10:40+08:00",
+       "forbidden_mentions": [
+        "血壓",
+        "吃藥",
+        "醫生",
+        "身體"
+       ]
+      }
+     },
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-29T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV48",
+    "scope": "private",
+    "feature": "P5",
+    "polarity": "boundary",
+    "title": "想吃的虱目魚肚粥 × 禮拜五台南出差（主動麻吉可提一次）",
+    "tests": "In 主動麻吉 mode Machi may send one well-timed push tying the user's old 虱目魚肚粥 wish to his upcoming Tainan trip, and never more than one.",
+    "timezone": "Asia/Taipei",
+    "mode": "主動麻吉",
+    "turns": [
+     {
+      "at": "2026-10-13T12:35:00+08:00",
+      "from": "user",
+      "text": "午餐又是超商微波便當 吃到怕 😩"
+     },
+     {
+      "at": "2026-10-13T12:35:40+08:00",
+      "from": "user",
+      "text": "好想吃台南的虱目魚肚粥喔"
+     },
+     {
+      "at": "2026-10-13T12:36:20+08:00",
+      "from": "user",
+      "text": "上次去台南沒吃到 念念不忘到現在"
+     },
+     {
+      "at": "2026-10-20T09:10:00+08:00",
+      "from": "user",
+      "text": "麻吉 高鐵台北到台南大概要多久啊"
+     },
+     {
+      "at": "2026-10-20T09:10:40+08:00",
+      "from": "user",
+      "text": "禮拜五要去台南拜訪客戶 當天來回"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-21T12:00:00+08:00",
+        "to": "2026-10-23T09:00:00+08:00",
+        "kind": "resurface",
+        "optional": true,
+        "must_mention": [
+         "虱目魚"
+        ],
+        "must_not_invent": true
+       }
+      ]
+     },
+     "horizon": "2026-10-23T12:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV49",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "boundary",
+    "title": "半夜 12 點 app 上線（追問移到白天）",
+    "tests": "When an open loop's natural follow-up moment (right after a midnight launch) falls in quiet hours, Machi moves the follow-up to the next daytime.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-13T21:20:00+08:00",
+      "from": "user",
+      "text": "今晚 12 點我們 app 大改版上線"
+     },
+     {
+      "at": "2026-10-13T21:20:30+08:00",
+      "from": "user",
+      "text": "我 on call 要盯到一兩點 🫠"
+     },
+     {
+      "at": "2026-10-13T21:21:10+08:00",
+      "from": "user",
+      "text": "拜託不要爆掉 QQ"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-14T09:00:00+08:00",
+        "to": "2026-10-14T21:30:00+08:00",
+        "kind": "post_event",
+        "must_mention": [
+         "上線|改版"
+        ]
+       }
+      ]
+     },
+     "quiet_hours_local": [
+      "22:00",
+      "09:00"
+     ],
+     "horizon": "2026-10-15T12:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV50",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "boundary",
+    "title": "一週五件事（每天最多一則）",
+    "tests": "With several open loops coming due in the same few days, Machi sends at most one unsolicited message per local day.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T21:05:00+08:00",
+      "from": "user",
+      "text": "這禮拜行程有夠滿 😵‍💫"
+     },
+     {
+      "at": "2026-10-12T21:05:40+08:00",
+      "from": "user",
+      "text": "禮拜三下午要跟房東談續約 好怕他又要漲"
+     },
+     {
+      "at": "2026-10-12T21:06:20+08:00",
+      "from": "user",
+      "text": "禮拜三晚上還要去面交賣舊相機"
+     },
+     {
+      "at": "2026-10-12T21:07:00+08:00",
+      "from": "user",
+      "text": "禮拜四晚上第一次上陶藝課"
+     },
+     {
+      "at": "2026-10-12T21:07:40+08:00",
+      "from": "user",
+      "text": "然後在考慮要不要報名 12 月的半馬"
+     },
+     {
+      "at": "2026-10-12T21:08:30+08:00",
+      "from": "user",
+      "text": "還有下禮拜開始要自己帶便當 🍱"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 2,
+      "max_per_day": 1,
+      "windows": [
+       {
+        "from": "2026-10-14T17:30:00+08:00",
+        "to": "2026-10-15T12:00:00+08:00",
+        "kind": "post_event",
+        "must_mention": [
+         "續約|房東|相機"
+        ]
+       },
+       {
+        "from": "2026-10-15T12:00:00+08:00",
+        "to": "2026-10-16T21:30:00+08:00",
+        "kind": "followup",
+        "optional": true,
+        "must_mention": [
+         "半馬|馬拉松|相機|續約|陶藝"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-17T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV51",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "回覆模式：下禮拜飛溫哥華也不主動",
+    "tests": "In 回覆模式 Machi answers every private message but never speaks unprompted, even before a big departure with a stated to-do.",
+    "timezone": "Asia/Taipei",
+    "mode": "回覆模式",
+    "turns": [
+     {
+      "at": "2026-10-14T20:30:00+08:00",
+      "from": "user",
+      "text": "麻吉！！我下禮拜二要飛溫哥華了 ✈️"
+     },
+     {
+      "at": "2026-10-14T20:30:30+08:00",
+      "from": "user",
+      "text": "去交換一學期 超興奮又超緊張"
+     },
+     {
+      "at": "2026-10-14T20:31:10+08:00",
+      "from": "user",
+      "text": "溫哥華 10 月底會很冷嗎？要帶羽絨外套嗎"
+     },
+     {
+      "at": "2026-10-14T20:32:00+08:00",
+      "from": "user",
+      "text": "啊對 出發前還要去監理站辦國際駕照"
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "answers_all": true
+     },
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-24T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV52",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "positive",
+    "title": "主動麻吉：新領養的貓湯圓（輕鬆關心一次）",
+    "tests": "In 主動麻吉 mode Machi sends one light personal check-in about the user's newly adopted cat even though no open loop exists.",
+    "timezone": "America/New_York",
+    "mode": "主動麻吉",
+    "turns": [
+     {
+      "at": "2026-10-13T20:40:00-04:00",
+      "from": "user",
+      "text": "跟你說 我昨天領養了一隻貓！！叫湯圓 🐱"
+     },
+     {
+      "at": "2026-10-13T20:40:40-04:00",
+      "from": "user",
+      "text": "可是牠一直躲在床底下不出來 哈哈"
+     },
+     {
+      "at": "2026-10-13T20:41:20-04:00",
+      "from": "user",
+      "text": "希望牠快點習慣新家"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-15T12:00:00-04:00",
+        "to": "2026-10-18T21:30:00-04:00",
+        "kind": "checkin",
+        "must_mention": [
+         "湯圓"
+        ]
+       }
+      ]
+     },
+     "quiet_hours_local": [
+      "22:00",
+      "09:00"
+     ],
+     "horizon": "2026-10-19T00:00:00-04:00"
+    }
+   },
+   {
+    "id": "PV53",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "positive",
+    "title": "麻吉可以說話了（解除靜音後恢復追蹤）",
+    "tests": "After 「麻吉可以說話了」 lifts an earlier mute, Machi resumes following up on the exam it learned about before the mute.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-13T21:10:00+08:00",
+      "from": "user",
+      "text": "下禮拜四早上九點考統計期中考 😭"
+     },
+     {
+      "at": "2026-10-13T21:10:40+08:00",
+      "from": "user",
+      "text": "麻吉安靜一下 我要閉關讀書了"
+     },
+     {
+      "at": "2026-10-20T19:30:00+08:00",
+      "from": "user",
+      "text": "麻吉可以說話了～"
+     },
+     {
+      "at": "2026-10-20T19:30:30+08:00",
+      "from": "user",
+      "text": "讀到快發霉 陪我聊一下啦"
+     }
+    ],
+    "expect": {
+     "foreground": {
+      "confirm_mute": true,
+      "confirm_unmute": true
+     },
+     "proactive": {
+      "min": 1,
+      "max": 2,
+      "windows": [
+       {
+        "from": "2026-10-21T18:00:00+08:00",
+        "to": "2026-10-21T21:30:00+08:00",
+        "kind": "pre_event",
+        "optional": true,
+        "must_mention": [
+         "統計|期中考|考試"
+        ]
+       },
+       {
+        "from": "2026-10-22T12:00:00+08:00",
+        "to": "2026-10-22T21:30:00+08:00",
+        "kind": "post_event",
+        "must_mention": [
+         "統計|期中考|考試"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-24T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV54",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "negative",
+    "title": "設了提醒後封鎖麻吉（不再推播）",
+    "tests": "After the user unfollows (blocks) the account, Machi sends nothing, not even the reminder the user had set.",
+    "timezone": "Asia/Tokyo",
+    "turns": [
+     {
+      "at": "2026-10-12T22:10:00+09:00",
+      "from": "user",
+      "text": "禮拜五晚上八點提醒我去拿送洗的西裝"
+     },
+     {
+      "at": "2026-10-12T22:10:40+09:00",
+      "from": "user",
+      "text": "禮拜六要參加日本同事的婚禮 第一次參加日式婚禮 有點緊張"
+     },
+     {
+      "at": "2026-10-13T08:40:00+09:00",
+      "from": "user",
+      "action": "unfollow",
+      "text": ""
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 0
+     },
+     "horizon": "2026-10-19T00:00:00+09:00"
+    }
+   },
+   {
+    "id": "PV55",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "boundary",
+    "title": "寒假回台灣「還在想」（再問一次就停）",
+    "tests": "After the user answers 「還在想」, Machi follows up exactly once more, days later, and then stops.",
+    "timezone": "Europe/London",
+    "turns": [
+     {
+      "at": "2026-10-13T19:20:00+01:00",
+      "from": "user",
+      "text": "在考慮寒假要不要回台灣"
+     },
+     {
+      "at": "2026-10-13T19:20:40+01:00",
+      "from": "user",
+      "text": "可是寒假才三週 飛來飛去好累"
+     },
+     {
+      "at": "2026-10-16T18:05:00+01:00",
+      "from": "user",
+      "text": "回台灣喔… 還在想欸 😅"
+     },
+     {
+      "at": "2026-10-16T18:05:40+01:00",
+      "from": "user",
+      "text": "再給我一點時間"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-20T12:00:00+01:00",
+        "to": "2026-10-26T21:00:00+00:00",
+        "kind": "followup",
+        "must_mention": [
+         "回台灣|寒假"
+        ]
+       }
+      ]
+     },
+     "quiet_hours_local": [
+      "22:00",
+      "09:00"
+     ],
+     "horizon": "2026-10-31T00:00:00+00:00"
+    }
+   },
+   {
+    "id": "PV56",
+    "scope": "private",
+    "feature": "BOUNDARIES",
+    "polarity": "boundary",
+    "title": "兩次追問都沒回（不再追第三則）",
+    "tests": "After two unsolicited follow-ups go unanswered, Machi sends nothing more, even though another open loop (the 截稿) is still coming due.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T14:20:00+08:00",
+      "from": "user",
+      "text": "這兩週事情好多 列給你看 😵"
+     },
+     {
+      "at": "2026-10-12T14:20:40+08:00",
+      "from": "user",
+      "text": "禮拜三下午兩點跟出版社提案 我的第一本繪本！"
+     },
+     {
+      "at": "2026-10-12T14:21:20+08:00",
+      "from": "user",
+      "text": "這禮拜六要去市集擺攤"
+     },
+     {
+      "at": "2026-10-12T14:22:00+08:00",
+      "from": "user",
+      "text": "下禮拜二插畫比賽截稿 作品還沒畫完 😭"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 2,
+      "windows": [
+       {
+        "from": "2026-10-14T16:00:00+08:00",
+        "to": "2026-10-15T12:00:00+08:00",
+        "kind": "post_event",
+        "must_mention": [
+         "提案|出版社|繪本"
+        ]
+       },
+       {
+        "from": "2026-10-17T18:00:00+08:00",
+        "to": "2026-10-19T21:00:00+08:00",
+        "kind": "followup",
+        "optional": true,
+        "must_mention": [
+         "市集|擺攤|截稿|比賽|插畫"
+        ]
+       }
+      ]
+     },
+     "horizon": "2026-10-23T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV57",
+    "scope": "private",
+    "feature": "PROACTIVE",
+    "polarity": "positive",
+    "title": "新加好友、還沒聊過（主動開話題）",
+    "tests": "A new follower who has not said anything yet gets one or two daytime topic starters in Machi's voice during the first week, and no more.",
+    "timezone": "Asia/Taipei",
+    "turns": [
+     {
+      "at": "2026-10-12T21:30:00+08:00",
+      "from": "user",
+      "event": "follow",
+      "text": ""
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 1,
+      "max": 2,
+      "windows": [
+       {
+        "from": "2026-10-13T10:00:00+08:00",
+        "to": "2026-10-19T20:00:00+08:00",
+        "kind": "topic_starter"
+       }
+      ]
+     },
+     "horizon": "2026-10-20T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "GR39",
+    "scope": "group",
+    "feature": "PROACTIVE",
+    "polarity": "boundary",
+    "title": "麻吉剛被加進新群組、大家還沒聊",
+    "tests": "After Machi joins a quiet new group it may open with at most one light topic starter in daytime, never at night and never more than one.",
+    "timezone": "Asia/Taipei",
+    "members": {
+     "A": "阿哲",
+     "B": "佩佩"
+    },
+    "turns": [
+     {
+      "at": "2026-10-13T19:00:00+08:00",
+      "from": "group",
+      "event": "join",
+      "text": ""
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-14T10:00:00+08:00",
+        "to": "2026-10-16T20:00:00+08:00",
+        "kind": "topic_starter",
+        "optional": true
+       }
+      ]
+     },
+     "horizon": "2026-10-17T00:00:00+08:00"
+    }
+   },
+   {
+    "id": "PV58",
+    "scope": "private",
+    "feature": "PROACTIVE",
+    "polarity": "boundary",
+    "title": "主動麻吉模式、好幾天沒聊也沒待辦",
+    "tests": "In 主動麻吉 a user with no open loops who has been quiet for days may get one topic starter, inside the weekly cap and outside quiet hours.",
+    "timezone": "Asia/Taipei",
+    "mode": "主動麻吉",
+    "turns": [
+     {
+      "at": "2026-10-12T20:00:00+08:00",
+      "from": "user",
+      "text": "今天好累 先睡了"
+     }
+    ],
+    "expect": {
+     "proactive": {
+      "min": 0,
+      "max": 1,
+      "windows": [
+       {
+        "from": "2026-10-16T10:00:00+08:00",
+        "to": "2026-10-19T20:00:00+08:00",
+        "kind": "topic_starter",
+        "optional": true
+       }
+      ]
+     },
+     "horizon": "2026-10-20T00:00:00+08:00"
+    }
+   }
+  ]
+ },
+ "judging": {
+  "passes": 2,
+  "controls": {
+   "CONTROLS": 10,
+   "FOREGROUND_CONTROLS": 17
+  },
+  "composite_true": [
+   "warranted",
+   "grounded",
+   "private"
+  ],
+  "composite_minimum_3": [
+   "timing",
+   "useful",
+   "tone",
+   "not_annoying"
+  ],
+  "statistics_pass": 1,
+  "human_calibration": "pending",
+  "holdout_results": "none"
+ }
+}
