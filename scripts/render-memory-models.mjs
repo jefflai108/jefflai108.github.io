@@ -3,6 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {renderQuality, validateQuality} from './render-memory-quality.mjs';
+import {buildComparison} from './memory-comparison-report.mjs';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=(n,d=1)=>Number(n).toFixed(d);
@@ -127,9 +128,9 @@ function caseMarkup(data,c){
   return `<details class="case" id="${c.id}" data-case data-difficulty="${c.difficulty}"${['MM01-hard','MM02-hard'].includes(c.id)?' open':''}><summary><b>${esc(c.id)} · ${esc(c.family)}</b><span class="chip">${c.difficulty.toUpperCase()}</span><span class="small">${c.turns.length} 則／${chars} 字</span><span class="small" data-case-count>16 份輸出</span></summary><details><summary>原始合成輸入、過時側寫與評分目標</summary><ol class="source">${c.turns.map(t=>`<li><span>[${t.seq}]</span><div class="bubble">${esc(t.text)}</div></li>`).join('')}</ol><h4>既有側寫（一般摘要可見；V2 事實抽取不使用）</h4><pre class="source-profile">${esc(c.profile||'（空）')}</pre>${c.correctionCandidates.length?`<h4>本次可更正候選</h4><pre>${esc(JSON.stringify(c.correctionCandidates,null,2))}</pre>`:''}<h4>不可混淆／擅自補完</h4><ul>${c.gold.mustNotAssert.map(t=>`<li>${esc(t)}</li>`).join('')}</ul><p class="small">目標意思只提供給評審，不提供給候選模型。逐項目標見各輸出的判讀明細。</p></details><div class="answers">${records.map(r=>answer(data,r,c)).join('')}</div></details>`;
 }
 
-export function render(data,view='profiles'){
+export function render(data,view='profiles',comparison=null){
   validateData(data);
-  if(['memory-models-quality-v4','memory-models-quality-v5-mem0','memory-models-quality-v6-mem0'].includes(data.version))return renderQuality(data,view);
+  if(['memory-models-quality-v4','memory-models-quality-v5-mem0','memory-models-quality-v6-mem0'].includes(data.version))return renderQuality(data,view,comparison);
   const apiFailures=data.records.filter(r=>!r.apiOk).length,formatFailures=data.records.filter(r=>r.apiOk&&!r.formatOk).length;
   const cost=data.records.reduce((n,r)=>n+r.costUsd,0);
   const differences=data.hardPairedDifferences.map(d=>`<tr><th scope="row">${taskLabel[d.task]}</th><td>${esc(data.manifest.arms.find(a=>a.id===d.armId).label)}</td><td>${d.passPointDifference>0?'+':''}${fmt(d.passPointDifference)} pp</td><td>${d.pairedInterval.map(v=>fmt(v)).join(' 至 ')} pp</td></tr>`).join('');
@@ -141,11 +142,13 @@ export function render(data,view='profiles'){
 
 export function publish(input,outputDirectory){
   const data=validateData(JSON.parse(fs.readFileSync(input,'utf8')));
-  const html=render(data);
+  const comparison=data.version==='memory-models-quality-v6-mem0'?buildComparison(validateData(JSON.parse(fs.readFileSync(new URL('../public/line-v3/memory-models-results-v4.public.json',import.meta.url),'utf8'))),data):null;
+  const html=render(data,'profiles',comparison);
   fs.mkdirSync(outputDirectory,{recursive:true});
   fs.writeFileSync(path.join(outputDirectory,'memory-models.html'),html);
-  fs.writeFileSync(path.join(outputDirectory,'memory-hallucinations.html'),['memory-models-quality-v4','memory-models-quality-v5-mem0','memory-models-quality-v6-mem0'].includes(data.version)?render(data,'hallucinations'):html.replaceAll('memory-models.html','memory-hallucinations.html').replace('<h1>Memory：品質與等待時間</h1>','<h1>Memory：幻覺與來源錯置</h1>'));
+  fs.writeFileSync(path.join(outputDirectory,'memory-hallucinations.html'),['memory-models-quality-v4','memory-models-quality-v5-mem0','memory-models-quality-v6-mem0'].includes(data.version)?render(data,'hallucinations',comparison):html.replaceAll('memory-models.html','memory-hallucinations.html').replace('<h1>Memory：品質與等待時間</h1>','<h1>Memory：幻覺與來源錯置</h1>'));
   fs.writeFileSync(path.join(outputDirectory,'memory-models-results.public.json'),JSON.stringify(data,null,2)+'\n');
+  if(comparison)fs.writeFileSync(path.join(outputDirectory,'memory-models-comparison.public.json'),JSON.stringify(comparison,null,2)+'\n');
   const columns=['difficulty','task','armId','n','passes','passPercent','scoreMean','coveragePercent','newCoveragePercent','updatePassPercent','unsafeOutputs','materialErrors','apiFailures','formatFailures','latencyP50','latencyP95','over40Seconds','retryOutputs','inputTokens','cachedTokens','cacheWriteTokens','outputTokens','reasoningTokens','costUsd'];
   fs.writeFileSync(path.join(outputDirectory,'memory-models-summary.csv'),columns.join(',')+'\n'+data.aggregates.map(a=>columns.map(k=>a[k]).join(',')).join('\n')+'\n');
   if(data.promptIterations)fs.writeFileSync(path.join(outputDirectory,'memory-prompt-iterations-summary.csv'),columns.concat('promptRound','split').join(',')+'\n'+data.promptIterations.aggregates.map(a=>columns.concat('promptRound','split').map(k=>a[k]).join(',')).join('\n')+'\n');

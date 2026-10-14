@@ -1,0 +1,199 @@
+{
+  "version": "memory-before-after-v4-v6",
+  "beforeSource": "b7090b9b111310bc1b5a4e65441a9ec42c1c6049",
+  "afterSource": "2a9c25058d0c3298759a8dfff4172dcdc9ac8607",
+  "casesHash": "ede4ad4274067edcca893ef94620babc31493f79953d32ecdf84b8dc9386da3a",
+  "rows": [
+    {
+      "armId": "baseline",
+      "label": "Baseline · 5.6 Luna + Terra",
+      "facts": {
+        "before": {
+          "errors": 26,
+          "n": 100,
+          "errorPercent": 26,
+          "passes": 62,
+          "newCoveragePercent": 79.8
+        },
+        "after": {
+          "errors": 2,
+          "n": 100,
+          "errorPercent": 2,
+          "passes": 81,
+          "newCoveragePercent": 88.13
+        }
+      },
+      "summary": {
+        "before": {
+          "errors": 50,
+          "n": 100,
+          "errorPercent": 50,
+          "passes": 48,
+          "newCoveragePercent": 90.97
+        },
+        "after": {
+          "errors": 39,
+          "n": 100,
+          "errorPercent": 39,
+          "passes": 59,
+          "newCoveragePercent": 91.34
+        }
+      },
+      "updates": {
+        "before": {
+          "passed": 12,
+          "n": 38
+        },
+        "after": {
+          "passed": 36,
+          "n": 38
+        }
+      }
+    },
+    {
+      "armId": "luna-medium",
+      "label": "6 Luna · medium",
+      "facts": {
+        "before": {
+          "errors": 24,
+          "n": 100,
+          "errorPercent": 24,
+          "passes": 60,
+          "newCoveragePercent": 80.13
+        },
+        "after": {
+          "errors": 2,
+          "n": 100,
+          "errorPercent": 2,
+          "passes": 75,
+          "newCoveragePercent": 85.47
+        }
+      },
+      "summary": {
+        "before": {
+          "errors": 6,
+          "n": 100,
+          "errorPercent": 6,
+          "passes": 91,
+          "newCoveragePercent": 88.29
+        },
+        "after": {
+          "errors": 4,
+          "n": 100,
+          "errorPercent": 4,
+          "passes": 93,
+          "newCoveragePercent": 88.14
+        }
+      },
+      "updates": {
+        "before": {
+          "passed": 14,
+          "n": 38
+        },
+        "after": {
+          "passed": 36,
+          "n": 38
+        }
+      }
+    },
+    {
+      "armId": "luna-high",
+      "label": "6 Luna · high",
+      "facts": {
+        "before": {
+          "errors": 25,
+          "n": 100,
+          "errorPercent": 25,
+          "passes": 61,
+          "newCoveragePercent": 80.8
+        },
+        "after": {
+          "errors": 2,
+          "n": 100,
+          "errorPercent": 2,
+          "passes": 70,
+          "newCoveragePercent": 83.3
+        }
+      },
+      "summary": {
+        "before": {
+          "errors": 3,
+          "n": 100,
+          "errorPercent": 3,
+          "passes": 94,
+          "newCoveragePercent": 88.45
+        },
+        "after": {
+          "errors": 4,
+          "n": 100,
+          "errorPercent": 4,
+          "passes": 91,
+          "newCoveragePercent": 88.54
+        }
+      },
+      "updates": {
+        "before": {
+          "passed": 13,
+          "n": 38
+        },
+        "after": {
+          "passed": 36,
+          "n": 38
+        }
+      }
+    },
+    {
+      "armId": "luna-sol",
+      "label": "6 Luna medium + 6.1 Sol low",
+      "facts": {
+        "before": {
+          "errors": 25,
+          "n": 100,
+          "errorPercent": 25,
+          "passes": 66,
+          "newCoveragePercent": 84.47
+        },
+        "after": {
+          "errors": 0,
+          "n": 100,
+          "errorPercent": 0,
+          "passes": 81,
+          "newCoveragePercent": 90.13
+        }
+      },
+      "summary": {
+        "before": {
+          "errors": 2,
+          "n": 100,
+          "errorPercent": 2,
+          "passes": 94,
+          "newCoveragePercent": 88.39
+        },
+        "after": {
+          "errors": 5,
+          "n": 100,
+          "errorPercent": 5,
+          "passes": 92,
+          "newCoveragePercent": 88.57
+        }
+      },
+      "updates": {
+        "before": {
+          "passed": 13,
+          "n": 38
+        },
+        "after": {
+          "passed": 38,
+          "n": 38
+        }
+      }
+    }
+  ],
+  "tokenEvidence": {
+    "perCallCap": 16384,
+    "candidateCalls": 1153,
+    "tokenLimitHits": 0,
+    "maxCompletionTokens": 9239,
+    "factsMaxAllowedAcrossTwoCalls": 32768
+  }
+}
