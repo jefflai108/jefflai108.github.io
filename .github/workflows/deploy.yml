@@ -90,6 +90,7 @@ jobs:
             --include='/styles.css' --include='/favicon.svg' \
             --include='/data/***' --include='/deep-dive/***' \
             --exclude='*' line-latest-snapshot/ dist/line-latest/
+          node scripts/install-debug-navigation.mjs dist/line-latest/index.html
 
       # Keep the complete TTS listening set outside Git and verify every MP3.
       - name: Install TTS benchmark audio

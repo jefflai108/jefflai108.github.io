@@ -102,12 +102,23 @@ served at `/line-latest/` by this site's Pages workflow. The workflow checks out
 that snapshot with the read-only `LINE_LATEST_READ_KEY` secret and copies only
 the website files into `dist/line-latest/`, excluding Git metadata and docs.
 The snapshot's files and history are never committed to this public repository.
+After installing each snapshot, `scripts/install-debug-navigation.mjs` adds a
+Debug link immediately before Benchmark. This also runs on scheduled refreshes;
+the private snapshot does not need to carry this site's navigation change.
 
 The additional schedule at UTC minutes 23 and 53 follows the private publisher
 at minutes 13 and 43. These refreshes skip personal profile data refreshes and
 do not create Git commits. Summarization remains in the private source workflow,
 with one daily LLM request; this site only installs the finished snapshot.
 The original weekly profile refresh and keep-alive commit remain in place.
+
+## Debug investigations
+
+`/debug/` lists shared investigation reports with their case dates and recording
+times. Leo Yang's five-note ASR comparison is at `/debug/leo/`, including the full
+captured hypotheses and four original recordings. The previous `/leo-debug/`
+page has been removed. Add future reports beneath `public/debug/` and link them
+from its index.
 
 ## LINE image and sticker understanding
 

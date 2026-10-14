@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Machi 的問題調查紀錄：原始錄音、辨識結果、回覆時間與逐筆比較。">
+  <link rel="canonical" href="https://jefflai108.github.io/debug/">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Debug · Machi 調查紀錄</title>
+</head>
+<body class="debug-index">
+  <a class="debug-skip" href="#main">跳至內容</a>
+  <header class="debug-header">
+    <div class="debug-header-inner">
+      <a class="debug-brand" href="/line-latest/">Machi</a>
+      <nav class="debug-nav" aria-label="網站分頁">
+        <a href="/line-latest/">近期更新</a>
+        <a href="/debug/" aria-current="page">Debug</a>
+        <a href="/line-v3/">Benchmark</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" tabindex="-1">
+    <div class="debug-intro">
+      <p class="debug-eyebrow">DEBUG</p>
+      <h1>一起看看，哪裡出了問題</h1>
+      <p>Machi 回得不太對時，我們把當時的紀錄攤開來看。這裡整理了每次調查的比較結果，點進去就能查看細節。</p>
+    </div>
+    <article class="debug-case" aria-labelledby="leo-title">
+      <div class="debug-case-meta">
+        <span class="debug-case-category">語音辨識</span>
+        <time datetime="2026-10-13">2026 年 10 月 13 日</time>
+        <span>16:34:28–16:36:53 · 台北時間</span>
+      </div>
+      <h2 id="leo-title"><a href="./leo/">Leo Yang · GCP 和 GPT 聽到了什麼？</a></h2>
+      <p>Leo 說語音沒有辨識對。我們逐筆對照兩邊的完整逐字稿，保留原始錄音、處理時間，以及 Machi 當時送出的回覆，讓大家可以自己聽聽看。</p>
+      <ul class="debug-facts" aria-label="調查內容">
+        <li>5 筆語音紀錄</li>
+        <li>4 份可播放錄音</li>
+        <li>完整辨識假說與時間</li>
+      </ul>
+      <a class="debug-case-link" href="./leo/">查看比較與調查紀錄 <span aria-hidden="true">→</span></a>
+    </article>
+    <footer>這些是當時保存的結果；辨識得對不對，還是要聽原始錄音來核對。</footer>
+  </main>
+</body>
+</html>
