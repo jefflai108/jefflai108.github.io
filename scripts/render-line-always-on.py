@@ -791,7 +791,8 @@ def authored_cases(data):
     return f'<div data-explorer>{filters(episodes)}{"".join(blocks)}</div>'
 
 
-def render_method(cases, *, has_results=False, diagnostic=None, planned_study=None, interruption=None, owed_development=None):
+def render_method(cases, *, has_results=False, diagnostic=None, planned_study=None, interruption=None, owed_development=None,
+                  generated_at="2026-10-14"):
     from collections import Counter
     episodes = cases['episodes']
     control_counts = cases.get('control_counts', {'CONTROLS': 10, 'FOREGROUND_CONTROLS': 17})
@@ -845,7 +846,7 @@ def render_method(cases, *, has_results=False, diagnostic=None, planned_study=No
 <p class="small">方法快照 SHA-256 <code>{esc(cases.get('protocol_sha256','等待快照'))}</code>；包括題組與 harness、評審規格、指標計算程式摘要。這是開發方法的快照，實測仍須另外凍結已提交來源與各組設定。</p></section>'''
     body += owed_diagnostic_panel(diagnostic)
     body += owed_development_panel(owed_development)
-    return page_shell(METHOD_NAME, "Always-on 方法", "麻吉要一直在背景接住事情，在值得關心的時候主動開口。這裡把「快、接得住、給下一步、主動得合適」轉成可重播、可逐段檢查的實驗。", body)
+    return page_shell(METHOD_NAME, "Always-on 方法", "麻吉要一直在背景接住事情，在值得關心的時候主動開口。這裡把「快、接得住、給下一步、主動得合適」轉成可重播、可逐段檢查的實驗。", body, generated=generated_at)
 
 
 def iteration_table(items):
@@ -1197,7 +1198,8 @@ def render(data, iterations=()):
         body += owed_diagnostic_panel(data.get('owed_diagnostic'))
         body += owed_development_panel(data.get('owed_development'))
         body += f'<section class="panel"><h2>逐段檢查，等資料完成</h2><p>本輪比較原有版本、Gemini Medium、Gemini High 與 GPT-6.1-Sol Low。每段情境會顯示各組完整時間軸、每次重複、主機檢查與 AI 判斷理由。現在可以先看<a href="{METHOD_NAME}">公開開發題組與評審門檻</a>。</p></section><section class="panel"><h2>研究迭代</h2>{iteration_table(iterations)}</section>'
-        return page_shell(PAGE_NAME, 'Always-on 結果', '這一頁保留完整研究的成績、案例與版本證據。每次迭代獨立呈現，讓主動訊息的時機、內容與打擾成本可以逐則檢查。', body, status='等待完整研究')
+        return page_shell(PAGE_NAME, 'Always-on 結果', '這一頁保留完整研究的成績、案例與版本證據。每次迭代獨立呈現，讓主動訊息的時機、內容與打擾成本可以逐則檢查。', body, status='等待完整研究',
+                          generated=data.get('generated_at', '2026-10-14'))
     validate_study(data)
     arms = study_arms(data)
     summaries = data['summary']
@@ -1362,7 +1364,8 @@ def main():
     elif args.pending:
         if (PUBLIC/JSON_NAME).exists() and json.loads((PUBLIC/JSON_NAME).read_text()).get('publication_ready') is True:
             raise ValueError('cannot_replace_complete_results_with_pending')
-        data={'schema_version':2,'status':'pending','cohort':'development','notice':'尚無完整重播、兩階段判讀與通過控制題的研究。'}
+        data={'schema_version':2,'status':'pending','cohort':'development','notice':'尚無完整重播、兩階段判讀與通過控制題的研究。',
+              'generated_at':args.generated_at}
     else:
         data=json.loads((PUBLIC/JSON_NAME).read_text())
     planned_text=None
@@ -1422,7 +1425,8 @@ def main():
         data['owed_development']=json.loads((PUBLIC/OWED_DEVELOPMENT_NAME).read_text())
     method, report=render_method(cases,has_results=data.get('publication_ready') is True,
                                 diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study'),
-                                interruption=data.get('study_interruption'),owed_development=data.get('owed_development')),render(data,index['iterations'])
+                                interruption=data.get('study_interruption'),owed_development=data.get('owed_development'),
+                                generated_at=data.get('generated_at','2026-10-14')),render(data,index['iterations'])
     check_public(data);check_public(index);check_public(cases)
     if planned_text is not None:
         digest=hashlib.sha256(planned_text.encode()).hexdigest()

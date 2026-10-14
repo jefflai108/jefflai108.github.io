@@ -3,6 +3,7 @@
  "status": "pending",
  "cohort": "development",
  "notice": "尚無完整重播、兩階段判讀與通過控制題的研究。",
+ "generated_at": "2026-10-15",
  "planned_study": {
   "schema_version": 1,
   "kind": "always_on_preregistered_plan",
