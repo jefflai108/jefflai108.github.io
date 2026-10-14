@@ -528,6 +528,7 @@ SCRIPT = """
 METHOD_NAME = "line-always-on-method.html"
 CASES_NAME = "line-always-on-cases.public.json"
 ITERATIONS_NAME = "line-always-on-iterations.public.json"
+CALIBRATION_NAME = "line-always-on-judge-calibration.public.json"
 CSS += """
 .filters{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:16px 0}.filters label{display:grid;gap:4px;font-size:13px}
 .filters input,.filters select{font:inherit;padding:8px 10px;border:1px solid #bdcfc4;border-radius:8px;background:#fff;max-width:100%}
@@ -657,12 +658,73 @@ def iteration_table(items):
     return '<div class="scroll"><table><thead><tr><th>研究</th><th>題組用途</th><th>產生時間</th><th>既有 → 引擎</th><th>來源結果 SHA-256</th></tr></thead><tbody>' + rows + '</tbody></table></div>'
 
 
+def calibration_project(study):
+    """Known-answer judge checks remain separate from engine performance."""
+    import hashlib
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    study = Path(study)
+    plan = json.loads((study / 'plan.json').read_text())
+    phases = []
+    for name, directory, count in (('訊息合適性', study / 'judge', 10),
+                                   ('前景回答', study / 'judge/foreground', 11)):
+        source = (directory / 'quality.json').read_bytes()
+        quality = json.loads(source)
+        controls = quality.get('controls', [])
+        if quality.get('calibration_only') is not True or quality.get('packet_count') != 0 \
+                or quality.get('passes') != 2 or quality.get('control_count') != count \
+                or len(controls) != count or quality.get('missing_judgments') != 0:
+            raise ValueError('incomplete_judge_calibration')
+        if len({item['id'] for item in controls}) != count or any(
+                len(item['judged']) != 2 or {row['pass'] for row in item['judged']} != {1, 2}
+                or any(row.get('as_expected') is not True for row in item['judged']) for item in controls):
+            raise ValueError('failed_judge_calibration')
+        packets = json.loads((directory / 'controls.json').read_text())
+        phases.append({'name': name, 'model': quality['model'], 'reasoning': quality['reasoning'],
+                       'control_count': count, 'judgments': count * 2, 'as_expected': count * 2,
+                       'retained_attempts': quality['attempts']['total'],
+                       'failed_attempts': quality['attempts']['errors'],
+                       'recorded_usage': quality['usage']['total'],
+                       'usage_unknown_attempts': sum(not json.loads(path.read_text()).get('usage')
+                           for path in (directory / 'controls').glob('*.json')),
+                       'rubric_sha256': quality['rubric_sha256'],
+                       'source_quality_sha256': hashlib.sha256(source).hexdigest(),
+                       'controls': controls, 'questions': packets})
+    data = {'schema_version': 1, 'kind': 'judge_calibration', 'calibration_only': True,
+            'engine_performance_evidence': False,
+            'date': datetime.fromtimestamp(plan['created_unix'], ZoneInfo('Asia/Taipei')).date().isoformat(),
+            'passes': 2,
+            'source_engine_ref': plan['refs']['engine'],
+            'plan_sha256': hashlib.sha256((study / 'plan.json').read_bytes()).hexdigest(), 'phases': phases}
+    check_public(data)
+    return data
+
+
+def calibration_panel(data):
+    if not data:
+        return ''
+    if data.get('kind') != 'judge_calibration' or data.get('calibration_only') is not True \
+            or data.get('engine_performance_evidence') is not False:
+        raise ValueError('invalid_calibration_scope')
+    rows = ''.join(f'<tr><th>{esc(phase["name"])}</th><td>{phase["control_count"]} 題 × 2 次</td>'
+                   f'<td>{phase["as_expected"]}/{phase["judgments"]} 符合預期</td></tr>' for phase in data['phases'])
+    failures = sum(phase['failed_attempts'] for phase in data['phases'])
+    tokens = sum(phase['recorded_usage'].get('total_tokens', 0) for phase in data['phases'])
+    return (f'<section class="panel"><h2>AI 評審的控制題已完成</h2><p>先用已知答案檢查評審是否理解適時關心、'
+            f'隱私、依據、能力界線與可用替代方案。這是評審校準，沒有測量主動引擎的效能。</p>'
+            f'<div class="scroll"><table><thead><tr><th>評審</th><th>控制題</th><th>兩次判讀</th></tr></thead><tbody>{rows}</tbody></table></div>'
+            f'<p><code>{esc(data["phases"][0]["model"])}</code> · 兩次獨立呼叫 · {esc(data["date"])}。'
+            f'保留最初 {failures} 次網路失敗；重試後取得完整判斷。已記錄用量 {tokens:,} tokens；失敗呼叫未回報用量，不能當成零成本。</p>'
+            f'<p><a href="{CALIBRATION_NAME}" download>下載控制題、逐次判斷理由與來源摘要</a>。控制題符合預期不代表真實使用者偏好，也不是引擎勝負結論。</p></section>')
+
+
 def render(data, iterations=()):
     if data.get('status') == 'pending':
         cards = ''.join(f'<div class="kpi"><p class="label">{label}</p><p class="pending-value">等待完整量測</p><p class="sub">{detail}</p></div>' for label, detail in (
             ('速度', '首次回覆與前景等待時間分開報告'), ('不漏接', '一般回答、欠答恢復與失敗通知分開'),
             ('可用的下一步', 'AI 前景盲評；誠實處理能力界線'), ('主動得合適', '命中、安靜負例與逐則合適率')))
         body = f'<section class="panel"><p class="notice warning"><b>尚未有可發布的完整 Always-on 研究。</b>目前沒有實測分數、改善幅度或勝負結論。</p><h2>這裡會呈現哪些結果</h2><div class="kpis">{cards}</div><p>只有完整重播、兩階段各兩次判讀、通過所有控制題，才會顯示成績。教學時間軸和合成測試 fixture 不會當成結果。</p></section>'
+        body += calibration_panel(data.get('judge_calibration'))
         body += f'<section class="panel"><h2>逐段檢查，等資料完成</h2><p>每段情境會顯示兩個版本的完整時間軸、每次重複、主機檢查與 AI 判斷理由。現在可以先看<a href="{METHOD_NAME}">公開開發題組與評審門檻</a>。</p></section><section class="panel"><h2>研究迭代</h2>{iteration_table(iterations)}</section>'
         return page_shell(PAGE_NAME, 'Always-on 結果', '這一頁保留完整研究的成績、案例與版本證據。每次迭代獨立呈現，讓主動訊息的時機、內容與打擾成本可以逐則檢查。', body, status='等待完整研究')
     validate_study(data)
@@ -732,6 +794,7 @@ def main():
     parser.add_argument('study',nargs='?',type=Path)
     parser.add_argument('--render',action='store_true')
     parser.add_argument('--pending',action='store_true')
+    parser.add_argument('--calibration-study',type=Path)
     parser.add_argument('--cases',type=Path)
     parser.add_argument('--source-ref')
     parser.add_argument('--iteration')
@@ -774,6 +837,11 @@ def main():
         data={'schema_version':2,'status':'pending','cohort':'development','notice':'尚無完整重播、兩階段判讀與通過控制題的研究。'}
     else:
         data=json.loads((PUBLIC/JSON_NAME).read_text())
+    if args.calibration_study:
+        if data.get('status') != 'pending':
+            raise ValueError('calibration_is_separate_from_study_results')
+        data['judge_calibration'] = calibration_project(args.calibration_study)
+        (PUBLIC/CALIBRATION_NAME).write_text(json.dumps(data['judge_calibration'],ensure_ascii=False,indent=1)+'\n')
     method, report=render_method(cases,has_results=data.get('publication_ready') is True),render(data,index['iterations'])
     check_public(data);check_public(index);check_public(cases)
     if protocol is not None:

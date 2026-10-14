@@ -93,6 +93,17 @@ class RenderTest(unittest.TestCase):
         self.assertNotIn('100.0%',page)
         self.assertNotIn('test-only',page)
 
+    def test_calibration_is_separate_from_engine_comparison(self):
+        calibration=json.loads((always_on.PUBLIC/always_on.CALIBRATION_NAME).read_text())
+        self.assertTrue(calibration['calibration_only'])
+        self.assertFalse(calibration['engine_performance_evidence'])
+        self.assertEqual([phase['as_expected'] for phase in calibration['phases']],[20,22])
+        with self.assertRaises(ValueError):always_on.project(calibration,generated_at='2026-10-14')
+        with self.assertRaises(ValueError):always_on.calibration_panel(dict(calibration,engine_performance_evidence=True))
+        page=always_on.render({'status':'pending','judge_calibration':calibration})
+        self.assertIn('沒有測量主動引擎的效能',page)
+        self.assertIn('沒有實測分數',page)
+
     def test_published_protocol_digest_covers_its_immutable_cases(self):
         import hashlib
         cases=json.loads((always_on.PUBLIC/always_on.CASES_NAME).read_text())
