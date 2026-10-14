@@ -16,10 +16,12 @@ const tabs = [
   ['line-stickers.html', 'LINE Stickers'],
   ['group-replies.html', 'Group replies'],
   ['mixed-media-bursts.html', 'Mixed-media bursts'],
+  ['line-always-on-method.html', 'Always-on 方法'],
+  ['line-always-on.html', 'Always-on 結果'],
 ];
 const version = name => crypto.createHash('sha256').update(fs.readFileSync(path.join(directory,name))).digest('hex').slice(0,12);
 const assets = `<link rel="stylesheet" href="navigation.css?v=${version('navigation.css')}"><link rel="stylesheet" href="report-layout.css?v=${version('report-layout.css')}"><script src="navigation.js?v=${version('navigation.js')}" defer></script>`;
-const navigation = /<nav\b[^>]*class="tabs"[^>]*>[\s\S]*?<\/nav>/g;
+const navigation = /<nav\b[^>]*class="tabs(?: benchmark-tabs)?"[^>]*>[\s\S]*?<\/nav>/g;
 const history = /<nav\b(?=[^>]*class="history")(?=[^>]*aria-label="歷史快照")[^>]*>[\s\S]*?<\/nav>/g;
 
 for (const [name] of tabs) {
@@ -33,13 +35,16 @@ for (const [name] of tabs) {
   // Baseline comparisons, provenance, and current-study evidence remain intact.
   html = html.replace(navigation,'').replace(history,'')
     .replace(/<div class="navwrap">\s*<\/div>/g,'')
+    .replace(/<div class="benchmark-nav">\s*<\/div>/g,'')
+    .replace(/<link\b[^>]*href="(?:navigation|report-layout)\.css(?:\?[^"]*)?"[^>]*>/g,'')
+    .replace(/<script\b[^>]*src="navigation\.js(?:\?[^"]*)?"[^>]*>[\s\S]*?<\/script>/g,'')
     .replace(/歷史版本：<a href="tts-followup-tagged-v\d+-\d{8}\.html">[\s\S]*?<\/a>\s*·\s*<a href="tts-followup-plain-\d{8}\.html">[\s\S]*?<\/a>。/g,'')
     .replace(/<a href="natural-bridges-final-v\d+\.html">查看 final-v\d+ 歷史題組<\/a>；/g,'');
   const links = tabs.map(([href,label]) => `<a href="${href}"${href === name ? ' aria-current="page"' : ''}>${label}</a>`).join('');
   const bar = `<div class="benchmark-nav"><div class="benchmark-return"><a href="/line-latest/" aria-label="返回產品更新首頁"><span aria-hidden="true">←</span> 返回產品更新</a></div><nav class="tabs benchmark-tabs" aria-label="比較分頁">${links}</nav></div>`;
   html = html.replace(/<body\b[^>]*>/, tag => {
     if (/\bclass=["']/.test(tag)) {
-      return tag.replace(/class=(["'])(.*?)\1/, (_, quote, classes) => `class=${quote}${classes} benchmark-page${quote}`);
+      return tag.replace(/class=(["'])(.*?)\1/, (_, quote, classes) => `class=${quote}${classes}${classes.split(/\s+/).includes('benchmark-page') ? '' : ' benchmark-page'}${quote}`);
     }
     return tag.replace('<body','<body class="benchmark-page"');
   });

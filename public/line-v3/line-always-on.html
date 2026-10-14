@@ -1,0 +1,113 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HeyMachi · Always-on 結果</title><meta name="description" content="麻吉 LINE Always-on 評估：完整方法、逐段合成對話、AI 盲評與可追溯的實測版本。">
+<link rel="canonical" href="https://jefflai108.github.io/line-v3/line-always-on.html"><style>
+*{box-sizing:border-box}body{margin:0;background:#f3f3ee;color:#193a31;font:15px/1.65 system-ui,-apple-system,'PingFang TC',sans-serif}
+header,main{margin:auto}h1{font-size:clamp(32px,5vw,52px);line-height:1.15;margin:15px 0}
+h2{font-size:22px;line-height:1.4;margin:0 0 12px}h3{font-size:17px;margin:20px 0 8px}h4{font-size:14px;margin:12px 0 8px}
+a{color:#23695d}a:focus-visible,summary:focus-visible,button:focus-visible,.bar:focus-visible{outline:3px solid #269890;outline-offset:3px}
+p{margin:9px 0}.eyebrow,.small,small{font-size:12px;color:#526c61}.muted{color:#5f7168}.lede{font-size:17px}
+.panel{border:1px solid #d6e0d7;border-radius:15px;background:white;padding:22px;margin-bottom:22px}
+.nowrap{white-space:nowrap}.notice{padding:14px 18px;background:#e8efeb;border:1px solid #cdded3;border-radius:12px}.warning{background:#fff3dc;border-color:#ead3a4}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.badge,.chip{display:inline-block;font-size:12px;background:#e5ece7;border-radius:20px;padding:3px 10px;color:#193a31}
+.tabs{display:flex;gap:5px;flex-wrap:wrap;background:#e3e9e2;padding:6px;border-radius:10px}.tabs a{padding:8px 12px;text-decoration:none;border-radius:7px;font-size:13px}.tabs [aria-current]{background:white;font-weight:700}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:16px}.kpi{border:1px solid #dce5de;border-radius:12px;padding:18px;background:#f8faf7}
+.kpi .label{font-size:13px;color:#526c61;margin:0 0 6px}.kpi .values{display:flex;gap:18px;align-items:flex-end;flex-wrap:wrap}
+.kpi .value{font-size:34px;font-weight:650;line-height:1.1}.kpi .from{font-size:22px;color:#5f7168;font-weight:500}.kpi .arrow{font-size:20px;color:#5f7168}
+.kpi .delta{font-size:14px;font-weight:600;color:#1d5a3a;margin-top:8px}.kpi .sub{font-size:12px;color:#526c61;margin-top:4px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:12px}.step{border:1px solid #dce5de;border-radius:10px;padding:15px;background:#f8faf7}.step b{display:block;margin-bottom:4px}
+.figure{margin:8px 0 18px}.chart{width:100%;height:auto;display:block}.chart text{font:12px system-ui,-apple-system,'PingFang TC',sans-serif;fill:#3d564b}
+.chart .cat{fill:#193a31;font-size:13px}.chart .tick{fill:#6c7d74;font-variant-numeric:tabular-nums}.chart .val{fill:#193a31;font-variant-numeric:tabular-nums}
+.chart .grid{stroke:#e1e8e1;stroke-width:1}.bar{cursor:default}.bar.existing{fill:#8f9a94}.bar.engine{fill:#1f7a6c}.bar:hover,.bar:focus{opacity:.82}
+.legend{display:flex;gap:16px;font-size:13px;margin:4px 0 6px}.legend span{display:inline-flex;align-items:center;gap:6px}.swatch{width:12px;height:12px;border-radius:3px;display:inline-block}
+.swatch.existing{background:#8f9a94}.swatch.engine{background:#1f7a6c}.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:22px}
+.scroll{overflow-x:auto;max-width:100%}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:10px;border-bottom:1px solid #e1e8e1;vertical-align:top}
+thead th{color:#52695e;background:#f8faf7}td small{display:block}.tableview{font-size:13px;margin:6px 0 0}
+.num td,.num th{font-variant-numeric:tabular-nums}details{margin:10px 0}summary{cursor:pointer}
+.episode{border:1px solid #dce5de;border-radius:12px;background:white;padding:12px 16px}.episode summary{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.switch{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.switch button{font:inherit;font-size:13px;border:1px solid #c5d5ca;background:#f8faf7;border-radius:8px;padding:6px 10px;cursor:pointer;color:#193a31}
+.switch button[aria-pressed=true]{background:#1f7a6c;color:white;border-color:#1f7a6c}.repeat-title{display:none}.nojs .repeat-title{display:block}
+.arms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.pane{min-width:0}
+.timeline{list-style:none;margin:0;padding:0}.timeline .day{font-size:12px;font-weight:650;color:#526c61;margin:12px 0 2px;border-bottom:1px solid #e1e8e1}
+.timeline .item{display:grid;grid-template-columns:48px minmax(0,1fr);gap:8px;align-items:start}.timeline .time{font-size:12px;color:#5f7168;padding-top:12px;font-variant-numeric:tabular-nums}
+.bubble{white-space:pre-wrap;overflow-wrap:anywhere;border-radius:12px;padding:10px 12px;margin:6px 0;border:1px solid #dce5de;background:white}
+.bubble b{font-size:12px;color:#526c61;font-weight:650}.bubble.user{background:#eef6ea;border-color:#d4e6cf}.bubble.machi{background:#f7f9f7}
+.bubble.push{background:#e6f2ee;border-color:#9cc7b8;border-width:1px 1px 1px 4px}
+.meta{border-top:1px dashed #dbe5dc;margin-top:8px;padding-top:8px;white-space:normal}.meta .chip{margin:0 6px 4px 0}.reason{font-size:12px;margin:4px 0;color:#3d564b}.host{font-size:12px;color:#6a7c72;margin:6px 0}
+.chip.ok{background:#ddefe3}.chip.bad{background:#f6ddd5;color:#7a2e22}.chip.polarity.positive{background:#ddefe3}.chip.polarity.negative{background:#eceee6}.chip.polarity.boundary{background:#f4ecd6}
+.chip.score{background:#dceee6}.chip.score.s1,.chip.score.s2{background:#f6ddd5;color:#7a2e22}.chip.score.s3{background:#f4ecd6}
+.tooltip{position:fixed;pointer-events:none;background:#193a31;color:white;font-size:12px;padding:6px 9px;border-radius:6px;max-width:320px;z-index:50}
+code{font-size:12px}.missing{color:#8a5a2b}footer{padding:22px 0;font-size:12px;color:#5f7168}.skip{position:absolute;left:-10000px}.skip:focus{left:16px;top:5px;background:white;padding:10px}
+@media(max-width:760px){.panel{padding:16px}.grid2{grid-template-columns:1fr}.kpi .value{font-size:28px}
+.arms{grid-template-columns:1fr}.pane h4::before{content:''}}
+
+.filters{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:16px 0}.filters label{display:grid;gap:4px;font-size:13px}
+.filters input,.filters select{font:inherit;padding:8px 10px;border:1px solid #bdcfc4;border-radius:8px;background:#fff;max-width:100%}
+.filters input[type=search]{width:260px}.filters select{min-width:100px}.filters input:focus-visible,.filters select:focus-visible{outline:3px solid #269890}
+.metric-rule{font-size:13px;white-space:normal}.status{font-weight:600;color:#315e4c}.demo-controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.demo-controls input{max-width:100%;accent-color:#1f7a6c}.iteration-meta{font-size:12px;overflow-wrap:anywhere}.pending-value{font-size:23px;line-height:1.4}
+[hidden]{display:none!important}.method-links{display:flex;gap:18px;flex-wrap:wrap}.formula{padding:14px;background:#eef5ee;border-radius:10px;font-size:14px}
+.goals th{white-space:nowrap}
+@media(max-width:760px){.goals thead{display:none}.goals,.goals tbody,.goals tr,.goals th,.goals td{display:block}.goals tr{padding:12px 0;border-bottom:1px solid #e1e8e1}.goals th,.goals td{padding:4px 0;border:0}.goals td:nth-child(2)::before{content:'行為：';font-weight:600}.goals td:nth-child(3)::before{content:'量測：';font-weight:600}}
+</style>
+<link rel="stylesheet" href="navigation.css"><link rel="stylesheet" href="report-layout.css"><script src="navigation.js" defer></script></head>
+<body class="benchmark-page nojs"><a class="skip" href="#content">跳到內容</a><div class="benchmark-nav"><nav class="tabs benchmark-tabs" aria-label="比較分頁"><a href="index.html">Interaction tasks</a><a href="delegation.html">Delegation tasks</a><a href="taiwan.html">台灣用語</a><a href="recovery.html">困難任務與失敗恢復</a><a href="tts-followup.html">TTS follow-up</a><a href="images-stickers.html">Images &amp; Stickers</a><a href="burst-turns.html">Burst turns</a><a href="natural-bridges.html">Natural bridges</a><a href="line-stickers.html">LINE Stickers</a><a href="group-replies.html">Group replies</a><a href="mixed-media-bursts.html">Mixed-media bursts</a><a href="line-always-on-method.html">Always-on 方法</a><a href="line-always-on.html" aria-current="page">Always-on 結果</a></nav></div>
+<header><p class="eyebrow">HeyMachi / LINE v3 · 2026-10-14 · 等待完整研究</p><h1>Always-on 結果</h1><p class="lede">這一頁保留完整研究的成績、案例與版本證據。每次迭代獨立呈現，讓主動訊息的時機、內容與打擾成本可以逐則檢查。</p>
+<div class="method-links"><a href="line-always-on-method.html">評估方法與題組</a><a href="line-always-on.html">實測結果與迭代</a></div></header>
+<main id="content"><section class="panel"><p class="notice warning"><b>尚未有可發布的完整 Always-on 研究。</b>目前沒有實測分數、改善幅度或勝負結論。</p><h2>這裡會呈現哪些結果</h2><div class="kpis"><div class="kpi"><p class="label">速度</p><p class="pending-value">等待完整量測</p><p class="sub">首次回覆與前景等待時間分開報告</p></div><div class="kpi"><p class="label">不漏接</p><p class="pending-value">等待完整量測</p><p class="sub">一般回答、欠答恢復與失敗通知分開</p></div><div class="kpi"><p class="label">可用的下一步</p><p class="pending-value">等待完整量測</p><p class="sub">AI 前景盲評；誠實處理能力界線</p></div><div class="kpi"><p class="label">主動得合適</p><p class="pending-value">等待完整量測</p><p class="sub">命中、安靜負例與逐則合適率</p></div></div><p>只有完整重播、兩階段各兩次判讀、通過所有控制題，才會顯示成績。教學時間軸和合成測試 fixture 不會當成結果。</p></section><section class="panel"><h2>AI 評審的控制題已完成</h2><p>先用已知答案檢查評審是否理解適時關心、隱私、依據、能力界線與可用替代方案。這是評審校準，沒有測量主動引擎的效能。</p><div class="scroll"><table><thead><tr><th>評審</th><th>控制題</th><th>兩次判讀</th></tr></thead><tbody><tr><th>訊息合適性</th><td>10 題 × 2 次</td><td>20/20 符合預期</td></tr><tr><th>前景回答</th><td>11 題 × 2 次</td><td>22/22 符合預期</td></tr></tbody></table></div><p><code>gpt-6-sol</code> · 兩次獨立呼叫 · 2026-10-14。保留最初 42 次網路失敗；重試後取得完整判斷。已記錄用量 91,469 tokens；失敗呼叫未回報用量，不能當成零成本。</p><p><a href="line-always-on-judge-calibration.public.json" download>下載控制題、逐次判斷理由與來源摘要</a>。控制題符合預期不代表真實使用者偏好，也不是引擎勝負結論。</p></section><section class="panel"><h2>逐段檢查，等資料完成</h2><p>每段情境會顯示兩個版本的完整時間軸、每次重複、主機檢查與 AI 判斷理由。現在可以先看<a href="line-always-on-method.html">公開開發題組與評審門檻</a>。</p></section><section class="panel"><h2>研究迭代</h2><p class="notice">尚無完成兩階段判讀並通過發布檢查的研究。開發與離線測試進度不會被填成效能成績。</p></section><footer>作者設計的開發題組。AI 評審判讀與實際使用者感受分開呈現；正式 LINE 送達、真人偏好與長期打擾仍需另行驗證。</footer></main>
+<script>document.body.classList.remove('nojs');
+(function(){
+  document.querySelectorAll('.pane').forEach(function(pane){
+    pane.querySelectorAll('.switch button').forEach(function(button){
+      button.addEventListener('click', function(){
+        var shown = button.getAttribute('data-show');
+        pane.querySelectorAll('.switch button').forEach(function(other){
+          other.setAttribute('aria-pressed', other === button ? 'true' : 'false');
+        });
+        pane.querySelectorAll('.repeat').forEach(function(item){
+          item.hidden = item.getAttribute('data-repeat') !== shown;
+        });
+      });
+    });
+  });
+  var tip = document.createElement('div');
+  tip.className = 'tooltip'; tip.hidden = true; document.body.appendChild(tip);
+  function show(event, mark){
+    tip.textContent = mark.getAttribute('data-tip'); tip.hidden = false;
+    var box = mark.getBoundingClientRect();
+    var x = event && event.clientX ? event.clientX : box.right, y = event && event.clientY ? event.clientY : box.top;
+    tip.style.left = Math.min(x + 12, window.innerWidth - 330) + 'px'; tip.style.top = (y - 34) + 'px';
+  }
+  document.querySelectorAll('[data-tip]').forEach(function(mark){
+    mark.addEventListener('pointermove', function(event){ show(event, mark); });
+    mark.addEventListener('focus', function(){ show(null, mark); });
+    mark.addEventListener('pointerleave', function(){ tip.hidden = true; });
+    mark.addEventListener('blur', function(){ tip.hidden = true; });
+  });
+})();
+
+(function(){
+  document.querySelectorAll('[data-explorer]').forEach(function(root){
+    var search=root.querySelector('[data-filter=search]');
+    function filter(){
+      var shown=0;
+      root.querySelectorAll('.episode').forEach(function(item){
+        var keep=Array.from(root.querySelectorAll('select[data-filter]')).every(function(control){
+          return !control.value || item.dataset[control.dataset.filter]===control.value;
+        }) && (!search || item.textContent.toLowerCase().includes(search.value.toLowerCase()));
+        item.hidden=!keep; if(keep)shown++;
+      });
+      root.querySelector('[data-visible]').textContent=shown+' 段情境';
+    }
+    root.querySelectorAll('[data-filter]').forEach(function(control){control.addEventListener('input',filter)});
+    filter();
+  });
+  var slider=document.querySelector('[data-clock]');
+  if(slider){
+    function clock(){
+      document.querySelectorAll('[data-stage]').forEach(function(item){item.hidden=Number(item.dataset.stage)>Number(slider.value)});
+      document.querySelector('[data-clock-label]').textContent=['第 0 天：收到使用者訊息','第 1 天：背景等待','第 2 天：檢查是否值得傳'][Number(slider.value)];
+    }
+    slider.addEventListener('input',clock);clock();
+  }
+})();
+</script></body></html>
