@@ -3,6 +3,7 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import shutil
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -152,6 +153,44 @@ class ColdBinding(unittest.TestCase):
                     plan['source_files'][name]=hashlib.sha256(b'foreign').hexdigest()
                     (root/'plan.private.json').write_text(json.dumps(plan))
                 with patch.object(dev,'TRUST',trusted),self.assertRaises(ValueError):dev.verified_projection(root)
+
+    def test_semantically_equal_original_bytes_must_match_before_judge_import(self):
+        for target in ('plan.private.json','plan.sha256.json','receipts/fixed.json','receipts/fixed.started.json',
+                       'receipts/foreign.json','symlink_claim','symlink_receipts','symlink_copied_receipts',
+                       'allowed_supervisor'):
+            with self.subTest(target=target),tempfile.TemporaryDirectory() as temp:
+                root=Path(temp)/'native';root.mkdir();trusted,plan,prefix=self.make(root)
+                marker=Path(temp)/'EXECUTED'
+                (prefix/'owed_development.py').write_text(f"from pathlib import Path\nPath({str(marker)!r}).write_text('bad')\n")
+                plan['source_files']={path.relative_to(root/'source').as_posix():hashlib.sha256(path.read_bytes()).hexdigest()
+                                     for path in (root/'source').rglob('*') if path.is_file()}
+                trusted['proof']['source_files_sha256']=digest(plan['source_files'])
+                plan['execution_order']=[{'slot':'fixed'}]
+                trusted['proof']['schedule_sha256']=digest(plan['execution_order'])
+                (root/'plan.private.json').write_text(json.dumps(plan))
+                (root/'plan.sha256.json').write_text('{"sha256":"native"}\n')
+                (root/'receipts').mkdir()
+                for name in ('fixed.json','fixed.started.json'):(root/'receipts'/name).write_text('{"same":true}\n')
+                judging=Path(temp)/'judge';shutil.copytree(root/'source',judging/'source/engine')
+                shutil.copytree(root/'receipts',judging/'inputs/receipts')
+                for name in ('plan.private.json','plan.sha256.json'):
+                    (judging/'inputs'/name).write_bytes((root/name).read_bytes())
+                changed=root/target
+                if target=='receipts/foreign.json':changed.write_text('{"foreign":"attempt"}\n')
+                elif target=='symlink_claim':
+                    claim=root/'receipts/fixed.started.json';claim.unlink()
+                    claim.symlink_to(judging/'inputs/receipts/fixed.started.json')
+                elif target in ('symlink_receipts','symlink_copied_receipts'):
+                    directory=(root/'receipts') if target=='symlink_receipts' else (judging/'inputs/receipts')
+                    retained=directory.with_name('retained-receipts');directory.rename(retained)
+                    directory.symlink_to(retained,target_is_directory=True)
+                elif target=='allowed_supervisor':
+                    (root/'receipts/fixed.supervisor.json').write_text('{"usage":"unknown; never retry"}\n')
+                else:
+                    changed.write_text(json.dumps(json.loads(changed.read_text()),indent=2)+'\n')
+                    self.assertEqual(json.loads(changed.read_text()),json.loads((judging/'inputs'/target).read_text()))
+                with patch.object(dev,'TRUST',trusted),self.assertRaises(ValueError):dev.verified_projection(root,judging)
+                self.assertEqual(marker.exists(),target=='allowed_supervisor')
 
 
 if __name__=='__main__':unittest.main()

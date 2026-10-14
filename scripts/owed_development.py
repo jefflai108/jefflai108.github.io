@@ -51,6 +51,12 @@ def inventory(directory):
 def checked_json(path):
  if path.is_symlink():raise ValueError('symlink_input')
  return json.loads(path.read_text())
+def exact_inputs(original,copied,names):
+ if original.is_symlink() or copied.is_symlink():raise ValueError('symlink_input_directory')
+ for name in names:
+  left,right=original/name,copied/name
+  if left.is_symlink() or right.is_symlink() or left.read_bytes()!=right.read_bytes():
+   raise ValueError('original_input_bytes_changed')
 files=inventory(root/'source')
 if digest(files)!=trusted['proof']['source_files_sha256']:raise ValueError('untrusted_source_inventory')
 plan=checked_json(root/'plan.private.json')
@@ -64,6 +70,13 @@ if plan.get('source_files')!=files or plan.get('source_ref')!=trusted['source_re
 if judge_root:
  judge_files=inventory(judge_root/'source/engine')
  if judge_files!=files:raise ValueError('untrusted_judge_source_inventory')
+ allowed={item['slot']+suffix for item in plan['execution_order']
+          for suffix in ('.json','.started.json','.supervisor.json')}
+ if any(path.is_symlink() or path.name not in allowed for path in (root/'receipts').glob('*')):
+  raise ValueError('foreign_original_native_attempt')
+ exact_inputs(root,judge_root/'inputs',('plan.private.json','plan.sha256.json'))
+ exact_inputs(root/'receipts',judge_root/'inputs/receipts',
+  [item['slot']+suffix for item in plan['execution_order'] for suffix in ('.json','.started.json')])
 # No frozen code is imported until the complete committed inventory is proved.
 sys.path.insert(0,str(root/'source'))
 from serve.line_agent_v3.evals.always_on import owed_development as dev
