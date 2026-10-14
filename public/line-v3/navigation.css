@@ -24,6 +24,23 @@ html { scrollbar-gutter: stable; }
   overflow-x: auto;
   scrollbar-width: none;
 }
+.benchmark-return {
+  box-sizing: border-box;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 8px 30px 0;
+}
+.benchmark-return a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 0;
+  color: #216b64;
+  font: 500 13px/21px system-ui, -apple-system, "PingFang TC", sans-serif;
+  text-decoration: none;
+}
+.benchmark-return a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.benchmark-return a:focus-visible { outline: 3px solid #269890; outline-offset: 3px; }
 .benchmark-nav .benchmark-tabs::-webkit-scrollbar { display: none; }
 .benchmark-nav .benchmark-tabs a {
   box-sizing: border-box;
@@ -49,6 +66,7 @@ html { scrollbar-gutter: stable; }
 }
 .benchmark-nav .benchmark-tabs a:focus-visible { outline: 3px solid #269890; outline-offset: -3px; }
 @media (max-width: 760px) {
+  .benchmark-return { padding: 8px 16px 0; }
   .benchmark-nav .benchmark-tabs { padding: 10px 16px; }
   .benchmark-nav .benchmark-tabs a { padding: 7px 10px; font-size: 12px; line-height: 21px; }
 }

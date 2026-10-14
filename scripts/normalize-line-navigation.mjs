@@ -36,7 +36,7 @@ for (const [name] of tabs) {
     .replace(/歷史版本：<a href="tts-followup-tagged-v\d+-\d{8}\.html">[\s\S]*?<\/a>\s*·\s*<a href="tts-followup-plain-\d{8}\.html">[\s\S]*?<\/a>。/g,'')
     .replace(/<a href="natural-bridges-final-v\d+\.html">查看 final-v\d+ 歷史題組<\/a>；/g,'');
   const links = tabs.map(([href,label]) => `<a href="${href}"${href === name ? ' aria-current="page"' : ''}>${label}</a>`).join('');
-  const bar = `<div class="benchmark-nav"><nav class="tabs benchmark-tabs" aria-label="比較分頁">${links}</nav></div>`;
+  const bar = `<div class="benchmark-nav"><div class="benchmark-return"><a href="/line-latest/" aria-label="返回產品更新首頁"><span aria-hidden="true">←</span> 返回產品更新</a></div><nav class="tabs benchmark-tabs" aria-label="比較分頁">${links}</nav></div>`;
   html = html.replace(/<body\b[^>]*>/, tag => {
     if (/\bclass=["']/.test(tag)) {
       return tag.replace(/class=(["'])(.*?)\1/, (_, quote, classes) => `class=${quote}${classes} benchmark-page${quote}`);
