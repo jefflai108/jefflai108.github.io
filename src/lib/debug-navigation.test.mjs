@@ -35,3 +35,13 @@ test('missing or ambiguous navigation stops deployment instead of publishing mis
   assert.throws(() => addDebugNavigation(snapshot.replace('benchmark-tab', 'other-tab')), /Benchmark/);
   assert.throws(() => addDebugNavigation(snapshot + snapshot), /page-tabs/);
 });
+
+test('a native Debug panel keeps its button and position on every snapshot refresh', () => {
+  const native = snapshot.replace('</nav>', '<button id="debug-tab">Debug</button></nav>')
+    + '<section id="debug-panel"><iframe id="debug-frame"></iframe></section>';
+  const output = addDebugNavigation(native);
+  assert.ok(output.includes('<button id="debug-tab">Debug</button>'));
+  assert.ok(output.indexOf('id="debug-tab"') < output.indexOf('id="benchmark-tab"'));
+  assert.equal([...output.matchAll(/id="debug-tab"/g)].length, 1);
+  assert.equal(addDebugNavigation(output), output);
+});
