@@ -297,7 +297,7 @@ class RenderTest(unittest.TestCase):
         index=json.loads((public/always_on.ITERATIONS_NAME).read_text())
         self.assertEqual(always_on.render(data,index['iterations']),(public/always_on.PAGE_NAME).read_text())
         self.assertEqual(always_on.render_method(cases,has_results=data.get('publication_ready') is True,
-            diagnostic=data.get('owed_diagnostic')),(public/always_on.METHOD_NAME).read_text())
+            diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study')),(public/always_on.METHOD_NAME).read_text())
 
 
 if __name__=='__main__':unittest.main()

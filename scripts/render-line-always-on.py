@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / "public/line-v3"
 JSON_NAME = "line-always-on-results.public.json"
 OWED_DIAGNOSTIC_NAME = "line-always-on-owed-diagnostic.public.json"
+PLANNED_STUDY_NAME = "line-always-on-planned-study.public.json"
 PAGE_NAME = "line-always-on.html"
 SOURCE_REPO = "https://github.com/jefflai108/streaming_taiwanese"
 ARMS = ("existing", "engine")
@@ -57,7 +58,7 @@ _UNSAFE = re.compile(r"/Users/|/private/|/home/|/var/folders|/srv/|AIza[0-9A-Za-
 
 PUBLIC_KEYS = ("schema_version", "arms", "refs", "models", "metadata", "summary", "comparison", "comparisons", "gates",
                "complete", "replay_complete", "judging_complete", "publication_ready", "incomplete_episodes",
-               "episodes", "runs", "judge_controls", "foreground_controls", "foreground_judge", "slot_status", "owed_diagnostic")
+               "episodes", "runs", "judge_controls", "foreground_controls", "foreground_judge", "slot_status", "owed_diagnostic", "planned_study")
 PRIVATE_KEYS = frozenset(("api_key", "authorization", "credentials", "encrypted_job", "user_id", "chat_id",
                           "message_hash", "event_hash", "lease_token", "reply_token", "mapping.private.json",
                           "http", "environment", "prompt", "system_prompt", "logs", "log", "path"))
@@ -788,7 +789,7 @@ def authored_cases(data):
     return f'<div data-explorer>{filters(episodes)}{"".join(blocks)}</div>'
 
 
-def render_method(cases, *, has_results=False, diagnostic=None):
+def render_method(cases, *, has_results=False, diagnostic=None, planned_study=None):
     from collections import Counter
     episodes = cases['episodes']
     control_counts = cases.get('control_counts', {'CONTROLS': 10, 'FOREGROUND_CONTROLS': 17})
@@ -799,7 +800,7 @@ def render_method(cases, *, has_results=False, diagnostic=None):
                  else "完整研究尚未完成。這一頁公開測試設計與合成題組；示意時間軸沒有量測分數。")
     strata_rows = ''.join(f'<tr><th>{SCOPE_LABELS[scope]}</th><td>{POLARITY_LABELS[polarity]}</td><td>{strata[(scope, polarity)]}</td></tr>'
                           for scope in SCOPE_LABELS for polarity in POLARITY_LABELS if strata[(scope, polarity)])
-    body = f'''
+    body = planned_study_panel(planned_study) + f'''
 <section class="panel"><p class="notice warning"><b>{readiness}</b>完整研究成績只會收錄完成兩階段評審、通過控制題的重播；小型診斷另外標示。</p>
 <h2>四個目標，分開量測</h2><div class="scroll"><table class="goals"><thead><tr><th>目標</th><th>可檢查的行為</th><th>量測單位</th></tr></thead><tbody>
 <tr><th>夠快</th><td>對使用者說的話及時開始回答；背景工作讓前景先走。</td><td>前景耗時與收到訊息到首次回覆的 p50 / p90；快回覆題的逐輪門檻。</td></tr>
@@ -1024,6 +1025,44 @@ def owed_diagnostic_module():
     return module
 
 
+def planned_study_module():
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('always_on_planned_study',Path(__file__).with_name('planned_study.py'))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def planned_study_panel(data):
+    if not data:
+        return ''
+    if data.get('kind') != 'always_on_preregistered_plan' or data.get('plan_verified') is not True \
+            or any(data.get(key) is not False for key in ('full_study_result','quality_complete','publication_ready')) \
+            or (data.get('episode_count'),data.get('slot_count'),data.get('repeats'),data.get('workers'),data.get('slot_timeout_s')) != (103,824,2,6,1800):
+        raise ValueError('invalid_public_planned_study')
+    planned_study_module().validate_public(data)
+    check_public(data)
+    proof=data['proof']
+    hashes=''.join(f'<li>{label}：<code>{esc(proof[key])}</code></li>' for key,label in (
+        ('plan_sha256','計畫'),('configuration_sha256','設定'),('cohort_sha256','執行題組'),
+        ('code_sha256','執行與判讀程式'),('source_files_sha256','凍結來源檔案'),('protocol_sha256','公開方法快照')))
+    return ('<section class="panel"><h2>本輪凍結的執行計畫</h2>'
+            '<p class="notice"><b>已驗證計畫與來源綁定，完整成績仍待完成。</b>這裡沒有即時部分分數，'
+            '計畫驗證不代表重播完成、原生呼叫全部通過或 AI 評審品質通過。</p>'
+            f'<p>候選引擎 {commit_link(data["refs"]["engine"])}；原有版本基準 {commit_link(data["refs"]["existing"])}。'
+            '基準是準備時已提交的版本；之後 main 更新不會改寫這次研究。'
+            '103 個情境 × 4 組 × 2 次＝824 個執行槽，每組在兩個合成帳號各執行一次。</p>'
+            '<p>三個候選背景設定固定為 Gemini 3.8 Flash Medium、Gemini 3.8 Flash High、GPT-6.1-Sol Low，'
+            '上限皆為 32,768 tokens、原生請求期限 120 秒。前景與委派設定保持固定。'
+            '凍結執行器使用 6 個 workers，每槽截止時間 1,800 秒；這不是前景或模型延遲門檻。</p>'
+            '<p>同一情境的兩個帳號區塊相鄰，每個區塊包含四組；逐情境交替哪個帳號先走。'
+            '每個帳號的組別順序保留 24 種排列輪換；不宣稱兩個帳號混合後的時間順序是完美 24 次週期。'
+            '併行重播的耗時受這個負載條件影響，不能直接當成正式環境延遲。</p>'
+            f'<details><summary>計畫、設定、題組與程式 SHA-256</summary><ul>{hashes}</ul></details>'
+            f'<p><a href="{PLANNED_STUDY_NAME}" download>下載已驗證的公開執行計畫摘要</a>。'
+            '只包含版本、設定、分母與排程摘要，不包含執行槽識別碼、私人路徑或未完成的分數。</p></section>')
+
+
 def owed_diagnostic_panel(data):
     if not data:
         return ''
@@ -1084,6 +1123,7 @@ def render(data, iterations=()):
             ('可用的下一步', 'AI 前景盲評；誠實處理能力界線'), ('主動得合適', '命中、安靜負例與逐則合適率')))
         body = f'<section class="panel"><p class="notice warning"><b>尚未有可發布的完整 Always-on 研究。</b>完整題組的分數、改善幅度與勝負結論仍待完成。</p><h2>這裡會呈現哪些結果</h2><div class="kpis">{cards}</div><p>只有完整重播、兩階段各兩次判讀、通過所有控制題，才會顯示完整成績。教學時間軸和合成測試 fixture 不會當成結果。</p></section>'
         body += calibration_panel(data.get('judge_calibration'))
+        body += planned_study_panel(data.get('planned_study'))
         body += owed_diagnostic_panel(data.get('owed_diagnostic'))
         body += f'<section class="panel"><h2>逐段檢查，等資料完成</h2><p>本輪比較原有版本、Gemini Medium、Gemini High 與 GPT-6.1-Sol Low。每段情境會顯示各組完整時間軸、每次重複、主機檢查與 AI 判斷理由。現在可以先看<a href="{METHOD_NAME}">公開開發題組與評審門檻</a>。</p></section><section class="panel"><h2>研究迭代</h2>{iteration_table(iterations)}</section>'
         return page_shell(PAGE_NAME, 'Always-on 結果', '這一頁保留完整研究的成績、案例與版本證據。每次迭代獨立呈現，讓主動訊息的時機、內容與打擾成本可以逐則檢查。', body, status='等待完整研究')
@@ -1201,6 +1241,7 @@ def main():
     parser.add_argument('--pending',action='store_true')
     parser.add_argument('--calibration-study',type=Path)
     parser.add_argument('--owed-diagnostic-study',type=Path)
+    parser.add_argument('--planned-study',type=Path)
     parser.add_argument('--cases',type=Path)
     parser.add_argument('--source-ref')
     parser.add_argument('--iteration')
@@ -1246,6 +1287,18 @@ def main():
         data={'schema_version':2,'status':'pending','cohort':'development','notice':'尚無完整重播、兩階段判讀與通過控制題的研究。'}
     else:
         data=json.loads((PUBLIC/JSON_NAME).read_text())
+    planned_text=None
+    if args.planned_study:
+        bound_protocol=protocol or json.loads((PUBLIC/cases['protocol_file']).read_text())
+        planned=planned_study_module().verified_projection(args.planned_study,cases,bound_protocol)
+        check_public(planned)
+        planned_text=json.dumps(planned,ensure_ascii=False,indent=1)+'\n'
+        data['planned_study']=planned
+    elif (PUBLIC/PLANNED_STUDY_NAME).exists():
+        data['planned_study']=json.loads((PUBLIC/PLANNED_STUDY_NAME).read_text())
+    if data.get('planned_study') and (data['planned_study']['refs']['engine'] != cases['source_ref']
+            or data['planned_study']['proof']['protocol_sha256'] != cases['protocol_sha256']):
+        raise ValueError('planned_method_binding_mismatch')
     if args.calibration_study:
         if data.get('status') != 'pending':
             raise ValueError('calibration_is_separate_from_study_results')
@@ -1271,8 +1324,15 @@ def main():
     elif (PUBLIC/OWED_DIAGNOSTIC_NAME).exists():
         data['owed_diagnostic']=json.loads((PUBLIC/OWED_DIAGNOSTIC_NAME).read_text())
     method, report=render_method(cases,has_results=data.get('publication_ready') is True,
-                                diagnostic=data.get('owed_diagnostic')),render(data,index['iterations'])
+                                diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study')),render(data,index['iterations'])
     check_public(data);check_public(index);check_public(cases)
+    if planned_text is not None:
+        digest=hashlib.sha256(planned_text.encode()).hexdigest()
+        archive=PUBLIC/('line-always-on-planned-study-'+digest[:12]+'.public.json')
+        if archive.exists() and archive.read_text()!=planned_text:
+            raise ValueError('immutable_planned_study_changed')
+        archive.write_text(planned_text)
+        (PUBLIC/PLANNED_STUDY_NAME).write_text(planned_text)
     if protocol is not None:
         frozen=PUBLIC/protocol_file
         if frozen.exists() and json.loads(frozen.read_text())!=protocol:

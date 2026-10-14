@@ -1953,5 +1953,78 @@
    }
   ],
   "limits": "單一開發題、三個候選設定、兩個合成帳號；不是完整研究、holdout、真人評分或模型排名。前景逾時為注入故障，不能給速度成績。誠實收尾仍留在分母，不算完成回答。評審與 Sol 候選來自同一供應商／模型家族，盲評不能消除偏誤。被原生驗證器丟棄的文字沒有保留，不能推測其拒絕原因。"
+ },
+ "planned_study": {
+  "schema_version": 1,
+  "kind": "always_on_preregistered_plan",
+  "plan_verified": true,
+  "full_study_result": false,
+  "quality_complete": false,
+  "publication_ready": false,
+  "refs": {
+   "engine": "818bc2ff9f9d3d1cb3f5fcf3d3da5a53336227a3",
+   "engine_high": "818bc2ff9f9d3d1cb3f5fcf3d3da5a53336227a3",
+   "engine_medium": "818bc2ff9f9d3d1cb3f5fcf3d3da5a53336227a3",
+   "engine_sol_low": "818bc2ff9f9d3d1cb3f5fcf3d3da5a53336227a3",
+   "existing": "e505e18d43ea0997cd7440522cd733f58a6d1959"
+  },
+  "arms": [
+   "existing",
+   "engine_medium",
+   "engine_high",
+   "engine_sol_low"
+  ],
+  "arm_configs": {
+   "existing": {
+    "always_on": null
+   },
+   "engine_medium": {
+    "always_on": {
+     "provider": "gemini",
+     "model": "gemini-3.8-flash",
+     "thinking_level": "medium",
+     "max_output_tokens": 32768,
+     "timeout_s": 120
+    }
+   },
+   "engine_high": {
+    "always_on": {
+     "provider": "gemini",
+     "model": "gemini-3.8-flash",
+     "thinking_level": "high",
+     "max_output_tokens": 32768,
+     "timeout_s": 120
+    }
+   },
+   "engine_sol_low": {
+    "always_on": {
+     "provider": "openai",
+     "model": "gpt-6.1-sol",
+     "thinking_level": "low",
+     "max_output_tokens": 32768,
+     "timeout_s": 120
+    }
+   }
+  },
+  "episode_count": 103,
+  "slot_count": 824,
+  "repeats": 2,
+  "workers": 6,
+  "slot_timeout_s": 1800,
+  "schedule": {
+   "episode_adjacent_account_blocks": true,
+   "alternating_first_account": true,
+   "per_account_permutation_cycle": 24,
+   "combined_chronological_perfect_cycle": false
+  },
+  "proof": {
+   "authored_cases_sha256": "ff8afb2672b5f5f92e31baedcaa3f4e7b0c2f48cef7aa83be2e9e56f840254d9",
+   "code_sha256": "ecdd819a9264bc0a8ebc7f91f3e910f5b39f28e4058beef410d0f871bafc5594",
+   "cohort_sha256": "83aafabef2b316872bdb98d4d9293aaf0b32c7efbe487f28ee6bc3ee6dd4ba24",
+   "configuration_sha256": "266fd4d1d7354c6d083b48e07fcacd019c70b7d82ec4d64e739231d0d98a9541",
+   "plan_sha256": "4530a0298493b5d26e9859feeb0bb33f78862ba3f4698490bb7fb0a544448044",
+   "protocol_sha256": "0ba97f541a92460aa0d5de72f7ba200359528e02beed7e6b64798f181cbc4296",
+   "source_files_sha256": "8964d54a092a49433fb1032baecab523f7a8592789c1e008f65465a1b741ede4"
+  }
  }
 }
