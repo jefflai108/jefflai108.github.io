@@ -14,10 +14,10 @@ html { scrollbar-gutter: stable; }
   justify-content: flex-start;
   align-items: stretch;
   gap: 3px;
-  max-width: 1500px;
+  max-width: var(--benchmark-width, 1500px);
   width: 100%;
   margin: 0 auto;
-  padding: 12px 30px;
+  padding: 12px var(--benchmark-gutter, 30px);
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -26,9 +26,9 @@ html { scrollbar-gutter: stable; }
 }
 .benchmark-return {
   box-sizing: border-box;
-  max-width: 1500px;
+  max-width: var(--benchmark-width, 1500px);
   margin: 0 auto;
-  padding: 8px 30px 0;
+  padding: 8px var(--benchmark-gutter, 30px) 0;
 }
 .benchmark-return a {
   display: inline-flex;
@@ -47,7 +47,7 @@ html { scrollbar-gutter: stable; }
   display: flex;
   flex: 0 0 auto;
   align-items: center;
-  /* Eleven tabs fit one row from 1440 px; narrower screens scroll the row. */
+  /* Keep one row; scroll when the full set exceeds the viewport. */
   padding: 8px 9px;
   font: 500 14px/23px system-ui, -apple-system, "PingFang TC", sans-serif;
   white-space: nowrap;
