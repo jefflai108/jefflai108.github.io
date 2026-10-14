@@ -11,10 +11,10 @@
   "quality_complete": false,
   "publication_ready": false,
   "refs": {
-   "engine": "c67b7e9e552918040125537a9de4118dfb221387",
-   "engine_high": "c67b7e9e552918040125537a9de4118dfb221387",
-   "engine_medium": "c67b7e9e552918040125537a9de4118dfb221387",
-   "engine_sol_low": "c67b7e9e552918040125537a9de4118dfb221387",
+   "engine": "8c137631121ce89180bbe80df2fbf352ab1fb0e2",
+   "engine_high": "8c137631121ce89180bbe80df2fbf352ab1fb0e2",
+   "engine_medium": "8c137631121ce89180bbe80df2fbf352ab1fb0e2",
+   "engine_sol_low": "8c137631121ce89180bbe80df2fbf352ab1fb0e2",
    "existing": "e505e18d43ea0997cd7440522cd733f58a6d1959"
   },
   "arms": [
@@ -68,13 +68,42 @@
   },
   "proof": {
    "authored_cases_sha256": "ff8afb2672b5f5f92e31baedcaa3f4e7b0c2f48cef7aa83be2e9e56f840254d9",
-   "code_sha256": "ecdd819a9264bc0a8ebc7f91f3e910f5b39f28e4058beef410d0f871bafc5594",
+   "code_sha256": "0bffafb9fb9a96bda042c9f4601bec976dabfe26a4acdf49367b1605ed777db5",
    "cohort_sha256": "83aafabef2b316872bdb98d4d9293aaf0b32c7efbe487f28ee6bc3ee6dd4ba24",
-   "configuration_sha256": "654b7dcd9ef6a17e28eabab9edf2614f30e48ed4bd74541eb95218d93d3c064d",
-   "plan_sha256": "927c06123af8ef7c3ea06cfff28122cd5efc4641f9b07a4fd67f3f96d441b5c9",
-   "protocol_sha256": "e0d3d28da8834fa307c047df987bc6ba0717e5e9f78f9db7fc1932ee1a4207dd",
-   "source_files_sha256": "f02aeb171e19bb7ad3f732379aba9ea10bf53ca9dc6e6f32a2e398ef1d5e84d5"
+   "configuration_sha256": "97f6bd8602cdfc733ff8d51be2d40adad9caefa28bc9696648f7267b6bc0946f",
+   "plan_sha256": "344846aa2199ab57a5554f515bae5b4ed1b5ac770965051190ea4cc9079b9490",
+   "protocol_sha256": "a1a3b7984df95bab66302c0ef75064eab2b4ec8d39d18f1094ef4c1e43122fbb",
+   "source_files_sha256": "27c254af1e2a2a1f268bd27d4a764cf216a89f477d3d1ed3ca5a68d1aaa3500a"
   }
+ },
+ "study_interruption": {
+  "schema_version": 1,
+  "kind": "always_on_historical_interruption",
+  "original_refs": {
+   "engine": "818bc2ff9f9d3d1cb3f5fcf3d3da5a53336227a3",
+   "engine_high": "818bc2ff9f9d3d1cb3f5fcf3d3da5a53336227a3",
+   "engine_medium": "818bc2ff9f9d3d1cb3f5fcf3d3da5a53336227a3",
+   "engine_sol_low": "818bc2ff9f9d3d1cb3f5fcf3d3da5a53336227a3",
+   "existing": "e505e18d43ea0997cd7440522cd733f58a6d1959"
+  },
+  "original_planned_file": "line-always-on-planned-study-7b6e67afd463.public.json",
+  "complete_study_result": false,
+  "partial_scores_published": false,
+  "generated_owned_caches": 15,
+  "pinned_source_bytes_verified": true,
+  "owned_caches_removed": true,
+  "original_receipts_retained": true,
+  "source_snapshot_protected": true,
+  "proof": {
+   "original_plan_sha256": "4530a0298493b5d26e9859feeb0bb33f78862ba3f4698490bb7fb0a544448044",
+   "original_configuration_sha256": "266fd4d1d7354c6d083b48e07fcacd019c70b7d82ec4d64e739231d0d98a9541",
+   "original_planned_public_sha256": "7b6e67afd46302e2c453d2826e4feb43026bdb88d915d1a1086e163049198bdf",
+   "agent_inventory_sha256": "ddad43f4f7b40f7dd0efa319e6a33595446d5c995712dae10f27e2229c85fd60",
+   "incident_sha256": "b51f074a78a964eb5057ff64862d189eed9400055e9e74514b3bd57844d515c8",
+   "restoration_sha256": "003517fa0fe44c2797b5a4279cdcd71f1d56a801fcc1c0b950c21ce96aae5745",
+   "read_only_snapshot_protection_sha256": "5a2fb35a20d8ec5a3bab9997f8e5a598b46d47855d38abae626c27c2c681bfe4"
+  },
+  "notice": "第一次研究的凍結來源中意外產生未列入計畫的 Python 快取，完整性門檻因此拒絕後續部分執行。已逐一確認本次產生的快取對應原已釘定原始碼，只移除這些快取；原計畫、來源與已產生收據保留。第一次資料留作中斷紀錄，不當成完整成績，也不與新一輪合併。新一輪另有獨立的凍結來源與計畫。"
  },
  "owed_diagnostic": {
   "schema_version": 1,
@@ -262,40 +291,11 @@
   ],
   "limits": "單一開發題、三個候選設定、兩個合成帳號；不是完整研究、holdout、真人評分或模型排名。前景逾時為注入故障，不能給速度成績。誠實收尾仍留在分母，不算完成回答。評審與 Sol 候選來自同一供應商／模型家族，盲評不能消除偏誤。被原生驗證器丟棄的文字沒有保留，不能推測其拒絕原因。"
  },
- "study_interruption": {
-  "schema_version": 1,
-  "kind": "always_on_historical_interruption",
-  "original_refs": {
-   "engine": "818bc2ff9f9d3d1cb3f5fcf3d3da5a53336227a3",
-   "engine_high": "818bc2ff9f9d3d1cb3f5fcf3d3da5a53336227a3",
-   "engine_medium": "818bc2ff9f9d3d1cb3f5fcf3d3da5a53336227a3",
-   "engine_sol_low": "818bc2ff9f9d3d1cb3f5fcf3d3da5a53336227a3",
-   "existing": "e505e18d43ea0997cd7440522cd733f58a6d1959"
-  },
-  "original_planned_file": "line-always-on-planned-study-7b6e67afd463.public.json",
-  "complete_study_result": false,
-  "partial_scores_published": false,
-  "generated_owned_caches": 15,
-  "pinned_source_bytes_verified": true,
-  "owned_caches_removed": true,
-  "original_receipts_retained": true,
-  "source_snapshot_protected": true,
-  "proof": {
-   "original_plan_sha256": "4530a0298493b5d26e9859feeb0bb33f78862ba3f4698490bb7fb0a544448044",
-   "original_configuration_sha256": "266fd4d1d7354c6d083b48e07fcacd019c70b7d82ec4d64e739231d0d98a9541",
-   "original_planned_public_sha256": "7b6e67afd46302e2c453d2826e4feb43026bdb88d915d1a1086e163049198bdf",
-   "agent_inventory_sha256": "ddad43f4f7b40f7dd0efa319e6a33595446d5c995712dae10f27e2229c85fd60",
-   "incident_sha256": "b51f074a78a964eb5057ff64862d189eed9400055e9e74514b3bd57844d515c8",
-   "restoration_sha256": "003517fa0fe44c2797b5a4279cdcd71f1d56a801fcc1c0b950c21ce96aae5745",
-   "read_only_snapshot_protection_sha256": "5a2fb35a20d8ec5a3bab9997f8e5a598b46d47855d38abae626c27c2c681bfe4"
-  },
-  "notice": "第一次研究的凍結來源中意外產生未列入計畫的 Python 快取，完整性門檻因此拒絕後續部分執行。已逐一確認本次產生的快取對應原已釘定原始碼，只移除這些快取；原計畫、來源與已產生收據保留。第一次資料留作中斷紀錄，不當成完整成績，也不與新一輪合併。新一輪另有獨立的凍結來源與計畫。"
- },
  "owed_development": {
   "schema_version": 1,
   "kind": "native_owed_development",
-  "source_ref": "35b4b33f55ca5bd7d97b0331f6bccc6494374483",
-  "native_source_ref": "c67b7e9e552918040125537a9de4118dfb221387",
+  "source_ref": "a66eda30143a90163073522fdd77ef5fdef8cbd6",
+  "native_source_ref": "8c137631121ce89180bbe80df2fbf352ab1fb0e2",
   "plan_verified": true,
   "full_study_result": false,
   "publication_ready": false,
@@ -414,17 +414,17 @@
    "另一個已知同群帳號記錄新成員加入"
   ],
   "proof": {
-   "source_files_sha256": "a0358113d28391e5c7709ac5e098e6ed4a7aeced7174f589624275a31e470fa4",
+   "source_files_sha256": "ecc9aed670c5f90ac00d516d2ff2e87aa4f3dae939601a5ca78f4b52b372fefe",
    "corpus_sha256": "0cd743e1a8bfa96ccd4a021409685b82f96ca180d42c3432a04ede7ef6d5a2c9",
    "configuration_sha256": "7aabdaa06fdfeef0bb3d87972a520be2003942557cd1a6c19348d151b35aecec",
    "settings_sha256": "6d80c03331fab3d1801c03fbbda8d5f4872fdb8635e85e966ab5ccf9ab90c103",
    "schedule_sha256": "1d9f5f6d112141bbc4c66749f99ac46621a7355904ea37c3ef67a37482661cfc",
-   "code_sha256": "2cb7fe07a3e370e9d2517a79d45987c1c99144064e1b511a35dd2c26d295d034",
+   "code_sha256": "51dbe7944bb446b2731bde59b7600b2d5a1959c7027bdd71987a3cbd5f58cdb4",
    "judge_export_code_sha256": "81b7ee1ce258c824e7d84b44f878306d66f4aa13e0019ec5ad5432c9cd106133",
    "judge_sha256": "f5b8823dcef67dfe9e63609cd9fdd3250986f74d9c4cc84ba84761176bd1bc61",
    "rubric_sha256": "33c60c6ad5a646c8eb3cceae9f5ccbe88e0a36ef7f27211a0199789621d45dd7",
-   "plan_sha256": "9ce32ecf0471c4c790ec719a80b0dce003d52c4567173fcf8eff4f8827dfdf2e",
-   "canonical_plan_sha256": "f3d14c4fdc61ba0559fed0378193254d87a9ed38127fa640f53a90b64dc7bd4c"
+   "plan_sha256": "dff3f5b75a05cda6e2935e65b61488848964cf33b5b53948912e9a45746917d2",
+   "canonical_plan_sha256": "04d07a6828d3024a74d46e8596c2f00384fbde65c3a3ab82e498dfd5bfad6761"
   },
   "results": null,
   "limits": "獨立的八題開發題組與四項原生停止控制；不是 holdout、完整研究或模型排名。前景故障與無關設定為明示腳本，背景欠答使用原始模型、提示、解析、驗證與送出檢查。串行模擬恢復不能給正式環境可靠度、延遲或 FAST 成績。失敗、無效輸出、誠實收尾和缺失均保留在預定分母。群組整理題只挑戰本群路由與安靜成員留言的相關性，沒有跨群私人資料誘餌。評審與 Sol 候選共享供應商／模型家族；盲評不能消除偏誤，真人校準仍待完成。原六次診斷被丟棄的模型文字不可恢復；新私有診斷不會替代原資料，也不會供給回答或評分。"
