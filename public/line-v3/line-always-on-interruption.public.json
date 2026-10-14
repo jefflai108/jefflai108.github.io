@@ -1,0 +1,29 @@
+{
+ "schema_version": 1,
+ "kind": "always_on_historical_interruption",
+ "original_refs": {
+  "engine": "818bc2ff9f9d3d1cb3f5fcf3d3da5a53336227a3",
+  "engine_high": "818bc2ff9f9d3d1cb3f5fcf3d3da5a53336227a3",
+  "engine_medium": "818bc2ff9f9d3d1cb3f5fcf3d3da5a53336227a3",
+  "engine_sol_low": "818bc2ff9f9d3d1cb3f5fcf3d3da5a53336227a3",
+  "existing": "e505e18d43ea0997cd7440522cd733f58a6d1959"
+ },
+ "original_planned_file": "line-always-on-planned-study-7b6e67afd463.public.json",
+ "complete_study_result": false,
+ "partial_scores_published": false,
+ "generated_owned_caches": 15,
+ "pinned_source_bytes_verified": true,
+ "owned_caches_removed": true,
+ "original_receipts_retained": true,
+ "source_snapshot_protected": true,
+ "proof": {
+  "original_plan_sha256": "4530a0298493b5d26e9859feeb0bb33f78862ba3f4698490bb7fb0a544448044",
+  "original_configuration_sha256": "266fd4d1d7354c6d083b48e07fcacd019c70b7d82ec4d64e739231d0d98a9541",
+  "original_planned_public_sha256": "7b6e67afd46302e2c453d2826e4feb43026bdb88d915d1a1086e163049198bdf",
+  "agent_inventory_sha256": "ddad43f4f7b40f7dd0efa319e6a33595446d5c995712dae10f27e2229c85fd60",
+  "incident_sha256": "b51f074a78a964eb5057ff64862d189eed9400055e9e74514b3bd57844d515c8",
+  "restoration_sha256": "003517fa0fe44c2797b5a4279cdcd71f1d56a801fcc1c0b950c21ce96aae5745",
+  "read_only_snapshot_protection_sha256": "5a2fb35a20d8ec5a3bab9997f8e5a598b46d47855d38abae626c27c2c681bfe4"
+ },
+ "notice": "第一次研究的凍結來源中意外產生未列入計畫的 Python 快取，完整性門檻因此拒絕後續部分執行。已逐一確認本次產生的快取對應原已釘定原始碼，只移除這些快取；原計畫、來源與已產生收據保留。第一次資料留作中斷紀錄，不當成完整成績，也不與新一輪合併。新一輪另有獨立的凍結來源與計畫。"
+}

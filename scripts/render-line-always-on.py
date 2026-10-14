@@ -25,6 +25,8 @@ PUBLIC = ROOT / "public/line-v3"
 JSON_NAME = "line-always-on-results.public.json"
 OWED_DIAGNOSTIC_NAME = "line-always-on-owed-diagnostic.public.json"
 PLANNED_STUDY_NAME = "line-always-on-planned-study.public.json"
+INTERRUPTION_NAME = "line-always-on-interruption.public.json"
+OWED_DEVELOPMENT_NAME = "line-always-on-owed-development.public.json"
 PAGE_NAME = "line-always-on.html"
 SOURCE_REPO = "https://github.com/jefflai108/streaming_taiwanese"
 ARMS = ("existing", "engine")
@@ -58,7 +60,7 @@ _UNSAFE = re.compile(r"/Users/|/private/|/home/|/var/folders|/srv/|AIza[0-9A-Za-
 
 PUBLIC_KEYS = ("schema_version", "arms", "refs", "models", "metadata", "summary", "comparison", "comparisons", "gates",
                "complete", "replay_complete", "judging_complete", "publication_ready", "incomplete_episodes",
-               "episodes", "runs", "judge_controls", "foreground_controls", "foreground_judge", "slot_status", "owed_diagnostic", "planned_study")
+               "episodes", "runs", "judge_controls", "foreground_controls", "foreground_judge", "slot_status", "owed_diagnostic", "planned_study", "study_interruption", "owed_development")
 PRIVATE_KEYS = frozenset(("api_key", "authorization", "credentials", "encrypted_job", "user_id", "chat_id",
                           "message_hash", "event_hash", "lease_token", "reply_token", "mapping.private.json",
                           "http", "environment", "prompt", "system_prompt", "logs", "log", "path"))
@@ -789,7 +791,7 @@ def authored_cases(data):
     return f'<div data-explorer>{filters(episodes)}{"".join(blocks)}</div>'
 
 
-def render_method(cases, *, has_results=False, diagnostic=None, planned_study=None):
+def render_method(cases, *, has_results=False, diagnostic=None, planned_study=None, interruption=None, owed_development=None):
     from collections import Counter
     episodes = cases['episodes']
     control_counts = cases.get('control_counts', {'CONTROLS': 10, 'FOREGROUND_CONTROLS': 17})
@@ -800,7 +802,7 @@ def render_method(cases, *, has_results=False, diagnostic=None, planned_study=No
                  else "完整研究尚未完成。這一頁公開測試設計與合成題組；示意時間軸沒有量測分數。")
     strata_rows = ''.join(f'<tr><th>{SCOPE_LABELS[scope]}</th><td>{POLARITY_LABELS[polarity]}</td><td>{strata[(scope, polarity)]}</td></tr>'
                           for scope in SCOPE_LABELS for polarity in POLARITY_LABELS if strata[(scope, polarity)])
-    body = planned_study_panel(planned_study) + f'''
+    body = planned_study_panel(planned_study) + interruption_panel(interruption) + f'''
 <section class="panel"><p class="notice warning"><b>{readiness}</b>完整研究成績只會收錄完成兩階段評審、通過控制題的重播；小型診斷另外標示。</p>
 <h2>四個目標，分開量測</h2><div class="scroll"><table class="goals"><thead><tr><th>目標</th><th>可檢查的行為</th><th>量測單位</th></tr></thead><tbody>
 <tr><th>夠快</th><td>對使用者說的話及時開始回答；背景工作讓前景先走。</td><td>前景耗時與收到訊息到首次回覆的 p50 / p90；快回覆題的逐輪門檻。</td></tr>
@@ -842,6 +844,7 @@ def render_method(cases, *, has_results=False, diagnostic=None, planned_study=No
 <p><a href="{CASES_NAME}" download>下載公開合成題組</a> · <a href="{esc(cases.get('protocol_file', CASES_NAME))}" download>下載不可覆寫的方法快照</a> · <a href="{PAGE_NAME}">查看完整研究與每次迭代</a></p>
 <p class="small">方法快照 SHA-256 <code>{esc(cases.get('protocol_sha256','等待快照'))}</code>；包括題組與 harness、評審規格、指標計算程式摘要。這是開發方法的快照，實測仍須另外凍結已提交來源與各組設定。</p></section>'''
     body += owed_diagnostic_panel(diagnostic)
+    body += owed_development_panel(owed_development)
     return page_shell(METHOD_NAME, "Always-on 方法", "麻吉要一直在背景接住事情，在值得關心的時候主動開口。這裡把「快、接得住、給下一步、主動得合適」轉成可重播、可逐段檢查的實驗。", body)
 
 
@@ -1033,6 +1036,69 @@ def planned_study_module():
     return module
 
 
+def interruption_module():
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('always_on_interruption',Path(__file__).with_name('study_interruption.py'))
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    return module
+
+
+def owed_development_module():
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('always_on_owed_development',Path(__file__).with_name('owed_development.py'))
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    return module
+
+
+def owed_development_panel(data):
+    if not data:return ''
+    owed_development_module().validate_public(data);check_public(data)
+    tasks=''.join(f'<tr><td>{esc(SCOPE_LABELS[row["scope"]])}</td><td>{esc(row["summary"])}</td>'
+                  f'<td>{esc(row["expected"])}</td></tr>' for row in data['tasks'])
+    body=('<section class="panel"><h2>獨立的欠答開發題組</h2>'
+        '<p class="notice"><b>與 824 槽研究及原六次單題診斷分開。</b>'
+        +('這份計畫已凍結，尚未有完整可展示的欠答題組成績。</p>' if data['status']=='pending' else
+          '已完成本開發題組的原生捕捉與新評審，不代表完整研究或模型排名。</p>')+
+        '<p>8 個正例（6 個私訊、2 個明確指名群組）× 3 個設定 × 2 個合成帳號＝48 個正例槽；'
+        '4 個原生停止控制 × 3 × 2＝24 個零呼叫控制槽，共 72 個新資料庫。每個正例最多一次真實欠答請求，'
+        '總上限 48 次；停止控制必須沒有欠答上傳或晚到回答。</p>'
+        '<p>三組是 Gemini 3.8 Flash Medium、High 與 GPT-6.1-Sol Low，皆 32,768 tokens／120 秒。'
+        '同情境的帳號區塊相鄰，交替帳號先後；每個帳號完整輪換六種候選排列兩次。正例的位置分配為輪換的 6／5／5，'
+        '不宣稱八題的順序完全均衡。原生欠答提示、解析與語意驗證器保持不變。</p>'
+        f'<div class="scroll"><table><thead><tr><th>對話</th><th>任務</th><th>預先指定檢查</th></tr></thead><tbody>{tasks}</tbody></table></div>'
+        f'<p>停止控制：{esc("；".join(data["withholding"]))}。</p>'
+        '<p>評審使用原有前景規格：48 段實際對話 × 2 次，加上全新的 17 題已知控制 × 2 次，最多 130 次。'
+        '只有全部 72 槽、130 次判讀與 34 次控制題都通過完整性檢查，才展示結果。'
+        '統計固定讀第一次，第二次檢查一致性；不把兩個帳號當成獨立新題。</p>')
+    if data['results'] is not None:
+        rows=[]
+        for arm,row in data['results']['arms'].items():
+            values=[f'{row["late_answer_delivered"]}/16',str(row['closures']),f'{row["withholding_passed"]}/8']
+            values.extend(f'{row["judgments"][field]}/16' for field in ('answered','no_rejection','honest','grounded'))
+            rows.append(f'<tr><th>{esc(ARM_LABELS[arm])}</th>'+''.join(f'<td>{esc(value)}</td>' for value in values)+'</tr>')
+        body+=('<div class="scroll"><table class="owed-diagnostic-table"><thead><tr><th>設定</th><th>實際補答</th><th>收尾</th><th>停止控制</th>'
+               '<th>完成回答（AI）</th><th>沒有直接拒絕（AI）</th><th>誠實（AI）</th><th>有依據（AI）</th></tr></thead>'
+               f'<tbody>{"".join(rows)}</tbody></table></div><p>原生無效輸出、收尾與失敗保留在各組 16 個正例分母；未公開被拒絕的私有模型文字。'
+               '呼叫用量的已知／未知次數與原生代碼在下載摘要中分開保留，未知不能當成零。</p>')
+    return body+(f'<p class="small">{esc(data["limits"])}</p>'
+        f'<p>欠答原生基底 {commit_link(data["native_source_ref"])} · 獨立執行／觀察程式 {commit_link(data["source_ref"])}。'
+        f'<a href="{OWED_DEVELOPMENT_NAME}" download>下載來源、計畫與分母綁定的公開摘要</a>。</p>'
+        f'<p class="small">計畫 SHA-256 <code>{esc(data["proof"]["plan_sha256"])}</code>。'
+        '公開摘要不含原始提示、私有解析文字、權限識別碼、私人路徑、思考或金鑰。</p></section>')
+
+
+def interruption_panel(data):
+    if not data:return ''
+    interruption_module().validate_public(data);check_public(data)
+    return ('<section class="panel"><h2>第一次研究的中斷紀錄</h2>'
+        f'<p>{esc(data["notice"])}</p>'
+        f'<p>原候選來源 {commit_link(data["original_refs"]["engine"])}；'
+        f'<a href="{esc(data["original_planned_file"])}" download>保留原始不可覆寫計畫</a>。'
+        '這裡沒有即時完成數、部分分數或模型排名。</p>'
+        f'<p class="small">原計畫 SHA-256 <code>{esc(data["proof"]["original_plan_sha256"])}</code>；'
+        f'<a href="{INTERRUPTION_NAME}" download>下載不含私人路徑的事件綁定紀錄</a>。</p></section>')
+
+
 def planned_study_panel(data):
     if not data:
         return ''
@@ -1124,7 +1190,9 @@ def render(data, iterations=()):
         body = f'<section class="panel"><p class="notice warning"><b>尚未有可發布的完整 Always-on 研究。</b>完整題組的分數、改善幅度與勝負結論仍待完成。</p><h2>這裡會呈現哪些結果</h2><div class="kpis">{cards}</div><p>只有完整重播、兩階段各兩次判讀、通過所有控制題，才會顯示完整成績。教學時間軸和合成測試 fixture 不會當成結果。</p></section>'
         body += calibration_panel(data.get('judge_calibration'))
         body += planned_study_panel(data.get('planned_study'))
+        body += interruption_panel(data.get('study_interruption'))
         body += owed_diagnostic_panel(data.get('owed_diagnostic'))
+        body += owed_development_panel(data.get('owed_development'))
         body += f'<section class="panel"><h2>逐段檢查，等資料完成</h2><p>本輪比較原有版本、Gemini Medium、Gemini High 與 GPT-6.1-Sol Low。每段情境會顯示各組完整時間軸、每次重複、主機檢查與 AI 判斷理由。現在可以先看<a href="{METHOD_NAME}">公開開發題組與評審門檻</a>。</p></section><section class="panel"><h2>研究迭代</h2>{iteration_table(iterations)}</section>'
         return page_shell(PAGE_NAME, 'Always-on 結果', '這一頁保留完整研究的成績、案例與版本證據。每次迭代獨立呈現，讓主動訊息的時機、內容與打擾成本可以逐則檢查。', body, status='等待完整研究')
     validate_study(data)
@@ -1151,6 +1219,8 @@ def render(data, iterations=()):
     body += background_model_panel(data)
     body += absolute_component_table(data)
     body += owed_diagnostic_panel(data.get('owed_diagnostic'))
+    body += owed_development_panel(data.get('owed_development'))
+    body += interruption_panel(data.get('study_interruption'))
     body += f'<section class="panel"><h2>分項判讀與控制題</h2><div class="grid2"><div class="scroll"><table><thead><tr><th>自主訊息 AI 分項（1–5）</th>{headers}</tr></thead><tbody>{quality_rows}</tbody></table></div><div class="scroll"><table><thead><tr><th>前景 AI 判讀</th>{headers}</tr></thead><tbody>{foreground_rows}</tbody></table></div></div><table><tbody>{control_rows}</tbody></table><p>這些是 AI 判讀；原始逐則分數與理由如下。控制題檢查評審是否理解規格，不證明實際使用者都喜歡這些訊息。</p></section>'
     body += f'<section class="panel"><h2>逐段時間軸</h2><p>自主關心、使用者要求與欠答分開標記；每組保留每次重複和失敗案例。</p><div data-explorer>{filters(data["episodes"])}{explorer(data)}</div></section>'
     body += f'<section class="panel"><h2>背景決策與阻擋原因</h2><div class="scroll"><table><tbody>{gate_rows}</tbody></table></div></section><section class="panel"><h2>研究迭代與可重建證據</h2>{iteration_table(iterations)}<p>{refs_description(data["refs"])}。</p><p>來源結果 SHA-256 <code>{data["source_artifact_sha256"]}</code>。完整模型設定、harness／rubric／packet 摘要與兩次判讀一致性見公開 JSON。</p><p><a href="{JSON_NAME}" download>下載本次公開結果</a> · <a href="{ITERATIONS_NAME}" download>下載研究索引</a></p></section>'
@@ -1242,6 +1312,11 @@ def main():
     parser.add_argument('--calibration-study',type=Path)
     parser.add_argument('--owed-diagnostic-study',type=Path)
     parser.add_argument('--planned-study',type=Path)
+    parser.add_argument('--owed-development-study',type=Path)
+    parser.add_argument('--owed-development-judge',type=Path)
+    parser.add_argument('--interruption-records',type=Path)
+    parser.add_argument('--interruption-inventory',type=Path)
+    parser.add_argument('--original-planned-public',type=Path)
     parser.add_argument('--cases',type=Path)
     parser.add_argument('--source-ref')
     parser.add_argument('--iteration')
@@ -1299,6 +1374,16 @@ def main():
     if data.get('planned_study') and (data['planned_study']['refs']['engine'] != cases['source_ref']
             or data['planned_study']['proof']['protocol_sha256'] != cases['protocol_sha256']):
         raise ValueError('planned_method_binding_mismatch')
+    interruption_text=None
+    if args.interruption_records:
+        if not args.interruption_inventory or not args.original_planned_public:
+            parser.error('give both interruption inventory and original immutable public plan')
+        note=interruption_module().verified_projection(args.interruption_records,args.interruption_inventory,
+                                                       args.original_planned_public)
+        check_public(note);data['study_interruption']=note
+        interruption_text=json.dumps(note,ensure_ascii=False,indent=1)+'\n'
+    elif (PUBLIC/INTERRUPTION_NAME).exists():
+        data['study_interruption']=json.loads((PUBLIC/INTERRUPTION_NAME).read_text())
     if args.calibration_study:
         if data.get('status') != 'pending':
             raise ValueError('calibration_is_separate_from_study_results')
@@ -1323,8 +1408,18 @@ def main():
         data['owed_diagnostic']=diagnostic
     elif (PUBLIC/OWED_DIAGNOSTIC_NAME).exists():
         data['owed_diagnostic']=json.loads((PUBLIC/OWED_DIAGNOSTIC_NAME).read_text())
+    development_text=None
+    if args.owed_development_judge and not args.owed_development_study:
+        parser.error('give the original owed development study with its judge archive')
+    if args.owed_development_study:
+        development=owed_development_module().verified_projection(args.owed_development_study,args.owed_development_judge)
+        check_public(development);data['owed_development']=development
+        development_text=json.dumps(development,ensure_ascii=False,indent=1)+'\n'
+    elif (PUBLIC/OWED_DEVELOPMENT_NAME).exists():
+        data['owed_development']=json.loads((PUBLIC/OWED_DEVELOPMENT_NAME).read_text())
     method, report=render_method(cases,has_results=data.get('publication_ready') is True,
-                                diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study')),render(data,index['iterations'])
+                                diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study'),
+                                interruption=data.get('study_interruption'),owed_development=data.get('owed_development')),render(data,index['iterations'])
     check_public(data);check_public(index);check_public(cases)
     if planned_text is not None:
         digest=hashlib.sha256(planned_text.encode()).hexdigest()
@@ -1333,6 +1428,16 @@ def main():
             raise ValueError('immutable_planned_study_changed')
         archive.write_text(planned_text)
         (PUBLIC/PLANNED_STUDY_NAME).write_text(planned_text)
+    if interruption_text is not None:
+        digest=hashlib.sha256(interruption_text.encode()).hexdigest()
+        archive=PUBLIC/('line-always-on-interruption-'+digest[:12]+'.public.json')
+        if archive.exists() and archive.read_text()!=interruption_text:raise ValueError('immutable_interruption_changed')
+        archive.write_text(interruption_text);(PUBLIC/INTERRUPTION_NAME).write_text(interruption_text)
+    if development_text is not None:
+        digest=hashlib.sha256(development_text.encode()).hexdigest()
+        archive=PUBLIC/('line-always-on-owed-development-'+digest[:12]+'.public.json')
+        if archive.exists() and archive.read_text()!=development_text:raise ValueError('immutable_owed_development_changed')
+        archive.write_text(development_text);(PUBLIC/OWED_DEVELOPMENT_NAME).write_text(development_text)
     if protocol is not None:
         frozen=PUBLIC/protocol_file
         if frozen.exists() and json.loads(frozen.read_text())!=protocol:
