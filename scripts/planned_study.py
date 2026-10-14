@@ -30,19 +30,26 @@ for name,wanted in plan['files'].items():
  path=root/name
  if path.is_symlink() or path.resolve().is_relative_to(root) is not True or not path.is_file() or sha(path)!=wanted:
   raise ValueError('changed_frozen_file')
+trusted=expected['files_sha256']
+harness_files={path.relative_to(root/'harness').as_posix() for path in (root/'harness').rglob('*') if path.is_file()}
+if harness_files!=set(trusted)|{'__init__.py'} or (root/'harness/__init__.py').read_bytes()!=b'':
+ raise ValueError('untrusted_harness_inventory')
+# The public, committed protocol is the authority before any archive code runs.
+if plan.get('refs',{}).get('engine')!=expected['source_ref']:
+ raise ValueError('planned_source_mismatch')
+if sha(root/'harness/cases.json')!=expected['cases_sha256']:
+ raise ValueError('planned_cohort_mismatch')
+if any(plan['files'].get('harness/'+name)!=value or sha(root/'harness'/name)!=value for name,value in trusted.items()):
+ raise ValueError('planned_protocol_code_mismatch')
+if json.loads((root/'cases.json').read_text())!=json.loads((root/'harness/cases.json').read_text()):
+ raise ValueError('planned_cohort_subset')
 sys.path.insert(0,str(root/'harness'))
 import runner
 def no_write(*args,**kwargs):raise ValueError('unexpected_plan_write')
 runner.write=no_write
 verified,episodes=runner.verify(root,frozen=True)
-if verified!=plan or plan['refs']['engine']!=expected['source_ref']:
+if verified!=plan:
  raise ValueError('planned_source_mismatch')
-if sha(root/'harness/cases.json')!=expected['cases_sha256']:
- raise ValueError('planned_cohort_mismatch')
-if any(plan['files'].get('harness/'+name)!=value for name,value in expected['files_sha256'].items()):
- raise ValueError('planned_protocol_code_mismatch')
-if json.loads((root/'cases.json').read_text())!=json.loads((root/'harness/cases.json').read_text()):
- raise ValueError('planned_cohort_subset')
 schedule=plan['execution_order']
 account_orders={account:[] for account in ('primary','secondary')}
 for index in range(0,len(schedule),8):

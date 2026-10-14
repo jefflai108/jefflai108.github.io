@@ -31,6 +31,25 @@ def snapshot():
         'receipts':[{'private_score':1}]}
 
 
+def cold_fixture(root, runner_text, *, trusted_runner_digest=None, shadow_text=None):
+    (root/'source').mkdir();(root/'harness').mkdir()
+    cohort={'episodes':[]}
+    for path,text in ((root/'harness/__init__.py',''),(root/'harness/runner.py',runner_text),
+                      (root/'harness/cases.json',json.dumps(cohort)),(root/'cases.json',json.dumps(cohort))):
+        path.write_text(text)
+    if shadow_text is not None:
+        (root/'harness/tempfile.py').write_text(shadow_text)
+    files={path.relative_to(root).as_posix():hashlib.sha256(path.read_bytes()).hexdigest()
+           for path in root.rglob('*') if path.is_file()}
+    (root/'plan.json').write_text(json.dumps({'refs':{'engine':'a'*40},'files':files}))
+    trusted={'runner.py':trusted_runner_digest or files['harness/runner.py'],
+             'cases.json':files['harness/cases.json']}
+    protocol={'source_ref':'a'*40,'cases':cohort,'files_sha256':trusted}
+    digest=hashlib.sha256(json.dumps(protocol,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    cases={'source_ref':'a'*40,'episodes':[],'cases_sha256':files['harness/cases.json'],'protocol_sha256':digest}
+    return cases,protocol
+
+
 class PlannedStudyTests(unittest.TestCase):
     def test_projection_is_plan_only_with_all_denominators_and_no_live_receipts(self):
         value=planned.project(snapshot());planned.validate_public(value)
@@ -75,6 +94,24 @@ class PlannedStudyTests(unittest.TestCase):
             protocol={'source_ref':'a'*40,'cases':{'episodes':[]},'files_sha256':{}}
             digest=hashlib.sha256(json.dumps(protocol,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
             cases={'source_ref':'a'*40,'episodes':[],'cases_sha256':'b'*64,'protocol_sha256':digest}
+            with self.assertRaisesRegex(ValueError,'planned_study_not_verified'):
+                planned.verified_projection(root,cases,protocol)
+            self.assertFalse(marker.exists())
+
+    def test_self_rehashed_foreign_runner_cannot_execute_before_trusted_hash_check(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);marker=root/'foreign-runner-executed'
+            text=f'from pathlib import Path\nPath({str(marker)!r}).write_text("executed")\n'
+            cases,protocol=cold_fixture(root,text,trusted_runner_digest='b'*64)
+            with self.assertRaisesRegex(ValueError,'planned_study_not_verified'):
+                planned.verified_projection(root,cases,protocol)
+            self.assertFalse(marker.exists())
+
+    def test_self_bound_stdlib_shadow_module_cannot_execute_from_harness(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);marker=root/'shadow-module-executed'
+            shadow=f'from pathlib import Path\nPath({str(marker)!r}).write_text("executed")\n'
+            cases,protocol=cold_fixture(root,'import tempfile\n',shadow_text=shadow)
             with self.assertRaisesRegex(ValueError,'planned_study_not_verified'):
                 planned.verified_projection(root,cases,protocol)
             self.assertFalse(marker.exists())
