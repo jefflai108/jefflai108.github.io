@@ -791,7 +791,8 @@ def authored_cases(data):
     return f'<div data-explorer>{filters(episodes)}{"".join(blocks)}</div>'
 
 
-def render_method(cases, *, has_results=False, diagnostic=None, planned_study=None, interruption=None, owed_development=None):
+def render_method(cases, *, has_results=False, diagnostic=None, planned_study=None, interruption=None, owed_development=None,
+                  generated_at="2026-10-14"):
     from collections import Counter
     episodes = cases['episodes']
     control_counts = cases.get('control_counts', {'CONTROLS': 10, 'FOREGROUND_CONTROLS': 17})
@@ -845,7 +846,7 @@ def render_method(cases, *, has_results=False, diagnostic=None, planned_study=No
 <p class="small">方法快照 SHA-256 <code>{esc(cases.get('protocol_sha256','等待快照'))}</code>；包括題組與 harness、評審規格、指標計算程式摘要。這是開發方法的快照，實測仍須另外凍結已提交來源與各組設定。</p></section>'''
     body += owed_diagnostic_panel(diagnostic)
     body += owed_development_panel(owed_development)
-    return page_shell(METHOD_NAME, "Always-on 方法", "麻吉要一直在背景接住事情，在值得關心的時候主動開口。這裡把「快、接得住、給下一步、主動得合適」轉成可重播、可逐段檢查的實驗。", body)
+    return page_shell(METHOD_NAME, "Always-on 方法", "麻吉要一直在背景接住事情，在值得關心的時候主動開口。這裡把「快、接得住、給下一步、主動得合適」轉成可重播、可逐段檢查的實驗。", body, generated=generated_at)
 
 
 def iteration_table(items):
@@ -1059,6 +1060,7 @@ def owed_development_panel(data):
         '<p class="notice"><b>與 824 槽研究及原六次單題診斷分開。</b>'
         +('這份計畫已凍結，尚未有完整可展示的欠答題組成績。</p>' if data['status']=='pending' else
           '已完成本開發題組的原生捕捉與新評審，不代表完整研究或模型排名。</p>')+
+        '<p>先前 35b4b33f 的 72 槽準備計畫未執行，已由本計畫取代；原六次單題診斷另外保留。</p>'
         '<p>8 個正例（6 個私訊、2 個明確指名群組）× 3 個設定 × 2 個合成帳號＝48 個正例槽；'
         '4 個原生停止控制 × 3 × 2＝24 個零呼叫控制槽，共 72 個新資料庫。每個正例最多一次真實欠答請求，'
         '總上限 48 次；停止控制必須沒有欠答上傳或晚到回答。</p>'
@@ -1118,8 +1120,10 @@ def planned_study_panel(data):
             f'<p>候選引擎 {commit_link(data["refs"]["engine"])}；原有版本基準 {commit_link(data["refs"]["existing"])}。'
             '基準是準備時已提交的版本；之後 main 更新不會改寫這次研究。'
             '103 個情境 × 4 組 × 2 次＝824 個執行槽，每組在兩個合成帳號各執行一次。</p>'
+            '<p>與基準的比較同時包含來源版本與引擎差異；三個候選彼此的比較，才是在相同引擎程式、'
+            '前景與委派設定下比較背景模型政策。先前 c67b7e9e 的完整研究準備計畫未執行，已由本計畫取代。</p>'
             '<p>三個候選背景設定固定為 Gemini 3.8 Flash Medium、Gemini 3.8 Flash High、GPT-6.1-Sol Low，'
-            '上限皆為 32,768 tokens、原生請求期限 120 秒。前景與委派設定保持固定。'
+            '上限皆為 32,768 tokens、原生請求期限 120 秒。三個候選的前景與委派設定保持固定。'
             '凍結執行器使用 6 個 workers，每槽截止時間 1,800 秒；這不是前景或模型延遲門檻。</p>'
             '<p>同一情境的兩個帳號區塊相鄰，每個區塊包含四組；逐情境交替哪個帳號先走。'
             '每個帳號的組別順序保留 24 種排列輪換；不宣稱兩個帳號混合後的時間順序是完美 24 次週期。'
@@ -1194,7 +1198,8 @@ def render(data, iterations=()):
         body += owed_diagnostic_panel(data.get('owed_diagnostic'))
         body += owed_development_panel(data.get('owed_development'))
         body += f'<section class="panel"><h2>逐段檢查，等資料完成</h2><p>本輪比較原有版本、Gemini Medium、Gemini High 與 GPT-6.1-Sol Low。每段情境會顯示各組完整時間軸、每次重複、主機檢查與 AI 判斷理由。現在可以先看<a href="{METHOD_NAME}">公開開發題組與評審門檻</a>。</p></section><section class="panel"><h2>研究迭代</h2>{iteration_table(iterations)}</section>'
-        return page_shell(PAGE_NAME, 'Always-on 結果', '這一頁保留完整研究的成績、案例與版本證據。每次迭代獨立呈現，讓主動訊息的時機、內容與打擾成本可以逐則檢查。', body, status='等待完整研究')
+        return page_shell(PAGE_NAME, 'Always-on 結果', '這一頁保留完整研究的成績、案例與版本證據。每次迭代獨立呈現，讓主動訊息的時機、內容與打擾成本可以逐則檢查。', body, status='等待完整研究',
+                          generated=data.get('generated_at', '2026-10-14'))
     validate_study(data)
     arms = study_arms(data)
     summaries = data['summary']
@@ -1359,7 +1364,8 @@ def main():
     elif args.pending:
         if (PUBLIC/JSON_NAME).exists() and json.loads((PUBLIC/JSON_NAME).read_text()).get('publication_ready') is True:
             raise ValueError('cannot_replace_complete_results_with_pending')
-        data={'schema_version':2,'status':'pending','cohort':'development','notice':'尚無完整重播、兩階段判讀與通過控制題的研究。'}
+        data={'schema_version':2,'status':'pending','cohort':'development','notice':'尚無完整重播、兩階段判讀與通過控制題的研究。',
+              'generated_at':args.generated_at}
     else:
         data=json.loads((PUBLIC/JSON_NAME).read_text())
     planned_text=None
@@ -1419,7 +1425,8 @@ def main():
         data['owed_development']=json.loads((PUBLIC/OWED_DEVELOPMENT_NAME).read_text())
     method, report=render_method(cases,has_results=data.get('publication_ready') is True,
                                 diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study'),
-                                interruption=data.get('study_interruption'),owed_development=data.get('owed_development')),render(data,index['iterations'])
+                                interruption=data.get('study_interruption'),owed_development=data.get('owed_development'),
+                                generated_at=data.get('generated_at','2026-10-14')),render(data,index['iterations'])
     check_public(data);check_public(index);check_public(cases)
     if planned_text is not None:
         digest=hashlib.sha256(planned_text.encode()).hexdigest()

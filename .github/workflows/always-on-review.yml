@@ -1,0 +1,41 @@
+name: Review Always-on source bindings
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - '.github/workflows/always-on-review.yml'
+      - 'scripts/render-line-always-on.py'
+      - 'scripts/owed_*.py'
+      - 'scripts/owed_development_trust.json'
+      - 'scripts/planned_study.py'
+      - 'scripts/study_interruption.py'
+      - 'scripts/test_*always_on*.py'
+      - 'scripts/test_owed_*.py'
+      - 'scripts/test_planned_study.py'
+      - 'scripts/test_study_interruption.py'
+      - 'public/line-v3/line-always-on*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: always-on-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Verify source bindings and public export guards
+        run: python3 -B -m unittest scripts/test_line_always_on.py scripts/test_owed_diagnostic.py scripts/test_planned_study.py scripts/test_study_interruption.py scripts/test_owed_development.py
+      - run: npm test
+      - name: Build the reviewed source
+        run: npm run build --ignore-scripts

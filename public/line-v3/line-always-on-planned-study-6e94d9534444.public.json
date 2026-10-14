@@ -1,0 +1,73 @@
+{
+ "schema_version": 1,
+ "kind": "always_on_preregistered_plan",
+ "plan_verified": true,
+ "full_study_result": false,
+ "quality_complete": false,
+ "publication_ready": false,
+ "refs": {
+  "engine": "8c137631121ce89180bbe80df2fbf352ab1fb0e2",
+  "engine_high": "8c137631121ce89180bbe80df2fbf352ab1fb0e2",
+  "engine_medium": "8c137631121ce89180bbe80df2fbf352ab1fb0e2",
+  "engine_sol_low": "8c137631121ce89180bbe80df2fbf352ab1fb0e2",
+  "existing": "e505e18d43ea0997cd7440522cd733f58a6d1959"
+ },
+ "arms": [
+  "existing",
+  "engine_medium",
+  "engine_high",
+  "engine_sol_low"
+ ],
+ "arm_configs": {
+  "existing": {
+   "always_on": null
+  },
+  "engine_medium": {
+   "always_on": {
+    "provider": "gemini",
+    "model": "gemini-3.8-flash",
+    "thinking_level": "medium",
+    "max_output_tokens": 32768,
+    "timeout_s": 120
+   }
+  },
+  "engine_high": {
+   "always_on": {
+    "provider": "gemini",
+    "model": "gemini-3.8-flash",
+    "thinking_level": "high",
+    "max_output_tokens": 32768,
+    "timeout_s": 120
+   }
+  },
+  "engine_sol_low": {
+   "always_on": {
+    "provider": "openai",
+    "model": "gpt-6.1-sol",
+    "thinking_level": "low",
+    "max_output_tokens": 32768,
+    "timeout_s": 120
+   }
+  }
+ },
+ "episode_count": 103,
+ "slot_count": 824,
+ "repeats": 2,
+ "workers": 6,
+ "slot_timeout_s": 1800,
+ "schedule": {
+  "episode_adjacent_account_blocks": true,
+  "alternating_first_account": true,
+  "per_account_permutation_cycle": 24,
+  "combined_chronological_perfect_cycle": false
+ },
+ "proof": {
+  "authored_cases_sha256": "ff8afb2672b5f5f92e31baedcaa3f4e7b0c2f48cef7aa83be2e9e56f840254d9",
+  "code_sha256": "0bffafb9fb9a96bda042c9f4601bec976dabfe26a4acdf49367b1605ed777db5",
+  "cohort_sha256": "83aafabef2b316872bdb98d4d9293aaf0b32c7efbe487f28ee6bc3ee6dd4ba24",
+  "configuration_sha256": "97f6bd8602cdfc733ff8d51be2d40adad9caefa28bc9696648f7267b6bc0946f",
+  "plan_sha256": "344846aa2199ab57a5554f515bae5b4ed1b5ac770965051190ea4cc9079b9490",
+  "protocol_sha256": "a1a3b7984df95bab66302c0ef75064eab2b4ec8d39d18f1094ef4c1e43122fbb",
+  "source_files_sha256": "27c254af1e2a2a1f268bd27d4a764cf216a89f477d3d1ed3ca5a68d1aaa3500a"
+ }
+}

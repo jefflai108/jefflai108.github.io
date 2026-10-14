@@ -1,0 +1,138 @@
+{
+ "schema_version": 1,
+ "kind": "native_owed_development",
+ "source_ref": "a66eda30143a90163073522fdd77ef5fdef8cbd6",
+ "native_source_ref": "8c137631121ce89180bbe80df2fbf352ab1fb0e2",
+ "plan_verified": true,
+ "full_study_result": false,
+ "publication_ready": false,
+ "held_out": false,
+ "status": "pending",
+ "native_capture_complete": false,
+ "quality_complete": false,
+ "planned_cells": 72,
+ "positive_tasks": 8,
+ "positive_denominator": 48,
+ "withholding_controls": 4,
+ "withholding_denominator": 24,
+ "max_native_calls": 48,
+ "max_calls_per_cell": 1,
+ "max_judge_calls": 130,
+ "configurations": {
+  "engine_medium": {
+   "provider": "gemini",
+   "model": "gemini-3.8-flash",
+   "thinking_level": "medium",
+   "max_output_tokens": 32768,
+   "timeout_s": 120
+  },
+  "engine_high": {
+   "provider": "gemini",
+   "model": "gemini-3.8-flash",
+   "thinking_level": "high",
+   "max_output_tokens": 32768,
+   "timeout_s": 120
+  },
+  "engine_sol_low": {
+   "provider": "openai",
+   "model": "gpt-6.1-sol",
+   "thinking_level": "low",
+   "max_output_tokens": 32768,
+   "timeout_s": 120
+  }
+ },
+ "schedule": {
+  "candidate_permutations": 6,
+  "secondary_order_offset": 3,
+  "adjacent_account_blocks": true,
+  "alternating_first_account": true,
+  "per_account_cycles": 2,
+  "positive_candidate_position_counts": [
+   6,
+   5,
+   5
+  ]
+ },
+ "judge": {
+  "model": "gpt-6-sol",
+  "reasoning": "medium",
+  "passes": 2,
+  "primary_pass": 1,
+  "max_output_tokens": 4000,
+  "timeout_s": 120,
+  "store": false,
+  "controls": 17,
+  "control_judgments": 34
+ },
+ "tasks": [
+  {
+   "scope": "private",
+   "foreground_failure": "timeout",
+   "summary": "公告改寫",
+   "expected": "四句保留提供的日期、地點"
+  },
+  {
+   "scope": "private",
+   "foreground_failure": "unavailable",
+   "summary": "三個相關優先順序問題",
+   "expected": "逐題給可用步驟，不新增提醒"
+  },
+  {
+   "scope": "private",
+   "foreground_failure": "invalid_output",
+   "summary": "價格、重量與預算比較",
+   "expected": "使用提供數值，保留正確算式與結論"
+  },
+  {
+   "scope": "private",
+   "foreground_failure": "unavailable",
+   "summary": "日期與預算更正後整理",
+   "expected": "採用最新更正，捨棄舊值"
+  },
+  {
+   "scope": "private",
+   "foreground_failure": "timeout",
+   "summary": "兩個相關失敗回合",
+   "expected": "原生合併兩個欠答承諾，只補答一次"
+  },
+  {
+   "scope": "private",
+   "foreground_failure": "timeout",
+   "summary": "夜間非緊急規劃",
+   "expected": "原生延到隔日早晨，保留日期與補答開頭"
+  },
+  {
+   "scope": "group",
+   "foreground_failure": "unavailable",
+   "summary": "指名麻吉整理群組方案",
+   "expected": "回覆原提問者與本群方案，不混入無關安靜留言"
+  },
+  {
+   "scope": "group",
+   "foreground_failure": "invalid_output",
+   "summary": "指名麻吉協助訂位",
+   "expected": "誠實說明能力，給可用替代步驟，不虛構完成訂位"
+  }
+ ],
+ "withholding": [
+  "原問題經簽章收回",
+  "原生清除個人資料",
+  "同題稍後已獲原生有效回答",
+  "另一個已知同群帳號記錄新成員加入"
+ ],
+ "proof": {
+  "source_files_sha256": "ecc9aed670c5f90ac00d516d2ff2e87aa4f3dae939601a5ca78f4b52b372fefe",
+  "corpus_sha256": "0cd743e1a8bfa96ccd4a021409685b82f96ca180d42c3432a04ede7ef6d5a2c9",
+  "configuration_sha256": "7aabdaa06fdfeef0bb3d87972a520be2003942557cd1a6c19348d151b35aecec",
+  "settings_sha256": "6d80c03331fab3d1801c03fbbda8d5f4872fdb8635e85e966ab5ccf9ab90c103",
+  "schedule_sha256": "1d9f5f6d112141bbc4c66749f99ac46621a7355904ea37c3ef67a37482661cfc",
+  "code_sha256": "51dbe7944bb446b2731bde59b7600b2d5a1959c7027bdd71987a3cbd5f58cdb4",
+  "judge_export_code_sha256": "81b7ee1ce258c824e7d84b44f878306d66f4aa13e0019ec5ad5432c9cd106133",
+  "judge_sha256": "f5b8823dcef67dfe9e63609cd9fdd3250986f74d9c4cc84ba84761176bd1bc61",
+  "rubric_sha256": "33c60c6ad5a646c8eb3cceae9f5ccbe88e0a36ef7f27211a0199789621d45dd7",
+  "plan_sha256": "dff3f5b75a05cda6e2935e65b61488848964cf33b5b53948912e9a45746917d2",
+  "canonical_plan_sha256": "04d07a6828d3024a74d46e8596c2f00384fbde65c3a3ab82e498dfd5bfad6761"
+ },
+ "results": null,
+ "limits": "獨立的八題開發題組與四項原生停止控制；不是 holdout、完整研究或模型排名。前景故障與無關設定為明示腳本，背景欠答使用原始模型、提示、解析、驗證與送出檢查。串行模擬恢復不能給正式環境可靠度、延遲或 FAST 成績。失敗、無效輸出、誠實收尾和缺失均保留在預定分母。群組整理題只挑戰本群路由與安靜成員留言的相關性，沒有跨群私人資料誘餌。評審與 Sol 候選共享供應商／模型家族；盲評不能消除偏誤，真人校準仍待完成。原六次診斷被丟棄的模型文字不可恢復；新私有診斷不會替代原資料，也不會供給回答或評分。"
+}

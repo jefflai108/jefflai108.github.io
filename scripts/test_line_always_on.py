@@ -298,7 +298,8 @@ class RenderTest(unittest.TestCase):
         self.assertEqual(always_on.render(data,index['iterations']),(public/always_on.PAGE_NAME).read_text())
         self.assertEqual(always_on.render_method(cases,has_results=data.get('publication_ready') is True,
             diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study'),
-            interruption=data.get('study_interruption'),owed_development=data.get('owed_development')),(public/always_on.METHOD_NAME).read_text())
+            interruption=data.get('study_interruption'),owed_development=data.get('owed_development'),
+            generated_at=data.get('generated_at','2026-10-14')),(public/always_on.METHOD_NAME).read_text())
 
 
 if __name__=='__main__':unittest.main()
