@@ -105,6 +105,8 @@ The snapshot's files and history are never committed to this public repository.
 After installing each snapshot, `scripts/install-debug-navigation.mjs` adds a
 Debug link immediately before Benchmark. This also runs on scheduled refreshes;
 the private snapshot does not need to carry this site's navigation change.
+Snapshots with a native Debug panel keep its in-page button, so the LINE Latest
+header stays visible while browsing debug reports.
 
 The additional schedule at UTC minutes 23 and 53 follows the private publisher
 at minutes 13 and 43. These refreshes skip personal profile data refreshes and
