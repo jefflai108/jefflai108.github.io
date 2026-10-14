@@ -11,11 +11,11 @@ const sha=v=>crypto.createHash('sha256').update(v).digest('hex');
 const same=(a,b)=>canonical(a)===canonical(b);
 const fail=message=>{throw new Error(message)};
 const quantile=(values,p)=>{const a=[...values].sort((x,y)=>x-y),i=(a.length-1)*p;return a[Math.floor(i)]+(a[Math.ceil(i)]-a[Math.floor(i)])*(i-Math.floor(i));};
-const receiptFields=['id','caseId','task','armId','repeat','config','maxCompletionTokens','profileConstruction','promptRound','parentGenerationId','promptHash','startedAt','completedAt','apiOk','formatOk','parseError','error','raw','accepted','modelReturned','finishReason','usage','attempts','latencySeconds','serviceTier'];
+const receiptFields=['id','caseId','task','armId','repeat','config','maxCompletionTokens','profileConstruction','promptRound','parentGenerationId','promptHash','startedAt','completedAt','apiOk','formatOk','parseError','error','raw','accepted','modelReturned','finishReason','usage','attempts','latencySeconds','serviceTier','reconciliation','extractionReceipt'];
 export const receiptHash=r=>sha(canonical(Object.fromEntries(receiptFields.filter(k=>Object.hasOwn(r,k)).map(k=>[k,r[k]]))));
 
 export function validateData(data){
-  if(data.version==='memory-models-quality-v4')return validateQuality(data,receiptHash);
+  if(['memory-models-quality-v4','memory-models-quality-v5-mem0','memory-models-quality-v6-mem0'].includes(data.version))return validateQuality(data,receiptHash);
   if(/(?:sk-(?:proj-)?[A-Za-z0-9_-]{16,}|Bearer\s+[A-Za-z0-9_.-]{16,}|\/Users\/|\/srv\/heymachi\/|OPENAI_API_KEY)/.test(JSON.stringify(data)))fail('Private material in public artifact');
   if(data.version!=='memory-models-profile-v2'||data.cases.length!==32||data.records.length!==512)fail('Incomplete measured study');
   if(sha(canonical(data.cases))!==data.manifest.casesHash)fail('Cases changed after freezing');
@@ -129,7 +129,7 @@ function caseMarkup(data,c){
 
 export function render(data,view='profiles'){
   validateData(data);
-  if(data.version==='memory-models-quality-v4')return renderQuality(data,view);
+  if(['memory-models-quality-v4','memory-models-quality-v5-mem0','memory-models-quality-v6-mem0'].includes(data.version))return renderQuality(data,view);
   const apiFailures=data.records.filter(r=>!r.apiOk).length,formatFailures=data.records.filter(r=>r.apiOk&&!r.formatOk).length;
   const cost=data.records.reduce((n,r)=>n+r.costUsd,0);
   const differences=data.hardPairedDifferences.map(d=>`<tr><th scope="row">${taskLabel[d.task]}</th><td>${esc(data.manifest.arms.find(a=>a.id===d.armId).label)}</td><td>${d.passPointDifference>0?'+':''}${fmt(d.passPointDifference)} pp</td><td>${d.pairedInterval.map(v=>fmt(v)).join(' 至 ')} pp</td></tr>`).join('');
@@ -144,9 +144,9 @@ export function publish(input,outputDirectory){
   const html=render(data);
   fs.mkdirSync(outputDirectory,{recursive:true});
   fs.writeFileSync(path.join(outputDirectory,'memory-models.html'),html);
-  fs.writeFileSync(path.join(outputDirectory,'memory-hallucinations.html'),data.version==='memory-models-quality-v4'?render(data,'hallucinations'):html.replaceAll('memory-models.html','memory-hallucinations.html').replace('<h1>Memory：品質與等待時間</h1>','<h1>Memory：幻覺與來源錯置</h1>'));
+  fs.writeFileSync(path.join(outputDirectory,'memory-hallucinations.html'),['memory-models-quality-v4','memory-models-quality-v5-mem0','memory-models-quality-v6-mem0'].includes(data.version)?render(data,'hallucinations'):html.replaceAll('memory-models.html','memory-hallucinations.html').replace('<h1>Memory：品質與等待時間</h1>','<h1>Memory：幻覺與來源錯置</h1>'));
   fs.writeFileSync(path.join(outputDirectory,'memory-models-results.public.json'),JSON.stringify(data,null,2)+'\n');
-  const columns=['difficulty','task','armId','n','passes','passPercent','scoreMean','coveragePercent','unsafeOutputs','materialErrors','apiFailures','formatFailures','latencyP50','latencyP95','over40Seconds','inputTokens','cachedTokens','cacheWriteTokens','outputTokens','reasoningTokens','costUsd'];
+  const columns=['difficulty','task','armId','n','passes','passPercent','scoreMean','coveragePercent','newCoveragePercent','updatePassPercent','unsafeOutputs','materialErrors','apiFailures','formatFailures','latencyP50','latencyP95','over40Seconds','retryOutputs','inputTokens','cachedTokens','cacheWriteTokens','outputTokens','reasoningTokens','costUsd'];
   fs.writeFileSync(path.join(outputDirectory,'memory-models-summary.csv'),columns.join(',')+'\n'+data.aggregates.map(a=>columns.map(k=>a[k]).join(',')).join('\n')+'\n');
   if(data.promptIterations)fs.writeFileSync(path.join(outputDirectory,'memory-prompt-iterations-summary.csv'),columns.concat('promptRound','split').join(',')+'\n'+data.promptIterations.aggregates.map(a=>columns.concat('promptRound','split').map(k=>a[k]).join(',')).join('\n')+'\n');
   console.log(`Published complete memory comparison: ${data.records.length} generations, ${data.judge.packetCount} blinded judge packets.`);
