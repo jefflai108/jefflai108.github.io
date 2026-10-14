@@ -25,7 +25,8 @@ TABS = (("index.html", "Interaction tasks"), ("delegation.html", "Delegation tas
         ("tts-followup.html", "TTS follow-up"), ("images-stickers.html", "Images &amp; Stickers"),
         ("burst-turns.html", "Burst turns"), ("natural-bridges.html", "Natural bridges"),
         ("line-stickers.html", "LINE Stickers"), ("group-replies.html", "Group replies"),
-        (PAGE, "Mixed-media bursts"))
+        (PAGE, "Mixed-media bursts"),
+        ("line-always-on-method.html", "Always-on 方法"), ("line-always-on.html", "Always-on 結果"))
 LABELS = {"baseline": "原有處理", "mixed": "混合媒體分段"}
 DETAIL = {"baseline": "圖片與文字各自成為獨立回合；V3 讓後到的文字不必等前一則圖片讀完。",
           "mixed": "私訊裡的一張圖片／PDF 可和前後幾秒內的文字併成同一個分段回合，一次回答（貼圖與第二張圖仍各自回覆）；"
