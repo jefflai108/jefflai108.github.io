@@ -18,7 +18,8 @@ const tabs = [
   ['mixed-media-bursts.html', 'Mixed-media bursts'],
   ['line-always-on-method.html', 'Always-on 方法'],
   ['line-always-on.html', 'Always-on 結果'],
-  ['memory-models.html', 'Memory 記憶'],
+  ['memory-models.html', 'Memory 檔案'],
+  ['memory-hallucinations.html', 'Memory 幻覺'],
 ];
 const version = name => crypto.createHash('sha256').update(fs.readFileSync(path.join(directory,name))).digest('hex').slice(0,12);
 const assets = `<link rel="stylesheet" href="navigation.css?v=${version('navigation.css')}"><link rel="stylesheet" href="report-layout.css?v=${version('report-layout.css')}"><script src="navigation.js?v=${version('navigation.js')}" defer></script>`;

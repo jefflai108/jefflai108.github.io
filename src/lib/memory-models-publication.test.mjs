@@ -11,16 +11,23 @@ const reportURL=new URL('../../public/line-v3/memory-models-results.public.json'
 const data=()=>JSON.parse(fs.readFileSync(reportURL,'utf8'));
 test('complete requested model comparison binds quality to every planned generation',()=>{
   const d=validateData(data());
-  assert.equal(d.records.length,512);
-  assert.equal(d.judge.primaryEvaluations.length,128);
-  assert.equal(d.judge.mirrorRecords.length,96);
-  assert.equal(d.records.filter(r=>r.difficulty==='hard').length,256);
+  assert.equal(d.records.length,800);
+  assert.equal(d.judge.primaryEvaluations.length,200);
+  assert.equal(d.judge.mirrorRecords.length,48);
+  assert.equal(d.records.filter(r=>r.difficulty==='hard').length,400);
+  assert.equal(d.cases.length,100);
+  assert.equal(d.promptIterations.records.length,600);
+  assert.equal(d.promptIterations.plans.length,3);
+  assert(d.records.every(r=>r.maxCompletionTokens===16384));
 });
 test('incomplete, duplicated, altered, or unjudged evidence cannot be published',()=>{
   const edits=[d=>d.records.pop(),d=>d.records[0]=d.records[1],
     d=>d.records[0].quality.score+=1,d=>d.records[0].latencySeconds+=1,
     d=>d.cases[0].turns[0].text+=' altered',d=>d.judge.primaryEvaluations.pop(),
     d=>d.judge.mirrorRecords.pop(),d=>d.manifest.arms[3].facts.effort='high',
+    d=>d.records[0].maxCompletionTokens=8192,d=>d.promptIterations.records.pop(),
+    d=>d.promptIterations.primaryEvaluations.pop(),
+    d=>d.promptIterations.plans[2].reviewedDevelopmentEvidenceHash=null,
     d=>d.judge.primaryEvaluations[0].evaluations[0].coverage[0].outputQuote='fabricated quote'];
   for(const edit of edits){const d=data();edit(d);assert.throws(()=>validateData(d));}
 });
@@ -40,15 +47,15 @@ test('candidate text is escaped and failures remain visible',()=>{
   const html=render(d);
   assert.match(html,/&lt;script&gt;alert/);
   assert.doesNotMatch(html,/<script>alert/);
-  assert.equal((html.match(/data-answer data-task=/g)||[]).length,512);
-  assert.match(html,/全部計畫呼叫均列入分母/);
+  assert.equal((html.match(/data-answer data-task=/g)||[]).length,1200);
+  assert.match(html,/所有計畫呼叫都列入分母/);
   assert.match(html,/p50/);assert.match(html,/p95/);
 });
 test('all active tabs share report width, memory link and one return link after repeat builds',()=>{
   const normalizer=fileURLToPath(new URL('../../scripts/normalize-line-navigation.mjs',import.meta.url));
   const source=fs.readFileSync(normalizer,'utf8');
   const pages=[...source.matchAll(/\['([^']+\.html)',/g)].map(m=>m[1]);
-  assert.equal(pages.length,14);
+  assert.equal(pages.length,15);
   const temp=fs.mkdtempSync(path.join(os.tmpdir(),'memory-nav-'));
   try{
     for(const name of [...pages,'navigation.css','navigation.js','report-layout.css'])
