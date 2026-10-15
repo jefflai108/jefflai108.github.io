@@ -105,6 +105,25 @@ def revision_fixture():
 
 
 class RenderTest(unittest.TestCase):
+    def test_current_deployment_is_separate_from_frozen_measurements_on_both_tabs(self):
+        data=always_on.project(variant_fixture(),generated_at='2026-10-14')
+        original=deepcopy(data)
+        cases=always_on.public_cases({'episodes':fixture()['episodes']},'a'*40,'b'*64)
+        pages=(always_on.render(data),always_on.render({'status':'pending'}),
+               always_on.render_method(cases))
+        for page in pages:
+            self.assertEqual(page.count('id="deployment-status"'),1)
+            self.assertIn('2026-10-16 06:20（台北）',page)
+            self.assertIn('/commit/c26b83488bbeac5afb7f3307ba880114efb4a236',page)
+            self.assertIn('/pull/609',page)
+            self.assertIn('2 個推送、2 個補答、1 個抽取',page)
+            self.assertIn('兩個 LINE 帳號均通過就緒檢查',page)
+            self.assertIn('群組被動計畫仍關閉',page)
+            self.assertIn('沒有到期的主動／補答工作',page)
+            self.assertIn('尚未驗證線上模型執行與送達、多使用者隔離或吞吐量',page)
+            self.assertIn('並非目前部署版本的重新量測',page)
+        self.assertEqual(data,original)
+
     def test_four_arm_model_study_preserves_all_timelines_and_six_paired_comparisons(self):
         data=always_on.project(variant_fixture(),generated_at='2026-10-14')
         page=always_on.render(data)
