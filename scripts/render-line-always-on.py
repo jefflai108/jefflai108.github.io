@@ -29,6 +29,7 @@ INTERRUPTION_NAME = "line-always-on-interruption.public.json"
 OWED_DEVELOPMENT_NAME = "line-always-on-owed-development.public.json"
 OWED_HOST_INTERRUPTION_NAME = "line-always-on-owed-host-interruption.public.json"
 OWED_TERMINAL_NAME = "line-always-on-owed-terminal.public.json"
+OWED_V2_NAME = "line-always-on-owed-development-v2.public.json"
 PAGE_NAME = "line-always-on.html"
 SOURCE_REPO = "https://github.com/jefflai108/streaming_taiwanese"
 ARMS = ("existing", "engine")
@@ -980,6 +981,7 @@ def authored_cases(data):
 def render_method(cases, *, has_results=False, diagnostic=None, planned_study=None, interruption=None, owed_development=None,
                   owed_development_host_interruption=None,
                   owed_development_terminal=None,
+                  owed_development_v2=None,
                   qualified_results=None,
                   generated_at="2026-10-14"):
     from collections import Counter
@@ -1036,6 +1038,7 @@ def render_method(cases, *, has_results=False, diagnostic=None, planned_study=No
 <p class="small">方法快照 SHA-256 <code>{esc(cases.get('protocol_sha256','等待快照'))}</code>；包括題組與 harness、評審規格、指標計算程式摘要。這是開發方法的快照，實測仍須另外凍結已提交來源與各組設定。</p></section>'''
     body += owed_diagnostic_panel(diagnostic)
     body += owed_development_panel(owed_development, owed_development_host_interruption, owed_development_terminal)
+    body += owed_development_v2_panel(owed_development_v2)
     return page_shell(METHOD_NAME, "Always-on 方法", "麻吉要一直在背景接住事情，在值得關心的時候主動開口。這裡把「快、接得住、給下一步、主動得合適」轉成可重播、可逐段檢查的實驗。", body, generated=generated_at)
 
 
@@ -1428,6 +1431,13 @@ def owed_development_module():
     return module
 
 
+def owed_development_v2_module():
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('always_on_owed_development_v2',Path(__file__).with_name('owed_development_v2.py'))
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    return module
+
+
 def _owed_host_digest(value):
     import hashlib
     return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True,
@@ -1727,6 +1737,53 @@ def verified_owed_terminal(study, judging, audit):
     return validate_owed_terminal(_owed_terminal_note())
 
 
+def owed_development_v2_panel(data):
+    if data is None:return ''
+    owed_development_v2_module().validate_public(data);check_public(data)
+    native=data['native'];judging=data['judging']
+    body=('<section class="panel"><h2>全新欠答開發題組 · v2</h2>'
+        '<p class="notice"><b>獨立新資料，不取代原始 v1。</b>'
+        '原 824 槽研究的版本與成績不變；原欠答 v1 的主機中斷、130 次一次性判讀和未通過門檻的終態仍另外保留。</p>'
+        '<p>相同的 8 個作者設計正例 × 3 組設定 × 2 個合成帳號＝48 個正例槽，另有 24 個原生停止控制，共 72 個新資料庫。'
+        '原生欠答每個正例仍最多一次請求，總上限 48 次。v1 與 v2 使用不同釋出版本，且 v1 受主機中斷影響，'
+        '跨輪差異不能單獨歸因於修補或模型。v2 的三組模型政策共用同一 e110 原生版本；'
+        '此欠答題組不量測 M6 的抽取、主動關心或主動訊息撰寫品質。</p>'
+        '<p>AI 判讀固定 130 個邏輯工作（96 次對話、34 次控制）。只容許技術錯誤或缺收據的中斷 claim 在原定上限內重試，'
+        '每個工作最多 3 次、最多 390 次判讀嘗試；與原生請求合計上限 438 次。任何有效判讀立即固定，負面答案與未通過控制也不重試。'
+        '兩輪各自保留第一份有效判讀；正式統計固定讀第 1 輪，第 2 輪只檢查一致性。</p>'
+        f'<p>實際原生收據：{native["completed_cells"]}/72；設定與捕捉就緒：{native["ready_cells"]}/72；'
+        f'零上傳停止控制：{native["withholding_passed"]}/24。缺收據的已開始槽：{native["missing_started_cells"]}，用量未知。</p>')
+    if judging is None:
+        body+='<p class="notice">尚未提供完成且通過門檻的 v2 AI 判讀；不展示模型成績。</p>'
+    else:
+        tokens=judging['usage']['token_usage']['total_tokens']
+        known='未回報' if tokens['known_tokens'] is None else f'{tokens["known_tokens"]:,}'
+        body+=(f'<p>有效邏輯判讀：{judging["valid_judgments"]}/130；符合預期的控制：{judging["expected_controls"]}/34。'
+            f'已開始的技術嘗試共 {judging["started_attempts"]} 次，其中 {judging["retained_attempts"]} 份收據、'
+            f'{judging["technical_errors"]} 次技術錯誤、{judging["interrupted_started_judgments"]} 次缺收據中斷；全部保留。'
+            f'仍缺 {judging["missing_judgments"]} 個有效判讀，其中 {judging["exhausted_judgments"]} 個已用完上限。</p>'
+            f'<p>只加總已回報的 {known} total tokens；{tokens["unknown_attempts"]} 次嘗試的 total tokens 未知，'
+            f'{judging["usage"]["request_sent_unknown_attempts"]} 次是否已上傳未知，不當成零費用或零呼叫。</p>')
+        if data['results'] is None:
+            body+='<p class="notice">v2 原生完整性或判讀／控制門檻未全部通過；成績保留不公開，不以缺失或失敗換取較小分母。</p>'
+    if data['results'] is not None:
+        rows=[]
+        for arm in ('engine_medium','engine_high','engine_sol_low'):
+            row=data['results']['arms'][arm]
+            cells=[f'{row["late_answer_delivered"]}/16',str(row['closures']),f'{row["withholding_passed"]}/8']
+            cells += [f'{row["judgments"][field]}/16' for field in ('answered','no_rejection','honest','grounded')]
+            rows.append(f'<tr><th>{esc(ARM_LABELS[arm])}</th>'+''.join(f'<td>{esc(cell)}</td>' for cell in cells)+'</tr>')
+        body+=('<div class="scroll"><table class="owed-diagnostic-table"><thead><tr><th>設定</th><th>實際補答</th><th>收尾</th><th>停止控制</th>'
+            '<th>完成回答（AI）</th><th>沒有直接拒絕（AI）</th><th>誠實（AI）</th><th>有依據（AI）</th></tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody></table></div>'
+            '<p>48 個正例與 24 個停止控制全部保留在分母；兩個帳號不是獨立新題。本開發摘要不與原研究合併，也不宣告模型排名。</p>')
+    proofs=''.join(f'<li>{esc(key)}：<code>{esc(value)}</code></li>' for key,value in data['proof'].items())
+    return body+(f'<p class="small">{esc(data["limits"])}</p><p>原生版本 {commit_link(data["native_source_ref"])} · '
+        f'獨立執行／判讀程式 {commit_link(data["source_ref"])}。</p>'
+        f'<details><summary>v2 來源、計畫與實際捕捉綁定</summary><ul class="iteration-meta">{proofs}</ul></details>'
+        f'<p><a href="{OWED_V2_NAME}" download>下載獨立 v2 公開摘要</a>；不含原始提示、識別碼或被拒絕的私有模型文字。</p></section>')
+
+
 def owed_development_projection(study, judging=None, terminal_audit=None):
     terminal=None
     if judging:
@@ -1902,7 +1959,7 @@ def owed_diagnostic_panel(data):
             f'<code>{esc(proof["retained_quality_sha256"])}</code>。公開檔不包含權限識別碼、原始提示、模型思考或金鑰。</p></section>')
 
 
-def render(data, iterations=()):
+def render(data, iterations=(), *, owed_development_v2=None):
     if data.get('status') == 'pending':
         cards = ''.join(f'<div class="kpi"><p class="label">{label}</p><p class="pending-value">等待完整量測</p><p class="sub">{detail}</p></div>' for label, detail in (
             ('速度', '首次回覆與前景等待時間分開報告'), ('不漏接', '一般回答、欠答恢復與失敗通知分開'),
@@ -1913,6 +1970,7 @@ def render(data, iterations=()):
         body += interruption_panel(data.get('study_interruption'))
         body += owed_diagnostic_panel(data.get('owed_diagnostic'))
         body += owed_development_panel(data.get('owed_development'), data.get('owed_development_host_interruption'), data.get('owed_development_terminal'))
+        body += owed_development_v2_panel(owed_development_v2)
         body += f'<section class="panel"><h2>逐段檢查，等資料完成</h2><p>本輪比較原有版本、Gemini Medium、Gemini High 與 GPT-6.1-Sol Low。每段情境會顯示各組完整時間軸、每次重複、主機檢查與 AI 判斷理由。現在可以先看<a href="{METHOD_NAME}">公開開發題組與評審門檻</a>。</p></section><section class="panel"><h2>研究迭代</h2>{iteration_table(iterations)}</section>'
         return page_shell(PAGE_NAME, 'Always-on 結果', '這一頁保留完整研究的成績、案例與版本證據。每次迭代獨立呈現，讓主動訊息的時機、內容與打擾成本可以逐則檢查。', body, status='等待完整研究',
                           generated=data.get('generated_at', '2026-10-14'))
@@ -1943,6 +2001,7 @@ def render(data, iterations=()):
     body += absolute_component_table(data)
     body += owed_diagnostic_panel(data.get('owed_diagnostic'))
     body += owed_development_panel(data.get('owed_development'), data.get('owed_development_host_interruption'), data.get('owed_development_terminal'))
+    body += owed_development_v2_panel(owed_development_v2)
     body += interruption_panel(data.get('study_interruption'))
     body += f'<section class="panel"><h2>分項判讀與控制題</h2><div class="grid2"><div class="scroll"><table><thead><tr><th>自主訊息 AI 分項（1–5）</th>{headers}</tr></thead><tbody>{quality_rows}</tbody></table></div><div class="scroll"><table><thead><tr><th>前景 AI 判讀</th>{headers}</tr></thead><tbody>{foreground_rows}</tbody></table></div></div><table><tbody>{control_rows}</tbody></table><p>這些是 AI 判讀；原始逐則分數與理由如下。控制題檢查評審是否理解規格，不證明實際使用者都喜歡這些訊息。</p></section>'
     body += f'<section class="panel"><h2>逐段時間軸</h2><p>自主關心、使用者要求與欠答分開標記；每組保留每次重複和失敗案例。</p><div data-explorer>{filters(data["episodes"])}{explorer(data)}</div></section>'
@@ -2037,6 +2096,10 @@ def main():
     parser.add_argument('--planned-study',type=Path)
     parser.add_argument('--owed-development-study',type=Path)
     parser.add_argument('--owed-development-judge',type=Path)
+    parser.add_argument('--owed-development-v2-study',type=Path,
+                        help='separate fresh v2 study; never replaces original owed-v1 or the main study')
+    parser.add_argument('--owed-development-v2-judge',type=Path,
+                        help='separate v2 judge archive with bounded technical attempts')
     parser.add_argument('--owed-development-host-evidence',type=Path,
                         help='Independently reviewed host observation bound to the original owed capture')
     parser.add_argument('--owed-development-terminal-audit',type=Path,
@@ -2177,13 +2240,32 @@ def main():
     elif (PUBLIC/OWED_HOST_INTERRUPTION_NAME).exists():
         data['owed_development_host_interruption']=json.loads((PUBLIC/OWED_HOST_INTERRUPTION_NAME).read_text())
     require_owed_host_interruption(data.get('owed_development'),data.get('owed_development_host_interruption'))
+    if args.owed_development_v2_judge and not args.owed_development_v2_study:
+        parser.error('give the fresh v2 native study with its v2 judge archive')
+    if args.study and (args.owed_development_v2_study or (PUBLIC/OWED_V2_NAME).exists()):
+        parser.error('export fresh owed-v2 separately; retain the original study iteration snapshot')
+    owed_v2_text=None
+    owed_v2=None
+    if args.owed_development_v2_study:
+        owed_v2_module=owed_development_v2_module()
+        owed_v2=owed_v2_module.verified_projection(args.owed_development_v2_study,
+            args.owed_development_v2_judge)
+        owed_v2_module.validate_public(owed_v2)
+        check_public(owed_v2)
+        owed_v2_text=json.dumps(owed_v2,ensure_ascii=False,indent=1)+'\n'
+    elif (PUBLIC/OWED_V2_NAME).exists():
+        if (PUBLIC/OWED_V2_NAME).is_symlink():raise ValueError('owed_v2_public_not_plain_file')
+        owed_v2=json.loads((PUBLIC/OWED_V2_NAME).read_text())
+        owed_development_v2_module().validate_public(owed_v2);check_public(owed_v2)
     method, report=render_method(cases,has_results=data.get('publication_ready') is True,
                                 diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study'),
                                 interruption=data.get('study_interruption'),owed_development=data.get('owed_development'),
                                 owed_development_host_interruption=data.get('owed_development_host_interruption'),
                                 owed_development_terminal=data.get('owed_development_terminal'),
+                                owed_development_v2=owed_v2,
                                 qualified_results=data,
-                                generated_at=data.get('generated_at','2026-10-14')),render(data,index['iterations'])
+                                generated_at=data.get('generated_at','2026-10-14')),render(data,index['iterations'],
+                                    owed_development_v2=owed_v2)
     check_public(data);check_public(index);check_public(cases)
     if planned_text is not None:
         digest=hashlib.sha256(planned_text.encode()).hexdigest()
@@ -2212,6 +2294,11 @@ def main():
         archive=PUBLIC/('line-always-on-owed-terminal-'+digest[:12]+'.public.json')
         if archive.exists() and archive.read_text()!=owed_terminal_text:raise ValueError('immutable_owed_terminal_changed')
         archive.write_text(owed_terminal_text);(PUBLIC/OWED_TERMINAL_NAME).write_text(owed_terminal_text)
+    if owed_v2_text is not None:
+        digest=hashlib.sha256(owed_v2_text.encode()).hexdigest()
+        archive=PUBLIC/('line-always-on-owed-development-v2-'+digest[:12]+'.public.json')
+        if archive.exists() and archive.read_text()!=owed_v2_text:raise ValueError('immutable_owed_v2_changed')
+        archive.write_text(owed_v2_text);(PUBLIC/OWED_V2_NAME).write_text(owed_v2_text)
     if protocol is not None:
         frozen=PUBLIC/protocol_file
         if frozen.exists() and json.loads(frozen.read_text())!=protocol:

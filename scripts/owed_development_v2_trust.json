@@ -1,0 +1,62 @@
+{
+ "protocol": "owed_development_v2_public_trust_v1",
+ "status": "reviewed",
+ "source_ref": "617592a8c8740faa4ceb8db37f2605b40874402d",
+ "native_source_ref": "e1101c275718ffda7199258d57ee1e8af971ee72",
+ "configurations": {
+  "engine_medium": {
+   "provider": "gemini",
+   "model": "gemini-3.8-flash",
+   "thinking_level": "medium",
+   "max_output_tokens": 32768,
+   "timeout_s": 120
+  },
+  "engine_high": {
+   "provider": "gemini",
+   "model": "gemini-3.8-flash",
+   "thinking_level": "high",
+   "max_output_tokens": 32768,
+   "timeout_s": 120
+  },
+  "engine_sol_low": {
+   "provider": "openai",
+   "model": "gpt-6.1-sol",
+   "thinking_level": "low",
+   "max_output_tokens": 32768,
+   "timeout_s": 120
+  }
+ },
+ "settings": {
+  "tick_s": 30,
+  "workers": 1,
+  "worker_timeout_s": 600,
+  "background_max_output_tokens": 32768,
+  "background_timeout_s": 120,
+  "foreground_failure": "declared_per_turn_native_transport_fault",
+  "unrelated_background_setup": "empty_original_native_extractor_schema",
+  "delegated_executor": "unavailable; any provider request fails closed",
+  "tts": false,
+  "native_group_mode_prelude_s": 60,
+  "candidate_permutations": 6,
+  "secondary_order_offset": 3,
+  "adjacent_account_blocks": true,
+  "account_first": "alternate_by_authored_scenario",
+  "engine_enabled": true,
+  "group_plans_enabled": true,
+  "timezone": "Asia/Taipei"
+ },
+ "proof": {
+  "source_files_sha256": "626fcbceb888e8792fded3f6d9945e7c5819933f7ccac241149d8fcd59e98564",
+  "corpus_sha256": "655dff423ff25bb016fb40c3f4129b715c9e03abd73431afe71c12a0f572b233",
+  "configuration_sha256": "7aabdaa06fdfeef0bb3d87972a520be2003942557cd1a6c19348d151b35aecec",
+  "settings_sha256": "6d80c03331fab3d1801c03fbbda8d5f4872fdb8635e85e966ab5ccf9ab90c103",
+  "schedule_sha256": "1d9f5f6d112141bbc4c66749f99ac46621a7355904ea37c3ef67a37482661cfc",
+  "plan_sha256": "1226f345ff15a6aab3aa7d9b6dbf97d682569e0272cadc78d4de2ac2fbebcd9e",
+  "canonical_plan_sha256": "3926650813bf0e2ddaaf510920869d19637b7977ba25cf90e8103700e5e5b887",
+  "freeze_audit_sha256": "30b52ffbaa4507f0ffeec5cb73374cab37e81eaa716ad1a0a09fa734878120bf",
+  "code_sha256": "d24c89339a8858de89c6011e8fdfe5a594de952773e054cb918811119e049a77",
+  "judge_export_code_sha256": "6a58499686d60c75151f619caa7ed0d817778a30c981b73fb13908bc9d72601d",
+  "judge_sha256": "327300f69b84008fca1b73f9feb78000668b108be2ad2a8b8979c08e3a15cef6",
+  "rubric_sha256": "33c60c6ad5a646c8eb3cceae9f5ccbe88e0a36ef7f27211a0199789621d45dd7"
+ }
+}
