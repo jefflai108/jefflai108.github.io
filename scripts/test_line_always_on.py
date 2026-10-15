@@ -409,7 +409,10 @@ class RenderTest(unittest.TestCase):
         index=json.loads((public/always_on.ITERATIONS_NAME).read_text())
         v2_path=public/always_on.OWED_V2_NAME
         owed_v2=json.loads(v2_path.read_text()) if v2_path.exists() else None
-        self.assertEqual(always_on.render(data,index['iterations'],owed_development_v2=owed_v2),
+        followup_path=public/always_on.OWED_RELEASE_NAME
+        owed_followup=json.loads(followup_path.read_text()) if followup_path.exists() else None
+        self.assertEqual(always_on.render(data,index['iterations'],owed_development_v2=owed_v2,
+            owed_release_followup=owed_followup),
             (public/always_on.PAGE_NAME).read_text())
         self.assertEqual(always_on.render_method(cases,has_results=data.get('publication_ready') is True,
             diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study'),
@@ -417,6 +420,7 @@ class RenderTest(unittest.TestCase):
             owed_development_host_interruption=data.get('owed_development_host_interruption'),
             owed_development_terminal=data.get('owed_development_terminal'),
             owed_development_v2=owed_v2,
+            owed_release_followup=owed_followup,
             qualified_results=data,
             generated_at=data.get('generated_at','2026-10-14')),(public/always_on.METHOD_NAME).read_text())
 
