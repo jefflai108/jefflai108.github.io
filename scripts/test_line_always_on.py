@@ -3,7 +3,12 @@ from copy import deepcopy
 import importlib.util
 import json
 from pathlib import Path
+import hashlib
+import shutil
+import subprocess
+import tempfile
 import unittest
+from unittest import mock
 
 HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location('always_on', HERE/'render-line-always-on.py')
@@ -78,6 +83,25 @@ def variant_fixture():
     data['comparisons']={candidate+'_vs_'+baseline:dict(deepcopy(comparison),baseline=baseline,candidate=candidate)
                          for baseline,candidate in pairs}
     return data
+
+
+def revision_fixture():
+    attempts = {'attempts':10, 'ok':6, 'errors':4,
+                'known_token_usage':{'input_tokens':200, 'output_tokens':40, 'total_tokens':240},
+                'unknown_usage_attempts':4,
+                'unknown_usage_components':{'input_tokens':4, 'output_tokens':4, 'total_tokens':4}}
+    new = {'attempts':3, 'ok':2, 'errors':1,
+           'known_token_usage':{'input_tokens':20, 'output_tokens':4, 'total_tokens':24},
+           'unknown_usage_attempts':1,
+           'unknown_usage_components':{'input_tokens':1, 'output_tokens':1, 'total_tokens':1}}
+    phase = {'changed_units':1, 'reused_units':2, 'changed_judgments':2, 'reused_judgments':4,
+             'message_units':2, 'control_units':1, 'reused_control_judgments':2,
+             'effective_judgments_required':6, 'original_attempts':attempts, 'new_attempts':new}
+    return {'protocol':always_on.EVALUATION_REVISION_PROTOCOL,
+            'original_plan_sha256':'1'*64, 'original_capture_sha256':'2'*64,
+            'corrected_eval_ref':'3'*40, 'corrected_code_sha256':'4'*64, 'manifest_sha256':'5'*64,
+            'maximum_new_provider_calls':12, 'limits':'獨立開發評估；不是新一次模型重播或真人校準。',
+            'phases':{name:deepcopy(phase) for name in ('proactive','foreground')}}
 
 
 class RenderTest(unittest.TestCase):
@@ -300,6 +324,178 @@ class RenderTest(unittest.TestCase):
             diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study'),
             interruption=data.get('study_interruption'),owed_development=data.get('owed_development'),
             generated_at=data.get('generated_at','2026-10-14')),(public/always_on.METHOD_NAME).read_text())
+
+
+class EvaluationRevisionPublicationTest(unittest.TestCase):
+    def capture(self, directory, messages):
+        root = Path(directory)
+        (root/'receipts').mkdir()
+        (root/'plan.json').write_text(json.dumps({'execution_order':[{'slot':'GR01.engine.r0'}]}))
+        (root/'receipts/GR01.engine.r0.json').write_text(json.dumps({'sends':[{'messages':messages}]}))
+        return root
+
+    def test_original_text_v2_capture_cannot_be_qualified_by_old_summary_or_metadata_claim(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.capture(directory, [{'type':'textV2','text':'{member} 記得喝水',
+                                             'substitution':{'member':{'type':'mention','mentionee':{'type':'user'}}}}])
+            (root/'results.json').write_text(json.dumps({'publication_ready':True,
+                'metadata':{'evaluation_revision':{'verified':True}}}))
+            with mock.patch('subprocess.run') as invoke:
+                with self.assertRaisesRegex(ValueError, 'evaluation_revision_required_for_text_v2'):
+                    always_on.verify_study_capture(root)
+            invoke.assert_not_called()
+
+    def test_detection_uses_wire_message_type_and_retains_legacy_text_fallback(self):
+        for messages in ([{'type':'text','text':'討論 textV2 名稱'}], None, []):
+            with self.subTest(messages=messages), tempfile.TemporaryDirectory() as directory:
+                self.assertFalse(always_on.capture_contains_text_v2(self.capture(directory, messages)))
+
+    def test_capture_symlink_is_refused_before_any_evaluator_runs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.capture(directory, [])
+            (root/'plan-original.json').write_bytes((root/'plan.json').read_bytes())
+            (root/'plan.json').unlink()
+            (root/'plan.json').symlink_to('plan-original.json')
+            with mock.patch('subprocess.run') as invoke:
+                with self.assertRaisesRegex(ValueError, 'symlink_publication_capture'):
+                    always_on.verify_study_capture(root)
+            invoke.assert_not_called()
+
+    def test_revision_disclosure_separates_actual_attempts_from_effective_reused_judgments(self):
+        data = fixture()
+        data['metadata']['evaluation_revision'] = revision_fixture()
+        page = always_on.render(always_on.project(data, generated_at='2026-10-16'))
+        self.assertIn('有效判讀共 12 次：更正 4 次、重用 8 次', page)
+        self.assertIn('原始評審實際保留 20 次嘗試，其中 8 次錯誤', page)
+        self.assertIn('更正後新增', page)
+        self.assertIn('未知用量不補成零', page)
+        self.assertIn('主統計仍固定取第一次判讀', page)
+        self.assertIn('input／output／total 未知次數', page)
+        self.assertIn('更正評估來源', page)
+        for changed in (lambda r:r.update(original_study='/Users/private/source'),
+                        lambda r:r['phases']['foreground'].update(reused_judgments=2),
+                        lambda r:r['phases']['proactive']['new_attempts'].update(unknown_usage_attempts=4),
+                        lambda r:r['phases']['foreground'].update(message_units=3),
+                        lambda r:r.update(maximum_new_provider_calls=100)):
+            with self.subTest(mutation=changed):
+                bad = deepcopy(data); changed(bad['metadata']['evaluation_revision'])
+                with self.assertRaises(ValueError): always_on.project(bad, generated_at='2026-10-16')
+
+    def revision_archive(self, directory):
+        """A committed fixture evaluator, a real immutable copy, and a tiny CLI."""
+        root = Path(directory).resolve()
+        original, revision, source = (root/name for name in ('original','revision','normal-git'))
+        for path in (original/'harness', original/'source/engine/serve', original/'receipts',
+                     original/'judge/foreground', source, revision/'harness'):
+            path.mkdir(parents=True)
+        (original/'harness/runner.py').write_text("raise AssertionError('original evaluator must not execute')\n")
+        (original/'source/engine/serve/__init__.py').write_text('')
+        (original/'judge/quality.json').write_text('{}\n')
+        (original/'judge/foreground/quality.json').write_text('{}\n')
+        (original/'receipts/GR01.engine.r0.json').write_text(json.dumps({'sends':[
+            {'messages':[{'type':'textV2','text':'{member} 喝水'}]}]}))
+        sha = lambda data:hashlib.sha256(data).hexdigest()
+        digest = lambda value:sha(json.dumps(value, ensure_ascii=False, sort_keys=True,
+            separators=(',',':'), allow_nan=False).encode())
+        plan = {'execution_order':[{'slot':'GR01.engine.r0'}], 'refs':fixture()['refs'],
+                'files':{name:sha((original/name).read_bytes()) for name in (
+                    'harness/runner.py','source/engine/serve/__init__.py')}}
+        (original/'plan.json').write_text(json.dumps(plan))
+        (original/'results.json').write_text('original-results-remain-unchanged\n')
+        code = {'__init__.py':'', 'cases.json':'{}\n', 'evaluation_revision.py':'# committed fixture closure\n',
+                'runner.py':'''HARNESS_FILES = ('__init__.py', 'runner.py', 'cases.json')
+if __name__ == '__main__':
+ import argparse,json
+ from pathlib import Path
+ p=argparse.ArgumentParser();p.add_argument('command',choices=['summary']);p.add_argument('--out',required=True);p.add_argument('--evaluation-revision',required=True)
+ a=p.parse_args();r=Path(a.evaluation_revision)
+ (r/'cli-arguments.private.json').write_text(json.dumps({'command':a.command,'out':a.out,'revision':a.evaluation_revision}))
+ (r/'results.json').write_bytes((r/'fixture-result.private.json').read_bytes())
+'''}
+        for name, text in code.items():
+            path = source/always_on.EVALUATION_PREFIX/name
+            path.parent.mkdir(parents=True,exist_ok=True);path.write_text(text)
+            (revision/'harness'/name).write_text(text)
+        def git(*args):
+            return subprocess.check_output(['git','-c','core.hooksPath=/dev/null','-C',str(source),*args],
+                stderr=subprocess.DEVNULL)
+        git('-c','init.templateDir=','init','-q')
+        git('add','serve')
+        git('-c','user.name=Offline fixture','-c','user.email=fixture@example.invalid',
+            '-c','commit.gpgsign=false','commit','-qm','fixture evaluator')
+        ref = git('rev-parse','HEAD').decode().strip()
+        inputs = {path.relative_to(original).as_posix():sha(path.read_bytes())
+                  for path in original.rglob('*') if path.is_file() and path.name!='results.json'}
+        for name in inputs:
+            target = revision/'inputs/study'/name
+            target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(original/name,target)
+        code_files = {name:sha(text.encode()) for name,text in code.items()}
+        plan_sha = sha((original/'plan.json').read_bytes())
+        capture_sha = digest({'plan_sha256':plan_sha,
+                             'receipts_sha256':{'GR01.engine.r0':inputs['receipts/GR01.engine.r0.json']}})
+        manifest = {'protocol':always_on.EVALUATION_REVISION_PROTOCOL,'corrected_eval_ref':ref,
+                    'code_files':code_files,'input_files':inputs,'original_study':str(original),
+                    'original_plan_sha256':plan_sha,'original_capture_sha256':capture_sha,
+                    'passes':2,'max_attempts_per_changed_judgment':3,'maximum_new_provider_calls':12}
+        (revision/'manifest.private.json').write_text(json.dumps(manifest))
+        (revision/'manifest.sha256.json').write_text(json.dumps({'sha256':digest(manifest)}))
+        metadata = revision_fixture()
+        metadata.update(original_plan_sha256=plan_sha,original_capture_sha256=capture_sha,
+            corrected_eval_ref=ref,corrected_code_sha256=digest(code_files),manifest_sha256=digest(manifest))
+        results = fixture();results['metadata']['evaluation_revision']=metadata
+        (revision/'fixture-result.private.json').write_text(json.dumps(results))
+        return original, revision, source, ref, manifest
+
+    def test_approved_revision_runs_the_dedicated_cli_and_preserves_original_results(self):
+        with tempfile.TemporaryDirectory() as directory:
+            original, revision, source, ref, _ = self.revision_archive(directory)
+            old = (original/'results.json').read_bytes()
+            result = always_on.verify_study_capture(original,evaluation_revision=revision,
+                evaluator_ref=ref,evaluator_source=source)
+            self.assertEqual(result,(revision/'results.json').read_bytes())
+            self.assertEqual((original/'results.json').read_bytes(),old)
+            self.assertEqual(json.loads((revision/'cli-arguments.private.json').read_text()),
+                {'command':'summary','out':str(original),'revision':str(revision)})
+            projected = always_on.project(json.loads(result),generated_at='2026-10-16')
+            self.assertEqual(projected['refs'],fixture()['refs'])
+            self.assertNotIn(str(original),json.dumps(projected))
+            self.assertNotIn(str(source),json.dumps(projected))
+
+    def test_revision_requires_explicit_git_pin_and_refuses_self_rehashed_foreign_closure(self):
+        for fault in ('missing-pin','wrong-ref','foreign-code','added-pyc','changed-mode','changed-input','symlink-code'):
+            with self.subTest(fault=fault),tempfile.TemporaryDirectory() as directory:
+                original, revision, source, ref, manifest = self.revision_archive(directory)
+                selected = None if fault=='missing-pin' else 'f'*40 if fault=='wrong-ref' else ref
+                if fault=='foreign-code':
+                    (revision/'harness/runner.py').write_text("raise AssertionError('untrusted')\n")
+                    manifest['code_files']['runner.py']=hashlib.sha256((revision/'harness/runner.py').read_bytes()).hexdigest()
+                    (revision/'manifest.private.json').write_text(json.dumps(manifest))
+                    sha=hashlib.sha256(json.dumps(manifest,ensure_ascii=False,sort_keys=True,
+                        separators=(',',':'),allow_nan=False).encode()).hexdigest()
+                    (revision/'manifest.sha256.json').write_text(json.dumps({'sha256':sha}))
+                elif fault=='added-pyc':(revision/'harness/runner.pyc').write_bytes(b'unbound')
+                elif fault=='changed-mode':(revision/'harness/runner.py').chmod(0o755)
+                elif fault=='changed-input':(revision/'inputs/study/receipts/GR01.engine.r0.json').write_text('{}')
+                elif fault=='symlink-code':
+                    (revision/'harness/runner.py').unlink()
+                    (revision/'harness/runner.py').symlink_to(source/always_on.EVALUATION_PREFIX/'runner.py')
+                with self.assertRaises(ValueError):
+                    always_on.verify_study_capture(original,evaluation_revision=revision,
+                        evaluator_ref=selected,evaluator_source=source)
+                self.assertFalse((revision/'cli-arguments.private.json').exists())
+
+    def test_revision_output_must_pass_gate_and_match_verified_provenance(self):
+        for fault in ('unqualified','forged-provenance'):
+            with self.subTest(fault=fault),tempfile.TemporaryDirectory() as directory:
+                original, revision, source, ref, _ = self.revision_archive(directory)
+                path=revision/'fixture-result.private.json';value=json.loads(path.read_text())
+                if fault=='unqualified': value['publication_ready']=False
+                else: value['metadata']['evaluation_revision']['original_capture_sha256']='f'*64
+                path.write_text(json.dumps(value))
+                with self.assertRaisesRegex(ValueError,'evaluation_revision_result_binding_mismatch'):
+                    always_on.verify_study_capture(original,evaluation_revision=revision,
+                        evaluator_ref=ref,evaluator_source=source)
+                self.assertEqual((original/'results.json').read_text(),'original-results-remain-unchanged\n')
 
 
 if __name__=='__main__':unittest.main()

@@ -66,6 +66,70 @@ PRIVATE_KEYS = frozenset(("api_key", "authorization", "credentials", "encrypted_
                           "http", "environment", "prompt", "system_prompt", "logs", "log", "path"))
 VERDICT_KEYS = ("warranted", "timing", "useful", "tone", "not_annoying", "grounded", "private",
                 "decision_progress", "reason", "grounding_issues")
+EVALUATION_REVISION_PROTOCOL = 'always_on_evaluation_revision_v1'
+EVALUATION_PREFIX = 'serve/line_agent_v3/evals/always_on/'
+
+
+def validate_evaluation_revision(value):
+    """Validate the public receipt of a separately verified evaluator revision."""
+    keys = {'protocol', 'original_plan_sha256', 'original_capture_sha256', 'corrected_eval_ref',
+            'corrected_code_sha256', 'manifest_sha256', 'maximum_new_provider_calls', 'limits', 'phases'}
+    if type(value) is not dict or set(value) != keys or value['protocol'] != EVALUATION_REVISION_PROTOCOL \
+            or type(value.get('corrected_eval_ref')) is not str \
+            or not re.fullmatch(r'[0-9a-f]{40}', value['corrected_eval_ref']) \
+            or type(value.get('limits')) is not str or not value['limits']:
+        raise ValueError('invalid_evaluation_revision')
+    for key in ('original_plan_sha256', 'original_capture_sha256', 'corrected_code_sha256', 'manifest_sha256'):
+        if type(value[key]) is not str or not re.fullmatch(r'[0-9a-f]{64}', value[key]):
+            raise ValueError('invalid_evaluation_revision_digest')
+
+    def count(number):
+        if type(number) is not int or not 0 <= number <= 10**12:
+            raise ValueError('invalid_evaluation_revision_count')
+        return number
+
+    phases = value['phases']
+    if type(phases) is not dict or set(phases) != {'proactive', 'foreground'}:
+        raise ValueError('invalid_evaluation_revision_phases')
+    phase_keys = {'changed_units', 'reused_units', 'changed_judgments', 'reused_judgments', 'message_units',
+                  'control_units', 'reused_control_judgments', 'effective_judgments_required',
+                  'original_attempts', 'new_attempts'}
+    attempt_keys = {'attempts', 'ok', 'errors', 'known_token_usage', 'unknown_usage_attempts',
+                    'unknown_usage_components'}
+    token_fields = {'input_tokens', 'output_tokens', 'total_tokens', 'reasoning_tokens', 'cached_input_tokens'}
+    for phase in phases.values():
+        if type(phase) is not dict or set(phase) != phase_keys:
+            raise ValueError('invalid_evaluation_revision_phase')
+        for key in phase_keys - {'original_attempts', 'new_attempts'}:
+            count(phase[key])
+        if phase['changed_units'] + phase['reused_units'] != phase['message_units'] + phase['control_units'] \
+                or phase['changed_judgments'] != 2 * phase['changed_units'] \
+                or phase['reused_judgments'] != 2 * phase['reused_units'] \
+                or phase['reused_control_judgments'] != 2 * phase['control_units'] \
+                or phase['effective_judgments_required'] != 2 * (phase['message_units'] + phase['control_units']):
+            raise ValueError('invalid_evaluation_revision_denominators')
+        for key in ('original_attempts', 'new_attempts'):
+            attempt = phase[key]
+            if type(attempt) is not dict or set(attempt) != attempt_keys:
+                raise ValueError('invalid_evaluation_revision_attempts')
+            for field in ('attempts', 'ok', 'errors', 'unknown_usage_attempts'):
+                count(attempt[field])
+            if attempt['attempts'] != attempt['ok'] + attempt['errors'] \
+                    or attempt['unknown_usage_attempts'] > attempt['attempts']:
+                raise ValueError('invalid_evaluation_revision_attempts')
+            usage, unknown = attempt['known_token_usage'], attempt['unknown_usage_components']
+            if type(usage) is not dict or set(usage) - token_fields or type(unknown) is not dict \
+                    or set(unknown) != {'input_tokens', 'output_tokens', 'total_tokens'}:
+                raise ValueError('invalid_evaluation_revision_usage')
+            for number in usage.values():
+                count(number)
+            for number in unknown.values():
+                if count(number) > attempt['attempts']:
+                    raise ValueError('invalid_evaluation_revision_usage')
+    if count(value['maximum_new_provider_calls']) != 3 * sum(p['changed_judgments'] for p in phases.values()):
+        raise ValueError('invalid_evaluation_revision_call_bound')
+    check_public(value)
+    return value
 
 
 def appropriate(verdict):
@@ -161,6 +225,13 @@ def validate_study(data):
                 raise ValueError("failed_controls:" + meta_key)
         if controls.get("judgments") != len(items) * 2 or controls.get("as_expected") != len(items) * 2:
             raise ValueError("failed_controls:" + meta_key)
+    if metadata.get('evaluation_revision') is not None:
+        revision = validate_evaluation_revision(metadata['evaluation_revision'])
+        for phase, meta_key in (('proactive', 'judge'), ('foreground', 'judge_foreground')):
+            count = revision['phases'][phase]
+            if count['message_units'] != metadata[meta_key]['packet_count'] \
+                    or count['control_units'] != metadata[meta_key]['control_count']:
+                raise ValueError('evaluation_revision_judge_count_mismatch')
     for run in runs:
         for message in run.get("proactive", []):
             verdict = message.get("verdict")
@@ -439,6 +510,58 @@ def background_model_panel(data):
             'Gemini 的 output 欄位不包含 reasoning，OpenAI 的 output 欄位包含 reasoning；不能直接相加成跨供應商總數。'
             '未曾呼叫的路徑沒有該路徑的模型品質證據，尤其是未觸發的欠答恢復。</p>'
             +''.join(detail)+'</section>')
+
+
+def evaluation_revision_panel(data):
+    """Disclose corrected observation and actual attempts without scoring retries."""
+    value = data.get('metadata', {}).get('evaluation_revision')
+    if value is None:
+        return ''
+    value = validate_evaluation_revision(value)
+    phases = value['phases']
+    labels = {'proactive': '主動訊息', 'foreground': '前景回答'}
+    unit_rows, attempt_rows = [], []
+    for name, phase in phases.items():
+        unit_rows.append(f'<tr><th>{labels[name]}</th><td>{phase["changed_units"]}</td>'
+            f'<td>{phase["reused_units"]}（控制題 {phase["control_units"]}）</td>'
+            f'<td>{phase["changed_judgments"]} / {phase["reused_judgments"]}</td>'
+            f'<td>{phase["effective_judgments_required"]}</td></tr>')
+        for key, label in (('original_attempts', '原始評審'), ('new_attempts', '更正後新增')):
+            attempt = phase[key]
+            known = attempt['known_token_usage'].get('total_tokens')
+            total = '未回報' if known is None else f'{known:,}'
+            unknown = attempt['unknown_usage_components']
+            attempt_rows.append(f'<tr><th>{labels[name]} · {label}</th><td>{attempt["attempts"]:,}</td>'
+                f'<td>{attempt["ok"]:,} / {attempt["errors"]:,}</td><td>{total}</td>'
+                f'<td>{attempt["unknown_usage_attempts"]:,}</td>'
+                f'<td>{unknown["input_tokens"]:,} / {unknown["output_tokens"]:,} / {unknown["total_tokens"]:,}</td></tr>')
+    original = sum(phase['original_attempts']['attempts'] for phase in phases.values())
+    errors = sum(phase['original_attempts']['errors'] for phase in phases.values())
+    effective = sum(phase['effective_judgments_required'] for phase in phases.values())
+    reused = sum(phase['reused_judgments'] for phase in phases.values())
+    changed = sum(phase['changed_judgments'] for phase in phases.values())
+    proofs = ''.join(f'<li>{label}：<code>{value[key]}</code></li>' for key, label in (
+        ('original_plan_sha256', '原始計畫 SHA-256'), ('original_capture_sha256', '原始捕捉 SHA-256'),
+        ('corrected_code_sha256', '更正評估程式 SHA-256'), ('manifest_sha256', '更正清單 SHA-256')))
+    return ('<section class="panel"><h2>評估更正與評審嘗試紀錄</h2>'
+        '<p class="notice">更正原評估器遺漏 LINE <code>textV2</code> 群組提及顯示文字的問題。'
+        '引擎、原始計畫、捕捉與模型輸出保持原樣；只對輸入已改變的評審單位取得新判讀，未改變的判讀經輸入綁定檢查後重用。'
+        '原始捕捉與所有舊嘗試另外保留，沒有重新執行模型比較。</p>'
+        f'<p>有效判讀共 {effective:,} 次：更正 {changed:,} 次、重用 {reused:,} 次。'
+        f'原始評審實際保留 {original:,} 次嘗試，其中 {errors:,} 次錯誤；這些歷史嘗試不能當成額外有效判讀。'
+        '主統計仍固定取第一次判讀，第二次只檢查一致性；完整性與全部控制題門檻保持不變。</p>'
+        '<div class="scroll"><table><thead><tr><th>評審階段</th><th>更正單位</th><th>重用單位</th>'
+        '<th>更正／重用判讀</th><th>所需有效判讀</th></tr></thead>'
+        f'<tbody>{"".join(unit_rows)}</tbody></table></div>'
+        '<div class="scroll"><table><thead><tr><th>實際嘗試來源</th><th>嘗試</th><th>有效回傳／錯誤</th>'
+        '<th>已回報總 tokens</th><th>用量未回報嘗試</th><th>input／output／total 未知次數</th></tr></thead>'
+        f'<tbody>{"".join(attempt_rows)}</tbody></table></div>'
+        '<p class="small">錯誤嘗試不一定已送出，也不代表零費用；只加總已回報 tokens，未知用量不補成零。'
+        '新增評審嘗試與有效／重用判讀分開計數，重用不會產生另一筆 provider 呼叫。</p>'
+        f'<p>更正評估來源 {commit_link(value["corrected_eval_ref"])}；'
+        f'新增呼叫上限 {value["maximum_new_provider_calls"]:,} 次。</p>'
+        f'<details><summary>原始捕捉與更正綁定</summary><ul class="iteration-meta">{proofs}</ul></details>'
+        f'<p class="small">{esc(value["limits"])}</p></section>')
 
 
 def absolute_component_table(data):
@@ -858,8 +981,194 @@ def iteration_table(items):
     return '<div class="scroll"><table><thead><tr><th>研究</th><th>題組用途</th><th>產生時間</th><th>既有 → 引擎</th><th>來源結果 SHA-256</th></tr></thead><tbody>' + rows + '</tbody></table></div>'
 
 
-def verify_study_capture(study):
+def capture_contains_text_v2(study):
+    """Inspect original wire receipts before an old evaluator can qualify them."""
+    root = Path(study).resolve()
+    plan_path, receipts = root / 'plan.json', root / 'receipts'
+    if plan_path.is_symlink() or receipts.is_symlink():
+        raise ValueError('symlink_publication_capture')
+    plan = json.loads(plan_path.read_text())
+    schedule = plan.get('execution_order') if type(plan) is dict else None
+    if type(schedule) is not list or not schedule:
+        raise ValueError('invalid_publication_schedule')
+    for item in schedule:
+        slot = item.get('slot') if type(item) is dict else None
+        if type(slot) is not str or not re.fullmatch(r'[A-Za-z0-9_.:-]+', slot) or slot in ('.', '..'):
+            raise ValueError('invalid_publication_slot')
+        path = receipts / (slot + '.json')
+        if path.is_symlink() or not path.is_file():
+            raise ValueError('missing_publication_receipt')
+        receipt = json.loads(path.read_text())
+        sends = receipt.get('sends') if type(receipt) is dict else None
+        if type(sends) is not list:
+            raise ValueError('invalid_publication_receipt')
+        for send in sends:
+            if type(send) is not dict:
+                raise ValueError('invalid_publication_send')
+            messages = send.get('messages')
+            if messages is None:
+                messages = []
+            if type(messages) is not list or any(type(message) is not dict for message in messages):
+                raise ValueError('invalid_publication_messages')
+            if any(message.get('type') == 'textV2' for message in messages):
+                return True
+    return False
+
+
+def verified_evaluation_inputs(study, revision, *, evaluator_ref, evaluator_source):
+    """Check the approved Git closure and original input bytes before execution."""
+    import ast
+    import hashlib
+    import subprocess
+
+    def sha(data):
+        return hashlib.sha256(data).hexdigest()
+
+    def canonical(value):
+        return sha(json.dumps(value, ensure_ascii=False, sort_keys=True,
+                              separators=(',', ':'), allow_nan=False).encode())
+
+    def inventory(directory):
+        if directory.is_symlink() or any(parent.is_symlink() for parent in directory.parents) \
+                or not directory.is_dir():
+            raise ValueError('invalid_evaluation_input_directory')
+        found = {}
+        for path in sorted(directory.rglob('*')):
+            if path.is_symlink():
+                raise ValueError('symlink_evaluation_input')
+            if path.is_file():
+                found[path.relative_to(directory).as_posix()] = sha(path.read_bytes())
+        return found
+
+    def read(path):
+        if path.is_symlink() or not path.is_file():
+            raise ValueError('invalid_evaluation_input_file')
+        return json.loads(path.read_text())
+
+    if type(evaluator_ref) is not str or not re.fullmatch(r'[0-9a-f]{40}', evaluator_ref) \
+            or evaluator_source is None:
+        raise ValueError('approved_evaluation_source_required')
+    original, revised = Path(study), Path(revision)
+    if original.is_symlink() or revised.is_symlink():
+        raise ValueError('symlink_evaluation_root')
+    original, revised = original.resolve(), revised.resolve()
+    if original == revised or original in revised.parents or revised in original.parents:
+        raise ValueError('evaluation_revision_must_be_separate')
+    manifest_path = revised / 'manifest.private.json'
+    manifest = read(manifest_path)
+    manifest_sha = canonical(manifest)
+    if manifest.get('protocol') != EVALUATION_REVISION_PROTOCOL \
+            or manifest.get('corrected_eval_ref') != evaluator_ref \
+            or read(revised / 'manifest.sha256.json') != {'sha256': manifest_sha} \
+            or Path(manifest.get('original_study', '')).resolve() != original \
+            or manifest.get('passes') != 2 or manifest.get('max_attempts_per_changed_judgment') != 3:
+        raise ValueError('evaluation_revision_manifest_mismatch')
+
+    def git(*arguments):
+        result = subprocess.run(['git', '--no-replace-objects', '-C', str(Path(evaluator_source).resolve()),
+                                 *arguments], capture_output=True)
+        if result.returncode:
+            raise ValueError('evaluation_revision_git_source_unavailable')
+        return result.stdout
+
+    if git('rev-parse', '--verify', evaluator_ref + '^{commit}').decode().strip() != evaluator_ref:
+        raise ValueError('invalid_evaluation_revision_commit')
+    committed_runner = git('show', evaluator_ref + ':' + EVALUATION_PREFIX + 'runner.py')
+    declarations = [node.value for node in ast.parse(committed_runner).body if isinstance(node, ast.Assign)
+                    and any(isinstance(target, ast.Name) and target.id == 'HARNESS_FILES' for target in node.targets)]
+    if len(declarations) != 1:
+        raise ValueError('invalid_committed_evaluation_closure')
+    names = ast.literal_eval(declarations[0])
+    if type(names) not in (list, tuple) or len(set(names)) != len(names) or any(
+            type(name) is not str or not re.fullmatch(r'[A-Za-z0-9_][A-Za-z0-9_.-]*', name) for name in names):
+        raise ValueError('invalid_committed_evaluation_closure')
+    names = set(names) | {'evaluation_revision.py'}
+    expected = {name: sha(git('show', evaluator_ref + ':' + EVALUATION_PREFIX + name)) for name in names}
+    modes = {}
+    for entry in git('ls-tree', '-rz', '--full-tree', evaluator_ref, '--', EVALUATION_PREFIX).split(b'\0'):
+        if not entry:
+            continue
+        header, filename = entry.split(b'\t', 1)
+        mode, kind, _identity = header.decode().split()
+        name = filename.decode().removeprefix(EVALUATION_PREFIX)
+        if name in names:
+            if kind != 'blob' or mode not in ('100644', '100755'):
+                raise ValueError('invalid_committed_evaluation_mode')
+            modes[name] = mode
+    harness = revised / 'harness'
+    if set(modes) != names or manifest.get('code_files') != expected or inventory(harness) != expected \
+            or any(path.is_dir() for path in harness.iterdir()) \
+            or any(bool((harness / name).stat().st_mode & 0o111) != (modes[name] == '100755') for name in names):
+        raise ValueError('untrusted_evaluation_revision_closure')
+
+    plan = read(original / 'plan.json')
+    inputs = manifest.get('input_files')
+    if type(inputs) is not dict or not inputs:
+        raise ValueError('invalid_evaluation_revision_inputs')
+    for name, digest in inputs.items():
+        relative = Path(name)
+        if type(name) is not str or relative.is_absolute() or any(part in ('.', '..') for part in relative.parts) \
+                or '\\' in name or type(digest) is not str or not re.fullmatch(r'[0-9a-f]{64}', digest):
+            raise ValueError('invalid_evaluation_revision_input_path')
+        path = original / relative
+        if path.is_symlink() or any(parent.is_symlink() for parent in path.parents if parent != original) \
+                or not path.is_file() or sha(path.read_bytes()) != digest:
+            raise ValueError('original_evaluation_input_changed')
+    slots = [item['slot'] for item in plan['execution_order']]
+    if len(set(slots)) != len(slots) or any(type(slot) is not str or not re.fullmatch(r'[A-Za-z0-9_.:-]+', slot)
+                                          or slot in ('.', '..') for slot in slots):
+        raise ValueError('invalid_evaluation_revision_schedule')
+    judges = inventory(original / 'judge')
+    required = {'plan.json', *plan['files'], *('receipts/' + slot + '.json' for slot in slots),
+                *('judge/' + name for name in judges)}
+    if set(inputs) != required or inventory(revised / 'inputs' / 'study') != inputs:
+        raise ValueError('evaluation_revision_input_inventory_mismatch')
+    for directory in ('source', 'harness'):
+        actual = {directory + '/' + name: digest for name, digest in inventory(original / directory).items()}
+        if actual != {name: digest for name, digest in plan['files'].items() if name.startswith(directory + '/')}:
+            raise ValueError('original_evaluation_source_changed')
+    plan_sha = sha((original / 'plan.json').read_bytes())
+    capture_sha = canonical({'plan_sha256': plan_sha,
+                             'receipts_sha256': {slot: inputs['receipts/' + slot + '.json'] for slot in slots}})
+    if manifest.get('original_plan_sha256') != plan_sha or manifest.get('original_capture_sha256') != capture_sha:
+        raise ValueError('evaluation_revision_capture_mismatch')
+    return manifest, {'original_plan_sha256': plan_sha, 'original_capture_sha256': capture_sha,
+                      'corrected_eval_ref': evaluator_ref, 'corrected_code_sha256': canonical(expected),
+                      'manifest_sha256': manifest_sha}, plan
+
+
+def verify_study_capture(study, *, evaluation_revision=None, evaluator_ref=None, evaluator_source=None):
     """Reproduce results from frozen receipts and retained judgments without writing."""
+    if evaluation_revision is not None:
+        import subprocess
+        import sys
+        revision = Path(evaluation_revision).resolve()
+        manifest, proofs, plan = verified_evaluation_inputs(study, evaluation_revision,
+            evaluator_ref=evaluator_ref, evaluator_source=evaluator_source)
+        result = subprocess.run([sys.executable, '-I', '-B', str(revision / 'harness' / 'runner.py'),
+            'summary', '--out', str(Path(study).resolve()), '--evaluation-revision', str(revision)],
+            capture_output=True, text=True, env={}, timeout=600)
+        if result.returncode:
+            raise ValueError('evaluation_revision_capture_not_verified')
+        path = revision / 'results.json'
+        if path.is_symlink() or not path.is_file():
+            raise ValueError('evaluation_revision_results_missing')
+        source = path.read_bytes()
+        actual = json.loads(source)
+        receipt = validate_evaluation_revision(actual.get('metadata', {}).get('evaluation_revision'))
+        if any(receipt[key] != value for key, value in proofs.items()) \
+                or receipt['maximum_new_provider_calls'] != manifest.get('maximum_new_provider_calls') \
+                or actual.get('refs') != plan.get('refs') or actual.get('publication_ready') is not True:
+            raise ValueError('evaluation_revision_result_binding_mismatch')
+        after, after_proofs, _ = verified_evaluation_inputs(study, evaluation_revision,
+            evaluator_ref=evaluator_ref, evaluator_source=evaluator_source)
+        if after != manifest or after_proofs != proofs:
+            raise ValueError('evaluation_revision_inputs_changed_during_summary')
+        return source
+    if evaluator_ref is not None or evaluator_source is not None:
+        raise ValueError('evaluation_revision_directory_required')
+    if capture_contains_text_v2(study):
+        raise ValueError('evaluation_revision_required_for_text_v2')
     import subprocess
     import sys
     program = '''
@@ -885,6 +1194,7 @@ print('verified')
                           capture_output=True,text=True,env={},timeout=600)
     if result.returncode or result.stdout.strip()!='verified':
         raise ValueError('publication_capture_not_verified')
+    return (Path(study).resolve() / 'results.json').read_bytes()
 
 
 def verify_calibration_capture(study):
@@ -1220,6 +1530,7 @@ def render(data, iterations=()):
     gate_rows = ''.join(f'<tr><th>{ARM_LABELS[arm]}</th><td><code>{esc(json.dumps(data["gates"][arm],ensure_ascii=False,sort_keys=True))}</code></td></tr>' for arm in arms)
     headers = ''.join(f'<th>{esc(ARM_LABELS[arm])}</th>' for arm in arms)
     body = f'<section class="panel"><h2>完整開發研究</h2><div class="kpis">{"".join(metrics)}</div><p class="small">每個情境在每組重複 {data["metadata"]["repeats"]} 次，兩個帳號交替使用。</p>{paired_comparisons(data)}</section>'
+    body += evaluation_revision_panel(data)
     body += model_configuration_panel(data)
     body += background_model_panel(data)
     body += absolute_component_table(data)
@@ -1319,6 +1630,10 @@ def main():
     parser.add_argument('--planned-study',type=Path)
     parser.add_argument('--owed-development-study',type=Path)
     parser.add_argument('--owed-development-judge',type=Path)
+    parser.add_argument('--evaluation-revision',type=Path,
+                        help='separate verified correction archive; original capture remains unchanged')
+    parser.add_argument('--evaluation-ref',help='independently approved committed evaluator SHA')
+    parser.add_argument('--evaluation-source',type=Path,help='normal Git checkout containing the approved evaluator')
     parser.add_argument('--interruption-records',type=Path)
     parser.add_argument('--interruption-inventory',type=Path)
     parser.add_argument('--original-planned-public',type=Path)
@@ -1327,6 +1642,10 @@ def main():
     parser.add_argument('--iteration')
     parser.add_argument('--generated-at',default='2026-10-14')
     args=parser.parse_args()
+    if (args.evaluation_revision is not None or args.evaluation_ref is not None or args.evaluation_source is not None) \
+            and (args.study is None or args.evaluation_revision is None or args.evaluation_ref is None
+                 or args.evaluation_source is None):
+        parser.error('give study, evaluation revision, approved ref and normal Git source together')
     import hashlib
     protocol=None
     rubric_assets={}
@@ -1350,8 +1669,8 @@ def main():
     index_path=PUBLIC/ITERATIONS_NAME
     index=json.loads(index_path.read_text()) if index_path.exists() else {'schema_version':1,'iterations':[]}
     if args.study:
-        verify_study_capture(args.study)
-        source=(args.study/'results.json').read_bytes()
+        source = verify_study_capture(args.study, evaluation_revision=args.evaluation_revision,
+            evaluator_ref=args.evaluation_ref, evaluator_source=args.evaluation_source)
         data=project(json.loads(source),generated_at=args.generated_at,artifact_sha256=hashlib.sha256(source).hexdigest())
         if not args.iteration or not re.fullmatch(r'[a-z0-9][a-z0-9-]{0,63}',args.iteration):parser.error('give --iteration with a stable public id')
         file=f'always-on/iterations/{args.iteration}.public.json'
