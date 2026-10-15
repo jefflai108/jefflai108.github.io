@@ -1,4 +1,20 @@
 {
  "schema_version": 1,
- "iterations": []
+ "iterations": [
+  {
+   "id": "study-r2-8c1376311",
+   "file": "always-on/iterations/study-r2-8c1376311.public.json",
+   "page": "line-always-on-study-r2-8c1376311.html",
+   "generated_at": "2026-10-16",
+   "refs": {
+    "existing": "e505e18d43ea0997cd7440522cd733f58a6d1959",
+    "engine": "8c137631121ce89180bbe80df2fbf352ab1fb0e2",
+    "engine_medium": "8c137631121ce89180bbe80df2fbf352ab1fb0e2",
+    "engine_high": "8c137631121ce89180bbe80df2fbf352ab1fb0e2",
+    "engine_sol_low": "8c137631121ce89180bbe80df2fbf352ab1fb0e2"
+   },
+   "artifact_sha256": "b18c83e27b90a283b4f824869d91c22a1bb6cbff37fbbe6082cb6c59a80ee241",
+   "cohort": "development"
+  }
+ ]
 }

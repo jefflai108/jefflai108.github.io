@@ -993,7 +993,7 @@ def render_method(cases, *, has_results=False, diagnostic=None, planned_study=No
     strata_rows = ''.join(f'<tr><th>{SCOPE_LABELS[scope]}</th><td>{POLARITY_LABELS[polarity]}</td><td>{strata[(scope, polarity)]}</td></tr>'
                           for scope in SCOPE_LABELS for polarity in POLARITY_LABELS if strata[(scope, polarity)])
     limitation = qualified_metric_limitations_panel(qualified_results) if has_results else ''
-    body = planned_study_panel(planned_study) + interruption_panel(interruption) + limitation + f'''
+    body = planned_study_panel(planned_study, qualified_results if has_results else None) + interruption_panel(interruption) + limitation + f'''
 <section class="panel"><p class="notice warning"><b>{readiness}</b>完整研究成績只會收錄完成兩階段評審、通過控制題的重播；小型診斷另外標示。</p>
 <h2>四個目標，分開量測</h2><div class="scroll"><table class="goals"><thead><tr><th>目標</th><th>可檢查的行為</th><th>量測單位</th></tr></thead><tbody>
 <tr><th>夠快</th><td>對使用者說的話及時開始回答；背景工作讓前景先走。</td><td>前景耗時與收到訊息到首次回覆的 p50 / p90；快回覆題的逐輪門檻。</td></tr>
@@ -1808,7 +1808,7 @@ def interruption_panel(data):
         f'<a href="{INTERRUPTION_NAME}" download>下載不含私人路徑的事件綁定紀錄</a>。</p></section>')
 
 
-def planned_study_panel(data):
+def planned_study_panel(data, qualified_results=None):
     if not data:
         return ''
     if data.get('kind') != 'always_on_preregistered_plan' or data.get('plan_verified') is not True \
@@ -1818,12 +1818,21 @@ def planned_study_panel(data):
     planned_study_module().validate_public(data)
     check_public(data)
     proof=data['proof']
+    qualified = bool(qualified_results and all(qualified_results.get(key) is True for key in
+        ('complete','replay_complete','judging_complete','publication_ready'))
+        and qualified_results.get('refs') == data['refs']
+        and qualified_results.get('metadata', {}).get('evaluation_revision', {}).get('original_plan_sha256') == proof['plan_sha256']
+        and qualified_results.get('metadata', {}).get('configuration_sha256') == proof['configuration_sha256'])
+    notice = ('<p class="notice"><b>已驗證計畫與來源綁定，完整研究結果已收錄。</b>'
+              '這是執行前凍結的計畫快照，原始來源與設定保持不變；'
+              f'完整結果、限制與原始分母另列於<a href="{PAGE_NAME}">結果頁</a>。</p>' if qualified else
+              '<p class="notice"><b>已驗證計畫與來源綁定，完整成績仍待完成。</b>這裡沒有即時部分分數，'
+              '計畫驗證不代表重播完成、原生呼叫全部通過或 AI 評審品質通過。</p>')
     hashes=''.join(f'<li>{label}：<code>{esc(proof[key])}</code></li>' for key,label in (
         ('plan_sha256','計畫'),('configuration_sha256','設定'),('cohort_sha256','執行題組'),
         ('code_sha256','執行與判讀程式'),('source_files_sha256','凍結來源檔案'),('protocol_sha256','公開方法快照')))
     return ('<section class="panel"><h2>本輪凍結的執行計畫</h2>'
-            '<p class="notice"><b>已驗證計畫與來源綁定，完整成績仍待完成。</b>這裡沒有即時部分分數，'
-            '計畫驗證不代表重播完成、原生呼叫全部通過或 AI 評審品質通過。</p>'
+            + notice +
             f'<p>候選引擎 {commit_link(data["refs"]["engine"])}；原有版本基準 {commit_link(data["refs"]["existing"])}。'
             '基準是準備時已提交的版本；之後 main 更新不會改寫這次研究。'
             '103 個情境 × 4 組 × 2 次＝824 個執行槽，每組在兩個合成帳號各執行一次。</p>'
@@ -1900,7 +1909,7 @@ def render(data, iterations=()):
             ('可用的下一步', 'AI 前景盲評；誠實處理能力界線'), ('主動得合適', '命中、安靜負例與逐則合適率')))
         body = f'<section class="panel"><p class="notice warning"><b>尚未有可發布的完整 Always-on 研究。</b>完整題組的分數、改善幅度與勝負結論仍待完成。</p><h2>這裡會呈現哪些結果</h2><div class="kpis">{cards}</div><p>只有完整重播、兩階段各兩次判讀、通過所有控制題，才會顯示完整成績。教學時間軸和合成測試 fixture 不會當成結果。</p></section>'
         body += calibration_panel(data.get('judge_calibration'))
-        body += planned_study_panel(data.get('planned_study'))
+        body += planned_study_panel(data.get('planned_study'), data)
         body += interruption_panel(data.get('study_interruption'))
         body += owed_diagnostic_panel(data.get('owed_diagnostic'))
         body += owed_development_panel(data.get('owed_development'), data.get('owed_development_host_interruption'), data.get('owed_development_terminal'))

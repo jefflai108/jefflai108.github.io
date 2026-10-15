@@ -224,6 +224,28 @@ class RenderTest(unittest.TestCase):
         self.assertNotIn('本輪指標與判讀的已知限制',stale)
         self.assertNotIn('本輪指標與判讀的已知限制',unbound)
 
+    def test_frozen_plan_callout_uses_only_matching_qualified_results_without_changing_plan(self):
+        plan=json.loads((always_on.PUBLIC/always_on.PLANNED_STUDY_NAME).read_text())
+        before=deepcopy(plan)
+        results={key:True for key in ('complete','replay_complete','judging_complete','publication_ready')}
+        results.update(refs=deepcopy(plan['refs']),metadata={'configuration_sha256':plan['proof']['configuration_sha256'],
+            'evaluation_revision':{'original_plan_sha256':plan['proof']['plan_sha256']}})
+        complete=always_on.planned_study_panel(plan,results)
+        self.assertIn('完整研究結果已收錄',complete)
+        self.assertIn('執行前凍結的計畫快照',complete)
+        self.assertNotIn('完整成績仍待完成',complete)
+        for changed in ('missing','complete','replay_complete','judging_complete','publication_ready','refs','plan','config'):
+            with self.subTest(changed=changed):
+                actual=deepcopy(results)
+                if changed=='missing':actual=None
+                elif changed in ('complete','replay_complete','judging_complete','publication_ready'):actual[changed]=False
+                elif changed=='refs':actual['refs']['engine']='f'*40
+                elif changed=='plan':actual['metadata']['evaluation_revision']['original_plan_sha256']='e'*64
+                else:actual['metadata']['configuration_sha256']='d'*64
+                self.assertIn('完整成績仍待完成',always_on.planned_study_panel(plan,actual))
+        self.assertEqual(plan,before)
+        self.assertFalse(plan['publication_ready'])
+
     def test_paired_recall_interval_and_lane_exposure_show_consistent_units(self):
         data=variant_fixture()
         comparison=next(iter(data['comparisons'].values()))

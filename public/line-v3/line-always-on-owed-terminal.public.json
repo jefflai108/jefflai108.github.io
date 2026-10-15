@@ -1,0 +1,59 @@
+{
+ "schema_version": 1,
+ "kind": "native_owed_terminal_unqualified",
+ "status": "terminal_unqualified",
+ "source_ref": "a66eda30143a90163073522fdd77ef5fdef8cbd6",
+ "native_source_ref": "8c137631121ce89180bbe80df2fbf352ab1fb0e2",
+ "native_cells": 72,
+ "planned_judgments": 130,
+ "retained_attempts": 130,
+ "valid_judgments": 125,
+ "technical_errors": 5,
+ "missing_judgments": 5,
+ "interrupted_started_judgments": 0,
+ "valid_control_judgments": 29,
+ "planned_control_judgments": 34,
+ "primary_pass": 1,
+ "quality_scores_published": false,
+ "replayed_attempts": 0,
+ "gates": {
+  "judging_complete": false,
+  "controls_passed": false,
+  "quality_ready": false,
+  "publication_ready": false
+ },
+ "judge_usage": {
+  "request_sent_attempts": 130,
+  "known_token_usage": {
+   "input_tokens": 305751,
+   "output_tokens": 27605,
+   "reasoning_tokens": 12687,
+   "total_tokens": 333356,
+   "cached_input_tokens": 291728
+  },
+  "unknown_usage_components": {
+   "input_tokens": 5,
+   "output_tokens": 5,
+   "reasoning_tokens": 5,
+   "total_tokens": 5,
+   "cached_input_tokens": 5
+  }
+ },
+ "proof": {
+  "plan_sha256": "dff3f5b75a05cda6e2935e65b61488848964cf33b5b53948912e9a45746917d2",
+  "canonical_plan_sha256": "04d07a6828d3024a74d46e8596c2f00384fbde65c3a3ab82e498dfd5bfad6761",
+  "configuration_sha256": "7aabdaa06fdfeef0bb3d87972a520be2003942557cd1a6c19348d151b35aecec",
+  "source_files_sha256": "ecc9aed670c5f90ac00d516d2ff2e87aa4f3dae939601a5ca78f4b52b372fefe",
+  "binding_file_sha256": "43f74bb9be152f66c0a41b091e33e979c2fb1e4466e38f79d175d2009176de12",
+  "binding_sha256": "5b3978ebe4adc4cb00b372734eae70fe005e9bdb79d2bca34333a92e0b4ec8fc",
+  "quality_sha256": "a804b86b3abd29b4f1ad1bd65267a3198a675521bac8b470cc2cb1adce1db6a2",
+  "input_files_sha256": "854f6e304e1b1f8ff34ad3a85c43ea3fa7236a81d82c6b6c4353bd4a342951e5",
+  "judge_attempts_sha256": "bb089bf07126a600c632b12e455aaf1d79b418fe26eb19f72896666697c23b7e",
+  "judge_claims_sha256": "cb664c87540b999fad255deb4eeb1877bcc26956c278ec600d2e9fbce497fac1",
+  "packets_sha256": "b5353986aae5a38a552145994fb9513f8aeebed8e525539426d0efac2966c1b8",
+  "controls_sha256": "fb8c640ebb7d678f767c2a4ac92b919d42b72564497d954334173db2f73d3004",
+  "mapping_sha256": "c0ecac504b4005b095d5dea5488475464a5faf104d0242d5ca9de7a21d169657",
+  "peer_audit_sha256": "54a98fdd3f6dc267a3ca38fa4210cfd4ab70f57f6eb1d14e1c09a2b4cef70884"
+ },
+ "notice": "72 槽原生捕捉已完成，130 次一次性判讀均已結束並保留；其中 125 次有效，5 次控制題發生技術錯誤。原規格仍有 5 次判讀缺失，完整判讀與控制題門檻未通過，因此不展示此題組的模型成績或排名。未重試或排除任何失敗，未回報用量不當成零。"
+}
