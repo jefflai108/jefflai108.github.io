@@ -323,6 +323,7 @@ class RenderTest(unittest.TestCase):
         self.assertEqual(always_on.render_method(cases,has_results=data.get('publication_ready') is True,
             diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study'),
             interruption=data.get('study_interruption'),owed_development=data.get('owed_development'),
+            owed_development_host_interruption=data.get('owed_development_host_interruption'),
             generated_at=data.get('generated_at','2026-10-14')),(public/always_on.METHOD_NAME).read_text())
 
 
@@ -496,6 +497,164 @@ if __name__ == '__main__':
                     always_on.verify_study_capture(original,evaluation_revision=revision,
                         evaluator_ref=ref,evaluator_source=source)
                 self.assertEqual((original/'results.json').read_text(),'original-results-remain-unchanged\n')
+
+
+class OwedHostInterruptionTest(unittest.TestCase):
+    def archive(self, directory):
+        root=Path(directory)/'native';root.mkdir();(root/'receipts').mkdir()
+        digest=always_on._owed_host_digest
+        sha=lambda raw:hashlib.sha256(raw).hexdigest()
+        configs={arm:{'provider':provider,'model':model,'thinking_level':level,
+                      'max_output_tokens':32768,'timeout_s':120}
+                 for arm,provider,model,level in (
+                    ('engine_medium','gemini','gemini-3.8-flash','medium'),
+                    ('engine_high','gemini','gemini-3.8-flash','high'),
+                    ('engine_sol_low','openai','gpt-6.1-sol','low'))}
+        order=[{'slot':f'cell{index:02d}','episode_id':f'OP{index//6+2:02d}',
+                'arm':list(configs)[index%3],'account':('primary','secondary')[index%2],
+                'kind':'positive' if index<48 else 'withhold'} for index in range(72)]
+        plan={'source_ref':always_on.OWED_HOST_SOURCE_REF,'native_source_ref':always_on.OWED_HOST_NATIVE_REF,
+              'planned_cells':72,'execution_order':order,'configurations':configs,
+              'configuration_sha256':digest(configs),'source_files':{'example.py':'a'*64}}
+        (root/'plan.private.json').write_text(json.dumps(plan))
+        receipts={};claims={}
+        for index,item in enumerate(order[:32]):
+            outcome,code=('provider_timeout','provider_timeout') if index<24 else (
+                ('provider_invalid_output','false_action') if index<29 else ('ok','ok'))
+            binding=dict(item,plan_sha256=digest(plan),source_ref=plan['source_ref'])
+            row=dict(binding,native_source_ref=plan['native_source_ref'],status='measured',
+                configuration_sha256=plan['configuration_sha256'],
+                background_parameters={'attempts':[dict(configs[item['arm']],lane='owed',
+                    channel=item['account'],outcome=outcome,native_code=code)]},
+                sends=[{'lane':'owed_answer','failure_notice':code!='ok'}],
+                development_boundary={'line_attempts':[{'account':item['account'],'accepted':True,'duplicate':False}]})
+            for value,suffix,mapping in ((row,'.json',receipts),(binding,'.started.json',claims)):
+                path=root/'receipts'/(item['slot']+suffix)
+                path.write_text(json.dumps(value));mapping[path.name]=sha(path.read_bytes())
+        evidence=Path(directory)/'host.private.json'
+        incident={'completed':32,'ready':32,'delivered':3,'claims_are_spent':True,
+                  'original_inputs_unchanged':True,'receipts_sha256':receipts,'claims_sha256':claims,
+                  'raw_diagnostic':'/private/not-for-publication host detail'}
+        evidence.write_text(json.dumps(incident))
+        proofs=dict(always_on.OWED_HOST_PROOFS,plan_sha256=sha((root/'plan.private.json').read_bytes()),
+            canonical_plan_sha256=digest(plan),configuration_sha256=digest(configs),
+            source_files_sha256=digest(plan['source_files']),host_evidence_sha256=sha(evidence.read_bytes()),
+            affected_receipts_sha256=digest(receipts),affected_claims_sha256=digest(claims))
+        development={'source_ref':plan['source_ref'],'native_source_ref':plan['native_source_ref'],
+            'planned_cells':72,'positive_denominator':48,'withholding_denominator':24,
+            'status':'complete','proof':{key:proofs[key] for key in
+                ('plan_sha256','canonical_plan_sha256','configuration_sha256','source_files_sha256')}}
+        return root,evidence,development,proofs
+
+    def repin_evidence(self, evidence, proofs):
+        raw=evidence.read_bytes();incident=json.loads(raw)
+        proofs.update(host_evidence_sha256=hashlib.sha256(raw).hexdigest(),
+            affected_receipts_sha256=always_on._owed_host_digest(incident['receipts_sha256']),
+            affected_claims_sha256=always_on._owed_host_digest(incident['claims_sha256']))
+
+    def repin_receipt(self, root, evidence, proofs, name, row):
+        path=root/'receipts'/name;path.write_text(json.dumps(row))
+        incident=json.loads(evidence.read_text())
+        incident['receipts_sha256'][name]=hashlib.sha256(path.read_bytes()).hexdigest()
+        evidence.write_text(json.dumps(incident));self.repin_evidence(evidence,proofs)
+
+    def test_reviewed_observation_binds_original_inputs_and_derives_all_retained_outcomes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root,evidence,development,proofs=self.archive(directory)
+            before={path.relative_to(root).as_posix():path.read_bytes() for path in root.rglob('*') if path.is_file()}
+            with mock.patch.object(always_on,'OWED_HOST_PROOFS',proofs),mock.patch('subprocess.run') as invoke:
+                note=always_on.verified_owed_host_interruption(root,evidence,development)
+                always_on.require_owed_host_interruption(development,note)
+            invoke.assert_not_called()
+            self.assertEqual(note['retained_outcomes'],{'timeouts':24,'false_action':5,'delivered':3})
+            self.assertEqual((note['planned_cells'],note['affected_completed_cells'],note['excluded_cells'],note['replayed_cells']),
+                             (72,32,0,0))
+            self.assertFalse(note['model_capability_ranking'])
+            public=json.dumps(note,ensure_ascii=False)
+            for private in (str(root),str(evidence),'raw_diagnostic','host detail','cell00'):
+                self.assertNotIn(private,public)
+            self.assertEqual(before,{path.relative_to(root).as_posix():path.read_bytes()
+                                     for path in root.rglob('*') if path.is_file()})
+
+    def test_changed_evidence_plan_receipt_or_claim_cannot_reuse_the_reviewed_proof(self):
+        for changed in ('evidence','plan','receipt','claim'):
+            with self.subTest(changed=changed),tempfile.TemporaryDirectory() as directory:
+                root,evidence,development,proofs=self.archive(directory)
+                path={'evidence':evidence,'plan':root/'plan.private.json',
+                      'receipt':root/'receipts/cell00.json','claim':root/'receipts/cell00.started.json'}[changed]
+                path.write_bytes(path.read_bytes()+b'\n')
+                with mock.patch.object(always_on,'OWED_HOST_PROOFS',proofs),self.assertRaisesRegex(ValueError,'owed_host'):
+                    always_on.verified_owed_host_interruption(root,evidence,development)
+
+    def test_symlinked_observation_plan_capture_or_study_is_refused(self):
+        for changed in ('evidence','plan','receipt','claim','receipts','study'):
+            with self.subTest(changed=changed),tempfile.TemporaryDirectory() as directory:
+                root,evidence,development,proofs=self.archive(directory)
+                path={'evidence':evidence,'plan':root/'plan.private.json','receipt':root/'receipts/cell00.json',
+                      'claim':root/'receipts/cell00.started.json','receipts':root/'receipts','study':root}[changed]
+                target=path.with_name(path.name+'.original');path.rename(target);path.symlink_to(target)
+                with mock.patch.object(always_on,'OWED_HOST_PROOFS',proofs),self.assertRaisesRegex(ValueError,'owed_host'):
+                    always_on.verified_owed_host_interruption(root,evidence,development)
+
+    def test_self_rehashed_inventory_cannot_select_unplanned_or_later_cells(self):
+        for selected in ('foreign-cell','cell50'):
+            with self.subTest(selected=selected),tempfile.TemporaryDirectory() as directory:
+                root,evidence,development,proofs=self.archive(directory)
+                incident=json.loads(evidence.read_text())
+                for key,suffix in (('receipts_sha256','.json'),('claims_sha256','.started.json')):
+                    incident[key][selected+suffix]=incident[key].pop('cell00'+suffix)
+                evidence.write_text(json.dumps(incident));self.repin_evidence(evidence,proofs)
+                with mock.patch.object(always_on,'OWED_HOST_PROOFS',proofs),self.assertRaisesRegex(ValueError,'inventory'):
+                    always_on.verified_owed_host_interruption(root,evidence,development)
+
+    def test_self_rehashed_receipt_must_still_match_source_configuration_account_and_claim(self):
+        for key,value in (('source_ref','f'*40),('native_source_ref','e'*40),('configuration_sha256','d'*64),
+                          ('account','secondary'),('slot','cell01')):
+            with self.subTest(field=key),tempfile.TemporaryDirectory() as directory:
+                root,evidence,development,proofs=self.archive(directory)
+                row=json.loads((root/'receipts/cell00.json').read_text());row[key]=value
+                self.repin_receipt(root,evidence,proofs,'cell00.json',row)
+                with mock.patch.object(always_on,'OWED_HOST_PROOFS',proofs),self.assertRaisesRegex(ValueError,'binding'):
+                    always_on.verified_owed_host_interruption(root,evidence,development)
+
+    def test_retained_counts_are_recomputed_instead_of_accepting_an_evidence_claim(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root,evidence,development,proofs=self.archive(directory)
+            row=json.loads((root/'receipts/cell00.json').read_text())
+            row['background_parameters']['attempts'][0].update(outcome='ok',native_code='ok')
+            row['sends'][0]['failure_notice']=False
+            self.repin_receipt(root,evidence,proofs,'cell00.json',row)
+            with mock.patch.object(always_on,'OWED_HOST_PROOFS',proofs),self.assertRaisesRegex(ValueError,'outcome_count'):
+                always_on.verified_owed_host_interruption(root,evidence,development)
+
+    def test_completed_affected_cohort_requires_the_bound_note_and_cannot_publish_a_metadata_flag(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root,evidence,development,proofs=self.archive(directory)
+            with mock.patch.object(always_on,'OWED_HOST_PROOFS',proofs):
+                with self.assertRaisesRegex(ValueError,'required'):
+                    always_on.require_owed_host_interruption(development,None)
+                always_on.require_owed_host_interruption(dict(development,status='pending'),None)
+                with self.assertRaisesRegex(ValueError,'invalid_owed_host'):
+                    always_on.require_owed_host_interruption(development,{'verified':True})
+                note=always_on.verified_owed_host_interruption(root,evidence,development)
+                for bad in (dict(note,excluded_cells=1),dict(note,model_capability_ranking=True),
+                            dict(note,diagnostic='/private/hidden')):
+                    with self.assertRaisesRegex(ValueError,'invalid_owed_host'):
+                        always_on.require_owed_host_interruption(development,bad)
+                with self.assertRaisesRegex(ValueError,'binding'):
+                    always_on.require_owed_host_interruption(dict(development,native_source_ref='f'*40),note)
+
+    def test_fixed_notice_is_visible_before_results_and_proof_hashes_can_wrap(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root,evidence,development,proofs=self.archive(directory)
+            development.update(tasks=[],withholding=[],results=None,limits='固定開發限制。')
+            with mock.patch.object(always_on,'OWED_HOST_PROOFS',proofs),mock.patch.object(always_on,'owed_development_module'):
+                note=always_on.verified_owed_host_interruption(root,evidence,development)
+                panel=always_on.owed_development_panel(development,note)
+            self.assertIn(always_on.OWED_HOST_NOTICE,panel)
+            self.assertIn('72 槽與 130 次判讀的原定門檻、分母及第一次判讀優先原則不變',panel)
+            self.assertIn('<ul class="iteration-meta">',panel)
+            self.assertIn(always_on.OWED_HOST_INTERRUPTION_NAME,panel)
 
 
 if __name__=='__main__':unittest.main()

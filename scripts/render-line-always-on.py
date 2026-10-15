@@ -27,6 +27,7 @@ OWED_DIAGNOSTIC_NAME = "line-always-on-owed-diagnostic.public.json"
 PLANNED_STUDY_NAME = "line-always-on-planned-study.public.json"
 INTERRUPTION_NAME = "line-always-on-interruption.public.json"
 OWED_DEVELOPMENT_NAME = "line-always-on-owed-development.public.json"
+OWED_HOST_INTERRUPTION_NAME = "line-always-on-owed-host-interruption.public.json"
 PAGE_NAME = "line-always-on.html"
 SOURCE_REPO = "https://github.com/jefflai108/streaming_taiwanese"
 ARMS = ("existing", "engine")
@@ -60,7 +61,7 @@ _UNSAFE = re.compile(r"/Users/|/private/|/home/|/var/folders|/srv/|AIza[0-9A-Za-
 
 PUBLIC_KEYS = ("schema_version", "arms", "refs", "models", "metadata", "summary", "comparison", "comparisons", "gates",
                "complete", "replay_complete", "judging_complete", "publication_ready", "incomplete_episodes",
-               "episodes", "runs", "judge_controls", "foreground_controls", "foreground_judge", "slot_status", "owed_diagnostic", "planned_study", "study_interruption", "owed_development")
+               "episodes", "runs", "judge_controls", "foreground_controls", "foreground_judge", "slot_status", "owed_diagnostic", "planned_study", "study_interruption", "owed_development", "owed_development_host_interruption")
 PRIVATE_KEYS = frozenset(("api_key", "authorization", "credentials", "encrypted_job", "user_id", "chat_id",
                           "message_hash", "event_hash", "lease_token", "reply_token", "mapping.private.json",
                           "http", "environment", "prompt", "system_prompt", "logs", "log", "path"))
@@ -68,6 +69,20 @@ VERDICT_KEYS = ("warranted", "timing", "useful", "tone", "not_annoying", "ground
                 "decision_progress", "reason", "grounding_issues")
 EVALUATION_REVISION_PROTOCOL = 'always_on_evaluation_revision_v1'
 EVALUATION_PREFIX = 'serve/line_agent_v3/evals/always_on/'
+OWED_HOST_SOURCE_REF = 'a66eda30143a90163073522fdd77ef5fdef8cbd6'
+OWED_HOST_NATIVE_REF = '8c137631121ce89180bbe80df2fbf352ab1fb0e2'
+# Independently reviewed external observation, never a flag supplied by results.
+OWED_HOST_PROOFS = {
+    'plan_sha256': 'dff3f5b75a05cda6e2935e65b61488848964cf33b5b53948912e9a45746917d2',
+    'canonical_plan_sha256': '04d07a6828d3024a74d46e8596c2f00384fbde65c3a3ab82e498dfd5bfad6761',
+    'configuration_sha256': '7aabdaa06fdfeef0bb3d87972a520be2003942557cd1a6c19348d151b35aecec',
+    'source_files_sha256': 'ecc9aed670c5f90ac00d516d2ff2e87aa4f3dae939601a5ca78f4b52b372fefe',
+    'host_evidence_sha256': 'bb8d97b16cb6e8b5a4ec150b113de2cbcd82b188b4174f9723a2b4747ddc5a3d',
+    'affected_receipts_sha256': '050f2581f7cc41e30b2857aabdde0e9fefb9c9693ce6acb4e2590d6d8bb23946',
+    'affected_claims_sha256': 'bba005fb4f8cd19e39077eceb9e56bc94f9d528a57b5be1ddf23e66f0d35b53f',
+}
+OWED_HOST_NOTICE = ('執行前 32 槽期間曾觀察到主機睡眠；原始 24 次逾時、5 次無效動作與 3 次送達全部保留，未重跑或排除。'
+    '無法將每次失敗單獨歸因於睡眠。本題組僅呈現受主機中斷影響的開發觀察，不據此比較模型能力或排名。')
 
 
 def validate_evaluation_revision(value):
@@ -915,6 +930,7 @@ def authored_cases(data):
 
 
 def render_method(cases, *, has_results=False, diagnostic=None, planned_study=None, interruption=None, owed_development=None,
+                  owed_development_host_interruption=None,
                   generated_at="2026-10-14"):
     from collections import Counter
     episodes = cases['episodes']
@@ -968,7 +984,7 @@ def render_method(cases, *, has_results=False, diagnostic=None, planned_study=No
 <p><a href="{CASES_NAME}" download>下載公開合成題組</a> · <a href="{esc(cases.get('protocol_file', CASES_NAME))}" download>下載不可覆寫的方法快照</a> · <a href="{PAGE_NAME}">查看完整研究與每次迭代</a></p>
 <p class="small">方法快照 SHA-256 <code>{esc(cases.get('protocol_sha256','等待快照'))}</code>；包括題組與 harness、評審規格、指標計算程式摘要。這是開發方法的快照，實測仍須另外凍結已提交來源與各組設定。</p></section>'''
     body += owed_diagnostic_panel(diagnostic)
-    body += owed_development_panel(owed_development)
+    body += owed_development_panel(owed_development, owed_development_host_interruption)
     return page_shell(METHOD_NAME, "Always-on 方法", "麻吉要一直在背景接住事情，在值得關心的時候主動開口。這裡把「快、接得住、給下一步、主動得合適」轉成可重播、可逐段檢查的實驗。", body, generated=generated_at)
 
 
@@ -1361,7 +1377,161 @@ def owed_development_module():
     return module
 
 
-def owed_development_panel(data):
+def _owed_host_digest(value):
+    import hashlib
+    return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True,
+                                    separators=(',', ':'), allow_nan=False).encode()).hexdigest()
+
+
+def _owed_host_note():
+    return {'schema_version': 1, 'kind': 'native_owed_host_interruption',
+        'source_ref': OWED_HOST_SOURCE_REF, 'native_source_ref': OWED_HOST_NATIVE_REF,
+        'planned_cells': 72, 'affected_completed_cells': 32,
+        'retained_outcomes': {'timeouts': 24, 'false_action': 5, 'delivered': 3},
+        'excluded_cells': 0, 'replayed_cells': 0, 'model_capability_ranking': False,
+        'proof': dict(OWED_HOST_PROOFS), 'notice': OWED_HOST_NOTICE}
+
+
+def validate_owed_host_interruption(value, development=None):
+    """The public note carries only the exact reviewed aggregate and proof hashes."""
+    if type(value) is not dict or _owed_host_digest(value) != _owed_host_digest(_owed_host_note()):
+        raise ValueError('invalid_owed_host_interruption')
+    if development is not None:
+        proof = development.get('proof', {})
+        if development.get('source_ref') != value['source_ref'] \
+                or development.get('native_source_ref') != value['native_source_ref'] \
+                or development.get('planned_cells') != 72 \
+                or development.get('positive_denominator') != 48 \
+                or development.get('withholding_denominator') != 24 \
+                or any(proof.get(key) != value['proof'][key] for key in
+                       ('plan_sha256', 'canonical_plan_sha256', 'configuration_sha256', 'source_files_sha256')):
+            raise ValueError('owed_host_study_binding_mismatch')
+    check_public(value)
+    return value
+
+
+def require_owed_host_interruption(development, value):
+    if value is not None:
+        if development is None:
+            raise ValueError('owed_host_study_required')
+        validate_owed_host_interruption(value, development)
+    if development and development.get('status') == 'complete' \
+            and (development.get('source_ref') == OWED_HOST_SOURCE_REF
+                 or development.get('proof', {}).get('plan_sha256') == OWED_HOST_PROOFS['plan_sha256']) \
+            and value is None:
+        raise ValueError('owed_host_interruption_required')
+
+
+def verified_owed_host_interruption(study, evidence, development):
+    """Bind a reviewed host observation to unchanged native inputs; never import them.
+
+    This supplements the original 72/130 verification. It neither reassesses
+    model quality nor removes a failure from that helper's fixed denominators.
+    The observation's SHA was reviewed independently; receipt times alone cannot
+    prove sleep or establish the cause of an individual provider timeout.
+    """
+    import hashlib
+
+    def read(path):
+        if path.is_symlink() or not path.is_file():
+            raise ValueError('owed_host_input_not_plain_file')
+        return path.read_bytes()
+
+    study, evidence = Path(study), Path(evidence)
+    if study.is_symlink() or (study / 'receipts').is_symlink():
+        raise ValueError('owed_host_input_not_plain_file')
+    evidence_raw = read(evidence)
+    if hashlib.sha256(evidence_raw).hexdigest() != OWED_HOST_PROOFS['host_evidence_sha256']:
+        raise ValueError('owed_host_evidence_mismatch')
+    incident = json.loads(evidence_raw)
+    raw_plan = read(study / 'plan.private.json')
+    plan = json.loads(raw_plan)
+    proofs = {key: OWED_HOST_PROOFS[key] for key in
+              ('plan_sha256', 'canonical_plan_sha256', 'configuration_sha256', 'source_files_sha256')}
+    if hashlib.sha256(raw_plan).hexdigest() != proofs['plan_sha256'] \
+            or _owed_host_digest(plan) != proofs['canonical_plan_sha256'] \
+            or plan.get('source_ref') != OWED_HOST_SOURCE_REF \
+            or plan.get('native_source_ref') != OWED_HOST_NATIVE_REF \
+            or plan.get('configuration_sha256') != proofs['configuration_sha256'] \
+            or _owed_host_digest(plan.get('configurations')) != proofs['configuration_sha256'] \
+            or _owed_host_digest(plan.get('source_files')) != proofs['source_files_sha256'] \
+            or plan.get('planned_cells') != 72:
+        raise ValueError('owed_host_plan_mismatch')
+    order = plan.get('execution_order', [])
+    if type(order) is not list or len(order) != 72 \
+            or any(type(item) is not dict or type(item.get('slot')) is not str
+                   or not re.fullmatch(r'[A-Za-z0-9_.-]+', item['slot']) for item in order) \
+            or len({item['slot'] for item in order}) != 72:
+        raise ValueError('owed_host_schedule_mismatch')
+    receipts, claims = incident.get('receipts_sha256'), incident.get('claims_sha256')
+    if type(receipts) is not dict or type(claims) is not dict \
+            or set(receipts) != {item['slot'] + '.json' for item in order[:32]} \
+            or set(claims) != {item['slot'] + '.started.json' for item in order[:32]} \
+            or _owed_host_digest(receipts) != OWED_HOST_PROOFS['affected_receipts_sha256'] \
+            or _owed_host_digest(claims) != OWED_HOST_PROOFS['affected_claims_sha256'] \
+            or incident.get('completed') != 32 or incident.get('ready') != 32 \
+            or incident.get('delivered') != 3 or incident.get('claims_are_spent') is not True \
+            or incident.get('original_inputs_unchanged') is not True:
+        raise ValueError('owed_host_capture_inventory_mismatch')
+    counts = {'timeouts': 0, 'false_action': 0, 'delivered': 0}
+    for item in order[:32]:
+        name = item['slot'] + '.json'
+        claim_name = item['slot'] + '.started.json'
+        raw_receipt, raw_claim = read(study / 'receipts' / name), read(study / 'receipts' / claim_name)
+        if hashlib.sha256(raw_receipt).hexdigest() != receipts[name] \
+                or hashlib.sha256(raw_claim).hexdigest() != claims[claim_name]:
+            raise ValueError('owed_host_original_capture_changed')
+        row, claim = json.loads(raw_receipt), json.loads(raw_claim)
+        if any(row.get(key) != item.get(key) or claim.get(key) != item.get(key)
+               for key in ('slot', 'episode_id', 'arm', 'account', 'kind')) \
+                or item.get('kind') != 'positive' or row.get('status') != 'measured' \
+                or any(value.get('plan_sha256') != proofs['canonical_plan_sha256']
+                       or value.get('source_ref') != OWED_HOST_SOURCE_REF for value in (row, claim)) \
+                or row.get('native_source_ref') != OWED_HOST_NATIVE_REF \
+                or row.get('configuration_sha256') != proofs['configuration_sha256']:
+            raise ValueError('owed_host_receipt_binding_mismatch')
+        owed = [attempt for attempt in row.get('background_parameters', {}).get('attempts', [])
+                if attempt.get('lane') == 'owed']
+        config = plan['configurations'].get(item['arm'], {})
+        if len(owed) != 1 or owed[0].get('channel') != item['account'] \
+                or any(owed[0].get(key) != config.get(key) for key in
+                       ('provider', 'model', 'thinking_level', 'max_output_tokens', 'timeout_s')):
+            raise ValueError('owed_host_native_attempt_mismatch')
+        outcome = owed[0].get('outcome'), owed[0].get('native_code')
+        if outcome == ('provider_timeout', 'provider_timeout'):
+            counts['timeouts'] += 1
+        elif outcome == ('provider_invalid_output', 'false_action'):
+            counts['false_action'] += 1
+        elif outcome == ('ok', 'ok'):
+            late = [send for send in row.get('sends', []) if send.get('lane') == 'owed_answer']
+            wire = row.get('development_boundary', {}).get('line_attempts', [])
+            if len(late) != 1 or late[0].get('failure_notice') is not False or not wire \
+                    or any(attempt.get('accepted') is not True or attempt.get('duplicate') is not False
+                           or attempt.get('account') != item['account'] for attempt in wire):
+                raise ValueError('owed_host_delivery_mismatch')
+            counts['delivered'] += 1
+        else:
+            raise ValueError('owed_host_unexpected_native_outcome')
+    note = _owed_host_note()
+    if counts != note['retained_outcomes']:
+        raise ValueError('owed_host_outcome_count_mismatch')
+    return validate_owed_host_interruption(note, development)
+
+
+def owed_host_interruption_panel(value):
+    if value is None:
+        return ''
+    validate_owed_host_interruption(value)
+    proofs = ''.join(f'<li>{esc(key)}：<code>{esc(digest)}</code></li>'
+                     for key, digest in value['proof'].items())
+    return ('<aside class="notice"><b>欠答開發題組的主機中斷限制</b>'
+            f'<p>{esc(value["notice"])}</p><p>72 槽與 130 次判讀的原定門檻、分母及第一次判讀優先原則不變。</p>'
+            f'<details><summary>主機觀察與原始收據的來源綁定</summary><ul class="iteration-meta">{proofs}</ul></details>'
+            f'<p><a href="{OWED_HOST_INTERRUPTION_NAME}" download>下載僅含彙總與證據摘要的中斷紀錄</a>。</p></aside>')
+
+
+def owed_development_panel(data, host_interruption=None):
+    require_owed_host_interruption(data, host_interruption)
     if not data:return ''
     owed_development_module().validate_public(data);check_public(data)
     tasks=''.join(f'<tr><td>{esc(SCOPE_LABELS[row["scope"]])}</td><td>{esc(row["summary"])}</td>'
@@ -1382,6 +1552,7 @@ def owed_development_panel(data):
         '<p>評審使用原有前景規格：48 段實際對話 × 2 次，加上全新的 17 題已知控制 × 2 次，最多 130 次。'
         '只有全部 72 槽、130 次判讀與 34 次控制題都通過完整性檢查，才展示結果。'
         '統計固定讀第一次，第二次檢查一致性；不把兩個帳號當成獨立新題。</p>')
+    body += owed_host_interruption_panel(host_interruption)
     if data['results'] is not None:
         rows=[]
         for arm,row in data['results']['arms'].items():
@@ -1506,7 +1677,7 @@ def render(data, iterations=()):
         body += planned_study_panel(data.get('planned_study'))
         body += interruption_panel(data.get('study_interruption'))
         body += owed_diagnostic_panel(data.get('owed_diagnostic'))
-        body += owed_development_panel(data.get('owed_development'))
+        body += owed_development_panel(data.get('owed_development'), data.get('owed_development_host_interruption'))
         body += f'<section class="panel"><h2>逐段檢查，等資料完成</h2><p>本輪比較原有版本、Gemini Medium、Gemini High 與 GPT-6.1-Sol Low。每段情境會顯示各組完整時間軸、每次重複、主機檢查與 AI 判斷理由。現在可以先看<a href="{METHOD_NAME}">公開開發題組與評審門檻</a>。</p></section><section class="panel"><h2>研究迭代</h2>{iteration_table(iterations)}</section>'
         return page_shell(PAGE_NAME, 'Always-on 結果', '這一頁保留完整研究的成績、案例與版本證據。每次迭代獨立呈現，讓主動訊息的時機、內容與打擾成本可以逐則檢查。', body, status='等待完整研究',
                           generated=data.get('generated_at', '2026-10-14'))
@@ -1535,7 +1706,7 @@ def render(data, iterations=()):
     body += background_model_panel(data)
     body += absolute_component_table(data)
     body += owed_diagnostic_panel(data.get('owed_diagnostic'))
-    body += owed_development_panel(data.get('owed_development'))
+    body += owed_development_panel(data.get('owed_development'), data.get('owed_development_host_interruption'))
     body += interruption_panel(data.get('study_interruption'))
     body += f'<section class="panel"><h2>分項判讀與控制題</h2><div class="grid2"><div class="scroll"><table><thead><tr><th>自主訊息 AI 分項（1–5）</th>{headers}</tr></thead><tbody>{quality_rows}</tbody></table></div><div class="scroll"><table><thead><tr><th>前景 AI 判讀</th>{headers}</tr></thead><tbody>{foreground_rows}</tbody></table></div></div><table><tbody>{control_rows}</tbody></table><p>這些是 AI 判讀；原始逐則分數與理由如下。控制題檢查評審是否理解規格，不證明實際使用者都喜歡這些訊息。</p></section>'
     body += f'<section class="panel"><h2>逐段時間軸</h2><p>自主關心、使用者要求與欠答分開標記；每組保留每次重複和失敗案例。</p><div data-explorer>{filters(data["episodes"])}{explorer(data)}</div></section>'
@@ -1630,6 +1801,8 @@ def main():
     parser.add_argument('--planned-study',type=Path)
     parser.add_argument('--owed-development-study',type=Path)
     parser.add_argument('--owed-development-judge',type=Path)
+    parser.add_argument('--owed-development-host-evidence',type=Path,
+                        help='Independently reviewed host observation bound to the original owed capture')
     parser.add_argument('--evaluation-revision',type=Path,
                         help='separate verified correction archive; original capture remains unchanged')
     parser.add_argument('--evaluation-ref',help='independently approved committed evaluator SHA')
@@ -1742,9 +1915,21 @@ def main():
         development_text=json.dumps(development,ensure_ascii=False,indent=1)+'\n'
     elif (PUBLIC/OWED_DEVELOPMENT_NAME).exists():
         data['owed_development']=json.loads((PUBLIC/OWED_DEVELOPMENT_NAME).read_text())
+    owed_host_text=None
+    if args.owed_development_host_evidence:
+        if not args.owed_development_study:
+            parser.error('give the original owed study with its host evidence')
+        note=verified_owed_host_interruption(args.owed_development_study,
+            args.owed_development_host_evidence,data.get('owed_development'))
+        data['owed_development_host_interruption']=note
+        owed_host_text=json.dumps(note,ensure_ascii=False,indent=1)+'\n'
+    elif (PUBLIC/OWED_HOST_INTERRUPTION_NAME).exists():
+        data['owed_development_host_interruption']=json.loads((PUBLIC/OWED_HOST_INTERRUPTION_NAME).read_text())
+    require_owed_host_interruption(data.get('owed_development'),data.get('owed_development_host_interruption'))
     method, report=render_method(cases,has_results=data.get('publication_ready') is True,
                                 diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study'),
                                 interruption=data.get('study_interruption'),owed_development=data.get('owed_development'),
+                                owed_development_host_interruption=data.get('owed_development_host_interruption'),
                                 generated_at=data.get('generated_at','2026-10-14')),render(data,index['iterations'])
     check_public(data);check_public(index);check_public(cases)
     if planned_text is not None:
@@ -1764,6 +1949,11 @@ def main():
         archive=PUBLIC/('line-always-on-owed-development-'+digest[:12]+'.public.json')
         if archive.exists() and archive.read_text()!=development_text:raise ValueError('immutable_owed_development_changed')
         archive.write_text(development_text);(PUBLIC/OWED_DEVELOPMENT_NAME).write_text(development_text)
+    if owed_host_text is not None:
+        digest=hashlib.sha256(owed_host_text.encode()).hexdigest()
+        archive=PUBLIC/('line-always-on-owed-host-interruption-'+digest[:12]+'.public.json')
+        if archive.exists() and archive.read_text()!=owed_host_text:raise ValueError('immutable_owed_host_interruption_changed')
+        archive.write_text(owed_host_text);(PUBLIC/OWED_HOST_INTERRUPTION_NAME).write_text(owed_host_text)
     if protocol is not None:
         frozen=PUBLIC/protocol_file
         if frozen.exists() and json.loads(frozen.read_text())!=protocol:
