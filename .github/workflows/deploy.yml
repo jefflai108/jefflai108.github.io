@@ -57,7 +57,7 @@ jobs:
         run: python3 -m unittest discover -s scripts -p test_line_mixed_media_bursts.py
 
       - name: Verify LINE always-on renderer and export guards
-        run: python3 -B -m unittest scripts/test_line_always_on.py scripts/test_owed_diagnostic.py scripts/test_planned_study.py scripts/test_study_interruption.py scripts/test_owed_development.py
+        run: python3 -B -m unittest scripts/test_line_always_on.py scripts/test_owed_diagnostic.py scripts/test_planned_study.py scripts/test_study_interruption.py scripts/test_owed_development.py scripts/test_owed_development_v2.py
 
       - name: Build
         run: |
