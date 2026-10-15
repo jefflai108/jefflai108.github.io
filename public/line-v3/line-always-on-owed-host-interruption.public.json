@@ -1,0 +1,26 @@
+{
+ "schema_version": 1,
+ "kind": "native_owed_host_interruption",
+ "source_ref": "a66eda30143a90163073522fdd77ef5fdef8cbd6",
+ "native_source_ref": "8c137631121ce89180bbe80df2fbf352ab1fb0e2",
+ "planned_cells": 72,
+ "affected_completed_cells": 32,
+ "retained_outcomes": {
+  "timeouts": 24,
+  "false_action": 5,
+  "delivered": 3
+ },
+ "excluded_cells": 0,
+ "replayed_cells": 0,
+ "model_capability_ranking": false,
+ "proof": {
+  "plan_sha256": "dff3f5b75a05cda6e2935e65b61488848964cf33b5b53948912e9a45746917d2",
+  "canonical_plan_sha256": "04d07a6828d3024a74d46e8596c2f00384fbde65c3a3ab82e498dfd5bfad6761",
+  "configuration_sha256": "7aabdaa06fdfeef0bb3d87972a520be2003942557cd1a6c19348d151b35aecec",
+  "source_files_sha256": "ecc9aed670c5f90ac00d516d2ff2e87aa4f3dae939601a5ca78f4b52b372fefe",
+  "host_evidence_sha256": "bb8d97b16cb6e8b5a4ec150b113de2cbcd82b188b4174f9723a2b4747ddc5a3d",
+  "affected_receipts_sha256": "050f2581f7cc41e30b2857aabdde0e9fefb9c9693ce6acb4e2590d6d8bb23946",
+  "affected_claims_sha256": "bba005fb4f8cd19e39077eceb9e56bc94f9d528a57b5be1ddf23e66f0d35b53f"
+ },
+ "notice": "執行前 32 槽期間曾觀察到主機睡眠；原始 24 次逾時、5 次無效動作與 3 次送達全部保留，未重跑或排除。無法將每次失敗單獨歸因於睡眠。本題組僅呈現受主機中斷影響的開發觀察，不據此比較模型能力或排名。"
+}

@@ -27,6 +27,8 @@ OWED_DIAGNOSTIC_NAME = "line-always-on-owed-diagnostic.public.json"
 PLANNED_STUDY_NAME = "line-always-on-planned-study.public.json"
 INTERRUPTION_NAME = "line-always-on-interruption.public.json"
 OWED_DEVELOPMENT_NAME = "line-always-on-owed-development.public.json"
+OWED_HOST_INTERRUPTION_NAME = "line-always-on-owed-host-interruption.public.json"
+OWED_TERMINAL_NAME = "line-always-on-owed-terminal.public.json"
 PAGE_NAME = "line-always-on.html"
 SOURCE_REPO = "https://github.com/jefflai108/streaming_taiwanese"
 ARMS = ("existing", "engine")
@@ -60,12 +62,109 @@ _UNSAFE = re.compile(r"/Users/|/private/|/home/|/var/folders|/srv/|AIza[0-9A-Za-
 
 PUBLIC_KEYS = ("schema_version", "arms", "refs", "models", "metadata", "summary", "comparison", "comparisons", "gates",
                "complete", "replay_complete", "judging_complete", "publication_ready", "incomplete_episodes",
-               "episodes", "runs", "judge_controls", "foreground_controls", "foreground_judge", "slot_status", "owed_diagnostic", "planned_study", "study_interruption", "owed_development")
+               "episodes", "runs", "judge_controls", "foreground_controls", "foreground_judge", "slot_status", "owed_diagnostic", "planned_study", "study_interruption", "owed_development", "owed_development_host_interruption", "owed_development_terminal")
 PRIVATE_KEYS = frozenset(("api_key", "authorization", "credentials", "encrypted_job", "user_id", "chat_id",
                           "message_hash", "event_hash", "lease_token", "reply_token", "mapping.private.json",
                           "http", "environment", "prompt", "system_prompt", "logs", "log", "path"))
 VERDICT_KEYS = ("warranted", "timing", "useful", "tone", "not_annoying", "grounded", "private",
                 "decision_progress", "reason", "grounding_issues")
+EVALUATION_REVISION_PROTOCOL = 'always_on_evaluation_revision_v1'
+EVALUATION_PREFIX = 'serve/line_agent_v3/evals/always_on/'
+OWED_HOST_SOURCE_REF = 'a66eda30143a90163073522fdd77ef5fdef8cbd6'
+OWED_HOST_NATIVE_REF = '8c137631121ce89180bbe80df2fbf352ab1fb0e2'
+# Independently reviewed external observation, never a flag supplied by results.
+OWED_HOST_PROOFS = {
+    'plan_sha256': 'dff3f5b75a05cda6e2935e65b61488848964cf33b5b53948912e9a45746917d2',
+    'canonical_plan_sha256': '04d07a6828d3024a74d46e8596c2f00384fbde65c3a3ab82e498dfd5bfad6761',
+    'configuration_sha256': '7aabdaa06fdfeef0bb3d87972a520be2003942557cd1a6c19348d151b35aecec',
+    'source_files_sha256': 'ecc9aed670c5f90ac00d516d2ff2e87aa4f3dae939601a5ca78f4b52b372fefe',
+    'host_evidence_sha256': 'bb8d97b16cb6e8b5a4ec150b113de2cbcd82b188b4174f9723a2b4747ddc5a3d',
+    'affected_receipts_sha256': '050f2581f7cc41e30b2857aabdde0e9fefb9c9693ce6acb4e2590d6d8bb23946',
+    'affected_claims_sha256': 'bba005fb4f8cd19e39077eceb9e56bc94f9d528a57b5be1ddf23e66f0d35b53f',
+}
+OWED_HOST_NOTICE = ('執行前 32 槽期間曾觀察到主機睡眠；原始 24 次逾時、5 次無效動作與 3 次送達全部保留，未重跑或排除。'
+    '無法將每次失敗單獨歸因於睡眠。本題組僅呈現受主機中斷影響的開發觀察，不據此比較模型能力或排名。')
+MEASURED_METRIC_SOURCE_REF = '8c137631121ce89180bbe80df2fbf352ab1fb0e2'
+MEASURED_METRIC_PLAN_SHA256 = '344846aa2199ab57a5554f515bae5b4ed1b5ac770965051190ea4cc9079b9490'
+OWED_TERMINAL_PEER_SHA256 = '54a98fdd3f6dc267a3ca38fa4210cfd4ab70f57f6eb1d14e1c09a2b4cef70884'
+OWED_TERMINAL_PROOFS = {
+    'binding_file_sha256': '43f74bb9be152f66c0a41b091e33e979c2fb1e4466e38f79d175d2009176de12',
+    'binding_sha256': '5b3978ebe4adc4cb00b372734eae70fe005e9bdb79d2bca34333a92e0b4ec8fc',
+    'quality_sha256': 'a804b86b3abd29b4f1ad1bd65267a3198a675521bac8b470cc2cb1adce1db6a2',
+    'input_files_sha256': '854f6e304e1b1f8ff34ad3a85c43ea3fa7236a81d82c6b6c4353bd4a342951e5',
+    'judge_attempts_sha256': 'bb089bf07126a600c632b12e455aaf1d79b418fe26eb19f72896666697c23b7e',
+    'judge_claims_sha256': 'cb664c87540b999fad255deb4eeb1877bcc26956c278ec600d2e9fbce497fac1',
+    'packets_sha256': 'b5353986aae5a38a552145994fb9513f8aeebed8e525539426d0efac2966c1b8',
+    'controls_sha256': 'fb8c640ebb7d678f767c2a4ac92b919d42b72564497d954334173db2f73d3004',
+    'mapping_sha256': 'c0ecac504b4005b095d5dea5488475464a5faf104d0242d5ca9de7a21d169657',
+}
+OWED_TERMINAL_TOKENS = {'input_tokens': 305751, 'output_tokens': 27605, 'reasoning_tokens': 12687,
+                        'total_tokens': 333356, 'cached_input_tokens': 291728}
+OWED_TERMINAL_NOTICE = ('72 槽原生捕捉已完成，130 次一次性判讀均已結束並保留；其中 125 次有效，5 次控制題發生技術錯誤。'
+    '原規格仍有 5 次判讀缺失，完整判讀與控制題門檻未通過，因此不展示此題組的模型成績或排名。'
+    '未重試或排除任何失敗，未回報用量不當成零。')
+
+
+def validate_evaluation_revision(value):
+    """Validate the public receipt of a separately verified evaluator revision."""
+    keys = {'protocol', 'original_plan_sha256', 'original_capture_sha256', 'corrected_eval_ref',
+            'corrected_code_sha256', 'manifest_sha256', 'maximum_new_provider_calls', 'limits', 'phases'}
+    if type(value) is not dict or set(value) != keys or value['protocol'] != EVALUATION_REVISION_PROTOCOL \
+            or type(value.get('corrected_eval_ref')) is not str \
+            or not re.fullmatch(r'[0-9a-f]{40}', value['corrected_eval_ref']) \
+            or type(value.get('limits')) is not str or not value['limits']:
+        raise ValueError('invalid_evaluation_revision')
+    for key in ('original_plan_sha256', 'original_capture_sha256', 'corrected_code_sha256', 'manifest_sha256'):
+        if type(value[key]) is not str or not re.fullmatch(r'[0-9a-f]{64}', value[key]):
+            raise ValueError('invalid_evaluation_revision_digest')
+
+    def count(number):
+        if type(number) is not int or not 0 <= number <= 10**12:
+            raise ValueError('invalid_evaluation_revision_count')
+        return number
+
+    phases = value['phases']
+    if type(phases) is not dict or set(phases) != {'proactive', 'foreground'}:
+        raise ValueError('invalid_evaluation_revision_phases')
+    phase_keys = {'changed_units', 'reused_units', 'changed_judgments', 'reused_judgments', 'message_units',
+                  'control_units', 'reused_control_judgments', 'effective_judgments_required',
+                  'original_attempts', 'new_attempts'}
+    attempt_keys = {'attempts', 'ok', 'errors', 'known_token_usage', 'unknown_usage_attempts',
+                    'unknown_usage_components'}
+    token_fields = {'input_tokens', 'output_tokens', 'total_tokens', 'reasoning_tokens', 'cached_input_tokens'}
+    for phase in phases.values():
+        if type(phase) is not dict or set(phase) != phase_keys:
+            raise ValueError('invalid_evaluation_revision_phase')
+        for key in phase_keys - {'original_attempts', 'new_attempts'}:
+            count(phase[key])
+        if phase['changed_units'] + phase['reused_units'] != phase['message_units'] + phase['control_units'] \
+                or phase['changed_judgments'] != 2 * phase['changed_units'] \
+                or phase['reused_judgments'] != 2 * phase['reused_units'] \
+                or phase['reused_control_judgments'] != 2 * phase['control_units'] \
+                or phase['effective_judgments_required'] != 2 * (phase['message_units'] + phase['control_units']):
+            raise ValueError('invalid_evaluation_revision_denominators')
+        for key in ('original_attempts', 'new_attempts'):
+            attempt = phase[key]
+            if type(attempt) is not dict or set(attempt) != attempt_keys:
+                raise ValueError('invalid_evaluation_revision_attempts')
+            for field in ('attempts', 'ok', 'errors', 'unknown_usage_attempts'):
+                count(attempt[field])
+            if attempt['attempts'] != attempt['ok'] + attempt['errors'] \
+                    or attempt['unknown_usage_attempts'] > attempt['attempts']:
+                raise ValueError('invalid_evaluation_revision_attempts')
+            usage, unknown = attempt['known_token_usage'], attempt['unknown_usage_components']
+            if type(usage) is not dict or set(usage) - token_fields or type(unknown) is not dict \
+                    or set(unknown) != {'input_tokens', 'output_tokens', 'total_tokens'}:
+                raise ValueError('invalid_evaluation_revision_usage')
+            for number in usage.values():
+                count(number)
+            for number in unknown.values():
+                if count(number) > attempt['attempts']:
+                    raise ValueError('invalid_evaluation_revision_usage')
+    if count(value['maximum_new_provider_calls']) != 3 * sum(p['changed_judgments'] for p in phases.values()):
+        raise ValueError('invalid_evaluation_revision_call_bound')
+    check_public(value)
+    return value
 
 
 def appropriate(verdict):
@@ -161,6 +260,13 @@ def validate_study(data):
                 raise ValueError("failed_controls:" + meta_key)
         if controls.get("judgments") != len(items) * 2 or controls.get("as_expected") != len(items) * 2:
             raise ValueError("failed_controls:" + meta_key)
+    if metadata.get('evaluation_revision') is not None:
+        revision = validate_evaluation_revision(metadata['evaluation_revision'])
+        for phase, meta_key in (('proactive', 'judge'), ('foreground', 'judge_foreground')):
+            count = revision['phases'][phase]
+            if count['message_units'] != metadata[meta_key]['packet_count'] \
+                    or count['control_units'] != metadata[meta_key]['control_count']:
+                raise ValueError('evaluation_revision_judge_count_mismatch')
     for run in runs:
         for message in run.get("proactive", []):
             verdict = message.get("verdict")
@@ -441,6 +547,58 @@ def background_model_panel(data):
             +''.join(detail)+'</section>')
 
 
+def evaluation_revision_panel(data):
+    """Disclose corrected observation and actual attempts without scoring retries."""
+    value = data.get('metadata', {}).get('evaluation_revision')
+    if value is None:
+        return ''
+    value = validate_evaluation_revision(value)
+    phases = value['phases']
+    labels = {'proactive': '主動訊息', 'foreground': '前景回答'}
+    unit_rows, attempt_rows = [], []
+    for name, phase in phases.items():
+        unit_rows.append(f'<tr><th>{labels[name]}</th><td>{phase["changed_units"]}</td>'
+            f'<td>{phase["reused_units"]}（控制題 {phase["control_units"]}）</td>'
+            f'<td>{phase["changed_judgments"]} / {phase["reused_judgments"]}</td>'
+            f'<td>{phase["effective_judgments_required"]}</td></tr>')
+        for key, label in (('original_attempts', '原始評審'), ('new_attempts', '更正後新增')):
+            attempt = phase[key]
+            known = attempt['known_token_usage'].get('total_tokens')
+            total = '未回報' if known is None else f'{known:,}'
+            unknown = attempt['unknown_usage_components']
+            attempt_rows.append(f'<tr><th>{labels[name]} · {label}</th><td>{attempt["attempts"]:,}</td>'
+                f'<td>{attempt["ok"]:,} / {attempt["errors"]:,}</td><td>{total}</td>'
+                f'<td>{attempt["unknown_usage_attempts"]:,}</td>'
+                f'<td>{unknown["input_tokens"]:,} / {unknown["output_tokens"]:,} / {unknown["total_tokens"]:,}</td></tr>')
+    original = sum(phase['original_attempts']['attempts'] for phase in phases.values())
+    errors = sum(phase['original_attempts']['errors'] for phase in phases.values())
+    effective = sum(phase['effective_judgments_required'] for phase in phases.values())
+    reused = sum(phase['reused_judgments'] for phase in phases.values())
+    changed = sum(phase['changed_judgments'] for phase in phases.values())
+    proofs = ''.join(f'<li>{label}：<code>{value[key]}</code></li>' for key, label in (
+        ('original_plan_sha256', '原始計畫 SHA-256'), ('original_capture_sha256', '原始捕捉 SHA-256'),
+        ('corrected_code_sha256', '更正評估程式 SHA-256'), ('manifest_sha256', '更正清單 SHA-256')))
+    return ('<section class="panel"><h2>評估更正與評審嘗試紀錄</h2>'
+        '<p class="notice">更正原評估器遺漏 LINE <code>textV2</code> 群組提及顯示文字的問題。'
+        '引擎、原始計畫、捕捉與模型輸出保持原樣；只對輸入已改變的評審單位取得新判讀，未改變的判讀經輸入綁定檢查後重用。'
+        '原始捕捉與所有舊嘗試另外保留，沒有重新執行模型比較。</p>'
+        f'<p>有效判讀共 {effective:,} 次：更正 {changed:,} 次、重用 {reused:,} 次。'
+        f'原始評審實際保留 {original:,} 次嘗試，其中 {errors:,} 次錯誤；這些歷史嘗試不能當成額外有效判讀。'
+        '主統計仍固定取第一次判讀，第二次只檢查一致性；完整性與全部控制題門檻保持不變。</p>'
+        '<div class="scroll"><table><thead><tr><th>評審階段</th><th>更正單位</th><th>重用單位</th>'
+        '<th>更正／重用判讀</th><th>所需有效判讀</th></tr></thead>'
+        f'<tbody>{"".join(unit_rows)}</tbody></table></div>'
+        '<div class="scroll"><table><thead><tr><th>實際嘗試來源</th><th>嘗試</th><th>有效回傳／錯誤</th>'
+        '<th>已回報總 tokens</th><th>用量未回報嘗試</th><th>input／output／total 未知次數</th></tr></thead>'
+        f'<tbody>{"".join(attempt_rows)}</tbody></table></div>'
+        '<p class="small">錯誤嘗試不一定已送出，也不代表零費用；只加總已回報 tokens，未知用量不補成零。'
+        '新增評審嘗試與有效／重用判讀分開計數，重用不會產生另一筆 provider 呼叫。</p>'
+        f'<p>更正評估來源 {commit_link(value["corrected_eval_ref"])}；'
+        f'新增呼叫上限 {value["maximum_new_provider_calls"]:,} 次。</p>'
+        f'<details><summary>原始捕捉與更正綁定</summary><ul class="iteration-meta">{proofs}</ul></details>'
+        f'<p class="small">{esc(value["limits"])}</p></section>')
+
+
 def absolute_component_table(data):
     """Keep message and host components visible with their own denominators."""
     arms=study_arms(data)
@@ -461,17 +619,45 @@ def absolute_component_table(data):
             count=summary.get('redlines',{}).get(key)
             cells.append('無資料' if count is None else str(count))
         values[arm]=cells
-    labels=('自主訊息有需要（AI）','自主訊息有依據（AI）','自主訊息隱私通過（AI）',
+    labels=('自主訊息有需要（AI）','自主訊息有依據（AI）','自主訊息隱私／分寸通過（AI）',
             '不漏接 NOMISS 情境','FAST 情境','FAST 個別回合',
-            '主機／評審紅線總次數','隱私紅線','安靜時段紅線','重複傳送','超量傳送','虛構聲稱')
+            '主機／評審紅線總次數','隱私相關旗標（字串規則＋AI）','安靜時段紅線','同一預設時窗多次命中','超量傳送','虛構聲稱')
     rows=''.join(f'<tr><th>{label}</th>'+''.join(f'<td>{esc(values[arm][i])}</td>' for arm in arms)+'</tr>'
                  for i,label in enumerate(labels))
     headers=''.join(f'<th>{esc(ARM_LABELS[arm])}</th>' for arm in arms)
     return ('<section class="panel"><h2>原始分項、分母與紅線</h2><div class="scroll"><table><thead><tr>'
             f'<th>指標</th>{headers}</tr></thead><tbody>{rows}</tbody></table></div>'
             '<p class="small">AI 比例只計已判讀的自主訊息；零曝光保留 0/0。NOMISS 僅計題組中的不漏接情境，'
-            'FAST 分別計情境與個別回合。紅線保留原始次數；重複通常與超量重疊，總數不再加一次重複。'
+            'FAST 分別計情境與個別回合。紅線保留原始次數，旗標可能重疊，不是獨立事故數。'
+            '「同一預設時窗多次命中」從同一題定時窗的第二則起計，不是 LINE／HTTP 重送判定；此欄常與超量重疊，原總數不另外加此欄。'
+            '隱私相關合計包含禁止字串規則命中及 AI 的隱私／當眾難堪疑慮，後者不等同已證實資料外洩；逐段的主機字串標記與 AI 判讀分開顯示。'
             '缺少資料顯示無資料，不當成零次。</p></section>')
+
+
+def measured_metric_limitations_panel(source_ref, plan_sha256):
+    """Disclose audited definitions for this exact capture without changing scores."""
+    if source_ref != MEASURED_METRIC_SOURCE_REF or plan_sha256 != MEASURED_METRIC_PLAN_SHA256:
+        return ''
+    return ('<section class="panel"><h2>本輪指標與判讀的已知限制</h2>'
+        f'<p>以下只適用於量測來源 {commit_link(source_ref)} 與本輪凍結題組。所有原始數值、分母及第 1 次判讀優先原則維持不變。</p>'
+        '<ul class="iteration-meta">'
+        '<li><b>PV57：</b>題目允許第一週 1–2 則開場；本輪三個執行槽各送出兩則不同的開場，相隔三天。原指標仍把同一預設時窗的第二則列為多次命中，'
+        '本輪三個執行槽因此被標記，不能據此證明傳輸重送或去重失效。作者預期開場，AI 評審卻否定貼心提醒模式下未經要求的首次聊天；'
+        '這也是題目與評審前提的歧異，不能把失分解讀為沒有送達。</li>'
+        '<li><b>GR31：</b>零自主訊息的預期涵蓋整段期間；六則候選提醒約在當天 17:00，早於 19:42 後才出現的抱怨。'
+        '這項負例失分不能證明引擎忽略了當時已知的結果。</li>'
+        '<li><b>PV17：</b>Medium 的兩則訊息在題定時窗內，第 1 次判讀也認為有需要，但沒有包含指定的「存錢」或「機車」字樣，'
+        '因此機械式時窗匹配未通過；命中率包含逐字詞匹配的敏感度。</li>'
+        '<li><b>AI 隱私判讀：</b>四個候選訊息的第 1 次 private=False 在第 2 次均為 True。仍保留第 1 次計分並揭露分歧，'
+        '不挑較好的判讀；這四個隱私／當眾難堪疑慮旗標沒有證實跨使用者資料外洩，也未經真人重新裁決。</li>'
+        '</ul></section>')
+
+
+def qualified_metric_limitations_panel(results):
+    if not results or results.get('publication_ready') is not True:
+        return ''
+    return measured_metric_limitations_panel(results.get('refs', {}).get('engine'),
+        results.get('metadata', {}).get('evaluation_revision', {}).get('original_plan_sha256'))
 
 
 def expectation_text(expect):
@@ -509,7 +695,7 @@ def verdict_chips(verdict):
     if verdict.get("grounded") is False:
         chips.append('<span class="chip bad">捏造事實</span>')
     if verdict.get("private") is False:
-        chips.append('<span class="chip bad">隱私外洩</span>')
+        chips.append('<span class="chip bad">隱私／難堪疑慮（AI）</span>')
     reason = f'<p class="reason">{esc(verdict["reason"])}</p>' if verdict.get("reason") else ""
     return f'<div class="meta">{"".join(chips)}{reason}</div>'
 
@@ -569,7 +755,7 @@ def timeline(episode, run):
     if checks.get("quiet_hours_violations"):
         flags.append(f"安靜時段傳了 {checks['quiet_hours_violations']} 則")
     if checks.get("forbidden_hits"):
-        flags.append("提到不該提的內容")
+        flags.append("禁止字串命中（主機檢查）")
     if not run["proactive"]:
         flags.insert(0, "這段期間沒有背景訊息")
     status = '<p class="host">' + " · ".join(esc(flag) for flag in flags) + "</p>" if flags else ""
@@ -792,6 +978,9 @@ def authored_cases(data):
 
 
 def render_method(cases, *, has_results=False, diagnostic=None, planned_study=None, interruption=None, owed_development=None,
+                  owed_development_host_interruption=None,
+                  owed_development_terminal=None,
+                  qualified_results=None,
                   generated_at="2026-10-14"):
     from collections import Counter
     episodes = cases['episodes']
@@ -803,7 +992,8 @@ def render_method(cases, *, has_results=False, diagnostic=None, planned_study=No
                  else "完整研究尚未完成。這一頁公開測試設計與合成題組；示意時間軸沒有量測分數。")
     strata_rows = ''.join(f'<tr><th>{SCOPE_LABELS[scope]}</th><td>{POLARITY_LABELS[polarity]}</td><td>{strata[(scope, polarity)]}</td></tr>'
                           for scope in SCOPE_LABELS for polarity in POLARITY_LABELS if strata[(scope, polarity)])
-    body = planned_study_panel(planned_study) + interruption_panel(interruption) + f'''
+    limitation = qualified_metric_limitations_panel(qualified_results) if has_results else ''
+    body = planned_study_panel(planned_study, qualified_results if has_results else None) + interruption_panel(interruption) + limitation + f'''
 <section class="panel"><p class="notice warning"><b>{readiness}</b>完整研究成績只會收錄完成兩階段評審、通過控制題的重播；小型診斷另外標示。</p>
 <h2>四個目標，分開量測</h2><div class="scroll"><table class="goals"><thead><tr><th>目標</th><th>可檢查的行為</th><th>量測單位</th></tr></thead><tbody>
 <tr><th>夠快</th><td>對使用者說的話及時開始回答；背景工作讓前景先走。</td><td>前景耗時與收到訊息到首次回覆的 p50 / p90；快回覆題的逐輪門檻。</td></tr>
@@ -845,7 +1035,7 @@ def render_method(cases, *, has_results=False, diagnostic=None, planned_study=No
 <p><a href="{CASES_NAME}" download>下載公開合成題組</a> · <a href="{esc(cases.get('protocol_file', CASES_NAME))}" download>下載不可覆寫的方法快照</a> · <a href="{PAGE_NAME}">查看完整研究與每次迭代</a></p>
 <p class="small">方法快照 SHA-256 <code>{esc(cases.get('protocol_sha256','等待快照'))}</code>；包括題組與 harness、評審規格、指標計算程式摘要。這是開發方法的快照，實測仍須另外凍結已提交來源與各組設定。</p></section>'''
     body += owed_diagnostic_panel(diagnostic)
-    body += owed_development_panel(owed_development)
+    body += owed_development_panel(owed_development, owed_development_host_interruption, owed_development_terminal)
     return page_shell(METHOD_NAME, "Always-on 方法", "麻吉要一直在背景接住事情，在值得關心的時候主動開口。這裡把「快、接得住、給下一步、主動得合適」轉成可重播、可逐段檢查的實驗。", body, generated=generated_at)
 
 
@@ -858,8 +1048,194 @@ def iteration_table(items):
     return '<div class="scroll"><table><thead><tr><th>研究</th><th>題組用途</th><th>產生時間</th><th>既有 → 引擎</th><th>來源結果 SHA-256</th></tr></thead><tbody>' + rows + '</tbody></table></div>'
 
 
-def verify_study_capture(study):
+def capture_contains_text_v2(study):
+    """Inspect original wire receipts before an old evaluator can qualify them."""
+    root = Path(study).resolve()
+    plan_path, receipts = root / 'plan.json', root / 'receipts'
+    if plan_path.is_symlink() or receipts.is_symlink():
+        raise ValueError('symlink_publication_capture')
+    plan = json.loads(plan_path.read_text())
+    schedule = plan.get('execution_order') if type(plan) is dict else None
+    if type(schedule) is not list or not schedule:
+        raise ValueError('invalid_publication_schedule')
+    for item in schedule:
+        slot = item.get('slot') if type(item) is dict else None
+        if type(slot) is not str or not re.fullmatch(r'[A-Za-z0-9_.:-]+', slot) or slot in ('.', '..'):
+            raise ValueError('invalid_publication_slot')
+        path = receipts / (slot + '.json')
+        if path.is_symlink() or not path.is_file():
+            raise ValueError('missing_publication_receipt')
+        receipt = json.loads(path.read_text())
+        sends = receipt.get('sends') if type(receipt) is dict else None
+        if type(sends) is not list:
+            raise ValueError('invalid_publication_receipt')
+        for send in sends:
+            if type(send) is not dict:
+                raise ValueError('invalid_publication_send')
+            messages = send.get('messages')
+            if messages is None:
+                messages = []
+            if type(messages) is not list or any(type(message) is not dict for message in messages):
+                raise ValueError('invalid_publication_messages')
+            if any(message.get('type') == 'textV2' for message in messages):
+                return True
+    return False
+
+
+def verified_evaluation_inputs(study, revision, *, evaluator_ref, evaluator_source):
+    """Check the approved Git closure and original input bytes before execution."""
+    import ast
+    import hashlib
+    import subprocess
+
+    def sha(data):
+        return hashlib.sha256(data).hexdigest()
+
+    def canonical(value):
+        return sha(json.dumps(value, ensure_ascii=False, sort_keys=True,
+                              separators=(',', ':'), allow_nan=False).encode())
+
+    def inventory(directory):
+        if directory.is_symlink() or any(parent.is_symlink() for parent in directory.parents) \
+                or not directory.is_dir():
+            raise ValueError('invalid_evaluation_input_directory')
+        found = {}
+        for path in sorted(directory.rglob('*')):
+            if path.is_symlink():
+                raise ValueError('symlink_evaluation_input')
+            if path.is_file():
+                found[path.relative_to(directory).as_posix()] = sha(path.read_bytes())
+        return found
+
+    def read(path):
+        if path.is_symlink() or not path.is_file():
+            raise ValueError('invalid_evaluation_input_file')
+        return json.loads(path.read_text())
+
+    if type(evaluator_ref) is not str or not re.fullmatch(r'[0-9a-f]{40}', evaluator_ref) \
+            or evaluator_source is None:
+        raise ValueError('approved_evaluation_source_required')
+    original, revised = Path(study), Path(revision)
+    if original.is_symlink() or revised.is_symlink():
+        raise ValueError('symlink_evaluation_root')
+    original, revised = original.resolve(), revised.resolve()
+    if original == revised or original in revised.parents or revised in original.parents:
+        raise ValueError('evaluation_revision_must_be_separate')
+    manifest_path = revised / 'manifest.private.json'
+    manifest = read(manifest_path)
+    manifest_sha = canonical(manifest)
+    if manifest.get('protocol') != EVALUATION_REVISION_PROTOCOL \
+            or manifest.get('corrected_eval_ref') != evaluator_ref \
+            or read(revised / 'manifest.sha256.json') != {'sha256': manifest_sha} \
+            or Path(manifest.get('original_study', '')).resolve() != original \
+            or manifest.get('passes') != 2 or manifest.get('max_attempts_per_changed_judgment') != 3:
+        raise ValueError('evaluation_revision_manifest_mismatch')
+
+    def git(*arguments):
+        result = subprocess.run(['git', '--no-replace-objects', '-C', str(Path(evaluator_source).resolve()),
+                                 *arguments], capture_output=True)
+        if result.returncode:
+            raise ValueError('evaluation_revision_git_source_unavailable')
+        return result.stdout
+
+    if git('rev-parse', '--verify', evaluator_ref + '^{commit}').decode().strip() != evaluator_ref:
+        raise ValueError('invalid_evaluation_revision_commit')
+    committed_runner = git('show', evaluator_ref + ':' + EVALUATION_PREFIX + 'runner.py')
+    declarations = [node.value for node in ast.parse(committed_runner).body if isinstance(node, ast.Assign)
+                    and any(isinstance(target, ast.Name) and target.id == 'HARNESS_FILES' for target in node.targets)]
+    if len(declarations) != 1:
+        raise ValueError('invalid_committed_evaluation_closure')
+    names = ast.literal_eval(declarations[0])
+    if type(names) not in (list, tuple) or len(set(names)) != len(names) or any(
+            type(name) is not str or not re.fullmatch(r'[A-Za-z0-9_][A-Za-z0-9_.-]*', name) for name in names):
+        raise ValueError('invalid_committed_evaluation_closure')
+    names = set(names) | {'evaluation_revision.py'}
+    expected = {name: sha(git('show', evaluator_ref + ':' + EVALUATION_PREFIX + name)) for name in names}
+    modes = {}
+    for entry in git('ls-tree', '-rz', '--full-tree', evaluator_ref, '--', EVALUATION_PREFIX).split(b'\0'):
+        if not entry:
+            continue
+        header, filename = entry.split(b'\t', 1)
+        mode, kind, _identity = header.decode().split()
+        name = filename.decode().removeprefix(EVALUATION_PREFIX)
+        if name in names:
+            if kind != 'blob' or mode not in ('100644', '100755'):
+                raise ValueError('invalid_committed_evaluation_mode')
+            modes[name] = mode
+    harness = revised / 'harness'
+    if set(modes) != names or manifest.get('code_files') != expected or inventory(harness) != expected \
+            or any(path.is_dir() for path in harness.iterdir()) \
+            or any(bool((harness / name).stat().st_mode & 0o111) != (modes[name] == '100755') for name in names):
+        raise ValueError('untrusted_evaluation_revision_closure')
+
+    plan = read(original / 'plan.json')
+    inputs = manifest.get('input_files')
+    if type(inputs) is not dict or not inputs:
+        raise ValueError('invalid_evaluation_revision_inputs')
+    for name, digest in inputs.items():
+        relative = Path(name)
+        if type(name) is not str or relative.is_absolute() or any(part in ('.', '..') for part in relative.parts) \
+                or '\\' in name or type(digest) is not str or not re.fullmatch(r'[0-9a-f]{64}', digest):
+            raise ValueError('invalid_evaluation_revision_input_path')
+        path = original / relative
+        if path.is_symlink() or any(parent.is_symlink() for parent in path.parents if parent != original) \
+                or not path.is_file() or sha(path.read_bytes()) != digest:
+            raise ValueError('original_evaluation_input_changed')
+    slots = [item['slot'] for item in plan['execution_order']]
+    if len(set(slots)) != len(slots) or any(type(slot) is not str or not re.fullmatch(r'[A-Za-z0-9_.:-]+', slot)
+                                          or slot in ('.', '..') for slot in slots):
+        raise ValueError('invalid_evaluation_revision_schedule')
+    judges = inventory(original / 'judge')
+    required = {'plan.json', *plan['files'], *('receipts/' + slot + '.json' for slot in slots),
+                *('judge/' + name for name in judges)}
+    if set(inputs) != required or inventory(revised / 'inputs' / 'study') != inputs:
+        raise ValueError('evaluation_revision_input_inventory_mismatch')
+    for directory in ('source', 'harness'):
+        actual = {directory + '/' + name: digest for name, digest in inventory(original / directory).items()}
+        if actual != {name: digest for name, digest in plan['files'].items() if name.startswith(directory + '/')}:
+            raise ValueError('original_evaluation_source_changed')
+    plan_sha = sha((original / 'plan.json').read_bytes())
+    capture_sha = canonical({'plan_sha256': plan_sha,
+                             'receipts_sha256': {slot: inputs['receipts/' + slot + '.json'] for slot in slots}})
+    if manifest.get('original_plan_sha256') != plan_sha or manifest.get('original_capture_sha256') != capture_sha:
+        raise ValueError('evaluation_revision_capture_mismatch')
+    return manifest, {'original_plan_sha256': plan_sha, 'original_capture_sha256': capture_sha,
+                      'corrected_eval_ref': evaluator_ref, 'corrected_code_sha256': canonical(expected),
+                      'manifest_sha256': manifest_sha}, plan
+
+
+def verify_study_capture(study, *, evaluation_revision=None, evaluator_ref=None, evaluator_source=None):
     """Reproduce results from frozen receipts and retained judgments without writing."""
+    if evaluation_revision is not None:
+        import subprocess
+        import sys
+        revision = Path(evaluation_revision).resolve()
+        manifest, proofs, plan = verified_evaluation_inputs(study, evaluation_revision,
+            evaluator_ref=evaluator_ref, evaluator_source=evaluator_source)
+        result = subprocess.run([sys.executable, '-I', '-B', str(revision / 'harness' / 'runner.py'),
+            'summary', '--out', str(Path(study).resolve()), '--evaluation-revision', str(revision)],
+            capture_output=True, text=True, env={}, timeout=600)
+        if result.returncode:
+            raise ValueError('evaluation_revision_capture_not_verified')
+        path = revision / 'results.json'
+        if path.is_symlink() or not path.is_file():
+            raise ValueError('evaluation_revision_results_missing')
+        source = path.read_bytes()
+        actual = json.loads(source)
+        receipt = validate_evaluation_revision(actual.get('metadata', {}).get('evaluation_revision'))
+        if any(receipt[key] != value for key, value in proofs.items()) \
+                or receipt['maximum_new_provider_calls'] != manifest.get('maximum_new_provider_calls') \
+                or actual.get('refs') != plan.get('refs') or actual.get('publication_ready') is not True:
+            raise ValueError('evaluation_revision_result_binding_mismatch')
+        after, after_proofs, _ = verified_evaluation_inputs(study, evaluation_revision,
+            evaluator_ref=evaluator_ref, evaluator_source=evaluator_source)
+        if after != manifest or after_proofs != proofs:
+            raise ValueError('evaluation_revision_inputs_changed_during_summary')
+        return source
+    if evaluator_ref is not None or evaluator_source is not None:
+        raise ValueError('evaluation_revision_directory_required')
+    if capture_contains_text_v2(study):
+        raise ValueError('evaluation_revision_required_for_text_v2')
     import subprocess
     import sys
     program = '''
@@ -885,6 +1261,7 @@ print('verified')
                           capture_output=True,text=True,env={},timeout=600)
     if result.returncode or result.stdout.strip()!='verified':
         raise ValueError('publication_capture_not_verified')
+    return (Path(study).resolve() / 'results.json').read_bytes()
 
 
 def verify_calibration_capture(study):
@@ -1051,14 +1428,342 @@ def owed_development_module():
     return module
 
 
-def owed_development_panel(data):
+def _owed_host_digest(value):
+    import hashlib
+    return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True,
+                                    separators=(',', ':'), allow_nan=False).encode()).hexdigest()
+
+
+def _owed_host_note():
+    return {'schema_version': 1, 'kind': 'native_owed_host_interruption',
+        'source_ref': OWED_HOST_SOURCE_REF, 'native_source_ref': OWED_HOST_NATIVE_REF,
+        'planned_cells': 72, 'affected_completed_cells': 32,
+        'retained_outcomes': {'timeouts': 24, 'false_action': 5, 'delivered': 3},
+        'excluded_cells': 0, 'replayed_cells': 0, 'model_capability_ranking': False,
+        'proof': dict(OWED_HOST_PROOFS), 'notice': OWED_HOST_NOTICE}
+
+
+def validate_owed_host_interruption(value, development=None):
+    """The public note carries only the exact reviewed aggregate and proof hashes."""
+    if type(value) is not dict or _owed_host_digest(value) != _owed_host_digest(_owed_host_note()):
+        raise ValueError('invalid_owed_host_interruption')
+    if development is not None:
+        proof = development.get('proof', {})
+        if development.get('source_ref') != value['source_ref'] \
+                or development.get('native_source_ref') != value['native_source_ref'] \
+                or development.get('planned_cells') != 72 \
+                or development.get('positive_denominator') != 48 \
+                or development.get('withholding_denominator') != 24 \
+                or any(proof.get(key) != value['proof'][key] for key in
+                       ('plan_sha256', 'canonical_plan_sha256', 'configuration_sha256', 'source_files_sha256')):
+            raise ValueError('owed_host_study_binding_mismatch')
+    check_public(value)
+    return value
+
+
+def require_owed_host_interruption(development, value):
+    if value is not None:
+        if development is None:
+            raise ValueError('owed_host_study_required')
+        validate_owed_host_interruption(value, development)
+    if development and development.get('status') == 'complete' \
+            and (development.get('source_ref') == OWED_HOST_SOURCE_REF
+                 or development.get('proof', {}).get('plan_sha256') == OWED_HOST_PROOFS['plan_sha256']) \
+            and value is None:
+        raise ValueError('owed_host_interruption_required')
+
+
+def verified_owed_host_interruption(study, evidence, development):
+    """Bind a reviewed host observation to unchanged native inputs; never import them.
+
+    This supplements the original 72/130 verification. It neither reassesses
+    model quality nor removes a failure from that helper's fixed denominators.
+    The observation's SHA was reviewed independently; receipt times alone cannot
+    prove sleep or establish the cause of an individual provider timeout.
+    """
+    import hashlib
+
+    def read(path):
+        if path.is_symlink() or not path.is_file():
+            raise ValueError('owed_host_input_not_plain_file')
+        return path.read_bytes()
+
+    study, evidence = Path(study), Path(evidence)
+    if study.is_symlink() or (study / 'receipts').is_symlink():
+        raise ValueError('owed_host_input_not_plain_file')
+    evidence_raw = read(evidence)
+    if hashlib.sha256(evidence_raw).hexdigest() != OWED_HOST_PROOFS['host_evidence_sha256']:
+        raise ValueError('owed_host_evidence_mismatch')
+    incident = json.loads(evidence_raw)
+    raw_plan = read(study / 'plan.private.json')
+    plan = json.loads(raw_plan)
+    proofs = {key: OWED_HOST_PROOFS[key] for key in
+              ('plan_sha256', 'canonical_plan_sha256', 'configuration_sha256', 'source_files_sha256')}
+    if hashlib.sha256(raw_plan).hexdigest() != proofs['plan_sha256'] \
+            or _owed_host_digest(plan) != proofs['canonical_plan_sha256'] \
+            or plan.get('source_ref') != OWED_HOST_SOURCE_REF \
+            or plan.get('native_source_ref') != OWED_HOST_NATIVE_REF \
+            or plan.get('configuration_sha256') != proofs['configuration_sha256'] \
+            or _owed_host_digest(plan.get('configurations')) != proofs['configuration_sha256'] \
+            or _owed_host_digest(plan.get('source_files')) != proofs['source_files_sha256'] \
+            or plan.get('planned_cells') != 72:
+        raise ValueError('owed_host_plan_mismatch')
+    order = plan.get('execution_order', [])
+    if type(order) is not list or len(order) != 72 \
+            or any(type(item) is not dict or type(item.get('slot')) is not str
+                   or not re.fullmatch(r'[A-Za-z0-9_.-]+', item['slot']) for item in order) \
+            or len({item['slot'] for item in order}) != 72:
+        raise ValueError('owed_host_schedule_mismatch')
+    receipts, claims = incident.get('receipts_sha256'), incident.get('claims_sha256')
+    if type(receipts) is not dict or type(claims) is not dict \
+            or set(receipts) != {item['slot'] + '.json' for item in order[:32]} \
+            or set(claims) != {item['slot'] + '.started.json' for item in order[:32]} \
+            or _owed_host_digest(receipts) != OWED_HOST_PROOFS['affected_receipts_sha256'] \
+            or _owed_host_digest(claims) != OWED_HOST_PROOFS['affected_claims_sha256'] \
+            or incident.get('completed') != 32 or incident.get('ready') != 32 \
+            or incident.get('delivered') != 3 or incident.get('claims_are_spent') is not True \
+            or incident.get('original_inputs_unchanged') is not True:
+        raise ValueError('owed_host_capture_inventory_mismatch')
+    counts = {'timeouts': 0, 'false_action': 0, 'delivered': 0}
+    for item in order[:32]:
+        name = item['slot'] + '.json'
+        claim_name = item['slot'] + '.started.json'
+        raw_receipt, raw_claim = read(study / 'receipts' / name), read(study / 'receipts' / claim_name)
+        if hashlib.sha256(raw_receipt).hexdigest() != receipts[name] \
+                or hashlib.sha256(raw_claim).hexdigest() != claims[claim_name]:
+            raise ValueError('owed_host_original_capture_changed')
+        row, claim = json.loads(raw_receipt), json.loads(raw_claim)
+        if any(row.get(key) != item.get(key) or claim.get(key) != item.get(key)
+               for key in ('slot', 'episode_id', 'arm', 'account', 'kind')) \
+                or item.get('kind') != 'positive' or row.get('status') != 'measured' \
+                or any(value.get('plan_sha256') != proofs['canonical_plan_sha256']
+                       or value.get('source_ref') != OWED_HOST_SOURCE_REF for value in (row, claim)) \
+                or row.get('native_source_ref') != OWED_HOST_NATIVE_REF \
+                or row.get('configuration_sha256') != proofs['configuration_sha256']:
+            raise ValueError('owed_host_receipt_binding_mismatch')
+        owed = [attempt for attempt in row.get('background_parameters', {}).get('attempts', [])
+                if attempt.get('lane') == 'owed']
+        config = plan['configurations'].get(item['arm'], {})
+        if len(owed) != 1 or owed[0].get('channel') != item['account'] \
+                or any(owed[0].get(key) != config.get(key) for key in
+                       ('provider', 'model', 'thinking_level', 'max_output_tokens', 'timeout_s')):
+            raise ValueError('owed_host_native_attempt_mismatch')
+        outcome = owed[0].get('outcome'), owed[0].get('native_code')
+        if outcome == ('provider_timeout', 'provider_timeout'):
+            counts['timeouts'] += 1
+        elif outcome == ('provider_invalid_output', 'false_action'):
+            counts['false_action'] += 1
+        elif outcome == ('ok', 'ok'):
+            late = [send for send in row.get('sends', []) if send.get('lane') == 'owed_answer']
+            wire = row.get('development_boundary', {}).get('line_attempts', [])
+            if len(late) != 1 or late[0].get('failure_notice') is not False or not wire \
+                    or any(attempt.get('accepted') is not True or attempt.get('duplicate') is not False
+                           or attempt.get('account') != item['account'] for attempt in wire):
+                raise ValueError('owed_host_delivery_mismatch')
+            counts['delivered'] += 1
+        else:
+            raise ValueError('owed_host_unexpected_native_outcome')
+    note = _owed_host_note()
+    if counts != note['retained_outcomes']:
+        raise ValueError('owed_host_outcome_count_mismatch')
+    return validate_owed_host_interruption(note, development)
+
+
+def owed_host_interruption_panel(value):
+    if value is None:
+        return ''
+    validate_owed_host_interruption(value)
+    proofs = ''.join(f'<li>{esc(key)}：<code>{esc(digest)}</code></li>'
+                     for key, digest in value['proof'].items())
+    return ('<aside class="notice"><b>欠答開發題組的主機中斷限制</b>'
+            f'<p>{esc(value["notice"])}</p><p>72 槽與 130 次判讀的原定門檻、分母及第一次判讀優先原則不變。</p>'
+            f'<details><summary>主機觀察與原始收據的來源綁定</summary><ul class="iteration-meta">{proofs}</ul></details>'
+            f'<p><a href="{OWED_HOST_INTERRUPTION_NAME}" download>下載僅含彙總與證據摘要的中斷紀錄</a>。</p></aside>')
+
+
+def _owed_terminal_note():
+    return {'schema_version':1,'kind':'native_owed_terminal_unqualified','status':'terminal_unqualified',
+        'source_ref':OWED_HOST_SOURCE_REF,'native_source_ref':OWED_HOST_NATIVE_REF,
+        'native_cells':72,'planned_judgments':130,'retained_attempts':130,'valid_judgments':125,
+        'technical_errors':5,'missing_judgments':5,'interrupted_started_judgments':0,
+        'valid_control_judgments':29,'planned_control_judgments':34,'primary_pass':1,
+        'quality_scores_published':False,'replayed_attempts':0,
+        'gates':{key:False for key in ('judging_complete','controls_passed','quality_ready','publication_ready')},
+        'judge_usage':{'request_sent_attempts':130,'known_token_usage':dict(OWED_TERMINAL_TOKENS),
+                       'unknown_usage_components':{key:5 for key in OWED_TERMINAL_TOKENS}},
+        'proof':{**{key:OWED_HOST_PROOFS[key] for key in ('plan_sha256','canonical_plan_sha256',
+                    'configuration_sha256','source_files_sha256')},**OWED_TERMINAL_PROOFS,
+                 'peer_audit_sha256':OWED_TERMINAL_PEER_SHA256},'notice':OWED_TERMINAL_NOTICE}
+
+
+def validate_owed_terminal(value, development=None):
+    if type(value) is not dict or _owed_host_digest(value) != _owed_host_digest(_owed_terminal_note()):
+        raise ValueError('invalid_owed_terminal_note')
+    if development is not None:
+        if development.get('status') != 'pending' or development.get('results') is not None:
+            raise ValueError('owed_terminal_scores_must_be_withheld')
+        validate_owed_host_interruption(_owed_host_note(),development)
+    check_public(value)
+    return value
+
+
+def verified_owed_terminal(study, judging, audit):
+    """Read only: prove the spent, unqualified one-shot archive, not new scores."""
+    import hashlib
+
+    def read(path):
+        if path.is_symlink() or not path.is_file():
+            raise ValueError('owed_terminal_input_not_plain_file')
+        return path.read_bytes()
+
+    def inventory(folder):
+        if folder.is_symlink() or not folder.is_dir():
+            raise ValueError('owed_terminal_input_not_plain_file')
+        found={}
+        for path in sorted(folder.rglob('*')):
+            if path.is_symlink():raise ValueError('owed_terminal_input_not_plain_file')
+            if path.is_file():found[path.relative_to(folder).as_posix()]=hashlib.sha256(read(path)).hexdigest()
+        return found
+
+    study,judging=Path(study),Path(judging)
+    if study.is_symlink() or judging.is_symlink():raise ValueError('owed_terminal_input_not_plain_file')
+    if audit is None:raise ValueError('owed_terminal_peer_audit_required')
+    audit_raw=read(Path(audit))
+    if hashlib.sha256(audit_raw).hexdigest()!=OWED_TERMINAL_PEER_SHA256:
+        raise ValueError('owed_terminal_peer_audit_mismatch')
+    peer=json.loads(audit_raw)
+    for key,expected in {'protocol':'owed72_original130_terminal_metadata_audit_v1',
+            'binding_raw_sha256':OWED_TERMINAL_PROOFS['binding_file_sha256'],
+            'binding_canonical_sha256':OWED_TERMINAL_PROOFS['binding_sha256'],
+            'quality_raw_sha256':OWED_TERMINAL_PROOFS['quality_sha256'],
+            'source_inventory_sha256':OWED_HOST_PROOFS['source_files_sha256'],
+            'input_inventory_sha256':OWED_TERMINAL_PROOFS['input_files_sha256'],
+            'all_exact_claim_attempt_request_bindings':True,'source_equal_native_and_preflight':True,
+            'all_inputs_byte_equal_native_and_preflight':True,'all96_conversation_verdicts_equal_quality':True,
+            'all_withholding_passed_zero_uploads':True,'quality_null':True}.items():
+        if type(peer.get(key)) is not type(expected) or peer[key]!=expected:
+            raise ValueError('owed_terminal_peer_binding_mismatch')
+    raw_binding=read(judging/'binding.private.json');binding=json.loads(raw_binding)
+    quality_raw=read(judging/'quality.private.json');quality=json.loads(quality_raw)
+    if hashlib.sha256(raw_binding).hexdigest()!=OWED_TERMINAL_PROOFS['binding_file_sha256'] \
+            or _owed_host_digest(binding)!=OWED_TERMINAL_PROOFS['binding_sha256'] \
+            or json.loads(read(judging/'binding.sha256.json')).get('sha256')!=_owed_host_digest(binding) \
+            or hashlib.sha256(quality_raw).hexdigest()!=OWED_TERMINAL_PROOFS['quality_sha256']:
+        raise ValueError('owed_terminal_retained_binding_changed')
+    plan_raw=read(study/'plan.private.json');plan=json.loads(plan_raw)
+    if hashlib.sha256(plan_raw).hexdigest()!=OWED_HOST_PROOFS['plan_sha256'] \
+            or _owed_host_digest(plan)!=OWED_HOST_PROOFS['canonical_plan_sha256'] \
+            or binding.get('original_plan_sha256')!=_owed_host_digest(plan) \
+            or any(binding.get(key)!=expected or plan.get(key)!=expected for key,expected in (
+                ('source_ref',OWED_HOST_SOURCE_REF),('native_source_ref',OWED_HOST_NATIVE_REF),
+                ('configuration_sha256',OWED_HOST_PROOFS['configuration_sha256']))) \
+            or _owed_host_digest(plan.get('configurations'))!=OWED_HOST_PROOFS['configuration_sha256'] \
+            or binding.get('export_code_ref')!=OWED_HOST_SOURCE_REF \
+            or _owed_host_digest(binding.get('source_files'))!=OWED_HOST_PROOFS['source_files_sha256'] \
+            or binding.get('source_files')!=plan.get('source_files') \
+            or inventory(judging/'source/engine')!=plan.get('source_files'):
+        raise ValueError('owed_terminal_original_plan_or_source_changed')
+    order=plan.get('execution_order',[])
+    names={'plan.private.json','plan.sha256.json'}|{f"receipts/{item['slot']}{suffix}"
+        for item in order for suffix in ('.json','.started.json')}
+    inputs=inventory(judging/'inputs')
+    if len(order)!=72 or len(names)!=146 or set(inputs)!=names or inputs!=binding.get('input_files') \
+            or _owed_host_digest(inputs)!=OWED_TERMINAL_PROOFS['input_files_sha256'] \
+            or any(hashlib.sha256(read(study/name)).hexdigest()!=digest for name,digest in inputs.items()):
+        raise ValueError('owed_terminal_original_inputs_changed')
+    base=judging/'judge/foreground';packets={}
+    for directory,name in (('results','packets'),('controls','controls')):
+        raw=read(base/(name+'.json'))
+        if hashlib.sha256(raw).hexdigest()!=OWED_TERMINAL_PROOFS[name+'_sha256'] \
+                or binding.get(name+'_sha256')!=OWED_TERMINAL_PROOFS[name+'_sha256']:
+            raise ValueError('owed_terminal_packets_changed')
+        packets[directory]=json.loads(raw)
+    if len(packets['results'])!=48 or len(packets['controls'])!=17 \
+            or hashlib.sha256(read(base/'mapping.private.json')).hexdigest()!=OWED_TERMINAL_PROOFS['mapping_sha256'] \
+            or binding.get('mapping_sha256')!=OWED_TERMINAL_PROOFS['mapping_sha256']:
+        raise ValueError('owed_terminal_packets_changed')
+    jobs=[(directory,packet['packet_id'],index) for directory,items in packets.items()
+          for packet in items for index in (1,2)]
+    expected={f'{directory}/{identity}.p{index}.a1.json' for directory,identity,index in jobs}
+    attempts={directory+'/'+name:digest for directory in packets
+              for name,digest in inventory(base/directory).items()}
+    claims=inventory(judging/'claims')
+    if len(jobs)!=130 or set(attempts)!=expected \
+            or set(claims)!={f'{identity}.p{index}.json' for _,identity,index in jobs} \
+            or _owed_host_digest(attempts)!=OWED_TERMINAL_PROOFS['judge_attempts_sha256'] \
+            or _owed_host_digest(claims)!=OWED_TERMINAL_PROOFS['judge_claims_sha256']:
+        raise ValueError('owed_terminal_attempt_inventory_changed')
+    valid=errors=valid_controls=0;known={key:0 for key in OWED_TERMINAL_TOKENS};unknown=dict(known)
+    for directory,identity,index in jobs:
+        value=json.loads(read(base/f'{directory}/{identity}.p{index}.a1.json'))
+        claim=json.loads(read(judging/'claims'/f'{identity}.p{index}.json'))
+        if any(value.get(key)!=expected for key,expected in (('packet_id',identity),('pass',index),
+                ('attempt',1),('model','gpt-6-sol'),('reasoning','medium'))) \
+                or any(claim.get(key)!=expected for key,expected in (('packet_id',identity),('pass',index),
+                    ('directory',directory),('binding_sha256',OWED_TERMINAL_PROOFS['binding_sha256']),
+                    ('request_sha256',value.get('request_sha256')))) \
+                or not re.fullmatch('[0-9a-f]{64}',value.get('request_sha256','')) \
+                or value.get('request_sent') is not True:
+            raise ValueError('owed_terminal_attempt_binding_changed')
+        if value.get('status')=='ok':
+            valid+=1;valid_controls+=int(directory=='controls')
+        elif value.get('status')=='error' and directory=='controls' and index==2:
+            errors+=1
+        else:raise ValueError('owed_terminal_unexpected_attempt_status')
+        for key in known:
+            count=(value.get('usage') or {}).get(key)
+            if type(count) is int and count>=0:known[key]+=count
+            else:unknown[key]+=1
+    if (valid,errors,valid_controls)!=(125,5,29) or known!=OWED_TERMINAL_TOKENS \
+            or unknown!={key:5 for key in known} \
+            or any(quality.get(key)!=expected for key,expected in (('planned_judgments',130),
+                ('retained_attempts',130),('missing_judgments',5),('interrupted_started_judgments',0),
+                ('primary_pass',1),('binding_sha256',OWED_TERMINAL_PROOFS['binding_sha256']))) \
+            or any(quality.get(key) is not False or peer.get('gates',{}).get(key) is not False
+                   for key in ('judging_complete','controls_passed','quality_ready','publication_ready')) \
+            or quality.get('quality') is not None or len(quality.get('controls',[]))!=29 \
+            or any(row.get('as_expected') is not True for row in quality['controls']):
+        raise ValueError('owed_terminal_original_gates_changed')
+    return validate_owed_terminal(_owed_terminal_note())
+
+
+def owed_development_projection(study, judging=None, terminal_audit=None):
+    terminal=None
+    if judging:
+        quality_path=Path(judging)/'quality.private.json'
+        if quality_path.is_symlink():raise ValueError('owed_terminal_input_not_plain_file')
+        if json.loads(quality_path.read_text()).get('quality_ready') is False:
+            terminal=verified_owed_terminal(study,judging,terminal_audit)
+    # The strict completed-score exporter is unchanged; terminal failures use
+    # only its original plan projection and a separate verified status note.
+    development=owed_development_module().verified_projection(study,None if terminal else judging)
+    if terminal:validate_owed_terminal(terminal,development)
+    return development,terminal
+
+
+def owed_terminal_panel(value):
+    if value is None:return ''
+    validate_owed_terminal(value)
+    hashes=''.join(f'<li>{esc(key)}：<code>{esc(digest)}</code></li>' for key,digest in value['proof'].items())
+    return ('<aside class="notice"><b>判讀已結束，未通過原定門檻</b>'
+        f'<p>{esc(value["notice"])}</p><p>125 次有效判讀包含 96 次對話與 29 次控制題；控制題原定 34 次，仍缺 5 次有效判讀。'
+        '只加總已回報的 333,356 total tokens；5 次嘗試的各項用量未知，不當成零費用或零 tokens。</p>'
+        f'<details><summary>原始輸入、130 次嘗試與獨立稽核綁定</summary><ul class="iteration-meta">{hashes}</ul></details>'
+        f'<p><a href="{OWED_TERMINAL_NAME}" download>下載不含題目、識別碼或模型成績的終態紀錄</a>。</p></aside>')
+
+
+def owed_development_panel(data, host_interruption=None, terminal_unqualified=None):
+    require_owed_host_interruption(data, host_interruption)
+    if terminal_unqualified is not None and data is None:raise ValueError('owed_terminal_study_required')
     if not data:return ''
+    if terminal_unqualified is not None:validate_owed_terminal(terminal_unqualified,data)
     owed_development_module().validate_public(data);check_public(data)
     tasks=''.join(f'<tr><td>{esc(SCOPE_LABELS[row["scope"]])}</td><td>{esc(row["summary"])}</td>'
                   f'<td>{esc(row["expected"])}</td></tr>' for row in data['tasks'])
     body=('<section class="panel"><h2>獨立的欠答開發題組</h2>'
         '<p class="notice"><b>與 824 槽研究及原六次單題診斷分開。</b>'
-        +('這份計畫已凍結，尚未有完整可展示的欠答題組成績。</p>' if data['status']=='pending' else
+        +('原生 72 槽與 130 次判讀均已結束，未通過原定門檻；此處保留終態，不等待或排定重試。</p>' if terminal_unqualified else
+          '這份計畫已凍結，尚未有完整可展示的欠答題組成績。</p>' if data['status']=='pending' else
           '已完成本開發題組的原生捕捉與新評審，不代表完整研究或模型排名。</p>')+
         '<p>先前 35b4b33f 的 72 槽準備計畫未執行，已由本計畫取代；原六次單題診斷另外保留。</p>'
         '<p>8 個正例（6 個私訊、2 個明確指名群組）× 3 個設定 × 2 個合成帳號＝48 個正例槽；'
@@ -1072,6 +1777,8 @@ def owed_development_panel(data):
         '<p>評審使用原有前景規格：48 段實際對話 × 2 次，加上全新的 17 題已知控制 × 2 次，最多 130 次。'
         '只有全部 72 槽、130 次判讀與 34 次控制題都通過完整性檢查，才展示結果。'
         '統計固定讀第一次，第二次檢查一致性；不把兩個帳號當成獨立新題。</p>')
+    body += owed_host_interruption_panel(host_interruption)
+    body += owed_terminal_panel(terminal_unqualified)
     if data['results'] is not None:
         rows=[]
         for arm,row in data['results']['arms'].items():
@@ -1101,7 +1808,7 @@ def interruption_panel(data):
         f'<a href="{INTERRUPTION_NAME}" download>下載不含私人路徑的事件綁定紀錄</a>。</p></section>')
 
 
-def planned_study_panel(data):
+def planned_study_panel(data, qualified_results=None):
     if not data:
         return ''
     if data.get('kind') != 'always_on_preregistered_plan' or data.get('plan_verified') is not True \
@@ -1111,12 +1818,21 @@ def planned_study_panel(data):
     planned_study_module().validate_public(data)
     check_public(data)
     proof=data['proof']
+    qualified = bool(qualified_results and all(qualified_results.get(key) is True for key in
+        ('complete','replay_complete','judging_complete','publication_ready'))
+        and qualified_results.get('refs') == data['refs']
+        and qualified_results.get('metadata', {}).get('evaluation_revision', {}).get('original_plan_sha256') == proof['plan_sha256']
+        and qualified_results.get('metadata', {}).get('configuration_sha256') == proof['configuration_sha256'])
+    notice = ('<p class="notice"><b>已驗證計畫與來源綁定，完整研究結果已收錄。</b>'
+              '這是執行前凍結的計畫快照，原始來源與設定保持不變；'
+              f'完整結果、限制與原始分母另列於<a href="{PAGE_NAME}">結果頁</a>。</p>' if qualified else
+              '<p class="notice"><b>已驗證計畫與來源綁定，完整成績仍待完成。</b>這裡沒有即時部分分數，'
+              '計畫驗證不代表重播完成、原生呼叫全部通過或 AI 評審品質通過。</p>')
     hashes=''.join(f'<li>{label}：<code>{esc(proof[key])}</code></li>' for key,label in (
         ('plan_sha256','計畫'),('configuration_sha256','設定'),('cohort_sha256','執行題組'),
         ('code_sha256','執行與判讀程式'),('source_files_sha256','凍結來源檔案'),('protocol_sha256','公開方法快照')))
     return ('<section class="panel"><h2>本輪凍結的執行計畫</h2>'
-            '<p class="notice"><b>已驗證計畫與來源綁定，完整成績仍待完成。</b>這裡沒有即時部分分數，'
-            '計畫驗證不代表重播完成、原生呼叫全部通過或 AI 評審品質通過。</p>'
+            + notice +
             f'<p>候選引擎 {commit_link(data["refs"]["engine"])}；原有版本基準 {commit_link(data["refs"]["existing"])}。'
             '基準是準備時已提交的版本；之後 main 更新不會改寫這次研究。'
             '103 個情境 × 4 組 × 2 次＝824 個執行槽，每組在兩個合成帳號各執行一次。</p>'
@@ -1193,10 +1909,10 @@ def render(data, iterations=()):
             ('可用的下一步', 'AI 前景盲評；誠實處理能力界線'), ('主動得合適', '命中、安靜負例與逐則合適率')))
         body = f'<section class="panel"><p class="notice warning"><b>尚未有可發布的完整 Always-on 研究。</b>完整題組的分數、改善幅度與勝負結論仍待完成。</p><h2>這裡會呈現哪些結果</h2><div class="kpis">{cards}</div><p>只有完整重播、兩階段各兩次判讀、通過所有控制題，才會顯示完整成績。教學時間軸和合成測試 fixture 不會當成結果。</p></section>'
         body += calibration_panel(data.get('judge_calibration'))
-        body += planned_study_panel(data.get('planned_study'))
+        body += planned_study_panel(data.get('planned_study'), data)
         body += interruption_panel(data.get('study_interruption'))
         body += owed_diagnostic_panel(data.get('owed_diagnostic'))
-        body += owed_development_panel(data.get('owed_development'))
+        body += owed_development_panel(data.get('owed_development'), data.get('owed_development_host_interruption'), data.get('owed_development_terminal'))
         body += f'<section class="panel"><h2>逐段檢查，等資料完成</h2><p>本輪比較原有版本、Gemini Medium、Gemini High 與 GPT-6.1-Sol Low。每段情境會顯示各組完整時間軸、每次重複、主機檢查與 AI 判斷理由。現在可以先看<a href="{METHOD_NAME}">公開開發題組與評審門檻</a>。</p></section><section class="panel"><h2>研究迭代</h2>{iteration_table(iterations)}</section>'
         return page_shell(PAGE_NAME, 'Always-on 結果', '這一頁保留完整研究的成績、案例與版本證據。每次迭代獨立呈現，讓主動訊息的時機、內容與打擾成本可以逐則檢查。', body, status='等待完整研究',
                           generated=data.get('generated_at', '2026-10-14'))
@@ -1220,11 +1936,13 @@ def render(data, iterations=()):
     gate_rows = ''.join(f'<tr><th>{ARM_LABELS[arm]}</th><td><code>{esc(json.dumps(data["gates"][arm],ensure_ascii=False,sort_keys=True))}</code></td></tr>' for arm in arms)
     headers = ''.join(f'<th>{esc(ARM_LABELS[arm])}</th>' for arm in arms)
     body = f'<section class="panel"><h2>完整開發研究</h2><div class="kpis">{"".join(metrics)}</div><p class="small">每個情境在每組重複 {data["metadata"]["repeats"]} 次，兩個帳號交替使用。</p>{paired_comparisons(data)}</section>'
+    body += evaluation_revision_panel(data)
+    body += qualified_metric_limitations_panel(data)
     body += model_configuration_panel(data)
     body += background_model_panel(data)
     body += absolute_component_table(data)
     body += owed_diagnostic_panel(data.get('owed_diagnostic'))
-    body += owed_development_panel(data.get('owed_development'))
+    body += owed_development_panel(data.get('owed_development'), data.get('owed_development_host_interruption'), data.get('owed_development_terminal'))
     body += interruption_panel(data.get('study_interruption'))
     body += f'<section class="panel"><h2>分項判讀與控制題</h2><div class="grid2"><div class="scroll"><table><thead><tr><th>自主訊息 AI 分項（1–5）</th>{headers}</tr></thead><tbody>{quality_rows}</tbody></table></div><div class="scroll"><table><thead><tr><th>前景 AI 判讀</th>{headers}</tr></thead><tbody>{foreground_rows}</tbody></table></div></div><table><tbody>{control_rows}</tbody></table><p>這些是 AI 判讀；原始逐則分數與理由如下。控制題檢查評審是否理解規格，不證明實際使用者都喜歡這些訊息。</p></section>'
     body += f'<section class="panel"><h2>逐段時間軸</h2><p>自主關心、使用者要求與欠答分開標記；每組保留每次重複和失敗案例。</p><div data-explorer>{filters(data["episodes"])}{explorer(data)}</div></section>'
@@ -1319,6 +2037,14 @@ def main():
     parser.add_argument('--planned-study',type=Path)
     parser.add_argument('--owed-development-study',type=Path)
     parser.add_argument('--owed-development-judge',type=Path)
+    parser.add_argument('--owed-development-host-evidence',type=Path,
+                        help='Independently reviewed host observation bound to the original owed capture')
+    parser.add_argument('--owed-development-terminal-audit',type=Path,
+                        help='Independent metadata audit of the original spent, unqualified judge archive')
+    parser.add_argument('--evaluation-revision',type=Path,
+                        help='separate verified correction archive; original capture remains unchanged')
+    parser.add_argument('--evaluation-ref',help='independently approved committed evaluator SHA')
+    parser.add_argument('--evaluation-source',type=Path,help='normal Git checkout containing the approved evaluator')
     parser.add_argument('--interruption-records',type=Path)
     parser.add_argument('--interruption-inventory',type=Path)
     parser.add_argument('--original-planned-public',type=Path)
@@ -1327,6 +2053,10 @@ def main():
     parser.add_argument('--iteration')
     parser.add_argument('--generated-at',default='2026-10-14')
     args=parser.parse_args()
+    if (args.evaluation_revision is not None or args.evaluation_ref is not None or args.evaluation_source is not None) \
+            and (args.study is None or args.evaluation_revision is None or args.evaluation_ref is None
+                 or args.evaluation_source is None):
+        parser.error('give study, evaluation revision, approved ref and normal Git source together')
     import hashlib
     protocol=None
     rubric_assets={}
@@ -1350,8 +2080,8 @@ def main():
     index_path=PUBLIC/ITERATIONS_NAME
     index=json.loads(index_path.read_text()) if index_path.exists() else {'schema_version':1,'iterations':[]}
     if args.study:
-        verify_study_capture(args.study)
-        source=(args.study/'results.json').read_bytes()
+        source = verify_study_capture(args.study, evaluation_revision=args.evaluation_revision,
+            evaluator_ref=args.evaluation_ref, evaluator_source=args.evaluation_source)
         data=project(json.loads(source),generated_at=args.generated_at,artifact_sha256=hashlib.sha256(source).hexdigest())
         if not args.iteration or not re.fullmatch(r'[a-z0-9][a-z0-9-]{0,63}',args.iteration):parser.error('give --iteration with a stable public id')
         file=f'always-on/iterations/{args.iteration}.public.json'
@@ -1415,17 +2145,44 @@ def main():
     elif (PUBLIC/OWED_DIAGNOSTIC_NAME).exists():
         data['owed_diagnostic']=json.loads((PUBLIC/OWED_DIAGNOSTIC_NAME).read_text())
     development_text=None
+    owed_terminal_text=None
     if args.owed_development_judge and not args.owed_development_study:
         parser.error('give the original owed development study with its judge archive')
+    if args.owed_development_terminal_audit and not (args.owed_development_study and args.owed_development_judge):
+        parser.error('give the original owed study and judge archive with its terminal audit')
     if args.owed_development_study:
-        development=owed_development_module().verified_projection(args.owed_development_study,args.owed_development_judge)
+        development,terminal=owed_development_projection(args.owed_development_study,args.owed_development_judge,
+            args.owed_development_terminal_audit)
         check_public(development);data['owed_development']=development
         development_text=json.dumps(development,ensure_ascii=False,indent=1)+'\n'
+        if terminal:
+            data['owed_development_terminal']=terminal
+            owed_terminal_text=json.dumps(terminal,ensure_ascii=False,indent=1)+'\n'
+        elif args.owed_development_judge:
+            data.pop('owed_development_terminal',None)
     elif (PUBLIC/OWED_DEVELOPMENT_NAME).exists():
         data['owed_development']=json.loads((PUBLIC/OWED_DEVELOPMENT_NAME).read_text())
+    if owed_terminal_text is None and not args.owed_development_judge and (PUBLIC/OWED_TERMINAL_NAME).exists():
+        data['owed_development_terminal']=json.loads((PUBLIC/OWED_TERMINAL_NAME).read_text())
+    if data.get('owed_development_terminal') is not None:
+        validate_owed_terminal(data['owed_development_terminal'],data.get('owed_development'))
+    owed_host_text=None
+    if args.owed_development_host_evidence:
+        if not args.owed_development_study:
+            parser.error('give the original owed study with its host evidence')
+        note=verified_owed_host_interruption(args.owed_development_study,
+            args.owed_development_host_evidence,data.get('owed_development'))
+        data['owed_development_host_interruption']=note
+        owed_host_text=json.dumps(note,ensure_ascii=False,indent=1)+'\n'
+    elif (PUBLIC/OWED_HOST_INTERRUPTION_NAME).exists():
+        data['owed_development_host_interruption']=json.loads((PUBLIC/OWED_HOST_INTERRUPTION_NAME).read_text())
+    require_owed_host_interruption(data.get('owed_development'),data.get('owed_development_host_interruption'))
     method, report=render_method(cases,has_results=data.get('publication_ready') is True,
                                 diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study'),
                                 interruption=data.get('study_interruption'),owed_development=data.get('owed_development'),
+                                owed_development_host_interruption=data.get('owed_development_host_interruption'),
+                                owed_development_terminal=data.get('owed_development_terminal'),
+                                qualified_results=data,
                                 generated_at=data.get('generated_at','2026-10-14')),render(data,index['iterations'])
     check_public(data);check_public(index);check_public(cases)
     if planned_text is not None:
@@ -1445,6 +2202,16 @@ def main():
         archive=PUBLIC/('line-always-on-owed-development-'+digest[:12]+'.public.json')
         if archive.exists() and archive.read_text()!=development_text:raise ValueError('immutable_owed_development_changed')
         archive.write_text(development_text);(PUBLIC/OWED_DEVELOPMENT_NAME).write_text(development_text)
+    if owed_host_text is not None:
+        digest=hashlib.sha256(owed_host_text.encode()).hexdigest()
+        archive=PUBLIC/('line-always-on-owed-host-interruption-'+digest[:12]+'.public.json')
+        if archive.exists() and archive.read_text()!=owed_host_text:raise ValueError('immutable_owed_host_interruption_changed')
+        archive.write_text(owed_host_text);(PUBLIC/OWED_HOST_INTERRUPTION_NAME).write_text(owed_host_text)
+    if owed_terminal_text is not None:
+        digest=hashlib.sha256(owed_terminal_text.encode()).hexdigest()
+        archive=PUBLIC/('line-always-on-owed-terminal-'+digest[:12]+'.public.json')
+        if archive.exists() and archive.read_text()!=owed_terminal_text:raise ValueError('immutable_owed_terminal_changed')
+        archive.write_text(owed_terminal_text);(PUBLIC/OWED_TERMINAL_NAME).write_text(owed_terminal_text)
     if protocol is not None:
         frozen=PUBLIC/protocol_file
         if frozen.exists() and json.loads(frozen.read_text())!=protocol:
