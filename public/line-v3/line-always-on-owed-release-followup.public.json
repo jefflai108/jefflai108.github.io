@@ -1,0 +1,502 @@
+{
+ "schema_version": 1,
+ "kind": "native_owed_integrated_release_followup",
+ "native_protocol": "native_owed_development_v2",
+ "comparison_scope": "integrated_release_followup",
+ "quality_scope": "owed_answers_only",
+ "guard_only_causality": false,
+ "pooled_with_prior_studies": false,
+ "publication_ready": false,
+ "held_out": false,
+ "quality_ready": true,
+ "prior_study": {
+  "source_ref": "617592a8c8740faa4ceb8db37f2605b40874402d",
+  "native_source_ref": "e1101c275718ffda7199258d57ee1e8af971ee72",
+  "public_alias": "line-always-on-owed-development-v2.public.json"
+ },
+ "study": {
+  "schema_version": 2,
+  "kind": "native_owed_development_v2",
+  "source_ref": "2dd681418f6b18e9f9bfc4113786d91aaf4b782a",
+  "native_source_ref": "1a62bc7d16e0bcfe856f9b0c48320ce2a4ddf4d3",
+  "full_study_result": false,
+  "publication_ready": false,
+  "held_out": false,
+  "planned_cells": 72,
+  "positive_denominator": 48,
+  "withholding_denominator": 24,
+  "max_native_calls": 48,
+  "max_calls_per_cell": 1,
+  "planned_judge_jobs": 130,
+  "max_attempts_per_job": 3,
+  "max_judge_calls": 390,
+  "max_combined_provider_calls": 438,
+  "primary_pass": 1,
+  "retry_policy": {
+   "version": 2,
+   "logical_jobs": 130,
+   "max_attempts_per_job": 3,
+   "one_new_attempt_per_unresolved_job_per_invocation": true,
+   "valid_verdict_final": true,
+   "retry_only": [
+    "technical_error",
+    "interrupted_claim_without_receipt"
+   ],
+   "interrupted_claim_spent_usage_unknown": true,
+   "namespace_lock": "exclusive_nonblocking_flock"
+  },
+  "configurations": {
+   "engine_medium": {
+    "provider": "gemini",
+    "model": "gemini-3.8-flash",
+    "thinking_level": "medium",
+    "max_output_tokens": 32768,
+    "timeout_s": 120
+   },
+   "engine_high": {
+    "provider": "gemini",
+    "model": "gemini-3.8-flash",
+    "thinking_level": "high",
+    "max_output_tokens": 32768,
+    "timeout_s": 120
+   },
+   "engine_sol_low": {
+    "provider": "openai",
+    "model": "gpt-6.1-sol",
+    "thinking_level": "low",
+    "max_output_tokens": 32768,
+    "timeout_s": 120
+   }
+  },
+  "settings": {
+   "tick_s": 30,
+   "workers": 1,
+   "worker_timeout_s": 600,
+   "background_max_output_tokens": 32768,
+   "background_timeout_s": 120,
+   "foreground_failure": "declared_per_turn_native_transport_fault",
+   "unrelated_background_setup": "empty_original_native_extractor_schema",
+   "reviewed_profile_setup": {
+    "version": 1,
+    "hook": "durable_profile.extract_profile",
+    "result": "empty_profile",
+    "source_projection": "native_owned_history",
+    "source_validation_and_privacy_fences": "native",
+    "provider_stage": "scripted_no_credentials_or_uploads",
+    "quality_measured": false,
+    "application_factory": "sidecar._line_diary_application",
+    "derivation_driver": "native_claim_run_line_derivation_settle",
+    "derivation_schedule": "after_turn_before_engine_and_before_tick",
+    "derivation_pass_limit": 64,
+    "summary_provider_stage": "scripted_existing_fixture_summary_5_or_6_no_credentials_or_uploads",
+    "derivation_errors": "invalidate_setup"
+   },
+   "delegated_executor": "unavailable; any provider request fails closed",
+   "tts": false,
+   "native_group_mode_prelude_s": 60,
+   "candidate_permutations": 6,
+   "secondary_order_offset": 3,
+   "adjacent_account_blocks": true,
+   "account_first": "alternate_by_authored_scenario",
+   "engine_enabled": true,
+   "group_plans_enabled": true,
+   "timezone": "Asia/Taipei"
+  },
+  "tasks": [
+   {
+    "scope": "private",
+    "foreground_failure": "timeout",
+    "summary": "公告改寫",
+    "expected": "四句保留提供的日期、地點"
+   },
+   {
+    "scope": "private",
+    "foreground_failure": "unavailable",
+    "summary": "三個相關優先順序問題",
+    "expected": "逐題給可用步驟，不新增提醒"
+   },
+   {
+    "scope": "private",
+    "foreground_failure": "invalid_output",
+    "summary": "價格、重量與預算比較",
+    "expected": "使用提供數值，保留正確算式與結論"
+   },
+   {
+    "scope": "private",
+    "foreground_failure": "unavailable",
+    "summary": "日期與預算更正後整理",
+    "expected": "採用最新更正，捨棄舊值"
+   },
+   {
+    "scope": "private",
+    "foreground_failure": "timeout",
+    "summary": "兩個相關失敗回合",
+    "expected": "原生合併兩個欠答承諾，只補答一次"
+   },
+   {
+    "scope": "private",
+    "foreground_failure": "timeout",
+    "summary": "夜間非緊急規劃",
+    "expected": "原生延到隔日早晨，保留日期與補答開頭"
+   },
+   {
+    "scope": "group",
+    "foreground_failure": "unavailable",
+    "summary": "指名麻吉整理群組方案",
+    "expected": "回覆原提問者與本群方案，不混入無關安靜留言"
+   },
+   {
+    "scope": "group",
+    "foreground_failure": "invalid_output",
+    "summary": "指名麻吉協助訂位",
+    "expected": "誠實說明能力，給可用替代步驟，不虛構完成訂位"
+   }
+  ],
+  "withholding": [
+   "原問題經簽章收回",
+   "原生清除個人資料",
+   "同題稍後已獲原生有效回答",
+   "另一個已知同群帳號記錄新成員加入"
+  ],
+  "proof": {
+   "source_files_sha256": "19062acfffa014d7dbb424389cbc6dec8103ab6de54232e6058896898a94ff3b",
+   "corpus_sha256": "655dff423ff25bb016fb40c3f4129b715c9e03abd73431afe71c12a0f572b233",
+   "configuration_sha256": "7aabdaa06fdfeef0bb3d87972a520be2003942557cd1a6c19348d151b35aecec",
+   "settings_sha256": "4d1e8c4375bd5acc8480b227fabc0090e8efbb30c2b7051a51a910f99a14d605",
+   "schedule_sha256": "1d9f5f6d112141bbc4c66749f99ac46621a7355904ea37c3ef67a37482661cfc",
+   "plan_sha256": "fd0509f7a070e6998146439db4e31bb38ca1b3900a0ddf9253a5ec607d0a8a9f",
+   "canonical_plan_sha256": "82301a62256069f637871e8803d1c107a87ec9aeeddbc0f419d10e4920479c73",
+   "freeze_audit_sha256": "f269065588051268e70965ab175dc8114f9a495ef088c7acf73c312643ab2670",
+   "code_sha256": "7d2ac2dd52d689bbde65465f5df6489f5404e9871e8dc67f7563a0c11b173776",
+   "judge_export_code_sha256": "6a58499686d60c75151f619caa7ed0d817778a30c981b73fb13908bc9d72601d",
+   "judge_sha256": "327300f69b84008fca1b73f9feb78000668b108be2ad2a8b8979c08e3a15cef6",
+   "rubric_sha256": "33c60c6ad5a646c8eb3cceae9f5ccbe88e0a36ef7f27211a0199789621d45dd7",
+   "native_capture_sha256": "bdbe633503bbbcae1e6882ee2e0e32d99355ceb7eab80983685241baaa1e6dec",
+   "binding_sha256": "240dbc67e3c61fcbb46b4e340afdf20bc2e5fda06715097f04d415bfdba5d974",
+   "judge_receipts_sha256": "7ff583bd00ca327515a0fa80400c612435fb6f7aa7cc5ed9cb7bae02cc482f3d",
+   "judge_claims_sha256": "7be81b910cadd6884ed7dff5f033fcd29e4cd305fdf7e4ed29bf645290f94314",
+   "retained_quality_sha256": "9dbcaf9d6f17228ee50074a19749b1fb8729fdfe4af4856bc9b912ad6158bdf1",
+   "packets_sha256": "8f84dbe820de2e0c50b3dbb2479e99aa3cb28e042b9b5d11d96d5e062c06afbb",
+   "controls_sha256": "fb8c640ebb7d678f767c2a4ac92b919d42b72564497d954334173db2f73d3004",
+   "mapping_sha256": "e0784af252c64b71781e9faddf638ed14b32a42040cd03b4ba493f65e2badf04"
+  },
+  "limits": "全新 v2 開發資料，與原 824 槽研究、原欠答 v1 及其主機中斷／判讀錯誤分開保留，不合併或修補舊結果。8 個作者設計正例，不是 holdout、正式環境可靠度或模型排名；前景故障與無關背景設定為明示腳本。原生欠答仍為一次性請求；只有技術判讀錯誤或缺收據的中斷 claim 可在預定上限內重試。任何有效判讀（包括負面答案或未通過的控制）都立即固定；正式統計使用第 1 輪，第 2 輪只檢查一致性。所有無效輸出、失敗、收尾及缺失保留在原分母；未回報用量不當成零。評審與 Sol 候選共享模型／供應商家族；真人校準尚未完成。",
+  "native": {
+   "completed_cells": 72,
+   "ready_cells": 72,
+   "withholding_passed": 24,
+   "missing_started_cells": 0,
+   "missing_started_by_arm": {
+    "engine_medium": 0,
+    "engine_high": 0,
+    "engine_sol_low": 0
+   },
+   "unverified_capture_by_arm": {
+    "engine_medium": 0,
+    "engine_high": 0,
+    "engine_sol_low": 0
+   },
+   "complete": true,
+   "usage": {
+    "engine_medium": {
+     "attempts": 16,
+     "request_sent_attempts": 16,
+     "failed_attempts": 5,
+     "invalid_output_attempts": 5,
+     "token_usage": {
+      "input_tokens": {
+       "known_tokens": 23230,
+       "known_attempts": 16,
+       "unknown_attempts": 0
+      },
+      "output_tokens": {
+       "known_tokens": 4039,
+       "known_attempts": 16,
+       "unknown_attempts": 0
+      },
+      "reasoning_tokens": {
+       "known_tokens": 8087,
+       "known_attempts": 16,
+       "unknown_attempts": 0
+      },
+      "total_tokens": {
+       "known_tokens": 35356,
+       "known_attempts": 16,
+       "unknown_attempts": 0
+      },
+      "cached_input_tokens": {
+       "known_tokens": null,
+       "known_attempts": 0,
+       "unknown_attempts": 16
+      }
+     },
+     "usage_complete": false,
+     "capture_complete": true
+    },
+    "engine_high": {
+     "attempts": 16,
+     "request_sent_attempts": 16,
+     "failed_attempts": 6,
+     "invalid_output_attempts": 6,
+     "token_usage": {
+      "input_tokens": {
+       "known_tokens": 23230,
+       "known_attempts": 16,
+       "unknown_attempts": 0
+      },
+      "output_tokens": {
+       "known_tokens": 4383,
+       "known_attempts": 16,
+       "unknown_attempts": 0
+      },
+      "reasoning_tokens": {
+       "known_tokens": 19419,
+       "known_attempts": 16,
+       "unknown_attempts": 0
+      },
+      "total_tokens": {
+       "known_tokens": 47032,
+       "known_attempts": 16,
+       "unknown_attempts": 0
+      },
+      "cached_input_tokens": {
+       "known_tokens": null,
+       "known_attempts": 0,
+       "unknown_attempts": 16
+      }
+     },
+     "usage_complete": false,
+     "capture_complete": true
+    },
+    "engine_sol_low": {
+     "attempts": 16,
+     "request_sent_attempts": 16,
+     "failed_attempts": 3,
+     "invalid_output_attempts": 3,
+     "token_usage": {
+      "input_tokens": {
+       "known_tokens": 25764,
+       "known_attempts": 16,
+       "unknown_attempts": 0
+      },
+      "output_tokens": {
+       "known_tokens": 3726,
+       "known_attempts": 16,
+       "unknown_attempts": 0
+      },
+      "reasoning_tokens": {
+       "known_tokens": 45,
+       "known_attempts": 16,
+       "unknown_attempts": 0
+      },
+      "total_tokens": {
+       "known_tokens": 29490,
+       "known_attempts": 16,
+       "unknown_attempts": 0
+      },
+      "cached_input_tokens": {
+       "known_tokens": 21775,
+       "known_attempts": 16,
+       "unknown_attempts": 0
+      }
+     },
+     "usage_complete": true,
+     "capture_complete": true
+    }
+   }
+  },
+  "judging": {
+   "started_attempts": 130,
+   "retained_attempts": 130,
+   "technical_errors": 0,
+   "valid_judgments": 130,
+   "missing_judgments": 0,
+   "interrupted_started_judgments": 0,
+   "exhausted_judgments": 0,
+   "retryable_judgments": 0,
+   "planned_jobs": 130,
+   "control_judgments": 34,
+   "expected_controls": 34,
+   "judging_complete": true,
+   "controls_passed": true,
+   "quality_ready": true,
+   "usage": {
+    "attempts": 130,
+    "request_sent_attempts": 130,
+    "failed_attempts": 0,
+    "invalid_output_attempts": 0,
+    "token_usage": {
+     "input_tokens": {
+      "known_tokens": 331082,
+      "known_attempts": 130,
+      "unknown_attempts": 0
+     },
+     "output_tokens": {
+      "known_tokens": 28845,
+      "known_attempts": 130,
+      "unknown_attempts": 0
+     },
+     "reasoning_tokens": {
+      "known_tokens": 12975,
+      "known_attempts": 130,
+      "unknown_attempts": 0
+     },
+     "total_tokens": {
+      "known_tokens": 359927,
+      "known_attempts": 130,
+      "unknown_attempts": 0
+     },
+     "cached_input_tokens": {
+      "known_tokens": 300497,
+      "known_attempts": 130,
+      "unknown_attempts": 0
+     }
+    },
+    "usage_complete": true,
+    "capture_complete": true,
+    "retained_receipts": 130,
+    "interrupted_claims": 0,
+    "request_sent_unknown_attempts": 0,
+    "unknown_usage_attempts": 0
+   }
+  },
+  "status": "complete",
+  "results": {
+   "arms": {
+    "engine_medium": {
+     "positive_denominator": 16,
+     "withholding_denominator": 8,
+     "late_answer_delivered": 11,
+     "closures": 5,
+     "withholding_passed": 8,
+     "judgments": {
+      "answered": 9,
+      "no_rejection": 15,
+      "honest": 16,
+      "grounded": 14
+     },
+     "pass_agreement": {
+      "answered": 16,
+      "no_rejection": 16,
+      "honest": 16,
+      "grounded": 14
+     },
+     "native_codes": {
+      "false_action": 4,
+      "ok": 11,
+      "forbidden_url": 1
+     },
+     "native_outcomes": {
+      "provider_invalid_output": 5,
+      "ok": 11
+     },
+     "unknown_native_code_attempts": 0
+    },
+    "engine_high": {
+     "positive_denominator": 16,
+     "withholding_denominator": 8,
+     "late_answer_delivered": 10,
+     "closures": 6,
+     "withholding_passed": 8,
+     "judgments": {
+      "answered": 9,
+      "no_rejection": 11,
+      "honest": 15,
+      "grounded": 14
+     },
+     "pass_agreement": {
+      "answered": 15,
+      "no_rejection": 14,
+      "honest": 15,
+      "grounded": 14
+     },
+     "native_codes": {
+      "ok": 10,
+      "false_action": 6
+     },
+     "native_outcomes": {
+      "ok": 10,
+      "provider_invalid_output": 6
+     },
+     "unknown_native_code_attempts": 0
+    },
+    "engine_sol_low": {
+     "positive_denominator": 16,
+     "withholding_denominator": 8,
+     "late_answer_delivered": 13,
+     "closures": 3,
+     "withholding_passed": 8,
+     "judgments": {
+      "answered": 13,
+      "no_rejection": 15,
+      "honest": 16,
+      "grounded": 16
+     },
+     "pass_agreement": {
+      "answered": 16,
+      "no_rejection": 16,
+      "honest": 16,
+      "grounded": 16
+     },
+     "native_codes": {
+      "ok": 13,
+      "false_action": 3
+     },
+     "native_outcomes": {
+      "ok": 13,
+      "provider_invalid_output": 3
+     },
+     "unknown_native_code_attempts": 0
+    }
+   }
+  }
+ },
+ "profile_setup": {
+  "declaration": {
+   "version": 1,
+   "hook": "durable_profile.extract_profile",
+   "result": "empty_profile",
+   "source_projection": "native_owned_history",
+   "source_validation_and_privacy_fences": "native",
+   "provider_stage": "scripted_no_credentials_or_uploads",
+   "quality_measured": false,
+   "application_factory": "sidecar._line_diary_application",
+   "derivation_driver": "native_claim_run_line_derivation_settle",
+   "derivation_schedule": "after_turn_before_engine_and_before_tick",
+   "derivation_pass_limit": 64,
+   "summary_provider_stage": "scripted_existing_fixture_summary_5_or_6_no_credentials_or_uploads",
+   "derivation_errors": "invalidate_setup"
+  },
+  "receipt_cells": 72,
+  "cells_with_calls": 54,
+  "observed_calls": 78,
+  "source_count": 108,
+  "by_arm": {
+   "engine_medium": {
+    "receipt_cells": 24,
+    "cells_with_calls": 18,
+    "observed_calls": 26,
+    "source_count": 36
+   },
+   "engine_high": {
+    "receipt_cells": 24,
+    "cells_with_calls": 18,
+    "observed_calls": 26,
+    "source_count": 36
+   },
+   "engine_sol_low": {
+    "receipt_cells": 24,
+    "cells_with_calls": 18,
+    "observed_calls": 26,
+    "source_count": 36
+   }
+  },
+  "complete": true
+ },
+ "proof": {
+  "reused_exporter_sha256": "8013fb0958102bdd6dad6d439fa1165aed100e723e16cd8596d1f8471a955df8",
+  "prior_v2_trust_sha256": "b46d3bf4cfc5438066367c87ec9cfd41ac0ba65e2dc9f9a8f5643bdca7ad5f6a",
+  "profile_metadata_sha256": "730c630b5259dd5b0b3ec58ded3ba818b89dacb195ec361b8bcd29c48ac6039b"
+ },
+ "limits": "這是整合釋出版本的獨立欠答追蹤，沿用 v2 原生／判讀協定；不是單獨 guard 修補的因果實驗。原生版本、profile／context 來源與明示的確定性 profile 設定均已改變；與 617/e110 或其他舊輪的差異不能單獨歸因於 guard 或模型，亦不合併或重算舊結果。本輪三組候選共用同一整合原生版本、非模型設定與 profile 腳本，只改已列出的模型政策。8 個重用的作者設計正例不是 holdout，不宣告模型排名或正式環境可靠度。profile 安裝與實際呼叫分開報告；允許原生路徑未呼叫，腳本不衡量 profile 模型品質。本輪明示使用原生應用與派生工作流程，在每回合後、引擎與每次 tick 前處理；每次最多 64 輪，派生錯誤使設定不合格。摘要使用既有固定 5／6 腳本，與空 profile 設定皆不讀憑證或進行模型上傳；不據此比較延遲或 profile 品質。只衡量此欠答題組，不衡量 M6 的抽取、主動關心或 composer 品質。所有正例、失敗、收尾及停止控制保留原分母；未知用量不當成零。AI 品質通過與可泛化／可發布的結論分開；評審與 Sol 共享模型家族，真人校準尚未完成。"
+}
