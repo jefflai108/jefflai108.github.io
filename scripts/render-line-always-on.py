@@ -819,6 +819,18 @@ def baseline_block(data):
             f'<p class="small muted">共 {base["conversations"]} 段完成的對話、{base["receipts"]} 次 LINE webhook。</p></div></div></section>')
 
 
+def deployment_status_panel():
+    """Current lifecycle observation, separate from every frozen study source."""
+    return ('<section class="panel" id="deployment-status"><h2>部署現況 · 2026-10-16 06:20（台北）</h2>'
+            f'<p>GCP 已啟用 {commit_link("c26b83488bbeac5afb7f3307ba880114efb4a236")}'
+            f'（<a href="{SOURCE_REPO}/pull/609">PR #609</a>）並解除暫停，兩個 LINE 帳號均通過就緒檢查。'
+            '一個服務程序共用 5 個固定背景執行緒：2 個推送、2 個補答、1 個抽取，不會為每位使用者另開程序。</p>'
+            '<p>背景設定為 GPT-6.1-Sol · Low，output tokens 上限 32,768、每次期限 120 秒。'
+            '群組被動計畫仍關閉，等待既有 D5 用途與保留期審查。</p>'
+            '<p class="small">已驗證啟動、受控停止、重新啟動與解除暫停。觀察中沒有到期的主動／補答工作，'
+            '因此尚未驗證線上模型執行與送達、多使用者隔離或吞吐量。以下成績仍屬各自凍結版本，並非目前部署版本的重新量測。</p></section>')
+
+
 CSS = """
 *{box-sizing:border-box}body{margin:0;background:#f3f3ee;color:#193a31;font:15px/1.65 system-ui,-apple-system,'PingFang TC',sans-serif}
 header,main{margin:auto}h1{font-size:clamp(32px,5vw,52px);line-height:1.15;margin:15px 0}
@@ -997,7 +1009,7 @@ def render_method(cases, *, has_results=False, diagnostic=None, planned_study=No
     strata_rows = ''.join(f'<tr><th>{SCOPE_LABELS[scope]}</th><td>{POLARITY_LABELS[polarity]}</td><td>{strata[(scope, polarity)]}</td></tr>'
                           for scope in SCOPE_LABELS for polarity in POLARITY_LABELS if strata[(scope, polarity)])
     limitation = qualified_metric_limitations_panel(qualified_results) if has_results else ''
-    body = planned_study_panel(planned_study, qualified_results if has_results else None) + interruption_panel(interruption) + limitation + f'''
+    body = deployment_status_panel() + planned_study_panel(planned_study, qualified_results if has_results else None) + interruption_panel(interruption) + limitation + f'''
 <section class="panel"><p class="notice warning"><b>{readiness}</b>完整研究成績只會收錄完成兩階段評審、通過控制題的重播；小型診斷另外標示。</p>
 <h2>四個目標，分開量測</h2><div class="scroll"><table class="goals"><thead><tr><th>目標</th><th>可檢查的行為</th><th>量測單位</th></tr></thead><tbody>
 <tr><th>夠快</th><td>對使用者說的話及時開始回答；背景工作讓前景先走。</td><td>前景耗時與收到訊息到首次回覆的 p50 / p90；快回覆題的逐輪門檻。</td></tr>
@@ -2029,7 +2041,7 @@ def render(data, iterations=(), *, owed_development_v2=None, owed_release_follow
         cards = ''.join(f'<div class="kpi"><p class="label">{label}</p><p class="pending-value">等待完整量測</p><p class="sub">{detail}</p></div>' for label, detail in (
             ('速度', '首次回覆與前景等待時間分開報告'), ('不漏接', '一般回答、欠答恢復與失敗通知分開'),
             ('可用的下一步', 'AI 前景盲評；誠實處理能力界線'), ('主動得合適', '命中、安靜負例與逐則合適率')))
-        body = f'<section class="panel"><p class="notice warning"><b>尚未有可發布的完整 Always-on 研究。</b>完整題組的分數、改善幅度與勝負結論仍待完成。</p><h2>這裡會呈現哪些結果</h2><div class="kpis">{cards}</div><p>只有完整重播、兩階段各兩次判讀、通過所有控制題，才會顯示完整成績。教學時間軸和合成測試 fixture 不會當成結果。</p></section>'
+        body = deployment_status_panel() + f'<section class="panel"><p class="notice warning"><b>尚未有可發布的完整 Always-on 研究。</b>完整題組的分數、改善幅度與勝負結論仍待完成。</p><h2>這裡會呈現哪些結果</h2><div class="kpis">{cards}</div><p>只有完整重播、兩階段各兩次判讀、通過所有控制題，才會顯示完整成績。教學時間軸和合成測試 fixture 不會當成結果。</p></section>'
         body += calibration_panel(data.get('judge_calibration'))
         body += planned_study_panel(data.get('planned_study'), data)
         body += interruption_panel(data.get('study_interruption'))
@@ -2059,7 +2071,7 @@ def render(data, iterations=(), *, owed_development_v2=None, owed_release_follow
     control_rows = ''.join(f'<tr><th>{label}</th><td>{data[key]["as_expected"]}/{data[key]["judgments"]} 符合預期</td><td>兩次判讀；缺失 0</td></tr>' for key,label in (('judge_controls','訊息評審控制'),('foreground_controls','前景評審控制')))
     gate_rows = ''.join(f'<tr><th>{ARM_LABELS[arm]}</th><td><code>{esc(json.dumps(data["gates"][arm],ensure_ascii=False,sort_keys=True))}</code></td></tr>' for arm in arms)
     headers = ''.join(f'<th>{esc(ARM_LABELS[arm])}</th>' for arm in arms)
-    body = f'<section class="panel"><h2>完整開發研究</h2><div class="kpis">{"".join(metrics)}</div><p class="small">每個情境在每組重複 {data["metadata"]["repeats"]} 次，兩個帳號交替使用。</p>{paired_comparisons(data)}</section>'
+    body = deployment_status_panel() + f'<section class="panel"><h2>完整開發研究</h2><div class="kpis">{"".join(metrics)}</div><p class="small">每個情境在每組重複 {data["metadata"]["repeats"]} 次，兩個帳號交替使用。</p>{paired_comparisons(data)}</section>'
     body += evaluation_revision_panel(data)
     body += qualified_metric_limitations_panel(data)
     body += model_configuration_panel(data)
