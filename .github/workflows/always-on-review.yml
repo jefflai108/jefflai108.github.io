@@ -9,6 +9,7 @@ on:
       - 'scripts/owed_*.py'
       - 'scripts/owed_development_trust.json'
       - 'scripts/owed_development_v2_trust.json'
+      - 'scripts/owed_release_followup_trust.json'
       - 'scripts/planned_study.py'
       - 'scripts/study_interruption.py'
       - 'scripts/test_*always_on*.py'
@@ -36,7 +37,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Verify source bindings and public export guards
-        run: python3 -B -m unittest scripts/test_line_always_on.py scripts/test_owed_diagnostic.py scripts/test_planned_study.py scripts/test_study_interruption.py scripts/test_owed_development.py scripts/test_owed_development_v2.py
+        run: python3 -B -m unittest scripts/test_line_always_on.py scripts/test_owed_diagnostic.py scripts/test_planned_study.py scripts/test_study_interruption.py scripts/test_owed_development.py scripts/test_owed_development_v2.py scripts/test_owed_release_followup.py
       - run: npm test
       - name: Build the reviewed source
         run: npm run build --ignore-scripts

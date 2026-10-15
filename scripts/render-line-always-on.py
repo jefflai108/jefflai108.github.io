@@ -30,6 +30,7 @@ OWED_DEVELOPMENT_NAME = "line-always-on-owed-development.public.json"
 OWED_HOST_INTERRUPTION_NAME = "line-always-on-owed-host-interruption.public.json"
 OWED_TERMINAL_NAME = "line-always-on-owed-terminal.public.json"
 OWED_V2_NAME = "line-always-on-owed-development-v2.public.json"
+OWED_RELEASE_NAME = "line-always-on-owed-release-followup.public.json"
 PAGE_NAME = "line-always-on.html"
 SOURCE_REPO = "https://github.com/jefflai108/streaming_taiwanese"
 ARMS = ("existing", "engine")
@@ -982,6 +983,7 @@ def render_method(cases, *, has_results=False, diagnostic=None, planned_study=No
                   owed_development_host_interruption=None,
                   owed_development_terminal=None,
                   owed_development_v2=None,
+                  owed_release_followup=None,
                   qualified_results=None,
                   generated_at="2026-10-14"):
     from collections import Counter
@@ -1039,6 +1041,7 @@ def render_method(cases, *, has_results=False, diagnostic=None, planned_study=No
     body += owed_diagnostic_panel(diagnostic)
     body += owed_development_panel(owed_development, owed_development_host_interruption, owed_development_terminal)
     body += owed_development_v2_panel(owed_development_v2)
+    body += owed_release_followup_panel(owed_release_followup)
     return page_shell(METHOD_NAME, "Always-on 方法", "麻吉要一直在背景接住事情，在值得關心的時候主動開口。這裡把「快、接得住、給下一步、主動得合適」轉成可重播、可逐段檢查的實驗。", body, generated=generated_at)
 
 
@@ -1438,6 +1441,13 @@ def owed_development_v2_module():
     return module
 
 
+def owed_release_followup_module():
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('always_on_owed_release_followup',Path(__file__).with_name('owed_release_followup.py'))
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    return module
+
+
 def _owed_host_digest(value):
     import hashlib
     return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True,
@@ -1784,6 +1794,61 @@ def owed_development_v2_panel(data):
         f'<p><a href="{OWED_V2_NAME}" download>下載獨立 v2 公開摘要</a>；不含原始提示、識別碼或被拒絕的私有模型文字。</p></section>')
 
 
+def owed_release_followup_panel(data):
+    if data is None:return ''
+    owed_release_followup_module().validate_public(data);check_public(data)
+    study=data['study'];profile=data['profile_setup'];native=study['native'];judging=study['judging']
+    body=('<section class="panel"><h2>整合釋出版本 · 獨立欠答追蹤</h2>'
+        '<p class="notice"><b>另一輪資料，沿用 v2 協定。</b>原 617/e110 v2 與 824 槽結果均獨立保留。'
+        '本輪同時更換整合版本、profile／context 來源，並明示使用確定性 profile 設定；不能把跨輪變化單獨歸因於 guard 修補或模型。</p>'
+        '<p>相同的 8 個重用正例 × 3 組候選 × 2 個合成帳號＝48 個正例，另有 24 個零欠答上傳控制，共 72 個新資料庫。'
+        '三組候選在本輪共用同一原生來源；每組上限 32,768 output tokens、120 秒，每個正例最多一次原生請求，合計最多 48 次。'
+        '這是欠答開發題組，未衡量 M6、抽取、主動關心或 composer 品質。</p>'
+        f'<p>原生收據 {native["completed_cells"]}/72；設定與捕捉就緒 {native["ready_cells"]}/72；'
+        f'零上傳控制 {native["withholding_passed"]}/24；缺收據的已開始槽 {native["missing_started_cells"]}。</p>'
+        f'<p>獨立 profile 設定檢查：{profile["receipt_cells"]}/72 個收據驗證已安裝；'
+        f'{profile["cells_with_calls"]} 個槽實際呼叫，共 {profile["observed_calls"]} 次。'
+        '安裝證明不等於實際呼叫；未呼叫不是零成本的模型量測。此設定使用原生已驗證來源並回傳空 profile，不讀模型憑證、不進行 profile 模型上傳。'
+        '本輪明示使用原生應用與派生工作流程，在每回合後、引擎與每次 tick 前處理，每次最多 64 輪；派生錯誤使設定不合格。'
+        '摘要使用既有固定 5／6 腳本，不讀憑證或進行摘要模型上傳；此設定不能用於 profile 品質或延遲的因果比較。</p>')
+    if judging is None:
+        body+='<p class="notice">尚未提供完整且通過控制的本輪判讀；不展示本輪模型成績。</p>'
+    else:
+        tokens=judging['usage']['token_usage']['total_tokens']
+        known='未回報' if tokens['known_tokens'] is None else f'{tokens["known_tokens"]:,}'
+        body+=(f'<p>有效邏輯判讀 {judging["valid_judgments"]}/130；符合預期的控制 {judging["expected_controls"]}/34。'
+            f'已開始 {judging["started_attempts"]} 次嘗試，保留 {judging["technical_errors"]} 次技術錯誤與 '
+            f'{judging["interrupted_started_judgments"]} 次缺收據中斷。每工作最多 3 次技術嘗試；有效負面判讀或未通過控制不重試。'
+            f'第 1 輪固定用於摘要，第 2 輪只檢查一致性；130 邏輯工作最多 390 次嘗試，與原生合計上限 438。</p>'
+            f'<p>判讀只加總已回報的 {known} total tokens；{tokens["unknown_attempts"]} 次 total tokens 未知，'
+            f'{judging["usage"]["request_sent_unknown_attempts"]} 次是否上傳未知。</p>')
+    for arm,row in native['usage'].items():
+        tokens=row['token_usage']['total_tokens']
+        known='未回報' if tokens['known_tokens'] is None else f'{tokens["known_tokens"]:,}'
+        body+=(f'<p class="small">{esc(ARM_LABELS[arm])} 原生用量：已觀察 {row["attempts"]}/16 次嘗試，'
+            f'已知 total tokens {known}，未知 {tokens["unknown_attempts"]} 次；'
+            f'捕捉完整：{"是" if row["capture_complete"] else "否"}。未觀察或未回報不當成零。</p>')
+    if data['quality_ready']:
+        rows=[]
+        for arm in ('engine_medium','engine_high','engine_sol_low'):
+            row=study['results']['arms'][arm]
+            cells=[f'{row["late_answer_delivered"]}/16',str(row['closures']),f'{row["withholding_passed"]}/8']
+            cells += [f'{row["judgments"][field]}/16' for field in ('answered','no_rejection','honest','grounded')]
+            rows.append(f'<tr><th>{esc(ARM_LABELS[arm])}</th>'+''.join(f'<td>{esc(cell)}</td>' for cell in cells)+'</tr>')
+        body+=('<div class="scroll"><table class="owed-diagnostic-table"><thead><tr><th>設定</th><th>實際補答</th><th>收尾</th><th>停止控制</th>'
+            '<th>完成回答（AI）</th><th>沒有直接拒絕（AI）</th><th>誠實（AI）</th><th>有依據（AI）</th></tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody></table></div>'
+            '<p class="notice">本輪品質捕捉與控制已就緒；8 個重用開發題不是 holdout，不作模型排名、修補因果或正式環境泛化結論。</p>')
+    elif judging is not None:
+        body+='<p class="notice">本輪原生、profile 或判讀門檻未全部通過；保留全部分母，不展示模型成績。</p>'
+    proofs={**study['proof'],**data['proof']}
+    links=''.join(f'<li>{esc(key)}：<code>{esc(value)}</code></li>' for key,value in proofs.items())
+    return body+(f'<p class="small">{esc(data["limits"])}</p><p>本輪原生 {commit_link(study["native_source_ref"])} · '
+        f'獨立 helper／判讀 {commit_link(study["source_ref"])}。</p>'
+        f'<details><summary>整合釋出追蹤的獨立來源與 profile 捕捉綁定</summary><ul class="iteration-meta">{links}</ul></details>'
+        f'<p><a href="{OWED_RELEASE_NAME}" download>下載本輪獨立公開摘要</a>；不含來源識別碼、原始提示或私有模型文字。</p></section>')
+
+
 def owed_development_projection(study, judging=None, terminal_audit=None):
     terminal=None
     if judging:
@@ -1959,7 +2024,7 @@ def owed_diagnostic_panel(data):
             f'<code>{esc(proof["retained_quality_sha256"])}</code>。公開檔不包含權限識別碼、原始提示、模型思考或金鑰。</p></section>')
 
 
-def render(data, iterations=(), *, owed_development_v2=None):
+def render(data, iterations=(), *, owed_development_v2=None, owed_release_followup=None):
     if data.get('status') == 'pending':
         cards = ''.join(f'<div class="kpi"><p class="label">{label}</p><p class="pending-value">等待完整量測</p><p class="sub">{detail}</p></div>' for label, detail in (
             ('速度', '首次回覆與前景等待時間分開報告'), ('不漏接', '一般回答、欠答恢復與失敗通知分開'),
@@ -1971,6 +2036,7 @@ def render(data, iterations=(), *, owed_development_v2=None):
         body += owed_diagnostic_panel(data.get('owed_diagnostic'))
         body += owed_development_panel(data.get('owed_development'), data.get('owed_development_host_interruption'), data.get('owed_development_terminal'))
         body += owed_development_v2_panel(owed_development_v2)
+        body += owed_release_followup_panel(owed_release_followup)
         body += f'<section class="panel"><h2>逐段檢查，等資料完成</h2><p>本輪比較原有版本、Gemini Medium、Gemini High 與 GPT-6.1-Sol Low。每段情境會顯示各組完整時間軸、每次重複、主機檢查與 AI 判斷理由。現在可以先看<a href="{METHOD_NAME}">公開開發題組與評審門檻</a>。</p></section><section class="panel"><h2>研究迭代</h2>{iteration_table(iterations)}</section>'
         return page_shell(PAGE_NAME, 'Always-on 結果', '這一頁保留完整研究的成績、案例與版本證據。每次迭代獨立呈現，讓主動訊息的時機、內容與打擾成本可以逐則檢查。', body, status='等待完整研究',
                           generated=data.get('generated_at', '2026-10-14'))
@@ -2002,6 +2068,7 @@ def render(data, iterations=(), *, owed_development_v2=None):
     body += owed_diagnostic_panel(data.get('owed_diagnostic'))
     body += owed_development_panel(data.get('owed_development'), data.get('owed_development_host_interruption'), data.get('owed_development_terminal'))
     body += owed_development_v2_panel(owed_development_v2)
+    body += owed_release_followup_panel(owed_release_followup)
     body += interruption_panel(data.get('study_interruption'))
     body += f'<section class="panel"><h2>分項判讀與控制題</h2><div class="grid2"><div class="scroll"><table><thead><tr><th>自主訊息 AI 分項（1–5）</th>{headers}</tr></thead><tbody>{quality_rows}</tbody></table></div><div class="scroll"><table><thead><tr><th>前景 AI 判讀</th>{headers}</tr></thead><tbody>{foreground_rows}</tbody></table></div></div><table><tbody>{control_rows}</tbody></table><p>這些是 AI 判讀；原始逐則分數與理由如下。控制題檢查評審是否理解規格，不證明實際使用者都喜歡這些訊息。</p></section>'
     body += f'<section class="panel"><h2>逐段時間軸</h2><p>自主關心、使用者要求與欠答分開標記；每組保留每次重複和失敗案例。</p><div data-explorer>{filters(data["episodes"])}{explorer(data)}</div></section>'
@@ -2100,6 +2167,10 @@ def main():
                         help='separate fresh v2 study; never replaces original owed-v1 or the main study')
     parser.add_argument('--owed-development-v2-judge',type=Path,
                         help='separate v2 judge archive with bounded technical attempts')
+    parser.add_argument('--owed-release-followup-study',type=Path,
+                        help='separate integrated-release owed follow-up; requires a reviewed final freeze')
+    parser.add_argument('--owed-release-followup-judge',type=Path,
+                        help='independent follow-up judge archive; never pools the prior v2 results')
     parser.add_argument('--owed-development-host-evidence',type=Path,
                         help='Independently reviewed host observation bound to the original owed capture')
     parser.add_argument('--owed-development-terminal-audit',type=Path,
@@ -2257,15 +2328,31 @@ def main():
         if (PUBLIC/OWED_V2_NAME).is_symlink():raise ValueError('owed_v2_public_not_plain_file')
         owed_v2=json.loads((PUBLIC/OWED_V2_NAME).read_text())
         owed_development_v2_module().validate_public(owed_v2);check_public(owed_v2)
+    if args.owed_release_followup_judge and not args.owed_release_followup_study:
+        parser.error('give the integrated-release native study with its own judge archive')
+    if args.study and (args.owed_release_followup_study or (PUBLIC/OWED_RELEASE_NAME).exists()):
+        parser.error('export integrated-release follow-up separately; retain original iteration snapshots')
+    owed_release_text=None
+    owed_release=None
+    if args.owed_release_followup_study:
+        module=owed_release_followup_module()
+        owed_release=module.verified_projection(args.owed_release_followup_study,args.owed_release_followup_judge)
+        module.validate_public(owed_release);check_public(owed_release)
+        owed_release_text=json.dumps(owed_release,ensure_ascii=False,indent=1)+'\n'
+    elif (PUBLIC/OWED_RELEASE_NAME).exists():
+        if (PUBLIC/OWED_RELEASE_NAME).is_symlink():raise ValueError('owed_followup_public_not_plain_file')
+        owed_release=json.loads((PUBLIC/OWED_RELEASE_NAME).read_text())
+        owed_release_followup_module().validate_public(owed_release);check_public(owed_release)
     method, report=render_method(cases,has_results=data.get('publication_ready') is True,
                                 diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study'),
                                 interruption=data.get('study_interruption'),owed_development=data.get('owed_development'),
                                 owed_development_host_interruption=data.get('owed_development_host_interruption'),
                                 owed_development_terminal=data.get('owed_development_terminal'),
                                 owed_development_v2=owed_v2,
+                                owed_release_followup=owed_release,
                                 qualified_results=data,
                                 generated_at=data.get('generated_at','2026-10-14')),render(data,index['iterations'],
-                                    owed_development_v2=owed_v2)
+                                    owed_development_v2=owed_v2,owed_release_followup=owed_release)
     check_public(data);check_public(index);check_public(cases)
     if planned_text is not None:
         digest=hashlib.sha256(planned_text.encode()).hexdigest()
@@ -2299,6 +2386,11 @@ def main():
         archive=PUBLIC/('line-always-on-owed-development-v2-'+digest[:12]+'.public.json')
         if archive.exists() and archive.read_text()!=owed_v2_text:raise ValueError('immutable_owed_v2_changed')
         archive.write_text(owed_v2_text);(PUBLIC/OWED_V2_NAME).write_text(owed_v2_text)
+    if owed_release_text is not None:
+        digest=hashlib.sha256(owed_release_text.encode()).hexdigest()
+        archive=PUBLIC/('line-always-on-owed-release-followup-'+digest[:12]+'.public.json')
+        if archive.exists() and archive.read_text()!=owed_release_text:raise ValueError('immutable_owed_followup_changed')
+        archive.write_text(owed_release_text);(PUBLIC/OWED_RELEASE_NAME).write_text(owed_release_text)
     if protocol is not None:
         frozen=PUBLIC/protocol_file
         if frozen.exists() and json.loads(frozen.read_text())!=protocol:

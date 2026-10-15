@@ -1,0 +1,100 @@
+{
+ "protocol": "owed_release_followup_public_trust_v1",
+ "status": "reviewed",
+ "binding": {
+  "v2": {
+   "protocol": "owed_development_v2_public_trust_v1",
+   "status": "reviewed",
+   "source_ref": "2dd681418f6b18e9f9bfc4113786d91aaf4b782a",
+   "native_source_ref": "1a62bc7d16e0bcfe856f9b0c48320ce2a4ddf4d3",
+   "configurations": {
+    "engine_medium": {
+     "provider": "gemini",
+     "model": "gemini-3.8-flash",
+     "thinking_level": "medium",
+     "max_output_tokens": 32768,
+     "timeout_s": 120
+    },
+    "engine_high": {
+     "provider": "gemini",
+     "model": "gemini-3.8-flash",
+     "thinking_level": "high",
+     "max_output_tokens": 32768,
+     "timeout_s": 120
+    },
+    "engine_sol_low": {
+     "provider": "openai",
+     "model": "gpt-6.1-sol",
+     "thinking_level": "low",
+     "max_output_tokens": 32768,
+     "timeout_s": 120
+    }
+   },
+   "settings": {
+    "tick_s": 30,
+    "workers": 1,
+    "worker_timeout_s": 600,
+    "background_max_output_tokens": 32768,
+    "background_timeout_s": 120,
+    "foreground_failure": "declared_per_turn_native_transport_fault",
+    "unrelated_background_setup": "empty_original_native_extractor_schema",
+    "reviewed_profile_setup": {
+     "version": 1,
+     "hook": "durable_profile.extract_profile",
+     "result": "empty_profile",
+     "source_projection": "native_owned_history",
+     "source_validation_and_privacy_fences": "native",
+     "provider_stage": "scripted_no_credentials_or_uploads",
+     "quality_measured": false,
+     "application_factory": "sidecar._line_diary_application",
+     "derivation_driver": "native_claim_run_line_derivation_settle",
+     "derivation_schedule": "after_turn_before_engine_and_before_tick",
+     "derivation_pass_limit": 64,
+     "summary_provider_stage": "scripted_existing_fixture_summary_5_or_6_no_credentials_or_uploads",
+     "derivation_errors": "invalidate_setup"
+    },
+    "delegated_executor": "unavailable; any provider request fails closed",
+    "tts": false,
+    "native_group_mode_prelude_s": 60,
+    "candidate_permutations": 6,
+    "secondary_order_offset": 3,
+    "adjacent_account_blocks": true,
+    "account_first": "alternate_by_authored_scenario",
+    "engine_enabled": true,
+    "group_plans_enabled": true,
+    "timezone": "Asia/Taipei"
+   },
+   "proof": {
+    "source_files_sha256": "19062acfffa014d7dbb424389cbc6dec8103ab6de54232e6058896898a94ff3b",
+    "corpus_sha256": "655dff423ff25bb016fb40c3f4129b715c9e03abd73431afe71c12a0f572b233",
+    "configuration_sha256": "7aabdaa06fdfeef0bb3d87972a520be2003942557cd1a6c19348d151b35aecec",
+    "settings_sha256": "4d1e8c4375bd5acc8480b227fabc0090e8efbb30c2b7051a51a910f99a14d605",
+    "schedule_sha256": "1d9f5f6d112141bbc4c66749f99ac46621a7355904ea37c3ef67a37482661cfc",
+    "plan_sha256": "fd0509f7a070e6998146439db4e31bb38ca1b3900a0ddf9253a5ec607d0a8a9f",
+    "canonical_plan_sha256": "82301a62256069f637871e8803d1c107a87ec9aeeddbc0f419d10e4920479c73",
+    "freeze_audit_sha256": "f269065588051268e70965ab175dc8114f9a495ef088c7acf73c312643ab2670",
+    "code_sha256": "7d2ac2dd52d689bbde65465f5df6489f5404e9871e8dc67f7563a0c11b173776",
+    "judge_export_code_sha256": "6a58499686d60c75151f619caa7ed0d817778a30c981b73fb13908bc9d72601d",
+    "judge_sha256": "327300f69b84008fca1b73f9feb78000668b108be2ad2a8b8979c08e3a15cef6",
+    "rubric_sha256": "33c60c6ad5a646c8eb3cceae9f5ccbe88e0a36ef7f27211a0199789621d45dd7"
+   }
+  },
+  "reused_exporter_sha256": "8013fb0958102bdd6dad6d439fa1165aed100e723e16cd8596d1f8471a955df8",
+  "prior_v2_trust_sha256": "b46d3bf4cfc5438066367c87ec9cfd41ac0ba65e2dc9f9a8f5643bdca7ad5f6a",
+  "profile_setup": {
+   "version": 1,
+   "hook": "durable_profile.extract_profile",
+   "result": "empty_profile",
+   "source_projection": "native_owned_history",
+   "source_validation_and_privacy_fences": "native",
+   "provider_stage": "scripted_no_credentials_or_uploads",
+   "quality_measured": false,
+   "application_factory": "sidecar._line_diary_application",
+   "derivation_driver": "native_claim_run_line_derivation_settle",
+   "derivation_schedule": "after_turn_before_engine_and_before_tick",
+   "derivation_pass_limit": 64,
+   "summary_provider_stage": "scripted_existing_fixture_summary_5_or_6_no_credentials_or_uploads",
+   "derivation_errors": "invalidate_setup"
+  }
+ }
+}
