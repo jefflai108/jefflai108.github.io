@@ -1,0 +1,15 @@
+{
+  "binding": {
+    "evaluator_ref": "e2b9b4994d7df593d195fe94b2269215c1bc885c",
+    "helper_ref": "7e35eb4451c7c7dd76a970353305ce78f4b18e40",
+    "judge_binding_sha256": "14bad822d40498281305f61db0cdb0449c948b8d9d86fed807c0b97006b73964",
+    "judge_files_sha256": "72020d73ca3ae93f63a33c3c6f0e22d8a7fb2c2450af0093a783ab4222bb370e",
+    "judge_seal_sha256": "85d25116941898f4af97a0c0943ef504d8832b0a6a268f10c0d04fd8a870ad82",
+    "native_files_sha256": "3e288e39eb31e217022e71fcc0b68b370ea1e621403e1def521af0653f723733",
+    "native_ref": "f20ced6884ccc39a93889bd56c8fb2e8f77d8d44",
+    "native_seal_sha256": "9ef8716cf96bc2286668ae5b13c9548461427eb7cc5cfb747f45d1365b9e7c6d",
+    "plan_sha256": "37bf55576078699b576d1ae2ccc488af8474274bb6dccd95078b4a4cf2d734bd"
+  },
+  "protocol": "m6_profile_capture_followup_trust_v1",
+  "status": "reviewed"
+}

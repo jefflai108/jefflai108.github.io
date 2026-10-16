@@ -1,0 +1,695 @@
+{
+ "schema_version": 1,
+ "kind": "m6_profile_capture_clock_followup_public_v1",
+ "status": "qualified",
+ "planned_cells": 12,
+ "policy_count": 1,
+ "cohort": "synthetic_development",
+ "publication_ready": false,
+ "quality_ready": true,
+ "cells": [
+  {
+   "account": "primary",
+   "capture_complete": true,
+   "checkin_capture_complete": true,
+   "checkin_observed": 2,
+   "checkin_projectable_records": 2,
+   "foreground_expectation_origin": "authored",
+   "horizon_complete": true,
+   "observed_tick_sends": 1,
+   "original_bounds": {
+    "min": 1,
+    "max": 1
+   },
+   "original_outcome": {
+    "count": 1,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 1,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [
+     {
+      "kind": "habit_checkin",
+      "optional": false,
+      "hit": true
+     }
+    ],
+    "listed_scripted_occurrences": 0
+   },
+   "profile_available": true,
+   "required_window_outcome": "hit",
+   "scenario": "PV41",
+   "send_observation": "complete_horizon",
+   "status": "complete"
+  },
+  {
+   "account": "secondary",
+   "capture_complete": true,
+   "checkin_capture_complete": true,
+   "checkin_observed": 2,
+   "checkin_projectable_records": 2,
+   "foreground_expectation_origin": "authored",
+   "horizon_complete": true,
+   "observed_tick_sends": 1,
+   "original_bounds": {
+    "min": 1,
+    "max": 1
+   },
+   "original_outcome": {
+    "count": 1,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 1,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [
+     {
+      "kind": "habit_checkin",
+      "optional": false,
+      "hit": true
+     }
+    ],
+    "listed_scripted_occurrences": 0
+   },
+   "profile_available": true,
+   "required_window_outcome": "hit",
+   "scenario": "PV41",
+   "send_observation": "complete_horizon",
+   "status": "complete"
+  },
+  {
+   "account": "secondary",
+   "capture_complete": true,
+   "checkin_capture_complete": true,
+   "checkin_observed": 1,
+   "checkin_projectable_records": 1,
+   "foreground_expectation_origin": "universal_only_no_authored_foreground",
+   "horizon_complete": true,
+   "observed_tick_sends": 0,
+   "original_bounds": {
+    "min": 0,
+    "max": 1
+   },
+   "original_outcome": {
+    "count": 0,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 0,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [
+     {
+      "kind": "followup",
+      "optional": true,
+      "hit": false
+     }
+    ],
+    "listed_scripted_occurrences": 0
+   },
+   "profile_available": true,
+   "required_window_outcome": "not_required",
+   "scenario": "PV42",
+   "send_observation": "complete_horizon",
+   "status": "complete"
+  },
+  {
+   "account": "primary",
+   "capture_complete": true,
+   "checkin_capture_complete": true,
+   "checkin_observed": 1,
+   "checkin_projectable_records": 1,
+   "foreground_expectation_origin": "universal_only_no_authored_foreground",
+   "horizon_complete": true,
+   "observed_tick_sends": 0,
+   "original_bounds": {
+    "min": 0,
+    "max": 1
+   },
+   "original_outcome": {
+    "count": 0,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 0,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [
+     {
+      "kind": "followup",
+      "optional": true,
+      "hit": false
+     }
+    ],
+    "listed_scripted_occurrences": 0
+   },
+   "profile_available": true,
+   "required_window_outcome": "not_required",
+   "scenario": "PV42",
+   "send_observation": "complete_horizon",
+   "status": "complete"
+  },
+  {
+   "account": "primary",
+   "capture_complete": true,
+   "checkin_capture_complete": true,
+   "checkin_observed": 2,
+   "checkin_projectable_records": 2,
+   "foreground_expectation_origin": "authored",
+   "horizon_complete": true,
+   "observed_tick_sends": 3,
+   "original_bounds": {
+    "min": 0,
+    "max": 0
+   },
+   "original_outcome": {
+    "count": 0,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 3,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [],
+    "listed_scripted_occurrences": 3
+   },
+   "profile_available": true,
+   "required_window_outcome": "not_required",
+   "scenario": "PV43",
+   "send_observation": "complete_horizon",
+   "status": "complete"
+  },
+  {
+   "account": "secondary",
+   "capture_complete": true,
+   "checkin_capture_complete": true,
+   "checkin_observed": 2,
+   "checkin_projectable_records": 2,
+   "foreground_expectation_origin": "authored",
+   "horizon_complete": true,
+   "observed_tick_sends": 3,
+   "original_bounds": {
+    "min": 0,
+    "max": 0
+   },
+   "original_outcome": {
+    "count": 0,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 3,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [],
+    "listed_scripted_occurrences": 3
+   },
+   "profile_available": true,
+   "required_window_outcome": "not_required",
+   "scenario": "PV43",
+   "send_observation": "complete_horizon",
+   "status": "complete"
+  },
+  {
+   "account": "secondary",
+   "capture_complete": true,
+   "checkin_capture_complete": true,
+   "checkin_observed": 3,
+   "checkin_projectable_records": 3,
+   "foreground_expectation_origin": "authored",
+   "horizon_complete": true,
+   "observed_tick_sends": 1,
+   "original_bounds": {
+    "min": 1,
+    "max": 1
+   },
+   "original_outcome": {
+    "count": 1,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 1,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [
+     {
+      "kind": "habit_checkin",
+      "optional": false,
+      "hit": true
+     }
+    ],
+    "listed_scripted_occurrences": 0
+   },
+   "profile_available": true,
+   "required_window_outcome": "hit",
+   "scenario": "PV44",
+   "send_observation": "complete_horizon",
+   "status": "complete"
+  },
+  {
+   "account": "primary",
+   "capture_complete": true,
+   "checkin_capture_complete": true,
+   "checkin_observed": 2,
+   "checkin_projectable_records": 2,
+   "foreground_expectation_origin": "authored",
+   "horizon_complete": true,
+   "observed_tick_sends": 0,
+   "original_bounds": {
+    "min": 1,
+    "max": 1
+   },
+   "original_outcome": {
+    "count": 0,
+    "count_ok": false,
+    "over_count": 0,
+    "requested": 0,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [
+     {
+      "kind": "habit_checkin",
+      "optional": false,
+      "hit": false
+     }
+    ],
+    "listed_scripted_occurrences": 0
+   },
+   "profile_available": true,
+   "required_window_outcome": "completed_miss",
+   "scenario": "PV44",
+   "send_observation": "complete_horizon",
+   "status": "complete"
+  },
+  {
+   "account": "primary",
+   "capture_complete": true,
+   "checkin_capture_complete": true,
+   "checkin_observed": 0,
+   "checkin_projectable_records": 0,
+   "foreground_expectation_origin": "authored",
+   "horizon_complete": true,
+   "observed_tick_sends": 0,
+   "original_bounds": {
+    "min": 0,
+    "max": 0
+   },
+   "original_outcome": {
+    "count": 0,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 0,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [],
+    "listed_scripted_occurrences": 0
+   },
+   "profile_available": true,
+   "required_window_outcome": "not_required",
+   "scenario": "PV45",
+   "send_observation": "complete_horizon",
+   "status": "complete"
+  },
+  {
+   "account": "secondary",
+   "capture_complete": true,
+   "checkin_capture_complete": true,
+   "checkin_observed": 0,
+   "checkin_projectable_records": 0,
+   "foreground_expectation_origin": "authored",
+   "horizon_complete": true,
+   "observed_tick_sends": 0,
+   "original_bounds": {
+    "min": 0,
+    "max": 0
+   },
+   "original_outcome": {
+    "count": 0,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 0,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [],
+    "listed_scripted_occurrences": 0
+   },
+   "profile_available": true,
+   "required_window_outcome": "not_required",
+   "scenario": "PV45",
+   "send_observation": "complete_horizon",
+   "status": "complete"
+  },
+  {
+   "account": "secondary",
+   "capture_complete": true,
+   "checkin_capture_complete": true,
+   "checkin_observed": 0,
+   "checkin_projectable_records": 0,
+   "foreground_expectation_origin": "authored",
+   "horizon_complete": true,
+   "observed_tick_sends": 0,
+   "original_bounds": {
+    "min": 0,
+    "max": 0
+   },
+   "original_outcome": {
+    "count": 0,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 0,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [],
+    "listed_scripted_occurrences": 0
+   },
+   "profile_available": true,
+   "required_window_outcome": "not_required",
+   "scenario": "PV46",
+   "send_observation": "complete_horizon",
+   "status": "complete"
+  },
+  {
+   "account": "primary",
+   "capture_complete": true,
+   "checkin_capture_complete": true,
+   "checkin_observed": 0,
+   "checkin_projectable_records": 0,
+   "foreground_expectation_origin": "authored",
+   "horizon_complete": true,
+   "observed_tick_sends": 0,
+   "original_bounds": {
+    "min": 0,
+    "max": 0
+   },
+   "original_outcome": {
+    "count": 0,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 0,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [],
+    "listed_scripted_occurrences": 0
+   },
+   "profile_available": true,
+   "required_window_outcome": "not_required",
+   "scenario": "PV46",
+   "send_observation": "complete_horizon",
+   "status": "complete"
+  }
+ ],
+ "native": {
+  "provider_attempts": 297,
+  "request_ceiling": 758,
+  "complete_horizons": 12,
+  "profile_available_cells": 12,
+  "checkin_capture_complete_cells": 12,
+  "usage": {
+   "input_tokens": {
+    "known_attempts": 297,
+    "unknown_attempts": 0,
+    "observed_tokens": 2205220
+   },
+   "output_tokens": {
+    "known_attempts": 297,
+    "unknown_attempts": 0,
+    "observed_tokens": 69227
+   },
+   "reasoning_tokens": {
+    "known_attempts": 233,
+    "unknown_attempts": 64,
+    "observed_tokens": 5782
+   },
+   "total_tokens": {
+    "known_attempts": 297,
+    "unknown_attempts": 0,
+    "observed_tokens": 2274447
+   }
+  },
+  "required_windows": {
+   "planned_cells": 4,
+   "hit": 3,
+   "completed_miss": 1,
+   "unavailable": 0
+  }
+ },
+ "judging": {
+  "logical_jobs": 160,
+  "valid_jobs": 160,
+  "started_attempts": 160,
+  "technical_errors": 0,
+  "interrupted_attempts": 0,
+  "valid_controls": 94,
+  "matched_controls": 94,
+  "failed_controls": 0,
+  "candidate_jobs": {
+   "planned": 66,
+   "started": 66,
+   "valid": 66
+  },
+  "calibration_status": "qualified",
+  "controls_qualified": true,
+  "control_jobs": 94,
+  "control_counts": {
+   "foreground": 25,
+   "proactive": 10,
+   "profile": 12
+  },
+  "primary_pass": 1,
+  "consistency_pass": 2,
+  "max_attempts_per_job": 3,
+  "max_logical_jobs": 182,
+  "request_ceiling": 546,
+  "calibration_before_candidates": true,
+  "usage": {
+   "input_tokens": {
+    "known_attempts": 160,
+    "unknown_attempts": 0,
+    "observed_tokens": 453716
+   },
+   "output_tokens": {
+    "known_attempts": 160,
+    "unknown_attempts": 0,
+    "observed_tokens": 45701
+   },
+   "reasoning_tokens": {
+    "known_attempts": 160,
+    "unknown_attempts": 0,
+    "observed_tokens": 27439
+   },
+   "total_tokens": {
+    "known_attempts": 160,
+    "unknown_attempts": 0,
+    "observed_tokens": 499417
+   }
+  },
+  "phases": {
+   "profile": {
+    "primary_units": 12,
+    "flags": {
+     "supported": {
+      "true": 12,
+      "false": 0,
+      "applicable": 12
+     },
+     "citations_valid": {
+      "true": 12,
+      "false": 0,
+      "applicable": 12
+     },
+     "owner_correct": {
+      "true": 12,
+      "false": 0,
+      "applicable": 12
+     },
+     "current": {
+      "true": 12,
+      "false": 0,
+      "applicable": 12
+     },
+     "coverage": {
+      "true": 12,
+      "false": 0,
+      "applicable": 12
+     }
+    },
+    "scores": {}
+   },
+   "foreground": {
+    "primary_units": 12,
+    "flags": {
+     "answered": {
+      "true": 12,
+      "false": 0,
+      "applicable": 12
+     },
+     "no_rejection": {
+      "true": 11,
+      "false": 1,
+      "applicable": 12
+     },
+     "honest": {
+      "true": 11,
+      "false": 1,
+      "applicable": 12
+     },
+     "grounded": {
+      "true": 7,
+      "false": 5,
+      "applicable": 12
+     },
+     "alternatives": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "recap_correct": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "confirmed": {
+      "true": 6,
+      "false": 0,
+      "applicable": 6
+     },
+     "resurfaced": {
+      "true": 1,
+      "false": 1,
+      "applicable": 2
+     },
+     "no_resurface": {
+      "true": 2,
+      "false": 0,
+      "applicable": 2
+     },
+     "media_acknowledged": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "care": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "offered": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "bridge": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     }
+    },
+    "scores": {}
+   },
+   "proactive": {
+    "primary_units": 9,
+    "flags": {
+     "warranted": {
+      "true": 9,
+      "false": 0,
+      "applicable": 9
+     },
+     "grounded": {
+      "true": 9,
+      "false": 0,
+      "applicable": 9
+     },
+     "private": {
+      "true": 9,
+      "false": 0,
+      "applicable": 9
+     }
+    },
+    "scores": {
+     "timing": {
+      "sum": 45,
+      "applicable": 9
+     },
+     "useful": {
+      "sum": 30,
+      "applicable": 9
+     },
+     "tone": {
+      "sum": 45,
+      "applicable": 9
+     },
+     "not_annoying": {
+      "sum": 45,
+      "applicable": 9
+     },
+     "decision_progress": {
+      "sum": 0,
+      "applicable": 0
+     }
+    }
+   }
+  },
+  "consistency": {
+   "foreground": {
+    "paired_packets": 12,
+    "same_flags": 11
+   },
+   "proactive": {
+    "paired_packets": 9,
+    "same_flags": 2
+   },
+   "profile": {
+    "paired_packets": 12,
+    "same_flags": 12
+   }
+  }
+ },
+ "proof": {
+  "evaluator_ref": "e2b9b4994d7df593d195fe94b2269215c1bc885c",
+  "helper_ref": "7e35eb4451c7c7dd76a970353305ce78f4b18e40",
+  "judge_binding_sha256": "14bad822d40498281305f61db0cdb0449c948b8d9d86fed807c0b97006b73964",
+  "judge_files_sha256": "72020d73ca3ae93f63a33c3c6f0e22d8a7fb2c2450af0093a783ab4222bb370e",
+  "judge_seal_sha256": "85d25116941898f4af97a0c0943ef504d8832b0a6a268f10c0d04fd8a870ad82",
+  "native_files_sha256": "3e288e39eb31e217022e71fcc0b68b370ea1e621403e1def521af0653f723733",
+  "native_ref": "f20ced6884ccc39a93889bd56c8fb2e8f77d8d44",
+  "native_seal_sha256": "9ef8716cf96bc2286668ae5b13c9548461427eb7cc5cfb747f45d1365b9e7c6d",
+  "plan_sha256": "37bf55576078699b576d1ae2ccc488af8474274bb6dccd95078b4a4cf2d734bd",
+  "native_outcomes_adapter_sha256": "32b909af1993d3856b73324a6820aa6d6a925e4474871543a666bc0369cb8789"
+ },
+ "evidence_contract": {
+  "host_outcomes": "matching_owner_account_chat_source_before_send",
+  "profile_time": "native_source_taipei_and_actual_request_asof",
+  "model_promise_is_operation_proof": false,
+  "single_change_causal_ablation": false
+ },
+ "history": [
+  {
+   "label": "H2／J5 原始診斷",
+   "file": "line-always-on-m6-profile-diagnostic-9cbbbfaaea55.public.json",
+   "sha256": "9cbbbfaaea5551596a42b76a56e76a6cdc7bb593becc8949c6e6da1f6eb6bb5e"
+  },
+  {
+   "label": "J3 原始未通過校準",
+   "file": "line-always-on-m6-profile-diagnostic-1080f6affbe1.public.json",
+   "sha256": "1080f6affbe1d1e6b6bf36a17aa3d3cf9115bf9d31ef3ee9403f7f9f3ea108b9"
+  },
+  {
+   "label": "J4 原始未通過校準",
+   "file": "line-always-on-m6-profile-diagnostic-fd29e6f9b4be.public.json",
+   "sha256": "fd29e6f9b4be94c52007b0392563daaefcff3592d74fa81beb588835f5c82213"
+  },
+  {
+   "label": "J7 原始未通過校準",
+   "file": "line-always-on-m6-profile-capture-followup-02e3bf552486.public.json",
+   "sha256": "02e3bf552486adea209cc736e13e5a50e80335467c83136ff9d9e957b09e7d95"
+  }
+ ],
+ "limits": "原始 PV41–46，各兩個合成帳號，共 12 個獨立開發 cells；不作模型排名或未見題目泛化結論。相對較早診斷，同時更換原生引擎及補齊操作與時間證據，不能把結果差異歸因於單一修正。本次只澄清專用前景評審的「回應涵蓋」，不代表操作成功，誠實與依據標準不變；這是已檢視控制後的開發修訂。沿用與 J7 相同的原生捕捉，不重跑或重複加總原生用量。J7 原始校準 93/94、候選判讀 0 次、已知 AI 判讀總用量 245,667 tokens 獨立保留。原始對話同時可見，不能把回憶歸因於 profile。可選邀請不製造曝光，主動品質只以實際訊息為分母。第 1 輪為主要判讀，第 2 輪只報一致性；94 個控制判讀先於候選，有效負評與失敗控制皆為最終結果。未完成或不可用不當成通過，未知用量不當成零；舊輪原始判讀與成本獨立保留，不重算或合併。"
+}
