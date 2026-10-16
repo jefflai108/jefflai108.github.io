@@ -1,0 +1,683 @@
+{
+ "schema_version": 1,
+ "kind": "m6_profile_public_diagnostic_v1",
+ "status": "incomplete",
+ "planned_cells": 12,
+ "policy_count": 1,
+ "cohort": "synthetic_development",
+ "publication_ready": false,
+ "quality_ready": false,
+ "cells": [
+  {
+   "scenario": "PV41",
+   "account": "primary",
+   "status": "complete",
+   "horizon_complete": true,
+   "capture_complete": true,
+   "profile_available": true,
+   "foreground_expectation_origin": "authored",
+   "original_bounds": {
+    "min": 1,
+    "max": 1
+   },
+   "observed_tick_sends": 1,
+   "send_observation": "complete_horizon",
+   "original_outcome": {
+    "count": 1,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 1,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [
+     {
+      "kind": "habit_checkin",
+      "optional": false,
+      "hit": true
+     }
+    ],
+    "listed_scripted_occurrences": 0
+   },
+   "required_window_outcome": "hit"
+  },
+  {
+   "scenario": "PV41",
+   "account": "secondary",
+   "status": "complete",
+   "horizon_complete": true,
+   "capture_complete": true,
+   "profile_available": true,
+   "foreground_expectation_origin": "authored",
+   "original_bounds": {
+    "min": 1,
+    "max": 1
+   },
+   "observed_tick_sends": 0,
+   "send_observation": "complete_horizon",
+   "original_outcome": {
+    "count": 0,
+    "count_ok": false,
+    "over_count": 0,
+    "requested": 0,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [
+     {
+      "kind": "habit_checkin",
+      "optional": false,
+      "hit": false
+     }
+    ],
+    "listed_scripted_occurrences": 0
+   },
+   "required_window_outcome": "completed_miss"
+  },
+  {
+   "scenario": "PV42",
+   "account": "secondary",
+   "status": "complete",
+   "horizon_complete": true,
+   "capture_complete": true,
+   "profile_available": true,
+   "foreground_expectation_origin": "universal_only_no_authored_foreground",
+   "original_bounds": {
+    "min": 0,
+    "max": 1
+   },
+   "observed_tick_sends": 0,
+   "send_observation": "complete_horizon",
+   "original_outcome": {
+    "count": 0,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 0,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [
+     {
+      "kind": "followup",
+      "optional": true,
+      "hit": false
+     }
+    ],
+    "listed_scripted_occurrences": 0
+   },
+   "required_window_outcome": "not_required"
+  },
+  {
+   "scenario": "PV42",
+   "account": "primary",
+   "status": "complete",
+   "horizon_complete": true,
+   "capture_complete": true,
+   "profile_available": true,
+   "foreground_expectation_origin": "universal_only_no_authored_foreground",
+   "original_bounds": {
+    "min": 0,
+    "max": 1
+   },
+   "observed_tick_sends": 1,
+   "send_observation": "complete_horizon",
+   "original_outcome": {
+    "count": 1,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 0,
+    "unsolicited": 1,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [
+     {
+      "kind": "followup",
+      "optional": true,
+      "hit": true
+     }
+    ],
+    "listed_scripted_occurrences": 0
+   },
+   "required_window_outcome": "not_required"
+  },
+  {
+   "scenario": "PV43",
+   "account": "primary",
+   "status": "complete",
+   "horizon_complete": true,
+   "capture_complete": true,
+   "profile_available": true,
+   "foreground_expectation_origin": "authored",
+   "original_bounds": {
+    "min": 0,
+    "max": 0
+   },
+   "observed_tick_sends": 3,
+   "send_observation": "complete_horizon",
+   "original_outcome": {
+    "count": 0,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 3,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [],
+    "listed_scripted_occurrences": 3
+   },
+   "required_window_outcome": "not_required"
+  },
+  {
+   "scenario": "PV43",
+   "account": "secondary",
+   "status": "complete",
+   "horizon_complete": true,
+   "capture_complete": true,
+   "profile_available": true,
+   "foreground_expectation_origin": "authored",
+   "original_bounds": {
+    "min": 0,
+    "max": 0
+   },
+   "observed_tick_sends": 3,
+   "send_observation": "complete_horizon",
+   "original_outcome": {
+    "count": 0,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 3,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [],
+    "listed_scripted_occurrences": 3
+   },
+   "required_window_outcome": "not_required"
+  },
+  {
+   "scenario": "PV44",
+   "account": "secondary",
+   "status": "complete",
+   "horizon_complete": true,
+   "capture_complete": true,
+   "profile_available": true,
+   "foreground_expectation_origin": "authored",
+   "original_bounds": {
+    "min": 1,
+    "max": 1
+   },
+   "observed_tick_sends": 1,
+   "send_observation": "complete_horizon",
+   "original_outcome": {
+    "count": 1,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 1,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [
+     {
+      "kind": "habit_checkin",
+      "optional": false,
+      "hit": true
+     }
+    ],
+    "listed_scripted_occurrences": 0
+   },
+   "required_window_outcome": "hit"
+  },
+  {
+   "scenario": "PV44",
+   "account": "primary",
+   "status": "complete",
+   "horizon_complete": true,
+   "capture_complete": true,
+   "profile_available": true,
+   "foreground_expectation_origin": "authored",
+   "original_bounds": {
+    "min": 1,
+    "max": 1
+   },
+   "observed_tick_sends": 1,
+   "send_observation": "complete_horizon",
+   "original_outcome": {
+    "count": 1,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 1,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [
+     {
+      "kind": "habit_checkin",
+      "optional": false,
+      "hit": true
+     }
+    ],
+    "listed_scripted_occurrences": 0
+   },
+   "required_window_outcome": "hit"
+  },
+  {
+   "scenario": "PV45",
+   "account": "primary",
+   "status": "complete",
+   "horizon_complete": true,
+   "capture_complete": true,
+   "profile_available": true,
+   "foreground_expectation_origin": "authored",
+   "original_bounds": {
+    "min": 0,
+    "max": 0
+   },
+   "observed_tick_sends": 0,
+   "send_observation": "complete_horizon",
+   "original_outcome": {
+    "count": 0,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 0,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [],
+    "listed_scripted_occurrences": 0
+   },
+   "required_window_outcome": "not_required"
+  },
+  {
+   "scenario": "PV45",
+   "account": "secondary",
+   "status": "complete",
+   "horizon_complete": true,
+   "capture_complete": true,
+   "profile_available": true,
+   "foreground_expectation_origin": "authored",
+   "original_bounds": {
+    "min": 0,
+    "max": 0
+   },
+   "observed_tick_sends": 0,
+   "send_observation": "complete_horizon",
+   "original_outcome": {
+    "count": 0,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 0,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [],
+    "listed_scripted_occurrences": 0
+   },
+   "required_window_outcome": "not_required"
+  },
+  {
+   "scenario": "PV46",
+   "account": "secondary",
+   "status": "complete",
+   "horizon_complete": true,
+   "capture_complete": true,
+   "profile_available": true,
+   "foreground_expectation_origin": "authored",
+   "original_bounds": {
+    "min": 0,
+    "max": 0
+   },
+   "observed_tick_sends": 0,
+   "send_observation": "complete_horizon",
+   "original_outcome": {
+    "count": 0,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 0,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [],
+    "listed_scripted_occurrences": 0
+   },
+   "required_window_outcome": "not_required"
+  },
+  {
+   "scenario": "PV46",
+   "account": "primary",
+   "status": "complete",
+   "horizon_complete": true,
+   "capture_complete": true,
+   "profile_available": true,
+   "foreground_expectation_origin": "authored",
+   "original_bounds": {
+    "min": 0,
+    "max": 0
+   },
+   "observed_tick_sends": 0,
+   "send_observation": "complete_horizon",
+   "original_outcome": {
+    "count": 0,
+    "count_ok": true,
+    "over_count": 0,
+    "requested": 0,
+    "unsolicited": 0,
+    "late_answers": 0,
+    "quiet_hours_violations": 0,
+    "windows": [],
+    "listed_scripted_occurrences": 0
+   },
+   "required_window_outcome": "not_required"
+  }
+ ],
+ "native": {
+  "provider_attempts": 296,
+  "request_ceiling": 758,
+  "complete_horizons": 12,
+  "profile_available_cells": 12,
+  "usage": {
+   "input_tokens": {
+    "known_attempts": 296,
+    "unknown_attempts": 0,
+    "observed_tokens": 2202760
+   },
+   "output_tokens": {
+    "known_attempts": 296,
+    "unknown_attempts": 0,
+    "observed_tokens": 68047
+   },
+   "reasoning_tokens": {
+    "known_attempts": 232,
+    "unknown_attempts": 64,
+    "observed_tokens": 6525
+   },
+   "total_tokens": {
+    "known_attempts": 296,
+    "unknown_attempts": 0,
+    "observed_tokens": 2270807
+   }
+  },
+  "required_windows": {
+   "planned_cells": 4,
+   "hit": 3,
+   "completed_miss": 1,
+   "unavailable": 0
+  }
+ },
+ "judging": {
+  "logical_jobs": 138,
+  "valid_jobs": 70,
+  "started_attempts": 70,
+  "technical_errors": 0,
+  "interrupted_attempts": 0,
+  "valid_controls": 70,
+  "matched_controls": 69,
+  "failed_controls": 1,
+  "candidate_jobs": {
+   "planned": 68,
+   "started": 0,
+   "valid": 0
+  },
+  "calibration_status": "failed_valid_final",
+  "controls_qualified": false,
+  "control_jobs": 70,
+  "primary_pass": 1,
+  "consistency_pass": 2,
+  "max_attempts_per_job": 3,
+  "max_logical_jobs": 158,
+  "request_ceiling": 474,
+  "calibration_before_candidates": true,
+  "usage": {
+   "input_tokens": {
+    "known_attempts": 70,
+    "unknown_attempts": 0,
+    "observed_tokens": 156922
+   },
+   "output_tokens": {
+    "known_attempts": 70,
+    "unknown_attempts": 0,
+    "observed_tokens": 14965
+   },
+   "reasoning_tokens": {
+    "known_attempts": 70,
+    "unknown_attempts": 0,
+    "observed_tokens": 6884
+   },
+   "total_tokens": {
+    "known_attempts": 70,
+    "unknown_attempts": 0,
+    "observed_tokens": 171887
+   }
+  },
+  "phases": {
+   "profile": {
+    "primary_units": 0,
+    "flags": {
+     "supported": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "citations_valid": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "owner_correct": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "current": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "coverage": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     }
+    },
+    "scores": {}
+   },
+   "foreground": {
+    "primary_units": 0,
+    "flags": {
+     "answered": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "no_rejection": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "honest": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "grounded": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "alternatives": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "recap_correct": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "confirmed": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "resurfaced": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "no_resurface": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "media_acknowledged": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "care": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "offered": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "bridge": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     }
+    },
+    "scores": {}
+   },
+   "proactive": {
+    "primary_units": 0,
+    "flags": {
+     "warranted": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "grounded": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "private": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     }
+    },
+    "scores": {
+     "timing": {
+      "sum": 0,
+      "applicable": 0
+     },
+     "useful": {
+      "sum": 0,
+      "applicable": 0
+     },
+     "tone": {
+      "sum": 0,
+      "applicable": 0
+     },
+     "not_annoying": {
+      "sum": 0,
+      "applicable": 0
+     },
+     "decision_progress": {
+      "sum": 0,
+      "applicable": 0
+     }
+    }
+   }
+  },
+  "consistency": {
+   "foreground": {
+    "paired_packets": 0,
+    "same_flags": 0
+   },
+   "proactive": {
+    "paired_packets": 0,
+    "same_flags": 0
+   },
+   "profile": {
+    "paired_packets": 0,
+    "same_flags": 0
+   }
+  }
+ },
+ "proof": {
+  "native_ref": "c26b83488bbeac5afb7f3307ba880114efb4a236",
+  "helper_ref": "8ff93e264f46e01bf6bd2ca94484a818ac32372f",
+  "evaluator_ref": "09316aa0c0e155f7161c22415c138ae901c79747",
+  "plan_sha256": "951ec12ccb457282911b5cc60c3159da386811324d3a00d8e7155ddb81fca8f6",
+  "judge_binding_sha256": "148624cc7baf5d17dc15fdc950c7ecbc28b014d5dcaf844315fdacc6cbbc0a9b",
+  "native_inventory_sha256": "04446632ff08ea38a3861b7395bb021bb1b95006be979939db17ad9b47c15528",
+  "judge_inventory_sha256": "103c072fc21edf6f538ddb7eaa720549c41a935913a5afa22eb32c9726d51a95",
+  "h1_terminal_audit_sha256": "6548311a785e1379756a9880f6862ffeb754d36f91594f93e44624d8c6dff22b",
+  "native_outcomes_adapter_sha256": "32b909af1993d3856b73324a6820aa6d6a925e4474871543a666bc0369cb8789"
+ },
+ "prior_aborted": {
+  "status": "aborted_not_pooled",
+  "planned_cells": 12,
+  "incomplete_cells": 3,
+  "interrupted_cells": 1,
+  "unstarted_cells": 8,
+  "complete_horizons": 0,
+  "provider_attempts": 16,
+  "known_total_token_attempts": 15,
+  "known_total_tokens": 177166,
+  "unknown_total_token_attempts": 1,
+  "judge_attempts": 0
+ },
+ "retained_calibrations": [
+  {
+   "evaluator_ref": "4e619c06019bc120012711cfd6144688880bd3c3",
+   "judge_binding_sha256": "fbf204c0068435455527794f4e5c302b3ca1122553e5a3d1b380d75154800b7b",
+   "judge_inventory_sha256": "2298fe258323c427976f5a40fbb14636e2715ff8531fd6f1140485bedd1539b2",
+   "seal_proof_sha256": "159ba09585a445654312890f35e2e8a83a6cf6b380128e359309af5a799e789f",
+   "status": "valid_final_failed_not_pooled",
+   "control_jobs": 70,
+   "valid_controls": 70,
+   "matched_controls": 68,
+   "failed_controls": 2,
+   "candidate_jobs": {
+    "planned": 68,
+    "started": 0,
+    "valid": 0
+   },
+   "started_attempts": 70,
+   "technical_errors": 0,
+   "interrupted_attempts": 0,
+   "known_total_token_attempts": 70,
+   "known_total_tokens": 171417,
+   "unknown_total_token_attempts": 0
+  },
+  {
+   "evaluator_ref": "09316aa0c0e155f7161c22415c138ae901c79747",
+   "judge_binding_sha256": "148624cc7baf5d17dc15fdc950c7ecbc28b014d5dcaf844315fdacc6cbbc0a9b",
+   "judge_inventory_sha256": "103c072fc21edf6f538ddb7eaa720549c41a935913a5afa22eb32c9726d51a95",
+   "seal_proof_sha256": "1132977bac061a1bf2e6ed5fa3cb3b5a976d412bc2bb196feafbad77cccf593f",
+   "status": "valid_final_failed_not_pooled",
+   "control_jobs": 70,
+   "valid_controls": 70,
+   "matched_controls": 69,
+   "failed_controls": 1,
+   "candidate_jobs": {
+    "planned": 68,
+    "started": 0,
+    "valid": 0
+   },
+   "started_attempts": 70,
+   "technical_errors": 0,
+   "interrupted_attempts": 0,
+   "known_total_token_attempts": 70,
+   "known_total_tokens": 171887,
+   "unknown_total_token_attempts": 0
+  }
+ ],
+ "limits": "單一已部署政策的 12 個合成開發 cells：原始 PV41–46，各兩個合成帳號。原生完成、profile 可用性與 profile／前景／主動訊息品質分開，不作模型排名或 holdout 結論。第 1 輪固定為主要判讀，第 2 輪只報一致性；70 個新控制判讀先於候選，所有有效負評與失敗控制均為最終結果。穩定願望不等於同意排程；可選邀請未出現不算 profile 遺漏。主動品質只以實際訊息為分母。原始對話同時可見，不能把回憶歸因於 profile；原生串行重播不代表正式環境的啟動或併發可靠度。原始 authored bounds／raw window 命中與 AI 訊息品質分列；未完成 horizon 不當成安靜通過或已證明漏接。未知用量不當成零；這是開發診斷，不宣告 Linux、速度或正式環境泛化通過。"
+}

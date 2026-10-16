@@ -31,6 +31,7 @@ OWED_HOST_INTERRUPTION_NAME = "line-always-on-owed-host-interruption.public.json
 OWED_TERMINAL_NAME = "line-always-on-owed-terminal.public.json"
 OWED_V2_NAME = "line-always-on-owed-development-v2.public.json"
 OWED_RELEASE_NAME = "line-always-on-owed-release-followup.public.json"
+M6_PROFILE_NAME = "line-always-on-m6-profile-diagnostic.public.json"
 PAGE_NAME = "line-always-on.html"
 SOURCE_REPO = "https://github.com/jefflai108/streaming_taiwanese"
 ARMS = ("existing", "engine")
@@ -821,9 +822,9 @@ def baseline_block(data):
 
 def deployment_status_panel():
     """Current lifecycle observation, separate from every frozen study source."""
-    return ('<section class="panel" id="deployment-status"><h2>部署現況 · 2026-10-16 06:20（台北）</h2>'
-            f'<p>GCP 已啟用 {commit_link("c26b83488bbeac5afb7f3307ba880114efb4a236")}'
-            f'（<a href="{SOURCE_REPO}/pull/609">PR #609</a>）並解除暫停，兩個 LINE 帳號均通過就緒檢查。'
+    return ('<section class="panel" id="deployment-status"><h2>部署現況 · 2026-10-16 07:59（台北）</h2>'
+            f'<p>GCP 已啟用 {commit_link("6085c0b31cc172ae1d9584a7fae0005801da2e27")}'
+            f'（<a href="{SOURCE_REPO}/pull/635">PR #635</a>）並解除暫停，兩個 LINE 帳號均通過就緒檢查。'
             '一個服務程序共用 5 個固定背景執行緒：2 個推送、2 個補答、1 個抽取，不會為每位使用者另開程序。</p>'
             '<p>背景設定為 GPT-6.1-Sol · Low，output tokens 上限 32,768、每次期限 120 秒。'
             '群組被動計畫仍關閉，等待既有 D5 用途與保留期審查。</p>'
@@ -996,6 +997,7 @@ def render_method(cases, *, has_results=False, diagnostic=None, planned_study=No
                   owed_development_terminal=None,
                   owed_development_v2=None,
                   owed_release_followup=None,
+                  m6_profile_diagnostic=None,
                   qualified_results=None,
                   generated_at="2026-10-14"):
     from collections import Counter
@@ -1054,6 +1056,7 @@ def render_method(cases, *, has_results=False, diagnostic=None, planned_study=No
     body += owed_development_panel(owed_development, owed_development_host_interruption, owed_development_terminal)
     body += owed_development_v2_panel(owed_development_v2)
     body += owed_release_followup_panel(owed_release_followup)
+    body += m6_profile_panel(m6_profile_diagnostic)
     return page_shell(METHOD_NAME, "Always-on 方法", "麻吉要一直在背景接住事情，在值得關心的時候主動開口。這裡把「快、接得住、給下一步、主動得合適」轉成可重播、可逐段檢查的實驗。", body, generated=generated_at)
 
 
@@ -1806,6 +1809,144 @@ def owed_development_v2_panel(data):
         f'<p><a href="{OWED_V2_NAME}" download>下載獨立 v2 公開摘要</a>；不含原始提示、識別碼或被拒絕的私有模型文字。</p></section>')
 
 
+def m6_profile_module():
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('always_on_m6_profile',Path(__file__).with_name('m6_profile_diagnostic.py'))
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    return module
+
+
+def m6_profile_panel(data):
+    if data is None:return ''
+    m6_profile_module().validate_public(data);check_public(data)
+    body=('<section class="panel"><h2>M6／真實側寫路徑 · 小型開發診斷</h2>'
+        '<p>單一已部署政策，原始 PV41–46 × primary／secondary，共 12 個獨立合成 cells。'
+        'profile、前景回答與主動訊息分開判讀；不作模型排名，也不是 holdout。</p>')
+    if data['status']=='awaiting_reviewed_freeze':
+        body+='<p class="notice">H2 與其新版判讀的最終來源與結果尚待獨立綁定；目前只列方法，不顯示或推定本輪成績。</p>'
+    else:
+        native=data['native'];judging=data['judging']
+        candidate=judging['candidate_jobs']
+        calibration={'pending':'尚未完成','qualified':'通過','failed_valid_final':'已由有效結果確定未通過'}[judging['calibration_status']]
+        body+=(f'<p>原始 horizon 完成 {native["complete_horizons"]}/12；可用的真實 profile checkpoint '
+            f'{native["profile_available_cells"]}/12。不可用與有效空 profile 分開；未完成、未開始及負面判讀保留。</p>'
+            f'<p>有效判讀 {judging["valid_jobs"]}/{judging["logical_jobs"]}；有效控制 '
+            f'{judging["valid_controls"]}/70（符合預期 {judging["matched_controls"]}、未符合 {judging["failed_controls"]}），校準{calibration}。'
+            '70 個控制判讀先於候選；第 1 輪固定為主要結果，第 2 輪只報一致性。'
+            '有效負評或未通過控制不重試；每工作至多 3 次技術嘗試。</p>')
+        body+=(f'<p>候選判讀工作：已開始 {candidate["started"]}/{candidate["planned"]}，有效 {candidate["valid"]}/{candidate["planned"]}；'
+            f'尚未開始 {candidate["planned"]-candidate["started"]} 個工作。'
+            f'技術錯誤 {judging["technical_errors"]} 次、缺收據中斷 {judging["interrupted_attempts"]} 次；'
+            '有效控制未符合預期與技術錯誤分開，所有實際用量均保留。</p>')
+        if judging['calibration_status']=='failed_valid_final':
+            body+='<p class="notice"><b>本輪校準已確定未通過。</b>有效控制結果已固定，不能以技術重試覆寫。'
+            body+=('本輪未進入候選判讀；側寫、前景回答與主動訊息的 AI 品質皆未判讀、不可判定。</p>'
+                if candidate['started']==0 else '保留既有候選觀察，但不能作合格 AI 品質結論。</p>')
+        authored=sum(row['foreground_expectation_origin']=='authored' for row in data['cells'])
+        universal=[row for row in data['cells'] if row['foreground_expectation_origin']=='universal_only_no_authored_foreground']
+        scenarios='、'.join(sorted({row['scenario'] for row in universal}))
+        body+=(f'<p>前景判讀來源：{authored} 個 cells 保留原作者前景規格；{len(universal)} 個 cells '
+            f'原題未提供前景規格'+(f'（{esc(scenarios)}）' if universal else '')+'。'
+            '未提供作者規格的 cells 僅依完成回答、沒有直接拒絕、誠實、有依據 4 項既有通用要求，'
+            '評估完整既有對話，不新增可選檢查。保留原定 12 個前景 cells 分母；'
+            '通用判讀不等於已有作者設計的習慣或 check-in 專屬前景規格。</p>')
+        windows=native['required_windows']
+        body+=(f'<p>原始題組的 4 個必要 follow-up cells：raw window 命中 {windows["hit"]}、'
+            f'完整 horizon 仍未命中 {windows["completed_miss"]}、尚不可判定 {windows["unavailable"]}。'
+            '這是未改動原始 scorer 的原生送達檢查，與實際訊息的 AI 品質分開；不是 profile-only recall。</p>')
+        body+=('<p class="notice"><b>本輪判讀輸入有已知限制。</b>前景封包未另列宿主寫入 check-in 後的操作收據，'
+            '評審無法據此核對操作結果。側寫封包也缺少原生來源的台灣時間欄位與審閱基準日期；'
+            '側寫生成仍使用執行主機日期，與情境的虛擬時間未統一。'
+            '因此，相關誠實、依據與側寫時間負評表示在這份封包內未獲支持，不能直接當成引擎失敗率。'
+            '原判讀與成本全部保留；補齊證據與統一重播時鐘後，需另開新版本測量。</p>')
+        labels={'profile':'側寫品質（有效 active checkpoint）','foreground':'前景回答品質','proactive':'實際主動訊息品質'}
+        rows=[]
+        for phase in ('profile','foreground','proactive'):
+            row=judging['phases'][phase];pair=judging['consistency'][phase]
+            rows.append(f'<tr><th>{labels[phase]}</th><td>'+
+                (str(row['primary_units']) if row['primary_units'] else '未判讀／不可判定')+'</td><td>'+
+                (f'{pair["same_flags"]}/{pair["paired_packets"]}' if pair['paired_packets'] else '尚無成對判讀')+'</td></tr>')
+        body+=('<div class="scroll"><table><thead><tr><th>獨立判讀面向</th><th>第 1 輪有效單位</th>'
+            '<th>兩輪旗標相同／成對單位</th></tr></thead><tbody>'+''.join(rows)+'</tbody></table></div>')
+        axis_labels={'supported':'內容有來源支持','citations_valid':'引用有效','owner_correct':'歸屬正確',
+            'current':'目前狀態正確','coverage':'重要持久資訊涵蓋','answered':'完成回答',
+            'no_rejection':'沒有直接拒絕','honest':'誠實','grounded':'有依據',
+            'warranted':'適合發出','private':'符合隱私界線'}
+        details=[]
+        for phase,fields in (('profile',('supported','citations_valid','owner_correct','current','coverage')),
+                             ('foreground',('answered','no_rejection','honest','grounded')),
+                             ('proactive',('warranted','grounded','private'))):
+            if not judging['phases'][phase]['primary_units']:
+                details.append(f'<p>{labels[phase]}：未判讀／不可判定。</p>')
+                continue
+            entries=[]
+            for field in fields:
+                item=judging['phases'][phase]['flags'][field]
+                entries.append(f'{axis_labels[field]} {item["true"]}/{item["applicable"]}（負面 {item["false"]}）')
+            details.append(f'<p>{labels[phase]}：'+esc('；'.join(entries))+'。</p>')
+        body+='<details><summary>主要判讀旗標與全部負面結果</summary>'+''.join(details)+'</details>'
+        body+=('<p class="notice">'+('本輪捕捉與 AI 校準門檻已就緒；仍只作開發診斷。' if data['quality_ready'] else
+            '本輪門檻未全部通過；下列可用性與已保留判讀不等於合格品質結論。')+'</p>')
+        for label,group in (('原生',native),('AI 判讀',judging)):
+            count=group['provider_attempts'] if label=='原生' else group['started_attempts']
+            parts=[]
+            for field in ('input_tokens','output_tokens','reasoning_tokens','total_tokens'):
+                item=group['usage'][field]
+                observed='未回報' if item['observed_tokens'] is None else f'{item["observed_tokens"]:,}'
+                parts.append(f'{field} 已知 {observed}（{item["known_attempts"]} 次），未知 {item["unknown_attempts"]} 次')
+            body+=f'<p class="small">{label} {count} 次已開始嘗試；'+esc('；'.join(parts))+'。未知不當成零。</p>'
+        status_labels={'complete':'完成','incomplete':'未完成','interrupted':'中斷','unstarted':'未開始'}
+        origin_labels={'authored':'作者前景規格','universal_only_no_authored_foreground':'前景僅通用 4 項'}
+        cells=[]
+        for row in data['cells']:
+            observed='未知' if row['observed_tick_sends'] is None else str(row['observed_tick_sends'])+('（部分）' if row['send_observation']=='partial' else '')
+            bounds=row['original_bounds'];outcome=row['original_outcome']
+            if outcome is None:
+                count=f'不可判定；原界線 {bounds["min"]}–{bounds["max"]}'
+                roles=quiet=raw_windows='不可判定'
+            else:
+                count=f'{outcome["count"]}／原界線 {bounds["min"]}–{bounds["max"]}；'+('符合' if outcome['count_ok'] else '不符')+f'，超量 {outcome["over_count"]}'
+                roles=f'要求 {outcome["requested"]}／未要求 {outcome["unsolicited"]}／欠答 {outcome["late_answers"]}'
+                if outcome['listed_scripted_occurrences']:
+                    roles+=f'；腳本列出 {outcome["listed_scripted_occurrences"]} 次'
+                quiet=str(outcome['quiet_hours_violations'])
+                raw_windows='；'.join(w['kind']+'：'+('命中' if w['hit'] else '未命中')+('（可選）' if w['optional'] else '') for w in outcome['windows']) or '無 authored window'
+            cells.append(f'<tr><th>{esc(row["scenario"])} · {esc(row["account"])}</th><td>{status_labels[row["status"]]}'
+                f'<br><span class="small">{origin_labels[row["foreground_expectation_origin"]]}</span></td>'
+                f'<td>{"可用" if row["profile_available"] else "不可用"}</td><td>{esc(observed)}</td><td>{esc(count)}</td>'
+                f'<td>{esc(roles)}</td><td>{esc(raw_windows)}</td><td>{esc(quiet)}</td></tr>')
+        body+=('<details><summary>全部 12 cells：可用性與原始 authored outcomes</summary><div class="scroll"><table><thead><tr><th>合成情境</th>'
+            '<th>原生 horizon</th><th>profile</th><th>實際 tick sends</th><th>原始計數界線</th><th>實際送達角色</th>'
+            '<th>原始 raw windows</th><th>安靜時段違規</th></tr></thead><tbody>'+''.join(cells)+'</tbody></table></div>'
+            '<p class="small">PV42 的可選 follow-up 為零仍有效；PV45／46 不預期主動訊息。PV43 腳本列出的 3 次停止前要求型 check-in '
+            '由原始 scorer 豁免計數；實際要求型總數只作描述，不證明三次都準時送達，也不把缺少它們變成新分數。'
+            '未完成 horizon 不作最終命中或安靜通過；部分送達可觀察才列數字，否則未知。raw window 命中不包含 AI warranted／grounded 信用。</p></details>')
+    for label,retained in zip(('J3','J4'),data['retained_calibrations']):
+        same=data['proof'] is not None and data['proof']['judge_binding_sha256']==retained['judge_binding_sha256']
+        body+=(f'<p class="notice"><b>{label} 原始校準獨立保留。</b>'+
+            (f'本頁目前展示的就是這一份 {label} 記錄，並非額外的一筆用量。' if same else '這份校準獨立保留，不併入本頁目前判讀數或用量。')+
+            f'{retained["valid_controls"]} 個有效控制判讀中，符合預期 {retained["matched_controls"]}、未符合 {retained["failed_controls"]}；'
+            f'候選工作已開始 {retained["candidate_jobs"]["started"]}/{retained["candidate_jobs"]["planned"]}，'
+            f'有效 {retained["candidate_jobs"]["valid"]}。'
+            f'{retained["started_attempts"]} 次嘗試，技術錯誤 {retained["technical_errors"]}、缺收據中斷 {retained["interrupted_attempts"]}；'
+            f'已知 {retained["known_total_tokens"]:,} total tokens（{retained["known_total_token_attempts"]} 次），'
+            f'未知 {retained["unknown_total_token_attempts"]} 次。沒有候選 AI 品質結論。</p>')
+    body+=('<p class="small">另開的 J4 在獨立 AI 先讀題目與規準、再比對參考值的檢查後，僅前瞻性修改一個 coverage 參考布林值；'
+        '模型請求內容與 rubric 相同，使用全新 70 個控制判讀。修正前未查看任何候選判讀；'
+        '這不是人類驗證，也未重算或覆寫 J3。'
+        'J5 採前瞻性校準試驗：由 Medium／4,000 改為 High／32,768，沿用規準、控制與門檻，使用全新校準；'
+        '結果依上方實際收據顯示，J3／J4 不併入其判讀數或用量。</p>')
+    if data['status']!='awaiting_reviewed_freeze':
+        body+=(f'<p><a href="{M6_PROFILE_NAME}" download>下載本輪公開診斷</a> · '
+            '<a href="line-always-on-m6-profile-diagnostic-1080f6affbe1.public.json" download>J3 原始校準</a> · '
+            '<a href="line-always-on-m6-profile-diagnostic-fd29e6f9b4be.public.json" download>J4 原始校準</a>。'
+            '僅含合成題組的彙總與來源摘要。</p>')
+    body+=('<p class="small">H1 中止輪獨立保留，絕不併入本輪：3 未完成、1 中斷、8 未開始；'
+        '16 次原生嘗試，15 次已知共 177,166 total tokens，1 次未知；0 次 AI 判讀。沒有完成的 horizon。</p>'
+        f'<p class="small">{esc(data["limits"])}</p></section>')
+    return body
+
+
 def owed_release_followup_panel(data):
     if data is None:return ''
     owed_release_followup_module().validate_public(data);check_public(data)
@@ -2036,7 +2177,7 @@ def owed_diagnostic_panel(data):
             f'<code>{esc(proof["retained_quality_sha256"])}</code>。公開檔不包含權限識別碼、原始提示、模型思考或金鑰。</p></section>')
 
 
-def render(data, iterations=(), *, owed_development_v2=None, owed_release_followup=None):
+def render(data, iterations=(), *, owed_development_v2=None, owed_release_followup=None, m6_profile_diagnostic=None):
     if data.get('status') == 'pending':
         cards = ''.join(f'<div class="kpi"><p class="label">{label}</p><p class="pending-value">等待完整量測</p><p class="sub">{detail}</p></div>' for label, detail in (
             ('速度', '首次回覆與前景等待時間分開報告'), ('不漏接', '一般回答、欠答恢復與失敗通知分開'),
@@ -2049,6 +2190,7 @@ def render(data, iterations=(), *, owed_development_v2=None, owed_release_follow
         body += owed_development_panel(data.get('owed_development'), data.get('owed_development_host_interruption'), data.get('owed_development_terminal'))
         body += owed_development_v2_panel(owed_development_v2)
         body += owed_release_followup_panel(owed_release_followup)
+        body += m6_profile_panel(m6_profile_diagnostic)
         body += f'<section class="panel"><h2>逐段檢查，等資料完成</h2><p>本輪比較原有版本、Gemini Medium、Gemini High 與 GPT-6.1-Sol Low。每段情境會顯示各組完整時間軸、每次重複、主機檢查與 AI 判斷理由。現在可以先看<a href="{METHOD_NAME}">公開開發題組與評審門檻</a>。</p></section><section class="panel"><h2>研究迭代</h2>{iteration_table(iterations)}</section>'
         return page_shell(PAGE_NAME, 'Always-on 結果', '這一頁保留完整研究的成績、案例與版本證據。每次迭代獨立呈現，讓主動訊息的時機、內容與打擾成本可以逐則檢查。', body, status='等待完整研究',
                           generated=data.get('generated_at', '2026-10-14'))
@@ -2081,6 +2223,7 @@ def render(data, iterations=(), *, owed_development_v2=None, owed_release_follow
     body += owed_development_panel(data.get('owed_development'), data.get('owed_development_host_interruption'), data.get('owed_development_terminal'))
     body += owed_development_v2_panel(owed_development_v2)
     body += owed_release_followup_panel(owed_release_followup)
+    body += m6_profile_panel(m6_profile_diagnostic)
     body += interruption_panel(data.get('study_interruption'))
     body += f'<section class="panel"><h2>分項判讀與控制題</h2><div class="grid2"><div class="scroll"><table><thead><tr><th>自主訊息 AI 分項（1–5）</th>{headers}</tr></thead><tbody>{quality_rows}</tbody></table></div><div class="scroll"><table><thead><tr><th>前景 AI 判讀</th>{headers}</tr></thead><tbody>{foreground_rows}</tbody></table></div></div><table><tbody>{control_rows}</tbody></table><p>這些是 AI 判讀；原始逐則分數與理由如下。控制題檢查評審是否理解規格，不證明實際使用者都喜歡這些訊息。</p></section>'
     body += f'<section class="panel"><h2>逐段時間軸</h2><p>自主關心、使用者要求與欠答分開標記；每組保留每次重複和失敗案例。</p><div data-explorer>{filters(data["episodes"])}{explorer(data)}</div></section>'
@@ -2197,6 +2340,9 @@ def main():
     parser.add_argument('--cases',type=Path)
     parser.add_argument('--source-ref')
     parser.add_argument('--iteration')
+    parser.add_argument('--m6-profile-pending',action='store_true', help='prospective method panel; no archive export')
+    parser.add_argument('--m6-profile-study',type=Path, help='separate reviewed twelve-store native diagnostic')
+    parser.add_argument('--m6-profile-judge',type=Path, help='separately reviewed M6 judge archive')
     parser.add_argument('--generated-at',default='2026-10-14')
     args=parser.parse_args()
     if (args.evaluation_revision is not None or args.evaluation_ref is not None or args.evaluation_source is not None) \
@@ -2355,6 +2501,23 @@ def main():
         if (PUBLIC/OWED_RELEASE_NAME).is_symlink():raise ValueError('owed_followup_public_not_plain_file')
         owed_release=json.loads((PUBLIC/OWED_RELEASE_NAME).read_text())
         owed_release_followup_module().validate_public(owed_release);check_public(owed_release)
+    if bool(args.m6_profile_study) != bool(args.m6_profile_judge):
+        parser.error('give both the separate M6 native and judge archives')
+    if args.m6_profile_pending and args.m6_profile_study:
+        parser.error('choose a prospective M6 panel or a reviewed export')
+    m6_profile=None
+    m6_text=None
+    if args.m6_profile_study or args.m6_profile_pending:
+        module=m6_profile_module()
+        m6_profile=(module.pending_projection() if args.m6_profile_pending else
+                    module.verified_projection(args.m6_profile_study,args.m6_profile_judge))
+        module.validate_public(m6_profile);check_public(m6_profile)
+        m6_text=json.dumps(m6_profile,ensure_ascii=False,indent=1)+'\n'
+    elif (PUBLIC/M6_PROFILE_NAME).exists():
+        path=PUBLIC/M6_PROFILE_NAME
+        if path.is_symlink():raise ValueError('m6_public_not_plain_file')
+        m6_profile=json.loads(path.read_text())
+        m6_profile_module().validate_public(m6_profile);check_public(m6_profile)
     method, report=render_method(cases,has_results=data.get('publication_ready') is True,
                                 diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study'),
                                 interruption=data.get('study_interruption'),owed_development=data.get('owed_development'),
@@ -2362,9 +2525,11 @@ def main():
                                 owed_development_terminal=data.get('owed_development_terminal'),
                                 owed_development_v2=owed_v2,
                                 owed_release_followup=owed_release,
+                                m6_profile_diagnostic=m6_profile,
                                 qualified_results=data,
                                 generated_at=data.get('generated_at','2026-10-14')),render(data,index['iterations'],
-                                    owed_development_v2=owed_v2,owed_release_followup=owed_release)
+                                    owed_development_v2=owed_v2,owed_release_followup=owed_release,
+                                    m6_profile_diagnostic=m6_profile)
     check_public(data);check_public(index);check_public(cases)
     if planned_text is not None:
         digest=hashlib.sha256(planned_text.encode()).hexdigest()
@@ -2403,6 +2568,14 @@ def main():
         archive=PUBLIC/('line-always-on-owed-release-followup-'+digest[:12]+'.public.json')
         if archive.exists() and archive.read_text()!=owed_release_text:raise ValueError('immutable_owed_followup_changed')
         archive.write_text(owed_release_text);(PUBLIC/OWED_RELEASE_NAME).write_text(owed_release_text)
+    if m6_text is not None:
+        digest=hashlib.sha256(m6_text.encode()).hexdigest()
+        archive=PUBLIC/('line-always-on-m6-profile-diagnostic-'+digest[:12]+'.public.json')
+        if archive.exists() and (archive.is_symlink() or archive.read_text()!=m6_text):
+            raise ValueError('immutable_m6_profile_changed')
+        alias=PUBLIC/M6_PROFILE_NAME
+        if alias.is_symlink():raise ValueError('m6_public_not_plain_file')
+        archive.write_text(m6_text);alias.write_text(m6_text)
     if protocol is not None:
         frozen=PUBLIC/protocol_file
         if frozen.exists() and json.loads(frozen.read_text())!=protocol:

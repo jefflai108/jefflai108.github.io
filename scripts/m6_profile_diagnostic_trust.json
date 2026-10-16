@@ -1,0 +1,14 @@
+{
+  "binding": {
+    "evaluator_ref": "fdd46fc1cb63422e4fd4b1d0f96bdbdf1ba767bf",
+    "h1_terminal_audit_sha256": "6548311a785e1379756a9880f6862ffeb754d36f91594f93e44624d8c6dff22b",
+    "helper_ref": "8ff93e264f46e01bf6bd2ca94484a818ac32372f",
+    "judge_binding_sha256": "6147b27a0926c95ad1dbc50e56f1c0b48fe08e028a1ac59bba199e543c80a709",
+    "judge_files_sha256": "aa848b7df905a01b65700a9bd6f95a262775d74ee9bf5db64c7f065c2bc4e413",
+    "native_files_sha256": "04446632ff08ea38a3861b7395bb021bb1b95006be979939db17ad9b47c15528",
+    "native_ref": "c26b83488bbeac5afb7f3307ba880114efb4a236",
+    "plan_sha256": "951ec12ccb457282911b5cc60c3159da386811324d3a00d8e7155ddb81fca8f6"
+  },
+  "protocol": "m6_profile_public_trust_v1",
+  "status": "reviewed"
+}

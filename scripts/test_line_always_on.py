@@ -113,9 +113,9 @@ class RenderTest(unittest.TestCase):
                always_on.render_method(cases))
         for page in pages:
             self.assertEqual(page.count('id="deployment-status"'),1)
-            self.assertIn('2026-10-16 06:20（台北）',page)
-            self.assertIn('/commit/c26b83488bbeac5afb7f3307ba880114efb4a236',page)
-            self.assertIn('/pull/609',page)
+            self.assertIn('2026-10-16 07:59（台北）',page)
+            self.assertIn('/commit/6085c0b31cc172ae1d9584a7fae0005801da2e27',page)
+            self.assertIn('/pull/635',page)
             self.assertIn('2 個推送、2 個補答、1 個抽取',page)
             self.assertIn('兩個 LINE 帳號均通過就緒檢查',page)
             self.assertIn('群組被動計畫仍關閉',page)
@@ -430,8 +430,10 @@ class RenderTest(unittest.TestCase):
         owed_v2=json.loads(v2_path.read_text()) if v2_path.exists() else None
         followup_path=public/always_on.OWED_RELEASE_NAME
         owed_followup=json.loads(followup_path.read_text()) if followup_path.exists() else None
+        m6_path=public/always_on.M6_PROFILE_NAME
+        m6_profile=json.loads(m6_path.read_text()) if m6_path.exists() else None
         self.assertEqual(always_on.render(data,index['iterations'],owed_development_v2=owed_v2,
-            owed_release_followup=owed_followup),
+            owed_release_followup=owed_followup,m6_profile_diagnostic=m6_profile),
             (public/always_on.PAGE_NAME).read_text())
         self.assertEqual(always_on.render_method(cases,has_results=data.get('publication_ready') is True,
             diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study'),
@@ -440,6 +442,7 @@ class RenderTest(unittest.TestCase):
             owed_development_terminal=data.get('owed_development_terminal'),
             owed_development_v2=owed_v2,
             owed_release_followup=owed_followup,
+            m6_profile_diagnostic=m6_profile,
             qualified_results=data,
             generated_at=data.get('generated_at','2026-10-14')),(public/always_on.METHOD_NAME).read_text())
 
