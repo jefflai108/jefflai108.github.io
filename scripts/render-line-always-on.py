@@ -822,10 +822,11 @@ def baseline_block(data):
 
 def deployment_status_panel():
     """Current lifecycle observation, separate from every frozen study source."""
-    return ('<section class="panel" id="deployment-status"><h2>部署現況 · 2026-10-16 07:59（台北）</h2>'
-            f'<p>GCP 已啟用 {commit_link("6085c0b31cc172ae1d9584a7fae0005801da2e27")}'
-            f'（<a href="{SOURCE_REPO}/pull/635">PR #635</a>）並解除暫停，兩個 LINE 帳號均通過就緒檢查。'
+    return ('<section class="panel" id="deployment-status"><h2>部署現況 · 2026-10-17 01:17（台北）</h2>'
+            f'<p>GCP 已啟用 {commit_link("f20ced6884ccc39a93889bd56c8fb2e8f77d8d44")}'
+            f'（<a href="{SOURCE_REPO}/pull/634">PR #634</a>、<a href="{SOURCE_REPO}/pull/638">PR #638</a>）並解除暫停，兩個 LINE 帳號均通過就緒檢查。'
             '一個服務程序共用 5 個固定背景執行緒：2 個推送、2 個補答、1 個抽取，不會為每位使用者另開程序。</p>'
+            '<p>本次包含 check-in 主題綁定修正與 SQL 載入改善：減少重複讀取列資料，SQL 查詢次數未變。</p>'
             '<p>背景設定為 GPT-6.1-Sol · Low，output tokens 上限 32,768、每次期限 120 秒。'
             '群組被動計畫仍關閉，等待既有 D5 用途與保留期審查。</p>'
             '<p class="small">已驗證啟動、受控停止、重新啟動與解除暫停。觀察中沒有到期的主動／補答工作，'
