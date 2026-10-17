@@ -16,6 +16,9 @@ on:
       - 'scripts/m6_profile_capture_followup.py'
       - 'scripts/m6_profile_capture_followup_trust.json'
       - 'scripts/test_m6_profile_capture_followup.py'
+      - 'scripts/m6_explicit_recurring.py'
+      - 'scripts/m6_explicit_recurring_trust.json'
+      - 'scripts/test_m6_explicit_recurring.py'
       - 'scripts/planned_study.py'
       - 'scripts/study_interruption.py'
       - 'scripts/test_*always_on*.py'
@@ -43,7 +46,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Verify source bindings and public export guards
-        run: python3 -B -m unittest scripts/test_line_always_on.py scripts/test_owed_diagnostic.py scripts/test_planned_study.py scripts/test_study_interruption.py scripts/test_owed_development.py scripts/test_owed_development_v2.py scripts/test_owed_release_followup.py scripts/test_m6_profile_diagnostic.py scripts/test_m6_profile_capture_followup.py
+        run: python3 -B -m unittest scripts/test_line_always_on.py scripts/test_owed_diagnostic.py scripts/test_planned_study.py scripts/test_study_interruption.py scripts/test_owed_development.py scripts/test_owed_development_v2.py scripts/test_owed_release_followup.py scripts/test_m6_profile_diagnostic.py scripts/test_m6_profile_capture_followup.py scripts/test_m6_explicit_recurring.py
       - run: npm test
       - name: Build the reviewed source
         run: npm run build --ignore-scripts

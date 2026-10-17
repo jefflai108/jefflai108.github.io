@@ -1,0 +1,355 @@
+{
+ "schema_version": 1,
+ "kind": "m6_explicit_recurring_public_v1",
+ "status": "qualified",
+ "planned_cells": 4,
+ "policy_count": 1,
+ "cohort": "synthetic_development",
+ "publication_ready": false,
+ "quality_ready": true,
+ "cells": [
+  {
+   "scenario": "ER01",
+   "repeat": 1,
+   "account": "primary",
+   "status": "complete",
+   "horizon_complete": true,
+   "capture_complete": true,
+   "profile_available": true,
+   "request_context_available": true,
+   "offer_stratum": "no_current_offer",
+   "checkin_capture_complete": true,
+   "checkin_observed": 2,
+   "checkin_projectable_records": 2,
+   "request_foreground_sent": 1,
+   "reserved_attempts": 18,
+   "actual_http_attempts": 18,
+   "request_sent_unknown_attempts": 0
+  },
+  {
+   "scenario": "ER01",
+   "repeat": 1,
+   "account": "secondary",
+   "status": "complete",
+   "horizon_complete": true,
+   "capture_complete": true,
+   "profile_available": true,
+   "request_context_available": true,
+   "offer_stratum": "other_or_unavailable",
+   "checkin_capture_complete": true,
+   "checkin_observed": 2,
+   "checkin_projectable_records": 2,
+   "request_foreground_sent": 1,
+   "reserved_attempts": 18,
+   "actual_http_attempts": 18,
+   "request_sent_unknown_attempts": 0
+  },
+  {
+   "scenario": "ER01",
+   "repeat": 2,
+   "account": "primary",
+   "status": "complete",
+   "horizon_complete": true,
+   "capture_complete": true,
+   "profile_available": true,
+   "request_context_available": true,
+   "offer_stratum": "other_or_unavailable",
+   "checkin_capture_complete": true,
+   "checkin_observed": 2,
+   "checkin_projectable_records": 2,
+   "request_foreground_sent": 1,
+   "reserved_attempts": 18,
+   "actual_http_attempts": 18,
+   "request_sent_unknown_attempts": 0
+  },
+  {
+   "scenario": "ER01",
+   "repeat": 2,
+   "account": "secondary",
+   "status": "complete",
+   "horizon_complete": true,
+   "capture_complete": true,
+   "profile_available": true,
+   "request_context_available": true,
+   "offer_stratum": "no_current_offer",
+   "checkin_capture_complete": true,
+   "checkin_observed": 2,
+   "checkin_projectable_records": 2,
+   "request_foreground_sent": 1,
+   "reserved_attempts": 18,
+   "actual_http_attempts": 18,
+   "request_sent_unknown_attempts": 0
+  }
+ ],
+ "native": {
+  "reserved_attempts": 72,
+  "actual_http_attempts": 72,
+  "request_sent_unknown_attempts": 0,
+  "request_ceiling": 180,
+  "complete_horizons": 4,
+  "profile_available_cells": 4,
+  "usage_capture_complete": true,
+  "usage": {
+   "input_tokens": {
+    "known_attempts": 72,
+    "unknown_attempts": 0,
+    "observed_tokens": 535092
+   },
+   "output_tokens": {
+    "known_attempts": 72,
+    "unknown_attempts": 0,
+    "observed_tokens": 14209
+   },
+   "reasoning_tokens": {
+    "known_attempts": 56,
+    "unknown_attempts": 16,
+    "observed_tokens": 1063
+   },
+   "total_tokens": {
+    "known_attempts": 72,
+    "unknown_attempts": 0,
+    "observed_tokens": 549301
+   }
+  }
+ },
+ "judging": {
+  "logical_jobs": 118,
+  "valid_jobs": 118,
+  "started_attempts": 118,
+  "technical_errors": 0,
+  "interrupted_attempts": 0,
+  "valid_controls": 94,
+  "matched_controls": 94,
+  "failed_controls": 0,
+  "candidate_jobs": {
+   "planned": 24,
+   "started": 24,
+   "valid": 24
+  },
+  "calibration_status": "qualified",
+  "controls_qualified": true,
+  "usage": {
+   "input_tokens": {
+    "known_attempts": 118,
+    "unknown_attempts": 0,
+    "observed_tokens": 304282
+   },
+   "output_tokens": {
+    "known_attempts": 118,
+    "unknown_attempts": 0,
+    "observed_tokens": 32695
+   },
+   "reasoning_tokens": {
+    "known_attempts": 118,
+    "unknown_attempts": 0,
+    "observed_tokens": 19235
+   },
+   "total_tokens": {
+    "known_attempts": 118,
+    "unknown_attempts": 0,
+    "observed_tokens": 336977
+   }
+  },
+  "control_jobs": 94,
+  "control_counts": {
+   "foreground": 25,
+   "proactive": 10,
+   "profile": 12
+  },
+  "primary_pass": 1,
+  "consistency_pass": 2,
+  "max_attempts_per_job": 3,
+  "max_logical_jobs": 126,
+  "request_ceiling": 378,
+  "calibration_before_candidates": true,
+  "phases": {
+   "profile": {
+    "primary_units": 4,
+    "flags": {
+     "supported": {
+      "true": 4,
+      "false": 0,
+      "applicable": 4
+     },
+     "citations_valid": {
+      "true": 4,
+      "false": 0,
+      "applicable": 4
+     },
+     "owner_correct": {
+      "true": 4,
+      "false": 0,
+      "applicable": 4
+     },
+     "current": {
+      "true": 4,
+      "false": 0,
+      "applicable": 4
+     },
+     "coverage": {
+      "true": 4,
+      "false": 0,
+      "applicable": 4
+     }
+    },
+    "scores": {}
+   },
+   "foreground": {
+    "primary_units": 4,
+    "flags": {
+     "answered": {
+      "true": 4,
+      "false": 0,
+      "applicable": 4
+     },
+     "no_rejection": {
+      "true": 4,
+      "false": 0,
+      "applicable": 4
+     },
+     "honest": {
+      "true": 4,
+      "false": 0,
+      "applicable": 4
+     },
+     "grounded": {
+      "true": 3,
+      "false": 1,
+      "applicable": 4
+     },
+     "alternatives": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "recap_correct": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "confirmed": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "resurfaced": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "no_resurface": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "media_acknowledged": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "care": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "offered": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     },
+     "bridge": {
+      "true": 0,
+      "false": 0,
+      "applicable": 0
+     }
+    },
+    "scores": {}
+   },
+   "proactive": {
+    "primary_units": 4,
+    "flags": {
+     "warranted": {
+      "true": 4,
+      "false": 0,
+      "applicable": 4
+     },
+     "grounded": {
+      "true": 4,
+      "false": 0,
+      "applicable": 4
+     },
+     "private": {
+      "true": 4,
+      "false": 0,
+      "applicable": 4
+     }
+    },
+    "scores": {
+     "timing": {
+      "sum": 20,
+      "applicable": 4
+     },
+     "useful": {
+      "sum": 15,
+      "applicable": 4
+     },
+     "tone": {
+      "sum": 20,
+      "applicable": 4
+     },
+     "not_annoying": {
+      "sum": 20,
+      "applicable": 4
+     },
+     "decision_progress": {
+      "sum": 0,
+      "applicable": 0
+     }
+    }
+   }
+  },
+  "consistency": {
+   "foreground": {
+    "paired_packets": 4,
+    "same_flags": 3
+   },
+   "proactive": {
+    "paired_packets": 4,
+    "same_flags": 2
+   },
+   "profile": {
+    "paired_packets": 4,
+    "same_flags": 4
+   }
+  }
+ },
+ "strata": {
+  "current_delivered_cooking_offer": {
+   "observed_cells": 0,
+   "complete_cells": 0,
+   "model_exposed_cells": 0
+  },
+  "no_current_offer": {
+   "observed_cells": 2,
+   "complete_cells": 2,
+   "model_exposed_cells": 2
+  },
+  "other_or_unavailable": {
+   "observed_cells": 2,
+   "complete_cells": 2,
+   "model_exposed_cells": 2
+  }
+ },
+ "proof": {
+  "evaluator_ref": "28c310b27c8cec138f22f391db43ce89fc73940f",
+  "helper_ref": "6bd20d09f89508a4e5138ab076a76203bd998051",
+  "judge_binding_sha256": "a48fd80d3173210fcf820b1a2a89cec051b60e5641b5341b611918f1f83c471a",
+  "judge_files_sha256": "e706e0c95441a8ebc15fab677e2a00b72c204e63dc0b673420b1060b65fd623a",
+  "judge_seal_sha256": "8a44e05895919c9341e4b89042777297a708a243eae5bf0f15e5ed77fff60851",
+  "native_files_sha256": "1ecfd314918c6107110ae2588d34b9668067c2c24d0b04bd07fc2d5865d0fe72",
+  "native_ref": "453c4ecafea91c714cd3a63b52f66534f571b4d0",
+  "native_seal_sha256": "bc9ed32fae835de1cc4b81f25ba1d0e5729f6e2aa9835d6ef00a985143f44f8d",
+  "plan_sha256": "06d87af801e25fc7e5f42983d6e0d0b51b093bb12c82a5199a56dbf0c87a994d"
+ },
+ "limits": "四個全新合成開發 cells，兩個帳號各重複兩次，使用同一策略與完整既有對話。四個軌跡預先指定同一則明確自我授權的每週請求；是否看見已送達提議只按實際發生分層，不是隨機分派、保證曝光或為取得提議而重抽。零樣本層仍保留。原生引擎包含後續修正，與較早 H3／J8 的差異不能解讀為單一修正的因果效果。沒有提議不等於失敗；原生預設晚上時間不等於使用者指定鐘點；模型承諾不等於成功保存排程，倫敦時區也必須有當時原生證據。沿用 J8 的規則、47 個控制題與全部 94 個先行判讀門檻；有效負評與失敗控制皆為最終結果。第 1 輪是主要品質判讀，第 2 輪只報一致性。未完成不當成通過，未知用量不當成零。多日時間範圍是本機日曆模擬，checkpoint 數與宿主總耗時不代表 API 完成延遲。不作模型排名、一般成功率、正式環境延遲或實際 LINE 送達結論。本輪原生與 AI 判讀成本分開，較早 J8／J7 的結果與成本不重算、不合併。"
+}

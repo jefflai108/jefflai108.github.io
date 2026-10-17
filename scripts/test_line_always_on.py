@@ -436,8 +436,11 @@ class RenderTest(unittest.TestCase):
         m6_profile=json.loads(m6_path.read_text()) if m6_path.exists() else None
         capture_path=public/always_on.M6_CAPTURE_NAME
         m6_capture=json.loads(capture_path.read_text()) if capture_path.exists() else None
+        er_path=public/always_on.M6_ER_NAME
+        m6_er=json.loads(er_path.read_text()) if er_path.exists() else None
         self.assertEqual(always_on.render(data,index['iterations'],owed_development_v2=owed_v2,
-            owed_release_followup=owed_followup,m6_profile_diagnostic=m6_profile,m6_profile_capture_followup=m6_capture),
+            owed_release_followup=owed_followup,m6_profile_diagnostic=m6_profile,m6_profile_capture_followup=m6_capture,
+            m6_explicit_recurring=m6_er),
             (public/always_on.PAGE_NAME).read_text())
         self.assertEqual(always_on.render_method(cases,has_results=data.get('publication_ready') is True,
             diagnostic=data.get('owed_diagnostic'),planned_study=data.get('planned_study'),
@@ -448,6 +451,7 @@ class RenderTest(unittest.TestCase):
             owed_release_followup=owed_followup,
             m6_profile_diagnostic=m6_profile,
             m6_profile_capture_followup=m6_capture,
+            m6_explicit_recurring=m6_er,
             qualified_results=data,
             generated_at=data.get('generated_at','2026-10-14')),(public/always_on.METHOD_NAME).read_text())
 
